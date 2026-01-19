@@ -1,25 +1,59 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import './App.css'
+import mapStyles from './mapStyles'
+// Importing google maps functionalities
+import {
+  GoogleMap,
+  useLoadScript,
+} from '@react-google-maps/api'
 
-function App() {
+export function App() {
+  const libraries = ['places'] // writing over here avoid rendering this evertime
+  // Placing here to avoid rendering
+  const mapContainerStyle = {
+    width: '100vw',
+    height: '100vh',
+  }
+  // Long and Lat of Reigna
+  const center = {
+    lat: 50.44521,
+    lng: -104.618896,
+  }
+  //
+  const options = {
+    styles: mapStyles,
+    disableDefaultUI: true, // This will remove the default UI i.e., Street View, View(Satellite/Default)...
+    zoomControl: true,
+  }
+
+  // Loading Google API key
+  const { isLoaded, LoadError } = useLoadScript({
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+    libraries,
+  })
+
+  if (LoadError) return 'Error Loading maps'
+  if (!isLoaded) return 'Loading Maps '
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1 className="Logo">
+        GoTransitRegina{" "}
+        <span role="img" aria-label="Bus Stop">
+          🚏
+        </span>
+      </h1>
+      <Search />
+      <GoogleMap
+        mapContainerStyle={mapContainerStyle}
+        zoom={10}
+        center={center}
+        options={options}
+      ></GoogleMap>
     </div>
-  );
+  )
 }
 
-export default App;
+function Search(){
+
+}
