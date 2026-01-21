@@ -64,5 +64,5 @@ export const MapModel = {
     height: '100vh',
   } as React.CSSProperties,
 
-  libraries: ['places'] as ("places" | "drawing" | "geometry" | "localContext" | "visualization")[],
+  libraries: ['places'] as ("places" | "drawing" | "geometry" | "visualization")[],
 };

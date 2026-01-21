@@ -8,6 +8,8 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.1",
     "@testing-library/user-event": "^13.5.0",
+    "@types/cors": "^2.8.19",
+    "cors": "^2.8.5",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-scripts": "5.0.1",
@@ -19,7 +21,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dev:server": "nodemon src/app.ts"
+    "dev:server": "nodemon src/server.ts"
   },
   "eslintConfig": {
     "extends": [
@@ -46,11 +48,11 @@
     "@types/node": "^25.0.9",
     "@types/react": "^19.2.8",
     "@types/react-dom": "^19.2.3",
-    "autoprefixer": "^10.4.23",
+    "autoprefixer": "^10.4.17",
     "express": "^5.2.1",
     "nodemon": "^3.1.11",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.18",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }

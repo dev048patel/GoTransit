@@ -5,13 +5,11 @@
  *          It isolates the database query logic from the rest of the application.
  */
 import { Route } from '../models/Route';
+import transitRoutes from '../data/transitRoutes';
 
 export class RouteRepository {
-    // Mock Database
-    private routes: Route[] = [
-        { id: '1', name: 'Downtown Express', stops: ['Central', 'Market', 'Union'] },
-        { id: '2', name: 'Campus Loop', stops: ['Dorm A', 'Library', 'Gym'] },
-    ];
+    // Using the real data file as our source of truth
+    private routes: Route[] = transitRoutes;
 
     /**
      * @method getAll
@@ -23,9 +21,9 @@ export class RouteRepository {
 
     /**
      * @method getById
-     * @description Finds a single record by its unique ID.
+     * @description Finds a single record by its unique ID (ROUTE_ID).
      */
     async getById(id: string): Promise<Route | undefined> {
-        return this.routes.find(r => r.id === id);
+        return this.routes.find(r => r.ROUTE_ID === id);
     }
 }
