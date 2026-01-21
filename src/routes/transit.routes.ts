@@ -22,4 +22,26 @@ router.get('/routes', TransitController.getRoutes);
  */
 router.get('/routes/:id', TransitController.getRouteById);
 
+/**
+ * @route GET /api/stops
+ * @desc Fetch all available transit stops
+ * @access Public
+ */
+router.get('/stops', TransitController.getStops);
+
+/**
+ * @route GET /api/colors
+ * @desc Fetch all available transit route colors
+ * @access Public
+ */
+router.get('/colors', TransitController.getColors);
+
+/**
+ * @route GET /api/live
+ * @desc Fetch live bus positions
+ * @access Public
+ */
+router.get('/live', TransitController.getLiveBuses);
+
+
 export default router;

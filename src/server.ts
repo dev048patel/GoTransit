@@ -1,10 +1,14 @@
 /**
- * @file app.ts
+ * @file server.ts
  * @description Entry point for the Express Backend Server.
  * @purpose Initializes the App, sets up middleware (CORS, JSON), and mounts routes.
  */
+import dotenv from 'dotenv';
+// Load environment variables from .env.local
+dotenv.config({ path: '.env.local' });
+
 import express from 'express';
-import cors from 'cors';
+import cors from 'cors'; // Cross Origin Resource Sharing : Allow cross-origin requests (Frontend -> Backend) like React -> Node.js ( Port 3000 -> Port 3001)
 import transitRoutes from './routes/transit.routes';
 
 const app = express();

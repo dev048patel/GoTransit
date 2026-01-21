@@ -4,7 +4,7 @@ This file is the Frontend Root("Brain of Frontend UI"). It is rendered by index.
 2. Sets up layout
 3. Parent component for all other components
 4. Passes data from controller to view
-*/ 
+*/
 
 import React from 'react';
 import './App.css';
@@ -13,7 +13,20 @@ import { MapView } from './views/MapView';
 
 export default function App() {
   // Controller: Handles logic and state
-  const { isLoaded, loadError, center, options, containerStyle, zoom } = useMapController();
+  const {
+    isLoaded,
+    loadError,
+    center,
+    options,
+    containerStyle,
+    zoom,
+    stops,
+    routes,
+    selectedRoute,
+    setSelectedRoute,
+    routePaths,
+    liveBuses
+  } = useMapController();
 
   // View: Renders the UI with data from the controller
   return (
@@ -24,6 +37,12 @@ export default function App() {
       options={options}
       containerStyle={containerStyle}
       zoom={zoom}
+      stops={stops}
+      routes={routes}
+      selectedRoute={selectedRoute}
+      setSelectedRoute={setSelectedRoute}
+      routePaths={routePaths}
+      liveBuses={liveBuses}
     />
   );
 }
