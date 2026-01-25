@@ -80,7 +80,7 @@ export const useMapController = (): MapControllerOutput => {
     };
 
     fetchLiveBuses();
-    const interval = setInterval(fetchLiveBuses, 3000); // Poll every 3s
+    const interval = setInterval(fetchLiveBuses, 1500); // Poll every 1.5 seconds
 
     return () => clearInterval(interval);
   }, []);

@@ -23,35 +23,31 @@ export class TransitService {
         this.stopRepo = new StopRepository();
     }
 
-    /**
-     * @method getAvailableRoutes
-     * @description Fetches all routes from the repository.
-     *              (Add business logic here if needed, e.g., filtering active routes only)
+    /*
+     Fetches all routes from the repository.
+     (Add business logic here if needed, e.g., filtering active routes only)
      */
     async getAvailableRoutes(): Promise<Route[]> {
         return this.routeRepo.getAll();
     }
 
-    /**
-     * @method getRouteDetails
-     * @description Fetches a specific route by ID.
-     */
+    /*
+    Fetches a specific route by ID.
+    */
     async getRouteDetails(id: string): Promise<Route | undefined> {
         return this.routeRepo.getById(id);
     }
 
-    /**
-     * @method getStops
-     * @description Fetches all available transit stops.
-     */
+    /*
+    Fetches all available transit stops.
+    */
     async getStops(): Promise<Stop[]> {
         return this.stopRepo.getAll();
     }
 
-    /**
-     * @method getColors
-     * @description Fetches all route colors.
-     */
+    /*
+    Fetches all route colors.
+    */
     async getColors(): Promise<RouteColor[]> {
         return transitColors;
     }
