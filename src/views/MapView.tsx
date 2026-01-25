@@ -119,6 +119,7 @@ export const MapView: React.FC<MapViewProps> = ({
             key={index}
             path={path}
             options={{
+
               strokeColor: routeColor,
               strokeOpacity: 0.8,
               strokeWeight: 5,
