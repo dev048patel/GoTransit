@@ -1,6 +1,5 @@
-/**
- * @file Stop.ts
- * @description Data definitions for Transit Stops.
+/*
+Data definitions for Transit Stops.
  */
 
 export interface Stop {
