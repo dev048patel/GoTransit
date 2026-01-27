@@ -64,11 +64,11 @@ export const useMapController = (): MapControllerOutput => {
   useEffect(() => {
     const fetchLiveBuses = async () => {
       try {
-        const baseUrl = process.env.REACT_APP_SERVER_URL || 'http://localhost:3001';
+        const baseUrl = process.env.REACT_APP_SERVER_URL || 'http://localhost:3001'; // Comment the server URL @end
         const fetchUrl = `${baseUrl}/api/live?_=${Date.now()}`;
         console.log(`[useMapController] Fetching Live Buses from:`, fetchUrl);
 
-        // Use timestamp to prevent caching as requested
+        // Use timestamp to prevent caching 
         const response = await fetch(fetchUrl);
         if (response.ok) {
           const data: BusPosition[] = await response.json();
@@ -106,6 +106,7 @@ export const useMapController = (): MapControllerOutput => {
 
     if (!feature || !feature.geometry?.coordinates) return [];
 
+    // Return coordinates of Selected Route as Lat and Lng
     return feature.geometry.coordinates.map((line: number[][]) =>
       line.map((coord: number[]) => ({
         lat: coord[1],

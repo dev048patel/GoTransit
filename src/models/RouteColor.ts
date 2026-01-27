@@ -1,6 +1,5 @@
-/**
- * @file RouteColor.ts
- * @description Data definitions for Transit Route Colors.
+/*
+Data definitions for Transit Route Colors.
  */
 
 export interface RouteColor {

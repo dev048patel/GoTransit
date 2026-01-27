@@ -1,6 +1,5 @@
-/**
- * @file Route.ts
- * @description Data definitions for Transit Routes.
+/*
+Data definitions for Transit Routes.
  */
 
 export interface Route {

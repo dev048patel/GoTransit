@@ -1,6 +1,5 @@
-/**
- * @file BusPosition.ts
- * @description Frontend model for live bus data.
+/*
+ Frontend model for live bus data.
  */
 
 export interface BusPosition {

@@ -24,9 +24,8 @@ interface MapViewProps {
   liveBuses: BusPosition[];
 }
 
-/**
- * @component MapView
- * @usage <MapView isLoaded={...} center={...} />
+/*
+ -> <MapView isLoaded={...} center={...} />
  */
 export const MapView: React.FC<MapViewProps> = ({
   isLoaded,
@@ -58,7 +57,7 @@ export const MapView: React.FC<MapViewProps> = ({
       </h1>
 
       {/* Floating Route Selector Dropdown */}
-      <div className="absolute top-24 left-4 z-10 w-80">
+      {/* <div className="absolute top-24 left-4 z-10 w-80">
         <div className="bg-white p-2 rounded-lg shadow-lg border border-gray-200">
           <label htmlFor="route-select" className="block text-xs font-bold text-gray-500 mb-1 ml-1 uppercase tracking-wide">
             Select Bus Route
@@ -84,7 +83,7 @@ export const MapView: React.FC<MapViewProps> = ({
             ))}
           </select>
         </div>
-      </div>
+      </div>  */}
 
       {/* GoogleMap Component */}
       <GoogleMap
