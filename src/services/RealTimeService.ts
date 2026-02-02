@@ -8,7 +8,7 @@ import { BusPosition } from '../models/BusPosition';
 
 //Handle interaction with the Transit Live Public API.
 export class RealTimeService {
-    private static API_URL = process.env.TRANSIT_LIVE_TRACKER_API_KEY;
+    private static API_URL = process.env.VITE_TRANSIT_LIVE_TRACKER_API_KEY;
 
     // getLiveBuses() is function which returns a promise to return an array of BusPosition objects.
     static async getLiveBuses(): Promise<BusPosition[]> {

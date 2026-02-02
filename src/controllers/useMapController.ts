@@ -35,7 +35,7 @@ export const useMapController = (): MapControllerOutput => {
 
   // 2. Initialize State / External APIs (Business Logic)
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY || "",
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "",
     libraries,
   });
 
@@ -47,7 +47,7 @@ export const useMapController = (): MapControllerOutput => {
     // Fetch Stops from Backend API
     const fetchStops = async () => {
       try {
-        const baseUrl = process.env.REACT_APP_SERVER_URL || 'http://localhost:3001';
+        const baseUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001';
         const response = await fetch(`${baseUrl}/api/stops`);
         if (!response.ok) throw new Error('Failed to fetch stops');
         const data: Stop[] = await response.json();
@@ -64,7 +64,7 @@ export const useMapController = (): MapControllerOutput => {
   useEffect(() => {
     const fetchLiveBuses = async () => {
       try {
-        const baseUrl = process.env.REACT_APP_SERVER_URL || 'http://localhost:3001'; // Comment the server URL @end
+        const baseUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001'; // Comment the server URL @end
         const fetchUrl = `${baseUrl}/api/live?_=${Date.now()}`;
         console.log(`[useMapController] Fetching Live Buses from:`, fetchUrl);
 

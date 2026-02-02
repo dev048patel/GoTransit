@@ -1,0 +1,22 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "noEmit": true,
+        "types": [
+            "node",
+            "express",
+            "cors",
+            "dotenv"
+        ]
+    },
+    "include": [
+        "src/server.ts",
+        "src/routes/**/*",
+        "src/controllers/**/*",
+        "src/models/**/*",
+        "src/repositories/**/*",
+        "src/services/**/*"
+    ]
+}
