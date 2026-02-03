@@ -43,7 +43,7 @@ export const MapModel = {
   options: {
     // styles: mapStyles,
     disableDefaultUI: true,
-    zoomControl: true,
+    zoomControl: false,
     restriction: {
       latLngBounds: {
         north: 50.53,

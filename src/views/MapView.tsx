@@ -8,6 +8,7 @@ import { Coordinates, MapOptions } from '../models/MapModel';
 import { Stop } from '../models/Stop';
 import { Route } from '../models/Route';
 import { BusPosition } from '../models/BusPosition';
+import Navbar from './Navbar';
 
 interface MapViewProps {
   isLoaded: boolean;
@@ -49,12 +50,12 @@ export const MapView: React.FC<MapViewProps> = ({
 
   return (
     <div className="relative h-screen w-full">
-      <h1 className="absolute top-0 left-0 z-10 p-4 Logo text-4xl font-bold font-sans text-blue-600 bg-white/80 w-full text-center shadow-sm backdrop-blur-sm">
+      {/* <h1 className="absolute top-0 left-0 z-10 p-4 Logo text-4xl font-bold font-sans text-blue-600 bg-white/80 w-full text-center shadow-sm backdrop-blur-sm">
         Go<span role="img" aria-label="Bus Stop">
           🚏
         </span>ransitRegina{" "}
-        
-      </h1>
+
+      </h1> */}
 
       {/* Floating Route Selector Dropdown */}
       {/* <div className="absolute top-24 left-4 z-10 w-80">
@@ -85,6 +86,10 @@ export const MapView: React.FC<MapViewProps> = ({
         </div>
       </div>  */}
 
+
+      <Navbar />
+      
+      
       {/* GoogleMap Component */}
       <GoogleMap
         mapContainerStyle={containerStyle}
@@ -112,7 +117,7 @@ export const MapView: React.FC<MapViewProps> = ({
           />
         ))}
 
-        {/* Render Route Polylines */}
+        {/* Render Route Polylines -> Comment @ END */}
         {routePaths.map((path, index) => (
           <Polyline
             key={index}
