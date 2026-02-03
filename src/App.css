@@ -1,4 +1,12 @@
-.Logo{
+/* This is commented to avoid FAQs and GOOGLE MAPS CONTROLS */
+    body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+} 
+
+
+.Logo {
     position: absolute;
     top: 1rem;
     left: 1rem;
