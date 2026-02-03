@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 export default function Navbar() {
     return (
         <nav style={{
@@ -25,7 +27,7 @@ export default function Navbar() {
                 gap: '8px'
             }}>
                 <span>🚌</span>
-                <span>Go 
+                <span>Go
                     <span role="img" aria-label="Bus Stop">🚏</span>ransit
                 </span>
             </div>
@@ -93,9 +95,11 @@ export default function Navbar() {
                     </svg>
                     Trip Planner
                 </button>
-                <div>
-                    Admin
-                </div>
+                <Link to="/admin" style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <div style={{ cursor: 'pointer', fontWeight: 500 }}>
+                        Admin
+                    </div>
+                </Link>
                 {/* Profile Icon */}
                 <div style={{
                     width: '36px',

@@ -12,8 +12,11 @@
     "@types/dotenv": "^6.1.1",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
+    "lucide-react": "^0.563.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
+    "react-router-dom": "^7.13.0",
+    "recharts": "^3.7.0",
     "use-places-autocomplete": "^4.0.1",
     "web-vitals": "^2.1.4"
   },
