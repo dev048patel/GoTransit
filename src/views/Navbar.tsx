@@ -1,4 +1,56 @@
-export default function Navbar() {
+import React, { useState } from 'react';
+import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
+
+interface NavbarProps {
+    onPlaceSelect?: (place: any) => void;
+}
+
+export default function Navbar({ onPlaceSelect }: NavbarProps = {}) {
+    const [showResults, setShowResults] = useState(false);
+
+    // Use Google Places Autocomplete hook
+    const {
+        ready,
+        value,
+        suggestions: { status, data },
+        setValue,
+        clearSuggestions,
+    } = usePlacesAutocomplete({
+        requestOptions: {
+            location: { lat: () => 50.4452 , lng: () => -104.6189 }, // Regina, Saskatchewan
+            radius: 50 * 1000, // 50km radius
+        },
+        debounce: 300, // 300ms debounce
+    });
+
+    const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setValue(e.target.value);
+        setShowResults(true);
+    };
+
+    const handleSelect = async (description: string, placeId: string) => {
+        setValue(description, false);
+        clearSuggestions();
+        setShowResults(false);
+
+        try {
+            // Get place details
+            const results = await getGeocode({ address: description });
+            const { lat, lng } = await getLatLng(results[0]);
+
+            // Call the onPlaceSelect callback if provided
+            if (onPlaceSelect) {
+                onPlaceSelect({
+                    id: placeId,
+                    displayName: description,
+                    location: { lat, lng },
+                });
+            }
+        } catch (error) {
+            console.error('Error selecting place:', error);
+        }
+    };
+
     return (
         <nav style={{
             position: 'absolute',
@@ -13,7 +65,8 @@ export default function Navbar() {
             alignItems: 'center',
             justifyContent: 'space-between',
             padding: '0 20px',
-            maxWidth: '100vw'
+            maxWidth: '100vw',
+            overflow: 'visible'
         }}>
             {/* Logo/Title */}
             <div style={{
@@ -25,12 +78,12 @@ export default function Navbar() {
                 gap: '8px'
             }}>
                 <span>🚌</span>
-                <span>Go 
+                <span>Go
                     <span role="img" aria-label="Bus Stop">🚏</span>ransit
                 </span>
             </div>
 
-            {/* Center - Search */}
+            {/* Center - Search with Autocomplete */}
             <div style={{
                 flex: 1,
                 maxWidth: '500px',
@@ -52,6 +105,10 @@ export default function Navbar() {
                     <input
                         type="text"
                         placeholder="Search for places..."
+                        value={value}
+                        onChange={handleInput}
+                        onFocus={() => data.length > 0 && setShowResults(true)}
+                        disabled={!ready}
                         style={{
                             border: 'none',
                             backgroundColor: 'transparent',
@@ -61,7 +118,65 @@ export default function Navbar() {
                             color: '#202124'
                         }}
                     />
+                    {!ready && (
+                        <div style={{
+                            width: '16px',
+                            height: '16px',
+                            border: '2px solid #f1f3f4',
+                            borderTop: '2px solid #1a73e8',
+                            borderRadius: '50%',
+                            animation: 'spin 1s linear infinite'
+                        }} />
+                    )}
                 </div>
+
+                {/* Autocomplete Results Dropdown */}
+                {showResults && status === 'OK' && data.length > 0 && (
+                    <div style={{
+                        position: 'absolute',
+                        top: '100%',
+                        left: 0,
+                        right: 0,
+                        marginTop: '8px',
+                        backgroundColor: 'white',
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                        maxHeight: '300px',
+                        overflowY: 'auto',
+                        zIndex: 1002
+                    }}>
+                        {data.map((suggestion) => {
+                            const {
+                                place_id,
+                                structured_formatting: { main_text, secondary_text },
+                            } = suggestion;
+
+                            return (
+                                <div
+                                    key={place_id}
+                                    onClick={() => handleSelect(suggestion.description, place_id)}
+                                    style={{
+                                        padding: '12px 16px',
+                                        cursor: 'pointer',
+                                        borderBottom: '1px solid #f1f3f4',
+                                        transition: 'background-color 0.2s'
+                                    }}
+                                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f8f9fa'}
+                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
+                                >
+                                    <div style={{ fontWeight: '500', color: '#202124', fontSize: '14px' }}>
+                                        {main_text}
+                                    </div>
+                                    {secondary_text && (
+                                        <div style={{ fontSize: '12px', color: '#5f6368', marginTop: '4px' }}>
+                                            {secondary_text}
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
             </div>
 
             {/* Right side - Actions */}
@@ -116,6 +231,14 @@ export default function Navbar() {
                     </svg>
                 </div>
             </div>
+
+            {/* CSS for loading spinner animation */}
+            <style>{`
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+            `}</style>
         </nav>
-    )
-};
+    );
+}
