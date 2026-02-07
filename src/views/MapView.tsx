@@ -23,6 +23,8 @@ interface MapViewProps {
   setSelectedRoute: (routeNum: string | null) => void;
   routePaths: { lat: number; lng: number }[][];
   liveBuses: BusPosition[];
+  handlePlaceSelect: (place: any) => void;
+  selectedPlaceMarker: { location: Coordinates; name: string } | null;
 }
 
 /*
@@ -40,14 +42,16 @@ export const MapView: React.FC<MapViewProps> = ({
   selectedRoute,
   setSelectedRoute,
   routePaths,
-  liveBuses
+  liveBuses,
+  handlePlaceSelect,
+  selectedPlaceMarker
 }) => {
   if (loadError) return <div>Error Loading maps</div>;
   if (!isLoaded) return <div>Loading Maps...</div>;
 
   const currentRoute = routes.find(r => r.ROUTE_NUM === selectedRoute);
   const routeColor = currentRoute?.ROUTE_COLO ? `#${currentRoute.ROUTE_COLO}` : '#FF0000';
-
+  
   return (
     <div className="relative h-screen w-full">
       {/* <h1 className="absolute top-0 left-0 z-10 p-4 Logo text-4xl font-bold font-sans text-blue-600 bg-white/80 w-full text-center shadow-sm backdrop-blur-sm">
@@ -87,11 +91,12 @@ export const MapView: React.FC<MapViewProps> = ({
       </div>  */}
 
 
-      <Navbar />
-      
-      
+      <Navbar onPlaceSelect={handlePlaceSelect} />
+
+
       {/* GoogleMap Component */}
       <GoogleMap
+        key={`map-${center.lat}-${center.lng}`}
         mapContainerStyle={containerStyle}
         zoom={zoom}
         center={center}
@@ -130,6 +135,15 @@ export const MapView: React.FC<MapViewProps> = ({
             }}
           />
         ))}
+
+        {/* Render Selected Place Marker */}
+        {selectedPlaceMarker && (
+          <Marker
+            position={selectedPlaceMarker.location}
+            title={selectedPlaceMarker.name}
+            zIndex={200}
+          />
+        )}
 
         {/* Render Live Buses */}
         {liveBuses.map((bus) => (

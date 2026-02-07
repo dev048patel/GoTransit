@@ -25,7 +25,9 @@ export default function App() {
     selectedRoute,
     setSelectedRoute,
     routePaths,
-    liveBuses
+    liveBuses,
+    handlePlaceSelect,
+    selectedPlaceMarker
   } = useMapController();
 
   // View: Renders the UI with data from the controller
@@ -43,6 +45,8 @@ export default function App() {
       setSelectedRoute={setSelectedRoute}
       routePaths={routePaths}
       liveBuses={liveBuses}
+      handlePlaceSelect={handlePlaceSelect}
+      selectedPlaceMarker={selectedPlaceMarker}
     />
   );
 }

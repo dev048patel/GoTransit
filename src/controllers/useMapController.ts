@@ -27,6 +27,8 @@ interface MapControllerOutput {
   setSelectedRoute: (routeNum: string | null) => void;
   routePaths: { lat: number; lng: number }[][];
   liveBuses: BusPosition[];
+  handlePlaceSelect: (place: any) => void;
+  selectedPlaceMarker: { location: Coordinates; name: string } | null;
 }
 
 export const useMapController = (): MapControllerOutput => {
@@ -42,6 +44,9 @@ export const useMapController = (): MapControllerOutput => {
   const [stops, setStops] = useState<Stop[]>([]);
   const [selectedRoute, setSelectedRoute] = useState<string | null>(null);
   const [liveBuses, setLiveBuses] = useState<BusPosition[]>([]);
+  const [center, setCenter] = useState<Coordinates>(MapModel.center);
+  const [zoom, setZoom] = useState<number>(MapModel.defaultZoom);
+  const [selectedPlaceMarker, setSelectedPlaceMarker] = useState<{ location: Coordinates; name: string } | null>(null);
 
   useEffect(() => {
     // Fetch Stops from Backend API
@@ -115,19 +120,33 @@ export const useMapController = (): MapControllerOutput => {
     );
   }, [selectedRoute]);
 
+  // Handle place selection from autocomplete
+  const handlePlaceSelect = (place: any) => {
+    if (place.location) {
+      setCenter(place.location);
+      setZoom(15); // Zoom in when a place is selected
+      setSelectedPlaceMarker({
+        location: place.location,
+        name: place.displayName || 'Selected Place'
+      });
+    }
+  };
+
   // 3. Return prepared data for the View
   return {
     isLoaded,
     loadError,
-    center: MapModel.center,
+    center,
     options: MapModel.options,
     containerStyle: MapModel.containerStyle,
-    zoom: MapModel.defaultZoom,
+    zoom,
     stops,
     routes: routesWithColors,
     selectedRoute,
     setSelectedRoute,
     routePaths,
     liveBuses,
+    handlePlaceSelect,
+    selectedPlaceMarker
   };
 };
