@@ -19,6 +19,7 @@ import UserManager from './views/admin/UserManager';
 import NotificationCenter from './views/admin/NotificationCenter';
 import SystemHealth from './views/admin/SystemHealth';
 import Reports from './views/admin/Reports';
+import LandingPage from './views/landing/LandingPage';
 
 export default function App() {
   // Controller: Handles logic and state
@@ -41,6 +42,10 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Landing Page */}
+        <Route path="/landing" element={<LandingPage />} />
+
+        {/* Map View */}
         <Route path="/" element={
           <MapView
             isLoaded={isLoaded}
