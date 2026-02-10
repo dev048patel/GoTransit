@@ -5,6 +5,7 @@ interface NavbarProps {
     onPlaceSelect?: (place: any) => void;
 }
 
+// Function is for giving autocomplete suggestions for places
 export default function Navbar({ onPlaceSelect }: NavbarProps = {}) {
     const [showResults, setShowResults] = useState(false);
 
@@ -20,14 +21,16 @@ export default function Navbar({ onPlaceSelect }: NavbarProps = {}) {
             location: { lat: () => 50.4452 , lng: () => -104.6189 }, // Regina, Saskatchewan
             radius: 50 * 1000, // 50km radius
         },
-        debounce: 300, // 300ms debounce
+        debounce: 300, // 300ms debounce built-in
     });
 
+    // Function is for handling input changes
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         setValue(e.target.value);
         setShowResults(true);
     };
 
+    // function is for handling place selection
     const handleSelect = async (description: string, placeId: string) => {
         setValue(description, false);
         clearSuggestions();
@@ -36,12 +39,12 @@ export default function Navbar({ onPlaceSelect }: NavbarProps = {}) {
         try {
             // Get place details
             const results = await getGeocode({ address: description });
-            const { lat, lng } = await getLatLng(results[0]);
+            const { lat, lng } = await getLatLng(results[0]); // await has no effect on this line 
 
             // Call the onPlaceSelect callback if provided
-            if (onPlaceSelect) {
+            if (onPlaceSelect) { // if onPlaceSelect is provided
                 onPlaceSelect({
-                    id: placeId,
+                    id: placeId, 
                     displayName: description,
                     location: { lat, lng },
                 });
@@ -106,7 +109,7 @@ export default function Navbar({ onPlaceSelect }: NavbarProps = {}) {
                         type="text"
                         placeholder="Search for places..."
                         value={value}
-                        onChange={handleInput}
+                        onChange={handleInput} // calling handleInput on change
                         onFocus={() => data.length > 0 && setShowResults(true)}
                         disabled={!ready}
                         style={{
@@ -145,7 +148,7 @@ export default function Navbar({ onPlaceSelect }: NavbarProps = {}) {
                         overflowY: 'auto',
                         zIndex: 1002
                     }}>
-                        {data.map((suggestion) => {
+                        {data.map((suggestion) => {  // combobox options for suggestions
                             const {
                                 place_id,
                                 structured_formatting: { main_text, secondary_text },
@@ -154,7 +157,7 @@ export default function Navbar({ onPlaceSelect }: NavbarProps = {}) {
                             return (
                                 <div
                                     key={place_id}
-                                    onClick={() => handleSelect(suggestion.description, place_id)}
+                                    onClick={() => handleSelect(suggestion.description, place_id)} // call handleSelect with the selected place for updating the place state
                                     style={{
                                         padding: '12px 16px',
                                         cursor: 'pointer',
@@ -164,11 +167,11 @@ export default function Navbar({ onPlaceSelect }: NavbarProps = {}) {
                                     onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f8f9fa'}
                                     onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
                                 >
-                                    <div style={{ fontWeight: '500', color: '#202124', fontSize: '14px' }}>
-                                        {main_text}
+                                    <div style={{ fontWeight: '500', color: '#202124', fontSize: '14px' }}> {/*Main address*/}
+                                        {main_text} 
                                     </div>
                                     {secondary_text && (
-                                        <div style={{ fontSize: '12px', color: '#5f6368', marginTop: '4px' }}>
+                                        <div style={{ fontSize: '12px', color: '#5f6368', marginTop: '4px' }}> {/* other detials like street name */}
                                             {secondary_text}
                                         </div>
                                     )}
