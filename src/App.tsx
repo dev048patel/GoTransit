@@ -17,9 +17,11 @@ export default function App() {
     isLoaded,
     loadError,
     center,
+    setCenter,
     options,
     containerStyle,
     zoom,
+    setZoom,
     stops,
     routes,
     selectedRoute,
@@ -27,7 +29,8 @@ export default function App() {
     routePaths,
     liveBuses,
     handlePlaceSelect,
-    selectedPlaceMarker
+    selectedPlaceMarker,
+    setSelectedPlaceMarker
   } = useMapController();
 
   // View: Renders the UI with data from the controller
@@ -36,9 +39,11 @@ export default function App() {
       isLoaded={isLoaded}
       loadError={loadError}
       center={center}
+      setCenter={setCenter}
       options={options}
       containerStyle={containerStyle}
       zoom={zoom}
+      setZoom={setZoom}
       stops={stops}
       routes={routes}
       selectedRoute={selectedRoute}
@@ -47,6 +52,7 @@ export default function App() {
       liveBuses={liveBuses}
       handlePlaceSelect={handlePlaceSelect}
       selectedPlaceMarker={selectedPlaceMarker}
+      setSelectedPlaceMarker={setSelectedPlaceMarker}
     />
   );
 }

@@ -18,9 +18,11 @@ interface MapControllerOutput {
   isLoaded: boolean;
   loadError: Error | undefined;
   center: Coordinates;
+  setCenter: (c: Coordinates) => void;
   options: MapOptions;
   containerStyle: React.CSSProperties;
   zoom: number;
+  setZoom: (z: number) => void;
   stops: Stop[];
   routes: Route[];
   selectedRoute: string | null;
@@ -29,6 +31,7 @@ interface MapControllerOutput {
   liveBuses: BusPosition[];
   handlePlaceSelect: (place: any) => void;
   selectedPlaceMarker: { location: Coordinates; name: string } | null;
+  setSelectedPlaceMarker: (marker: { location: Coordinates; name: string } | null) => void;
 }
 
 export const useMapController = (): MapControllerOutput => {
@@ -137,9 +140,11 @@ export const useMapController = (): MapControllerOutput => {
     isLoaded,
     loadError,
     center,
+    setCenter,
     options: MapModel.options,
     containerStyle: MapModel.containerStyle,
     zoom,
+    setZoom,
     stops,
     routes: routesWithColors,
     selectedRoute,
@@ -147,6 +152,7 @@ export const useMapController = (): MapControllerOutput => {
     routePaths,
     liveBuses,
     handlePlaceSelect,
-    selectedPlaceMarker
+    selectedPlaceMarker,
+    setSelectedPlaceMarker
   };
 };

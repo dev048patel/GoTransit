@@ -3,10 +3,11 @@ import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocom
 
 interface NavbarProps {
     onPlaceSelect?: (place: any) => void;
+    onTripPlannerClick?: () => void;
 }
 
 // Function is for giving autocomplete suggestions for places
-export default function Navbar({ onPlaceSelect }: NavbarProps = {}) {
+export default function Navbar({ onPlaceSelect, onTripPlannerClick }: NavbarProps = {}) {
     const [showResults, setShowResults] = useState(false);
 
     // Use Google Places Autocomplete hook
@@ -18,7 +19,7 @@ export default function Navbar({ onPlaceSelect }: NavbarProps = {}) {
         clearSuggestions,
     } = usePlacesAutocomplete({
         requestOptions: {
-            location: { lat: () => 50.4452 , lng: () => -104.6189 }, // Regina, Saskatchewan
+            location: new google.maps.LatLng(50.4452, -104.6189), // Regina, Saskatchewan
             radius: 50 * 1000, // 50km radius
         },
         debounce: 300, // 300ms debounce built-in
@@ -44,7 +45,7 @@ export default function Navbar({ onPlaceSelect }: NavbarProps = {}) {
             // Call the onPlaceSelect callback if provided
             if (onPlaceSelect) { // if onPlaceSelect is provided
                 onPlaceSelect({
-                    id: placeId, 
+                    id: placeId,
                     displayName: description,
                     location: { lat, lng },
                 });
@@ -168,7 +169,7 @@ export default function Navbar({ onPlaceSelect }: NavbarProps = {}) {
                                     onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
                                 >
                                     <div style={{ fontWeight: '500', color: '#202124', fontSize: '14px' }}> {/*Main address*/}
-                                        {main_text} 
+                                        {main_text}
                                     </div>
                                     {secondary_text && (
                                         <div style={{ fontSize: '12px', color: '#5f6368', marginTop: '4px' }}> {/* other detials like street name */}
@@ -189,27 +190,29 @@ export default function Navbar({ onPlaceSelect }: NavbarProps = {}) {
                 gap: '16px'
             }}>
                 {/* Trip Planner Button */}
-                <button style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    padding: '8px 16px',
-                    backgroundColor: '#1a73e8',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '20px',
-                    fontSize: '14px',
-                    fontWeight: '500',
-                    cursor: 'pointer',
-                    transition: 'background-color 0.2s'
-                }}
+                <button
+                    onClick={onTripPlannerClick}
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        padding: '8px 16px',
+                        backgroundColor: '#1a73e8',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '20px',
+                        fontSize: '14px',
+                        fontWeight: '500',
+                        cursor: 'pointer',
+                        transition: 'background-color 0.2s'
+                    }}
                     onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1557b0'}
                     onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1a73e8'}
                 >
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
                     </svg>
-                    Trip Planner
+                    Future Trip Planner
                 </button>
                 <div>
                     Admin
