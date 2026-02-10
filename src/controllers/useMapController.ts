@@ -121,11 +121,11 @@ export const useMapController = (): MapControllerOutput => {
   }, [selectedRoute]);
 
   // Handle place selection from autocomplete
-  const handlePlaceSelect = (place: any) => {
+  const handlePlaceSelect = (place: any) => {  // for updating the map center
     if (place.location) {
       setCenter(place.location);
       setZoom(15); // Zoom in when a place is selected
-      setSelectedPlaceMarker({
+      setSelectedPlaceMarker({ // set selected place marker
         location: place.location,
         name: place.displayName || 'Selected Place'
       });
