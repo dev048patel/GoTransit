@@ -8,8 +8,12 @@ export interface RouteSegment {
     routeName: string;
     fromStop: string;
     fromStopId: string;
+    fromStopLat: number;
+    fromStopLng: number;
     toStop: string;
     toStopId: string;
+    toStopLat: number;
+    toStopLng: number;
     estimatedTime: number; // minutes
 }
 
@@ -20,6 +24,10 @@ export interface TripOption {
     walkingDistance: number; // meters (walking from origin to first stop + last stop to destination)
     originStop: string; // Name of first stop
     destinationStop: string; // Name of last stop
+    originLat: number;
+    originLng: number;
+    destLat: number;
+    destLng: number;
 }
 
 export interface RouteSuggestionRequest {
