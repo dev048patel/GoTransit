@@ -47,7 +47,7 @@ export const useMapController = (): MapControllerOutput => {
     // Fetch Stops from Backend API
     const fetchStops = async () => {
       try {
-        const baseUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001';
+        const baseUrl = import.meta.env.VITE_SERVER_URL;
         const response = await fetch(`${baseUrl}/api/stops`);
         if (!response.ok) throw new Error('Failed to fetch stops');
         const data: Stop[] = await response.json();
@@ -64,7 +64,7 @@ export const useMapController = (): MapControllerOutput => {
   useEffect(() => {
     const fetchLiveBuses = async () => {
       try {
-        const baseUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001'; // Comment the server URL @end
+        const baseUrl = import.meta.env.VITE_SERVER_URL;
         const fetchUrl = `${baseUrl}/api/live?_=${Date.now()}`;
         console.log(`[useMapController] Fetching Live Buses from:`, fetchUrl);
 
