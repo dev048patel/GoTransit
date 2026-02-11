@@ -12,19 +12,19 @@ import cors from 'cors'; // Cross Origin Resource Sharing : Allow cross-origin r
 import transitRoutes from './routes/transit.routes';
 
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3001; // Railway assigns PORT dynamically
 
 // Allow only specific origins to access the backend
 const allowedOrigins = [
-  'https://www.gotransitregina.ca',
-  'https://gotransitregina.ca',
-  'http://localhost:5173' // Keep this for local development
+    'https://www.gotransitregina.ca',
+    'https://gotransitregina.ca',
+    'http://localhost:5173' // Keep this for local development
 ];
 
 app.use(cors({
-  origin: allowedOrigins,
-  methods: ['GET', 'POST'],
-  credentials: true
+    origin: allowedOrigins,
+    methods: ['GET', 'POST'],
+    credentials: true
 }));
 
 
