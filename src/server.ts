@@ -14,8 +14,22 @@ import transitRoutes from './routes/transit.routes';
 const app = express();
 const port = 3001;
 
+// Allow only specific origins to access the backend
+const allowedOrigins = [
+  'https://www.gotransitregina.ca',
+  'https://gotransitregina.ca',
+  'http://localhost:5173' // Keep this for local development
+];
+
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ['GET', 'POST'],
+  credentials: true
+}));
+
+
 // Middleware
-app.use(cors()); // Allow cross-origin requests (Frontend -> Backend)
+
 app.use(express.json()); // Parse incoming JSON request bodies
 
 // Mount Routes
