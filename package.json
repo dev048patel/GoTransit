@@ -21,11 +21,14 @@
     "react-intersection-observer": "^10.0.2",
     "react-router-dom": "^7.13.0",
     "recharts": "^3.7.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
     "use-places-autocomplete": "^4.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "vite",
+    "start:server": "tsx src/server.ts",
     "build": "vite build",
     "serve": "vite preview",
     "dev:server": "TS_NODE_PROJECT=tsconfig.server.json nodemon src/server.ts"
@@ -61,7 +64,6 @@
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3",
     "vite": "^7.3.1"
   }
 }
