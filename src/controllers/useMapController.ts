@@ -66,7 +66,6 @@ export const useMapController = (): MapControllerOutput => {
       try {
         const baseUrl = import.meta.env.VITE_SERVER_URL;
         const fetchUrl = `${baseUrl}/api/live?_=${Date.now()}`;
-        console.log(`[useMapController] Fetching Live Buses from:`, fetchUrl);
 
         // Use timestamp to prevent caching 
         const response = await fetch(fetchUrl);
@@ -80,7 +79,7 @@ export const useMapController = (): MapControllerOutput => {
     };
 
     fetchLiveBuses();
-    const interval = setInterval(fetchLiveBuses, 1500); // Poll every 1.5 seconds
+    const interval = setInterval(fetchLiveBuses, 10000); // Poll every 10 seconds
 
     return () => clearInterval(interval);
   }, []);

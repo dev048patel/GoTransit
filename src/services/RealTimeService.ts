@@ -8,7 +8,7 @@ import { BusPosition } from '../models/BusPosition';
 
 //Handle interaction with the Transit Live Public API.
 export class RealTimeService {
-    private static API_URL = process.env.VITE_TRANSIT_LIVE_TRACKER_API_KEY;
+    private static API_URL = process.env.TRANSIT_LIVE_API_URL;
 
     // getLiveBuses() is function which returns a promise to return an array of BusPosition objects.
     static async getLiveBuses(): Promise<BusPosition[]> {
@@ -16,7 +16,6 @@ export class RealTimeService {
             // Append timestamp to prevent caching.
             const urlWithTime = `${this.API_URL}?_=${Date.now()}`;
 
-            console.log(`Fetching live transit data from: ${urlWithTime}`); // We will comment @ end.
 
             const response = await fetch(urlWithTime); // making HTTP GET req to API(External) and await for response.
 
