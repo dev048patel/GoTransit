@@ -1,6 +1,6 @@
 /*
-This is the Buisness/Backend Logic Layer. "Decision making" 
-1. Recieve req from controller
+This is the Business/Backend Logic Layer. "Decision making" 
+1. Receive req from controller
 2. Call Repository to fetch data
 3. Applies Logic
 4. Returns data to controller

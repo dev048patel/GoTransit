@@ -21,8 +21,12 @@ import SystemHealth from './views/admin/SystemHealth';
 import Reports from './views/admin/Reports';
 import LandingPage from './views/landing/LandingPage';
 
-export default function App() {
-  // Controller: Handles logic and state
+/**
+ * MapPage — Wrapper that scopes the map controller to this route only.
+ * The controller (Google Maps loading, API polling, data fetching)
+ * now only runs when the user is on the "/" route.
+ */
+function MapPage() {
   const {
     isLoaded,
     loadError,
@@ -38,30 +42,33 @@ export default function App() {
     liveBuses
   } = useMapController();
 
-  // View: Renders the UI with data from the controller
+  return (
+    <MapView
+      isLoaded={isLoaded}
+      loadError={loadError}
+      center={center}
+      options={options}
+      containerStyle={containerStyle}
+      zoom={zoom}
+      stops={stops}
+      routes={routes}
+      selectedRoute={selectedRoute}
+      setSelectedRoute={setSelectedRoute}
+      routePaths={routePaths}
+      liveBuses={liveBuses}
+    />
+  );
+}
+
+export default function App() {
   return (
     <BrowserRouter>
       <Routes>
         {/* Landing Page */}
         <Route path="/landing" element={<LandingPage />} />
 
-        {/* Map View */}
-        <Route path="/" element={
-          <MapView
-            isLoaded={isLoaded}
-            loadError={loadError}
-            center={center}
-            options={options}
-            containerStyle={containerStyle}
-            zoom={zoom}
-            stops={stops}
-            routes={routes}
-            selectedRoute={selectedRoute}
-            setSelectedRoute={setSelectedRoute}
-            routePaths={routePaths}
-            liveBuses={liveBuses}
-          />
-        } />
+        {/* Map View — Controller only runs on this route */}
+        <Route path="/" element={<MapPage />} />
 
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminLayout />}>
@@ -77,3 +84,4 @@ export default function App() {
     </BrowserRouter>
   );
 }
+
