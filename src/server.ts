@@ -41,11 +41,9 @@ app.get('/api/status', (req, res) => {
     res.json({ message: 'Backend is running!', status: 'OK' });
 });
 
-// Start Server strictly if this file is executed directly (not imported)
-if (require.main === module) {
-    app.listen(port, '0.0.0.0', () => {
-        console.log(`Server running at http://0.0.0.0:${port}`);
-    });
-}
+// Start Server
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Server running at http://0.0.0.0:${port}`);
+});
 
 export default app;
