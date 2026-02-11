@@ -12,7 +12,7 @@ import cors from 'cors'; // Cross Origin Resource Sharing : Allow cross-origin r
 import transitRoutes from './routes/transit.routes';
 
 const app = express();
-const port = process.env.PORT || 3001; // Railway assigns PORT dynamically
+const port = Number(process.env.PORT) || 3001; // Railway assigns PORT dynamically
 
 // Allow only specific origins to access the backend
 const allowedOrigins = [
@@ -43,8 +43,8 @@ app.get('/api/status', (req, res) => {
 
 // Start Server strictly if this file is executed directly (not imported)
 if (require.main === module) {
-    app.listen(port, () => {
-        console.log(`Server running at http://localhost:${port}`);
+    app.listen(port, '0.0.0.0', () => {
+        console.log(`Server running at http://0.0.0.0:${port}`);
     });
 }
 

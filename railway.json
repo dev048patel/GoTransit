@@ -6,7 +6,6 @@
     },
     "deploy": {
         "startCommand": "npx tsx src/server.ts",
-        "healthcheckPath": "/api/status",
         "restartPolicyType": "ON_FAILURE",
         "restartPolicyMaxRetries": 10
     }
