@@ -5,7 +5,7 @@
         "buildCommand": "npm install"
     },
     "deploy": {
-        "startCommand": "npx tsx src/server.ts",
+        "startCommand": "npm run start:server",
         "restartPolicyType": "ON_FAILURE",
         "restartPolicyMaxRetries": 10
     }
