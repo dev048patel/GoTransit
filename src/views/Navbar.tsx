@@ -95,11 +95,7 @@ export default function Navbar() {
                     </svg>
                     Trip Planner
                 </button>
-                <Link to="/admin" style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <div style={{ cursor: 'pointer', fontWeight: 500 }}>
-                        Admin
-                    </div>
-                </Link>
+                {/* Admin link hidden from public users — access via /admin URL directly */}
                 {/* Profile Icon */}
                 <div style={{
                     width: '36px',
