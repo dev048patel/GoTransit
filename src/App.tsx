@@ -21,6 +21,7 @@ import SystemHealth from './views/admin/SystemHealth';
 import Reports from './views/admin/Reports';
 import VisitorAnalytics from './views/admin/VisitorAnalytics';
 import LandingPage from './views/landing/LandingPage';
+import { useAnalyticsBeacon } from './hooks/useAnalyticsBeacon';
 
 /**
  * MapPage — Wrapper that scopes the map controller to this route only.
@@ -66,6 +67,9 @@ function MapPage() {
 }
 
 export default function App() {
+  // Send analytics beacon once on site load, heartbeat every 60s
+  useAnalyticsBeacon();
+
   return (
     <BrowserRouter>
       <Routes>

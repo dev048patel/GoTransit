@@ -1,42 +1,16 @@
 /*
-  Visitor Tracking Middleware
-  Logs every incoming request with:
-  - IP address
-  - User agent (browser, OS, device)
-  - Requested path
-  - Timestamp
-  - HTTP method
-
-  Data is stored in-memory (resets when server restarts).
-  For production, this would be replaced with a database.
+  Visitor Session Store
+  Tracks unique visitors using a beacon + heartbeat model.
+  
+  - Frontend sends POST /beacon once on page load → creates a session
+  - Frontend sends POST /heartbeat every 60s → keeps session alive
+  - Session expires after 30 min of no heartbeat → visitor is "inactive"
+  
+  One person on one device = 1 session (no inflation from API polling).
+  Same person on different device = 2 sessions.
 */
 
-import { Request, Response, NextFunction } from 'express';
-
-export interface VisitorRecord {
-    ip: string;
-    userAgent: string;
-    browser: string;
-    os: string;
-    device: string;
-    path: string;
-    method: string;
-    timestamp: string;
-    country?: string;
-}
-
-// In-memory store (persists until server restart)
-const visitors: VisitorRecord[] = [];
-const MAX_RECORDS = 1000; // Keep last 1000 visits to prevent memory issues
-
-/*
-  Parses the User-Agent string to extract browser, OS, and device type.
-*/
-/*
-  Lookup tables for User-Agent parsing.
-  Each entry: [pattern to match, label to assign].
-  Order matters — first match wins (e.g., Edge before Chrome).
-*/
+// ─── UA Lookup Tables ──────────────────────────────
 const BROWSER_CODES: [string, string][] = [
     ['Firefox/', 'Firefox'],
     ['Edg/', 'Edge'],
@@ -74,101 +48,157 @@ function parseUserAgent(ua: string): { browser: string; os: string; device: stri
     const browser = BROWSER_CODES.find(([code]) => ua.includes(code))?.[1] ?? 'Unknown';
     const os = OS_CODES.find(([code]) => ua.includes(code))?.[1] ?? 'Unknown';
     const device = DEVICE_CODES.find(([code]) => ua.includes(code))?.[1] ?? 'Desktop';
-
     return { browser, os, device };
 }
 
+// ─── Session Types ─────────────────────────────────
+export interface VisitorSession {
+    sessionId: string;         // Unique fingerprint (IP + UA)
+    ip: string;
+    browser: string;
+    os: string;
+    device: string;
+    firstSeen: string;         // When they first opened the site
+    lastSeen: string;          // Last heartbeat received
+    status: 'active' | 'inactive';
+    pagesVisited: string[];    // Pages they navigated to
+    pageViews: number;         // Total navigation events
+}
+
+// ─── Storage ───────────────────────────────────────
+const sessions = new Map<string, VisitorSession>();
+const SESSION_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
+
+function createFingerprint(ip: string, userAgent: string): string {
+    return `${ip}::${userAgent}`;
+}
+
+// ─── Public API ────────────────────────────────────
+
 /*
-  Express middleware that logs each visitor request.
+  Called when the frontend sends a beacon (page load).
+  Creates a new session or reactivates an existing one.
 */
-export function visitorTracker(req: Request, res: Response, next: NextFunction): void {
-    // Get the real IP (Railway/Vercel often set x-forwarded-for)
-    const forwarded = req.headers['x-forwarded-for'];
-    const ip = typeof forwarded === 'string'
-        ? forwarded.split(',')[0].trim()
-        : req.socket.remoteAddress || 'Unknown';
-
-    const userAgent = req.headers['user-agent'] || 'Unknown';
+export function registerSession(ip: string, userAgent: string, page?: string): string {
+    const sessionId = createFingerprint(ip, userAgent);
     const { browser, os, device } = parseUserAgent(userAgent);
+    const now = new Date().toISOString();
 
-    const record: VisitorRecord = {
-        ip,
-        userAgent,
-        browser,
-        os,
-        device,
-        path: req.path,
-        method: req.method,
-        timestamp: new Date().toISOString(),
-    };
-
-    visitors.push(record);
-
-    // Trim to prevent unbounded memory growth
-    if (visitors.length > MAX_RECORDS) {
-        visitors.splice(0, visitors.length - MAX_RECORDS);
+    const existing = sessions.get(sessionId);
+    if (existing) {
+        // User returned — reactivate session
+        existing.lastSeen = now;
+        existing.status = 'active';
+        existing.pageViews += 1;
+        if (page && !existing.pagesVisited.includes(page)) {
+            existing.pagesVisited.push(page);
+        }
+    } else {
+        // Brand new visitor
+        sessions.set(sessionId, {
+            sessionId,
+            ip,
+            browser,
+            os,
+            device,
+            firstSeen: now,
+            lastSeen: now,
+            status: 'active',
+            pagesVisited: page ? [page] : ['/'],
+            pageViews: 1,
+        });
     }
 
-    next();
+    return sessionId;
 }
 
 /*
-  Returns all visitor records (newest first).
+  Called every 60s by the frontend heartbeat.
+  Keeps the session alive and optionally updates the current page.
 */
-export function getVisitorRecords(): VisitorRecord[] {
-    return [...visitors].reverse();
+export function heartbeat(ip: string, userAgent: string, page?: string): boolean {
+    const sessionId = createFingerprint(ip, userAgent);
+    const session = sessions.get(sessionId);
+
+    if (!session) {
+        // Session doesn't exist yet — create it via beacon
+        registerSession(ip, userAgent, page);
+        return true;
+    }
+
+    session.lastSeen = new Date().toISOString();
+    session.status = 'active';
+    if (page && !session.pagesVisited.includes(page)) {
+        session.pagesVisited.push(page);
+    }
+
+    return true;
+}
+
+/*
+  Marks sessions as inactive if no heartbeat received in 30 minutes.
+*/
+function expireStaleSessions(): void {
+    const now = Date.now();
+    sessions.forEach((session) => {
+        if (now - new Date(session.lastSeen).getTime() > SESSION_TIMEOUT_MS) {
+            session.status = 'inactive';
+        }
+    });
+}
+
+/*
+  Returns all visitor sessions (newest first by last activity).
+*/
+export function getVisitorRecords(): VisitorSession[] {
+    expireStaleSessions();
+    return Array.from(sessions.values())
+        .sort((a, b) => new Date(b.lastSeen).getTime() - new Date(a.lastSeen).getTime());
 }
 
 /*
   Returns aggregated analytics summary.
 */
 export function getAnalyticsSummary() {
+    expireStaleSessions();
+
     const now = new Date();
     const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-    const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
 
-    const recentVisitors = visitors.filter(v => new Date(v.timestamp) > oneDayAgo);
-    const lastHourVisitors = visitors.filter(v => new Date(v.timestamp) > oneHourAgo);
+    const allSessions = Array.from(sessions.values());
 
-    // Unique IPs
-    const uniqueIPs = new Set(recentVisitors.map(v => v.ip));
-    const uniqueIPsLastHour = new Set(lastHourVisitors.map(v => v.ip));
+    // Active = has status 'active' (heartbeat within last 30 min)
+    const activeSessions = allSessions.filter(s => s.status === 'active');
+    // Active in last 24h (regardless of current status)
+    const active24h = allSessions.filter(s => new Date(s.lastSeen) > oneDayAgo);
 
-    // Browser breakdown
+    // Browser breakdown (per unique visitor)
     const browsers: Record<string, number> = {};
-    recentVisitors.forEach(v => {
-        browsers[v.browser] = (browsers[v.browser] || 0) + 1;
-    });
+    active24h.forEach(s => { browsers[s.browser] = (browsers[s.browser] || 0) + 1; });
 
     // OS breakdown
     const operatingSystems: Record<string, number> = {};
-    recentVisitors.forEach(v => {
-        operatingSystems[v.os] = (operatingSystems[v.os] || 0) + 1;
-    });
+    active24h.forEach(s => { operatingSystems[s.os] = (operatingSystems[s.os] || 0) + 1; });
 
     // Device breakdown
     const devices: Record<string, number> = {};
-    recentVisitors.forEach(v => {
-        devices[v.device] = (devices[v.device] || 0) + 1;
-    });
+    active24h.forEach(s => { devices[s.device] = (devices[s.device] || 0) + 1; });
 
-    // Most visited paths
+    // Top pages
     const paths: Record<string, number> = {};
-    recentVisitors.forEach(v => {
-        paths[v.path] = (paths[v.path] || 0) + 1;
+    active24h.forEach(s => {
+        s.pagesVisited.forEach(p => { paths[p] = (paths[p] || 0) + 1; });
     });
-
-    // Top pages sorted by visits
     const topPages = Object.entries(paths)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 10)
         .map(([path, count]) => ({ path, count }));
 
     return {
-        totalVisits24h: recentVisitors.length,
-        uniqueVisitors24h: uniqueIPs.size,
-        activeLastHour: uniqueIPsLastHour.size,
-        totalVisitsAllTime: visitors.length,
+        totalVisitors: allSessions.length,
+        uniqueVisitors24h: active24h.length,
+        activeNow: activeSessions.length,
+        totalPageViews: allSessions.reduce((sum, s) => sum + s.pageViews, 0),
         browsers: Object.entries(browsers).map(([name, count]) => ({ name, count })),
         operatingSystems: Object.entries(operatingSystems).map(([name, count]) => ({ name, count })),
         devices: Object.entries(devices).map(([name, count]) => ({ name, count })),

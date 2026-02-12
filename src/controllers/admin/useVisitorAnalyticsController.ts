@@ -7,20 +7,21 @@ import { useState, useEffect, useCallback } from 'react';
 
 interface VisitorRecord {
     ip: string;
-    userAgent: string;
+    fingerprint: string;
     browser: string;
     os: string;
     device: string;
-    path: string;
-    method: string;
-    timestamp: string;
+    firstSeen: string;
+    lastSeen: string;
+    pageViews: number;
+    pagesVisited: string[];
 }
 
 interface AnalyticsSummary {
-    totalVisits24h: number;
+    totalVisitors: number;
     uniqueVisitors24h: number;
-    activeLastHour: number;
-    totalVisitsAllTime: number;
+    activeNow: number;
+    totalPageViews: number;
     browsers: { name: string; count: number }[];
     operatingSystems: { name: string; count: number }[];
     devices: { name: string; count: number }[];

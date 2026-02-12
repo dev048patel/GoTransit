@@ -96,8 +96,8 @@ export default function VisitorAnalytics() {
                                 <Wifi size={22} className="text-blue-500" />
                             </div>
                             <div>
-                                <p className="text-2xl font-bold text-gray-900">{summary.activeLastHour}</p>
-                                <p className="text-sm text-gray-500">Active Last Hour</p>
+                                <p className="text-2xl font-bold text-gray-900">{summary.activeNow}</p>
+                                <p className="text-sm text-gray-500">Active Now</p>
                             </div>
                         </div>
                     </div>
@@ -118,8 +118,8 @@ export default function VisitorAnalytics() {
                                 <Eye size={22} className="text-purple-500" />
                             </div>
                             <div>
-                                <p className="text-2xl font-bold text-gray-900">{summary.totalVisits24h}</p>
-                                <p className="text-sm text-gray-500">Page Views (24h)</p>
+                                <p className="text-2xl font-bold text-gray-900">{summary.totalPageViews}</p>
+                                <p className="text-sm text-gray-500">Page Views</p>
                             </div>
                         </div>
                     </div>
@@ -129,8 +129,8 @@ export default function VisitorAnalytics() {
                                 <Activity size={22} className="text-yellow-500" />
                             </div>
                             <div>
-                                <p className="text-2xl font-bold text-gray-900">{summary.totalVisitsAllTime}</p>
-                                <p className="text-sm text-gray-500">Total Visits (All Time)</p>
+                                <p className="text-2xl font-bold text-gray-900">{summary.totalVisitors}</p>
+                                <p className="text-sm text-gray-500">Total Unique Visitors</p>
                             </div>
                         </div>
                     </div>
@@ -262,32 +262,33 @@ export default function VisitorAnalytics() {
                 </div>
             )}
 
-            {/* Live Visitor Table */}
+            {/* Unique Visitor Table */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 <div className="p-6 border-b border-gray-100">
                     <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
                         <Globe size={20} className="text-blue-500" />
-                        Recent Visitors
-                        <span className="ml-2 text-sm font-normal text-gray-400">({visitors.length} records)</span>
+                        Unique Visitors
+                        <span className="ml-2 text-sm font-normal text-gray-400">({visitors.length} unique)</span>
                     </h3>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="w-full">
                         <thead>
                             <tr className="bg-gray-50 text-left">
-                                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Time</th>
                                 <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">IP Address</th>
                                 <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Device</th>
                                 <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Browser</th>
                                 <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">OS</th>
-                                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Path</th>
-                                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Method</th>
+                                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">First Seen</th>
+                                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Last Active</th>
+                                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Page Views</th>
+                                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Pages Visited</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
                             {visitors.length === 0 ? (
                                 <tr>
-                                    <td colSpan={7} className="px-6 py-12 text-center text-gray-400">
+                                    <td colSpan={8} className="px-6 py-12 text-center text-gray-400">
                                         <Clock size={32} className="mx-auto mb-3 opacity-50" />
                                         <p>No visitors recorded yet. Data will appear as people visit the site.</p>
                                     </td>
@@ -295,10 +296,6 @@ export default function VisitorAnalytics() {
                             ) : (
                                 visitors.slice(0, 50).map((visitor, index) => (
                                     <tr key={index} className="hover:bg-gray-50 transition-colors">
-                                        <td className="px-6 py-3 text-sm whitespace-nowrap">
-                                            <div className="text-gray-900 font-medium">{formatTime(visitor.timestamp)}</div>
-                                            <div className="text-gray-400 text-xs">{getTimeSince(visitor.timestamp)}</div>
-                                        </td>
                                         <td className="px-6 py-3 text-sm">
                                             <code className="bg-gray-100 px-2 py-1 rounded text-xs font-mono">{visitor.ip}</code>
                                         </td>
@@ -310,16 +307,29 @@ export default function VisitorAnalytics() {
                                         </td>
                                         <td className="px-6 py-3 text-sm text-gray-700">{visitor.browser}</td>
                                         <td className="px-6 py-3 text-sm text-gray-700">{visitor.os}</td>
-                                        <td className="px-6 py-3 text-sm">
-                                            <span className="text-blue-600 font-mono text-xs">{visitor.path}</span>
+                                        <td className="px-6 py-3 text-sm whitespace-nowrap">
+                                            <div className="text-gray-900 font-medium">{formatTime(visitor.firstSeen)}</div>
+                                            <div className="text-gray-400 text-xs">{formatDate(visitor.firstSeen)}</div>
+                                        </td>
+                                        <td className="px-6 py-3 text-sm whitespace-nowrap">
+                                            <div className="text-gray-900 font-medium">{getTimeSince(visitor.lastSeen)}</div>
+                                        </td>
+                                        <td className="px-6 py-3 text-sm text-center">
+                                            <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-medium">
+                                                {visitor.pageViews}
+                                            </span>
                                         </td>
                                         <td className="px-6 py-3 text-sm">
-                                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${visitor.method === 'GET' ? 'bg-green-100 text-green-700' :
-                                                    visitor.method === 'POST' ? 'bg-blue-100 text-blue-700' :
-                                                        'bg-gray-100 text-gray-700'
-                                                }`}>
-                                                {visitor.method}
-                                            </span>
+                                            <div className="flex flex-wrap gap-1">
+                                                {visitor.pagesVisited.slice(0, 3).map((page, i) => (
+                                                    <span key={i} className="text-blue-600 font-mono text-xs bg-blue-50 px-1.5 py-0.5 rounded">
+                                                        {page}
+                                                    </span>
+                                                ))}
+                                                {visitor.pagesVisited.length > 3 && (
+                                                    <span className="text-gray-400 text-xs">+{visitor.pagesVisited.length - 3} more</span>
+                                                )}
+                                            </div>
                                         </td>
                                     </tr>
                                 ))
@@ -329,7 +339,7 @@ export default function VisitorAnalytics() {
                 </div>
                 {visitors.length > 50 && (
                     <div className="p-4 bg-gray-50 text-center text-sm text-gray-500">
-                        Showing 50 of {visitors.length} records
+                        Showing 50 of {visitors.length} unique visitors
                     </div>
                 )}
             </div>
