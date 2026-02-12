@@ -6,11 +6,10 @@ This is Frontend Part, which controls behaviour of the map.
 */
 import { useLoadScript } from '@react-google-maps/api';
 import { MapModel, Coordinates, MapOptions } from '../models/MapModel';
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { Stop } from '../models/Stop';
 import transitRoutes from '../data/transitRoutes';
 import transitColors from '../data/transitColors';
-import transitShapesData from '../data/transitShapes.json';
 import { Route } from '../models/Route';
 import { BusPosition } from '../models/BusPosition';
 
@@ -27,6 +26,8 @@ interface MapControllerOutput {
   setSelectedRoute: (routeNum: string | null) => void;
   routePaths: { lat: number; lng: number }[][];
   liveBuses: BusPosition[];
+  currentZoom: number;
+  onZoomChanged: (newZoom: number) => void;
 }
 
 export const useMapController = (): MapControllerOutput => {
@@ -39,9 +40,16 @@ export const useMapController = (): MapControllerOutput => {
     libraries,
   });
 
-  const [stops, setStops] = useState<Stop[]>([]);
+  const [allStops, setAllStops] = useState<Stop[]>([]);
   const [selectedRoute, setSelectedRoute] = useState<string | null>(null);
   const [liveBuses, setLiveBuses] = useState<BusPosition[]>([]);
+  const [currentZoom, setCurrentZoom] = useState(MapModel.defaultZoom);
+  const [shapesData, setShapesData] = useState<any>(null);
+
+  // Callback for MapView to report zoom changes
+  const onZoomChanged = useCallback((newZoom: number) => {
+    setCurrentZoom(newZoom);
+  }, []);
 
   useEffect(() => {
     // Fetch Stops from Backend API
@@ -51,7 +59,7 @@ export const useMapController = (): MapControllerOutput => {
         const response = await fetch(`${baseUrl}/api/stops`);
         if (!response.ok) throw new Error('Failed to fetch stops');
         const data: Stop[] = await response.json();
-        setStops(data);
+        setAllStops(data);
       } catch (error) {
         console.error("Error fetching stops:", error);
       }
@@ -84,6 +92,15 @@ export const useMapController = (): MapControllerOutput => {
     return () => clearInterval(interval);
   }, []);
 
+  // Lazy-load the 3.4MB shapes file only when needed
+  useEffect(() => {
+    if (selectedRoute && !shapesData) {
+      import('../data/transitShapes.json').then((module) => {
+        setShapesData(module.default);
+      });
+    }
+  }, [selectedRoute, shapesData]);
+
   const routesWithColors = useMemo(() => {
     return transitRoutes.map(route => {
       const colorData = transitColors.find(c => c.route_id === parseInt(route.ROUTE_NUM));
@@ -94,10 +111,16 @@ export const useMapController = (): MapControllerOutput => {
     });
   }, []);
 
-  const routePaths = useMemo(() => {
-    if (!selectedRoute) return [];
+  // Only show stops when zoomed in enough (≥14) to avoid rendering 1,400 DOM markers
+  const visibleStops = useMemo(() => {
+    if (currentZoom < 14) return [];
+    return allStops;
+  }, [allStops, currentZoom]);
 
-    const feature = (transitShapesData as any).features?.find((f: any) =>
+  const routePaths = useMemo(() => {
+    if (!selectedRoute || !shapesData) return [];
+
+    const feature = shapesData.features?.find((f: any) =>
       f.properties?.ROUTE_NUM === selectedRoute ||
       f.properties?.RouteId === selectedRoute ||
       f.properties?.ROUTE_ID === selectedRoute
@@ -112,7 +135,7 @@ export const useMapController = (): MapControllerOutput => {
         lng: coord[0]
       }))
     );
-  }, [selectedRoute]);
+  }, [selectedRoute, shapesData]);
 
   // 3. Return prepared data for the View
   return {
@@ -122,11 +145,13 @@ export const useMapController = (): MapControllerOutput => {
     options: MapModel.options,
     containerStyle: MapModel.containerStyle,
     zoom: MapModel.defaultZoom,
-    stops,
+    stops: visibleStops,
     routes: routesWithColors,
     selectedRoute,
     setSelectedRoute,
     routePaths,
     liveBuses,
+    currentZoom,
+    onZoomChanged,
   };
 };
