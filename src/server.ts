@@ -11,7 +11,6 @@ import express from 'express';
 import cors from 'cors'; // Cross Origin Resource Sharing : Allow cross-origin requests (Frontend -> Backend) like React -> Node.js ( Port 3000 -> Port 3001)
 import transitRoutes from './routes/transit.routes';
 import analyticsRoutes from './routes/analytics.routes';
-import { visitorTracker } from './middleware/visitorTracker';
 
 const app = express();
 const port = Number(process.env.PORT) || 3001; // Railway assigns PORT dynamically
@@ -33,9 +32,6 @@ app.use(cors({
 // Middleware
 
 app.use(express.json()); // Parse incoming JSON request bodies
-
-// Visitor Tracking — logs every request (IP, device, browser, path)
-app.use(visitorTracker);
 
 // Mount Routes
 // Usage: All transit-related endpoints will start with /api
