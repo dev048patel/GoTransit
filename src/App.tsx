@@ -39,7 +39,9 @@ function MapPage() {
     selectedRoute,
     setSelectedRoute,
     routePaths,
-    liveBuses
+    liveBuses,
+    currentZoom,
+    onZoomChanged
   } = useMapController();
 
   return (
@@ -56,6 +58,8 @@ function MapPage() {
       setSelectedRoute={setSelectedRoute}
       routePaths={routePaths}
       liveBuses={liveBuses}
+      currentZoom={currentZoom}
+      onZoomChanged={onZoomChanged}
     />
   );
 }

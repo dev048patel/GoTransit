@@ -2,7 +2,7 @@
  Only responsible for UX/UI rendering. 
  It receives all data as props and determines how the map looks on screen. It contains NO business logic.
  */
-import React from 'react';
+import React, { useCallback, useRef } from 'react';
 import { GoogleMap, Marker, Polyline } from '@react-google-maps/api';
 import { Coordinates, MapOptions } from '../models/MapModel';
 import { Stop } from '../models/Stop';
@@ -23,6 +23,8 @@ interface MapViewProps {
   setSelectedRoute: (routeNum: string | null) => void;
   routePaths: { lat: number; lng: number }[][];
   liveBuses: BusPosition[];
+  currentZoom: number;
+  onZoomChanged: (newZoom: number) => void;
 }
 
 /*
@@ -40,8 +42,22 @@ export const MapView: React.FC<MapViewProps> = ({
   selectedRoute,
   setSelectedRoute,
   routePaths,
-  liveBuses
+  liveBuses,
+  currentZoom,
+  onZoomChanged
 }) => {
+  // Use a ref to track the map instance for zoom change events
+  const mapRef = useRef<google.maps.Map | null>(null);
+
+  const onMapLoad = useCallback((map: google.maps.Map) => {
+    mapRef.current = map;
+  }, []);
+
+  const handleZoomChanged = useCallback(() => {
+    if (mapRef.current) {
+      onZoomChanged(mapRef.current.getZoom() || 11);
+    }
+  }, [onZoomChanged]);
   if (loadError) return <div>Error Loading maps</div>;
   if (!isLoaded) return <div>Loading Maps...</div>;
 
@@ -58,6 +74,8 @@ export const MapView: React.FC<MapViewProps> = ({
         zoom={zoom}
         center={center}
         options={options}
+        onLoad={onMapLoad}
+        onZoomChanged={handleZoomChanged}
       >
         {/* Render Stops */}
         {stops.map((stop) => (
