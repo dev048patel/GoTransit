@@ -6,11 +6,10 @@ This is Frontend Part, which controls behaviour of the map.
 */
 import { useLoadScript } from '@react-google-maps/api';
 import { MapModel, Coordinates, MapOptions } from '../models/MapModel';
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { Stop } from '../models/Stop';
 import transitRoutes from '../data/transitRoutes';
 import transitColors from '../data/transitColors';
-import transitShapesData from '../data/transitShapes.json';
 import { Route } from '../models/Route';
 import { BusPosition } from '../models/BusPosition';
 
@@ -32,6 +31,8 @@ interface MapControllerOutput {
   handlePlaceSelect: (place: any) => void;
   selectedPlaceMarker: { location: Coordinates; name: string } | null;
   setSelectedPlaceMarker: (marker: { location: Coordinates; name: string } | null) => void;
+  currentZoom: number;
+  onZoomChanged: (newZoom: number) => void;
 }
 
 export const useMapController = (): MapControllerOutput => {
@@ -44,22 +45,29 @@ export const useMapController = (): MapControllerOutput => {
     libraries,
   });
 
-  const [stops, setStops] = useState<Stop[]>([]);
+  const [allStops, setAllStops] = useState<Stop[]>([]);
   const [selectedRoute, setSelectedRoute] = useState<string | null>(null);
   const [liveBuses, setLiveBuses] = useState<BusPosition[]>([]);
   const [center, setCenter] = useState<Coordinates>(MapModel.center);
   const [zoom, setZoom] = useState<number>(MapModel.defaultZoom);
   const [selectedPlaceMarker, setSelectedPlaceMarker] = useState<{ location: Coordinates; name: string } | null>(null);
+  const [currentZoom, setCurrentZoom] = useState(MapModel.defaultZoom);
+  const [shapesData, setShapesData] = useState<any>(null);
+
+  // Callback for MapView to report zoom changes
+  const onZoomChanged = useCallback((newZoom: number) => {
+    setCurrentZoom(newZoom);
+  }, []);
 
   useEffect(() => {
     // Fetch Stops from Backend API
     const fetchStops = async () => {
       try {
-        const baseUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001';
+        const baseUrl = import.meta.env.VITE_SERVER_URL;
         const response = await fetch(`${baseUrl}/api/stops`);
         if (!response.ok) throw new Error('Failed to fetch stops');
         const data: Stop[] = await response.json();
-        setStops(data);
+        setAllStops(data);
       } catch (error) {
         console.error("Error fetching stops:", error);
       }
@@ -72,9 +80,8 @@ export const useMapController = (): MapControllerOutput => {
   useEffect(() => {
     const fetchLiveBuses = async () => {
       try {
-        const baseUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001'; // Comment the server URL @end
+        const baseUrl = import.meta.env.VITE_SERVER_URL;
         const fetchUrl = `${baseUrl}/api/live?_=${Date.now()}`;
-        console.log(`[useMapController] Fetching Live Buses from:`, fetchUrl);
 
         // Use timestamp to prevent caching 
         const response = await fetch(fetchUrl);
@@ -88,10 +95,19 @@ export const useMapController = (): MapControllerOutput => {
     };
 
     fetchLiveBuses();
-    const interval = setInterval(fetchLiveBuses, 1500); // Poll every 1.5 seconds
+    const interval = setInterval(fetchLiveBuses, 10000); // Poll every 10 seconds
 
     return () => clearInterval(interval);
   }, []);
+
+  // Lazy-load the 3.4MB shapes file only when needed
+  useEffect(() => {
+    if (selectedRoute && !shapesData) {
+      import('../data/transitShapes.json').then((module) => {
+        setShapesData(module.default);
+      });
+    }
+  }, [selectedRoute, shapesData]);
 
   const routesWithColors = useMemo(() => {
     return transitRoutes.map(route => {
@@ -103,10 +119,16 @@ export const useMapController = (): MapControllerOutput => {
     });
   }, []);
 
-  const routePaths = useMemo(() => {
-    if (!selectedRoute) return [];
+  // Only show stops when zoomed in enough (≥14) to avoid rendering 1,400 DOM markers
+  const visibleStops = useMemo(() => {
+    if (currentZoom < 14) return [];
+    return allStops;
+  }, [allStops, currentZoom]);
 
-    const feature = (transitShapesData as any).features?.find((f: any) =>
+  const routePaths = useMemo(() => {
+    if (!selectedRoute || !shapesData) return [];
+
+    const feature = shapesData.features?.find((f: any) =>
       f.properties?.ROUTE_NUM === selectedRoute ||
       f.properties?.RouteId === selectedRoute ||
       f.properties?.ROUTE_ID === selectedRoute
@@ -121,7 +143,7 @@ export const useMapController = (): MapControllerOutput => {
         lng: coord[0]
       }))
     );
-  }, [selectedRoute]);
+  }, [selectedRoute, shapesData]);
 
   // Handle place selection from autocomplete
   const handlePlaceSelect = (place: any) => {  // for updating the map center
@@ -146,6 +168,8 @@ export const useMapController = (): MapControllerOutput => {
     zoom,
     setZoom,
     stops,
+    zoom: MapModel.defaultZoom,
+    stops: visibleStops,
     routes: routesWithColors,
     selectedRoute,
     setSelectedRoute,
@@ -154,5 +178,7 @@ export const useMapController = (): MapControllerOutput => {
     handlePlaceSelect,
     selectedPlaceMarker,
     setSelectedPlaceMarker
+    currentZoom,
+    onZoomChanged,
   };
 };

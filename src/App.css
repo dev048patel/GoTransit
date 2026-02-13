@@ -1,9 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* This is commented to avoid FAQs and GOOGLE MAPS CONTROLS */
-    body {
+body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-} 
+}
 
 
 .Logo {
