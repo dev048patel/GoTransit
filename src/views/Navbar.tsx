@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
+import { Route } from '../models/Route';
 
 interface NavbarProps {
     onPlaceSelect?: (place: any) => void;
     onTripPlannerClick?: () => void;
+    routes?: Route[];
+    selectedRoute?: string | null;
+    onRouteSelect?: (routeNum: string | null) => void;
 }
 
 // Function is for giving autocomplete suggestions for places
-export default function Navbar({ onPlaceSelect, onTripPlannerClick }: NavbarProps) {
+export default function Navbar({ onPlaceSelect, onTripPlannerClick, routes, selectedRoute, onRouteSelect }: NavbarProps) {
     const [showResults, setShowResults] = useState(false);
 
     // Use Google Places Autocomplete hook
@@ -187,8 +191,53 @@ export default function Navbar({ onPlaceSelect, onTripPlannerClick }: NavbarProp
             <div style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '16px'
+                gap: '12px'
             }}>
+                {/* Route Selector Dropdown */}
+                {routes && onRouteSelect && (
+                    <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5f6368"
+                            strokeWidth="2" style={{ position: 'absolute', left: '10px', pointerEvents: 'none', zIndex: 1 }}>
+                            <rect x="3" y="6" width="18" height="12" rx="2" />
+                            <circle cx="7" cy="18" r="2" />
+                            <circle cx="17" cy="18" r="2" />
+                            <line x1="3" y1="10" x2="21" y2="10" />
+                        </svg>
+                        <select
+                            value={selectedRoute || ''}
+                            onChange={(e) => onRouteSelect(e.target.value || null)}
+                            style={{
+                                appearance: 'none',
+                                WebkitAppearance: 'none',
+                                padding: '8px 32px 8px 34px',
+                                backgroundColor: selectedRoute ? '#e8f0fe' : '#f1f3f4',
+                                border: selectedRoute ? '2px solid #1a73e8' : '1px solid #dadce0',
+                                borderRadius: '20px',
+                                fontSize: '13px',
+                                fontWeight: '500',
+                                color: selectedRoute ? '#1a73e8' : '#5f6368',
+                                cursor: 'pointer',
+                                outline: 'none',
+                                minWidth: '180px',
+                                transition: 'all 0.2s',
+                                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235f6368' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
+                                backgroundRepeat: 'no-repeat',
+                                backgroundPosition: 'right 10px center',
+                            }}
+                        >
+                            <option value="">🚌 Select Route</option>
+                            {[...routes]
+                                .sort((a, b) => parseInt(a.ROUTE_NUM) - parseInt(b.ROUTE_NUM))
+                                .map(route => (
+                                    <option key={route.ROUTE_ID} value={route.ROUTE_NUM}>
+                                        Route {route.ROUTE_NUM} — {route.ROUTE_NAME}
+                                    </option>
+                                ))
+                            }
+                        </select>
+                    </div>
+                )}
+
                 {/* Trip Planner Button */}
                 <button
                     onClick={onTripPlannerClick}
