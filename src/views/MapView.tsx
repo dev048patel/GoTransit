@@ -252,37 +252,43 @@ export const MapView: React.FC<MapViewProps> = ({
           </Marker>
         )}
 
-        {/* Render Live Buses (filter to selected route during tracking) */}
+        {/* Render Live Buses — colored by route using transitColors data */}
         {(activeTracking
           ? liveBuses.filter(bus => {
             const trackingRoutes = new Set(activeTracking.segments.map(s => s.routeNum));
             return trackingRoutes.has(String(bus.route_num));
           })
           : liveBuses
-        ).map((bus) => (
-          <Marker
-            key={bus.bus_id}
-            position={{ lat: bus.lat, lng: bus.lng }}
-            icon={{
-              path: (window as any).google?.maps?.SymbolPath?.FORWARD_CLOSED_ARROW,
-              scale: 5,
-              fillColor: '#00CC00',
-              fillOpacity: 1,
-              strokeWeight: 1,
-              strokeColor: '#000000',
-              rotation: bus.heading,
-            }}
-            title={`Bus #${bus.bus_id} (${bus.line_name})`}
-            label={{
-              text: bus.route_num?.toString() || "",
-              color: "#000000",
-              fontWeight: "bold",
-              fontSize: "12px",
-              className: "bg-white px-1 rounded"
-            }}
-            zIndex={100}
-          />
-        ))}
+        ).map((bus) => {
+          // Look up this bus's route color from the routes prop
+          const matchedRoute = routes.find(r => r.ROUTE_NUM === String(bus.route_num));
+          const busColor = matchedRoute?.ROUTE_COLO ? `#${matchedRoute.ROUTE_COLO}` : '#00CC00';
+
+          return (
+            <Marker
+              key={bus.bus_id}
+              position={{ lat: bus.lat, lng: bus.lng }}
+              icon={{
+                path: (window as any).google?.maps?.SymbolPath?.FORWARD_CLOSED_ARROW,
+                scale: 5,
+                fillColor: busColor,
+                fillOpacity: 1,
+                strokeWeight: 1.5,
+                strokeColor: '#FFFFFF',
+                rotation: bus.heading,
+              }}
+              title={`Bus #${bus.bus_id} — Route ${bus.route_num} (${bus.line_name})`}
+              label={{
+                text: bus.route_num?.toString() || "",
+                color: busColor,
+                fontWeight: "bold",
+                fontSize: "12px",
+                className: "bg-white px-1 rounded"
+              }}
+              zIndex={100}
+            />
+          );
+        })}
       </GoogleMap>
     </div>
   );
