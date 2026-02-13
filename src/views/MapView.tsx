@@ -2,10 +2,8 @@
  Only responsible for UX/UI rendering. 
  It receives all data as props and determines how the map looks on screen. It contains NO business logic.
  */
-import React, { useState } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { GoogleMap, Marker, Polyline, InfoWindow } from '@react-google-maps/api';
-import React, { useCallback, useRef } from 'react';
-import { GoogleMap, Marker, Polyline } from '@react-google-maps/api';
 import { Coordinates, MapOptions } from '../models/MapModel';
 import { Stop } from '../models/Stop';
 import { Route } from '../models/Route';
@@ -59,7 +57,9 @@ export const MapView: React.FC<MapViewProps> = ({
   liveBuses,
   handlePlaceSelect,
   selectedPlaceMarker,
-  setSelectedPlaceMarker
+  setSelectedPlaceMarker,
+  currentZoom,
+  onZoomChanged
 }) => {
   const [showTripPlanner, setShowTripPlanner] = useState(false);
   const [showInfoWindow, setShowInfoWindow] = useState(false);
@@ -90,9 +90,8 @@ export const MapView: React.FC<MapViewProps> = ({
     setSelectedPlaceMarker(null); // Remove the destination marker from map
   };
 
-  currentZoom,
-    onZoomChanged
-}) => {
+  // Remove garbage lines
+
   // Use a ref to track the map instance for zoom change events
   const mapRef = useRef<google.maps.Map | null>(null);
 
