@@ -65,6 +65,14 @@ export const MapView: React.FC<MapViewProps> = ({
   const [showInfoWindow, setShowInfoWindow] = useState(false);
   const [showBusSuggestions, setShowBusSuggestions] = useState(false);
   const [activeTracking, setActiveTracking] = useState<TripOption | null>(null);
+  const [selectedBus, setSelectedBus] = useState<BusPosition | null>(null);
+
+  // Convert heading degrees to compass direction
+  const getDirection = (heading: number): string => {
+    const dirs = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+    const index = Math.round(heading / 45) % 8;
+    return dirs[index];
+  };
 
   // When a place is selected, also show the InfoWindow
   const handlePlaceSelectWithPopup = (place: any) => {
@@ -270,16 +278,33 @@ export const MapView: React.FC<MapViewProps> = ({
           const matchedRoute = routes.find(r => r.ROUTE_NUM === String(bus.route_num));
           const busColor = matchedRoute?.ROUTE_COLO ? `#${matchedRoute.ROUTE_COLO}` : '#1a73e8';
 
-          // Create an SVG bus icon as a data URL
+          // Rotation: heading is 0=N, 90=E, 180=S, 270=W
+          // SVG bus faces right (East = 90°), so offset by -90
+          const rotation = (bus.heading || 0) - 90;
+
+          // Side-view bus SVG icon matching user's reference image, rotated by heading
           const busSvg = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
-            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
-              <rect x="4" y="6" width="28" height="20" rx="4" fill="${busColor}" stroke="white" stroke-width="2"/>
-              <rect x="8" y="9" width="8" height="7" rx="1" fill="white" opacity="0.9"/>
-              <rect x="20" y="9" width="8" height="7" rx="1" fill="white" opacity="0.9"/>
-              <circle cx="11" cy="28" r="3" fill="${busColor}" stroke="white" stroke-width="1.5"/>
-              <circle cx="25" cy="28" r="3" fill="${busColor}" stroke="white" stroke-width="1.5"/>
-              <rect x="4" y="18" width="28" height="3" fill="${busColor}" opacity="0.8"/>
-              <text x="18" y="23" text-anchor="middle" font-size="7" font-weight="bold" fill="white" font-family="Arial">${bus.route_num}</text>
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+              <g transform="rotate(${rotation}, 20, 20)">
+                <!-- Bus body -->
+                <rect x="5" y="12" width="30" height="14" rx="3" fill="${busColor}" stroke="white" stroke-width="1.5"/>
+                <!-- Roof curve -->
+                <path d="M8 12 Q8 8 12 8 L28 8 Q32 8 32 12" fill="${busColor}" stroke="white" stroke-width="1.5"/>
+                <!-- Windows -->
+                <rect x="10" y="10" width="5" height="6" rx="1" fill="white" opacity="0.85"/>
+                <rect x="17" y="10" width="5" height="6" rx="1" fill="white" opacity="0.85"/>
+                <rect x="24" y="10" width="5" height="6" rx="1" fill="white" opacity="0.85"/>
+                <!-- Windshield -->
+                <path d="M32 12 L35 14 L35 22 L32 24" fill="white" opacity="0.7" stroke="white" stroke-width="0.5"/>
+                <!-- Route number on body -->
+                <text x="20" y="24" text-anchor="middle" font-size="7" font-weight="bold" fill="white" font-family="Arial, sans-serif">${bus.route_num}</text>
+                <!-- Wheels -->
+                <circle cx="12" cy="28" r="2.5" fill="#333" stroke="white" stroke-width="1"/>
+                <circle cx="28" cy="28" r="2.5" fill="#333" stroke="white" stroke-width="1"/>
+                <!-- Wheel wells -->
+                <rect x="9" y="25" width="6" height="3" rx="1.5" fill="${busColor}"/>
+                <rect x="25" y="25" width="6" height="3" rx="1.5" fill="${busColor}"/>
+              </g>
             </svg>
           `)}`;
 
@@ -289,12 +314,49 @@ export const MapView: React.FC<MapViewProps> = ({
               position={{ lat: bus.lat, lng: bus.lng }}
               icon={{
                 url: busSvg,
-                scaledSize: new google.maps.Size(36, 36),
-                anchor: new google.maps.Point(18, 18),
+                scaledSize: new google.maps.Size(40, 40),
+                anchor: new google.maps.Point(20, 20),
               }}
               title={`Bus #${bus.bus_id} — Route ${bus.route_num} (${bus.line_name})`}
               zIndex={100}
-            />
+              onClick={() => {
+                setSelectedBus(bus);
+                setSelectedRoute(String(bus.route_num));
+              }}
+            >
+              {/* Bus Info Window */}
+              {selectedBus && selectedBus.bus_id === bus.bus_id && (
+                <InfoWindow
+                  position={{ lat: bus.lat, lng: bus.lng }}
+                  onCloseClick={() => setSelectedBus(null)}
+                >
+                  <div style={{
+                    padding: '8px 4px',
+                    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                    minWidth: '200px'
+                  }}>
+                    <div style={{ fontWeight: '700', fontSize: '15px', color: '#202124', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <span style={{
+                        display: 'inline-block',
+                        backgroundColor: busColor,
+                        color: 'white',
+                        borderRadius: '6px',
+                        padding: '2px 8px',
+                        fontSize: '13px',
+                        fontWeight: '700'
+                      }}>Route {bus.route_num}</span>
+                      {bus.line_name}
+                    </div>
+                    <div style={{ fontSize: '13px', color: '#5f6368', lineHeight: '1.8' }}>
+                      <div>🚌 <strong>Bus ID:</strong> {bus.bus_id}</div>
+                      <div>🧭 <strong>Heading:</strong> {bus.heading}° ({getDirection(bus.heading)})</div>
+                      <div>💨 <strong>Speed:</strong> {bus.speed > 0 ? `${bus.speed} km/h` : 'Stopped'}</div>
+                      <div>📍 <strong>Position:</strong> {bus.lat.toFixed(5)}, {bus.lng.toFixed(5)}</div>
+                    </div>
+                  </div>
+                </InfoWindow>
+              )}
+            </Marker>
           );
         })}
       </GoogleMap>

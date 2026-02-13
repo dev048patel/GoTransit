@@ -8,6 +8,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { RoutePlanningService } from '../services/RoutePlanningService';
 import { TripOption } from '../models/RoutePlanning';
+import transitColors from '../data/transitColors';
 
 interface BusSuggestionPanelProps {
     destination: { lat: number; lng: number; name: string };
@@ -123,11 +124,14 @@ export default function BusSuggestionPanel({ destination, onClose, onSelectRoute
 
 // --- RouteCard (same timeline design as TripPlannerModal) ---
 function RouteCard({ option, index }: { option: TripOption; index: number }) {
-    const routeColors = ['#1a73e8', '#ea4335', '#34a853', '#fbbc04', '#9334e6'];
-    const cardColor = routeColors[index % routeColors.length];
+    // Look up actual transit color for the first segment's route
+    const getRouteColor = (routeNum: string): string => {
+        const match = transitColors.find(c => c.route_id === parseInt(routeNum));
+        return match ? match.colour : '#1a73e8';
+    };
 
     return (
-        <div style={{ ...cardStyle, borderLeft: `4px solid ${cardColor}` }}>
+        <div style={{ ...cardStyle, borderLeft: `4px solid ${getRouteColor(option.segments[0]?.routeNum)}` }}>
             {index === 0 && (
                 <div style={{
                     fontSize: '11px', fontWeight: '600', color: '#34a853',
@@ -142,7 +146,7 @@ function RouteCard({ option, index }: { option: TripOption; index: number }) {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                     {option.segments.map((seg, i) => (
-                        <span key={i} style={{ ...routeBadgeStyle, backgroundColor: cardColor }}>
+                        <span key={i} style={{ ...routeBadgeStyle, backgroundColor: getRouteColor(seg.routeNum) }}>
                             Route {seg.routeNum}
                         </span>
                     ))}
@@ -172,9 +176,9 @@ function RouteCard({ option, index }: { option: TripOption; index: number }) {
                 {option.segments.map((seg, i) => (
                     <div key={i}>
                         <div style={timelineStepStyle}>
-                            <span style={timelineDotStyle(cardColor)} />
+                            <span style={timelineDotStyle(getRouteColor(seg.routeNum))} />
                             <span>
-                                Board <strong style={{ color: cardColor }}>Route {seg.routeNum}</strong>
+                                Board <strong style={{ color: getRouteColor(seg.routeNum) }}>Route {seg.routeNum}</strong>
                                 <span style={{ color: '#5f6368' }}> ({seg.routeName})</span>
                             </span>
                         </div>
