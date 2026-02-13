@@ -4,10 +4,10 @@
   All data comes from props via the controller (MVC pattern).
 */
 import React, { useState } from 'react';
-import { useVisitorAnalyticsController } from '../../controllers/admin/useVisitorAnalyticsController';
+import { useVisitorAnalyticsController, DatePreset } from '../../controllers/admin/useVisitorAnalyticsController';
 import {
     Globe, Monitor, Smartphone, Tablet, Chrome, Clock, Users, Eye,
-    RefreshCw, Wifi, Activity, MapPin
+    RefreshCw, Wifi, Activity, MapPin, Calendar
 } from 'lucide-react';
 import {
     PieChart, Pie, Cell, ResponsiveContainer, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid
@@ -22,7 +22,10 @@ const DeviceIcon = ({ device }: { device: string }) => {
 };
 
 export default function VisitorAnalytics() {
-    const { visitors, summary, loading, error, lastRefreshed, refresh } = useVisitorAnalyticsController();
+    const {
+        visitors, summary, loading, error, lastRefreshed, refresh,
+        activePreset, dateFrom, dateTo, applyPreset, setCustomRange
+    } = useVisitorAnalyticsController();
     const [activeTab, setActiveTab] = useState<'live' | 'browsers' | 'devices'>('live');
 
     if (loading && !summary) {
@@ -87,6 +90,48 @@ export default function VisitorAnalytics() {
                 </div>
             </div>
 
+            {/* Date Filter Bar */}
+            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+                <div className="flex flex-wrap items-center gap-3">
+                    <Calendar size={18} className="text-gray-500" />
+                    <span className="text-sm font-medium text-gray-700">Filter:</span>
+
+                    {/* Preset Buttons */}
+                    {([['today', 'Today'], ['7days', '7 Days'], ['30days', '30 Days'], ['all', 'All Time']] as [DatePreset, string][]).map(([preset, label]) => (
+                        <button
+                            key={preset}
+                            onClick={() => applyPreset(preset)}
+                            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition ${activePreset === preset
+                                    ? 'bg-blue-500 text-white shadow-sm'
+                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                }`}
+                        >
+                            {label}
+                        </button>
+                    ))}
+
+                    <div className="w-px h-6 bg-gray-200 mx-1" />
+
+                    {/* Custom Date Inputs */}
+                    <div className="flex items-center gap-2">
+                        <label className="text-xs text-gray-500">From</label>
+                        <input
+                            type="date"
+                            value={dateFrom}
+                            onChange={(e) => setCustomRange(e.target.value, dateTo)}
+                            className="px-2 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                        />
+                        <label className="text-xs text-gray-500">To</label>
+                        <input
+                            type="date"
+                            value={dateTo}
+                            onChange={(e) => setCustomRange(dateFrom, e.target.value)}
+                            className="px-2 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                        />
+                    </div>
+                </div>
+            </div>
+
             {/* Summary Cards */}
             {summary && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -107,8 +152,8 @@ export default function VisitorAnalytics() {
                                 <Users size={22} className="text-green-500" />
                             </div>
                             <div>
-                                <p className="text-2xl font-bold text-gray-900">{summary.uniqueVisitors24h}</p>
-                                <p className="text-sm text-gray-500">Unique Visitors (24h)</p>
+                                <p className="text-2xl font-bold text-gray-900">{summary.visitorsInRange}</p>
+                                <p className="text-sm text-gray-500">Visitors in Range</p>
                             </div>
                         </div>
                     </div>
