@@ -161,7 +161,7 @@ export const MapView: React.FC<MapViewProps> = ({
           <RouteTrackingOverlay tripOption={activeTracking} />
         )}
 
-        {/* Render Stops as 🚏 emoji (hide during tracking for clean view) */}
+        {/* Render Stops (hide during tracking for clean view) */}
         {!activeTracking && stops.map((stop) => (
           <Marker
             key={stop.STOP_ID}
@@ -170,16 +170,13 @@ export const MapView: React.FC<MapViewProps> = ({
               lng: parseFloat(stop.LON),
             }}
             title={`${stop.STOP_NAME} (#${stop.STOP_ID})`}
-            label={{
-              text: '🚏',
-              fontSize: '18px',
-              className: 'bus-stop-emoji',
-            }}
             icon={{
               path: (window as any).google?.maps?.SymbolPath?.CIRCLE,
-              scale: 0,
-              fillOpacity: 0,
-              strokeWeight: 0,
+              scale: 3,
+              fillColor: '#2196F3',
+              fillOpacity: 1,
+              strokeWeight: 1,
+              strokeColor: '#ffffff',
             }}
           />
         ))}
