@@ -148,45 +148,69 @@ function expireStaleSessions(): void {
 }
 
 /*
-  Returns all visitor sessions (newest first by last activity).
+  Returns visitor sessions, optionally filtered by date range.
+  Filters on firstSeen so you can find "who visited on Feb 12".
 */
-export function getVisitorRecords(): VisitorSession[] {
+export function getVisitorRecords(from?: string, to?: string): VisitorSession[] {
     expireStaleSessions();
-    return Array.from(sessions.values())
-        .sort((a, b) => new Date(b.lastSeen).getTime() - new Date(a.lastSeen).getTime());
+    let results = Array.from(sessions.values());
+
+    if (from) {
+        const fromDate = new Date(from).getTime();
+        results = results.filter(s => new Date(s.firstSeen).getTime() >= fromDate);
+    }
+    if (to) {
+        // Add 1 day to 'to' so selecting "Feb 12" includes the whole day
+        const toDate = new Date(to).getTime() + 24 * 60 * 60 * 1000;
+        results = results.filter(s => new Date(s.firstSeen).getTime() < toDate);
+    }
+
+    return results.sort((a, b) => new Date(b.lastSeen).getTime() - new Date(a.lastSeen).getTime());
 }
 
 /*
   Returns aggregated analytics summary.
+  When from/to are provided, all metrics are scoped to that window.
+  Otherwise defaults to last 24 hours for breakdowns.
 */
-export function getAnalyticsSummary() {
+export function getAnalyticsSummary(from?: string, to?: string) {
     expireStaleSessions();
-
-    const now = new Date();
-    const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
     const allSessions = Array.from(sessions.values());
 
-    // Active = has status 'active' (heartbeat within last 30 min)
-    const activeSessions = allSessions.filter(s => s.status === 'active');
-    // Active in last 24h (regardless of current status)
-    const active24h = allSessions.filter(s => new Date(s.lastSeen) > oneDayAgo);
+    // Filter sessions to date range (or default to all for the cards)
+    let filtered: VisitorSession[];
+    if (from || to) {
+        filtered = allSessions.filter(s => {
+            const t = new Date(s.firstSeen).getTime();
+            if (from && t < new Date(from).getTime()) return false;
+            if (to && t >= new Date(to).getTime() + 24 * 60 * 60 * 1000) return false;
+            return true;
+        });
+    } else {
+        // Default: last 24h for breakdowns
+        const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+        filtered = allSessions.filter(s => new Date(s.lastSeen) > oneDayAgo);
+    }
 
-    // Browser breakdown (per unique visitor)
+    // Active = heartbeat within last 30 min (always real-time, not filtered)
+    const activeSessions = allSessions.filter(s => s.status === 'active');
+
+    // Browser breakdown
     const browsers: Record<string, number> = {};
-    active24h.forEach(s => { browsers[s.browser] = (browsers[s.browser] || 0) + 1; });
+    filtered.forEach(s => { browsers[s.browser] = (browsers[s.browser] || 0) + 1; });
 
     // OS breakdown
     const operatingSystems: Record<string, number> = {};
-    active24h.forEach(s => { operatingSystems[s.os] = (operatingSystems[s.os] || 0) + 1; });
+    filtered.forEach(s => { operatingSystems[s.os] = (operatingSystems[s.os] || 0) + 1; });
 
     // Device breakdown
     const devices: Record<string, number> = {};
-    active24h.forEach(s => { devices[s.device] = (devices[s.device] || 0) + 1; });
+    filtered.forEach(s => { devices[s.device] = (devices[s.device] || 0) + 1; });
 
     // Top pages
     const paths: Record<string, number> = {};
-    active24h.forEach(s => {
+    filtered.forEach(s => {
         s.pagesVisited.forEach(p => { paths[p] = (paths[p] || 0) + 1; });
     });
     const topPages = Object.entries(paths)
@@ -196,9 +220,9 @@ export function getAnalyticsSummary() {
 
     return {
         totalVisitors: allSessions.length,
-        uniqueVisitors24h: active24h.length,
+        visitorsInRange: filtered.length,
         activeNow: activeSessions.length,
-        totalPageViews: allSessions.reduce((sum, s) => sum + s.pageViews, 0),
+        totalPageViews: filtered.reduce((sum, s) => sum + s.pageViews, 0),
         browsers: Object.entries(browsers).map(([name, count]) => ({ name, count })),
         operatingSystems: Object.entries(operatingSystems).map(([name, count]) => ({ name, count })),
         devices: Object.entries(devices).map(([name, count]) => ({ name, count })),

@@ -60,7 +60,9 @@ router.post('/heartbeat', (req: Request, res: Response) => {
  */
 router.get('/visitors', (req: Request, res: Response) => {
     try {
-        const records = getVisitorRecords();
+        const from = req.query.from as string | undefined;
+        const to = req.query.to as string | undefined;
+        const records = getVisitorRecords(from, to);
         res.json(records);
     } catch (error) {
         console.error('Error fetching visitor records:', error);
@@ -74,7 +76,9 @@ router.get('/visitors', (req: Request, res: Response) => {
  */
 router.get('/summary', (req: Request, res: Response) => {
     try {
-        const summary = getAnalyticsSummary();
+        const from = req.query.from as string | undefined;
+        const to = req.query.to as string | undefined;
+        const summary = getAnalyticsSummary(from, to);
         res.json(summary);
     } catch (error) {
         console.error('Error fetching analytics summary:', error);
