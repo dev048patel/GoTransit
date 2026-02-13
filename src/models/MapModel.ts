@@ -1,9 +1,10 @@
 /*
-This is Frontend part. Rules and Settings of MAP
-1. Map default settings
+This is Frontend part. Rule and Setting of MAO
+1. Map defualt settings
 2. Type definitions
 3. Constants(Model)
 */
+// import mapStyles from '../mapStyles';
 
 // Type Definitions (ensures data consistency) 
 export interface Coordinates {

@@ -24,7 +24,7 @@ interface ShapeFeature {
 let stopToRoutes: Map<string, Set<string>> | null = null;
 let routeToStops: Map<string, Set<string>> | null = null;
 
-const PROXIMITY_THRESHOLD_METERS = 40; // Stop must be within 40m of route shape (tightened from 100m to avoid false matches on parallel streets)
+const PROXIMITY_THRESHOLD_METERS = 100; // Stop must be within 100m of route shape
 
 /**
  * Calculate distance in meters between two lat/lng points using Haversine formula.
