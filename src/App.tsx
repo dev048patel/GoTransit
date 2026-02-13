@@ -46,7 +46,7 @@ function MapPage() {
     liveBuses,
     handlePlaceSelect,
     selectedPlaceMarker,
-    setSelectedPlaceMarker
+    setSelectedPlaceMarker,
     currentZoom,
     onZoomChanged
   } = useMapController();
