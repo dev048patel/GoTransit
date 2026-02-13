@@ -9,6 +9,7 @@ import React, { useState } from 'react';
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
 import { RoutePlanningService } from '../services/RoutePlanningService';
 import { TripOption } from '../models/RoutePlanning';
+import transitColors from '../data/transitColors';
 
 interface TripPlannerModalProps {
     isOpen: boolean;
@@ -267,13 +268,17 @@ export default function TripPlannerModal({ isOpen, onClose, onSelectRoute }: Tri
 
 // --- Route Card Subcomponent ---
 function RouteCard({ option, index }: { option: TripOption; index: number }) {
-    const routeColors = ['#1a73e8', '#ea4335', '#34a853', '#fbbc04', '#9334e6'];
-    const cardColor = routeColors[index % routeColors.length];
+    // Look up actual transit color for each segment's route
+    const getRouteColor = (routeNum: string): string => {
+        const match = transitColors.find(c => c.route_id === parseInt(routeNum));
+        return match ? match.colour : '#1a73e8';
+    };
+    const primaryColor = getRouteColor(option.segments[0]?.routeNum);
 
     return (
         <div style={{
             ...cardStyle,
-            borderLeft: `4px solid ${cardColor}`
+            borderLeft: `4px solid ${primaryColor}`
         }}>
             {/* Recommended tag for first result */}
             {index === 0 && (
@@ -292,7 +297,7 @@ function RouteCard({ option, index }: { option: TripOption; index: number }) {
                     {option.segments.map((seg, i) => (
                         <span key={i} style={{
                             ...routeBadgeStyle,
-                            backgroundColor: cardColor
+                            backgroundColor: getRouteColor(seg.routeNum)
                         }}>
                             Route {seg.routeNum}
                         </span>
@@ -326,9 +331,9 @@ function RouteCard({ option, index }: { option: TripOption; index: number }) {
                 {option.segments.map((seg, i) => (
                     <div key={i}>
                         <div style={timelineStepStyle}>
-                            <span style={timelineDotStyle(cardColor)} />
+                            <span style={timelineDotStyle(getRouteColor(seg.routeNum))} />
                             <span>
-                                Board <strong style={{ color: cardColor }}>Route {seg.routeNum}</strong>
+                                Board <strong style={{ color: getRouteColor(seg.routeNum) }}>Route {seg.routeNum}</strong>
                                 <span style={{ color: '#5f6368' }}> ({seg.routeName})</span>
                             </span>
                         </div>

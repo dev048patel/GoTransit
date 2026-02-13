@@ -6,6 +6,7 @@
  */
 import React from 'react';
 import { TripOption } from '../models/RoutePlanning';
+import transitColors from '../data/transitColors';
 
 interface TrackingPanelProps {
     tripOption: TripOption;
@@ -17,7 +18,10 @@ export default function TrackingPanel({ tripOption, onStopTracking }: TrackingPa
     const arrivalTime = new Date(now.getTime() + tripOption.totalTime * 60000);
     const formatTime = (d: Date) => d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
 
-    const routeColors = ['#1a73e8', '#9334e6', '#ea4335', '#34a853'];
+    const getRouteColor = (routeNum: string): string => {
+        const match = transitColors.find(c => c.route_id === parseInt(routeNum));
+        return match ? match.colour : '#1a73e8';
+    };
 
     return (
         <div style={panelStyle}>
@@ -45,7 +49,7 @@ export default function TrackingPanel({ tripOption, onStopTracking }: TrackingPa
                             <span style={{ color: '#5f6368', fontSize: '12px' }}>›</span>
                             <span style={{
                                 ...routeBadgeSmallStyle,
-                                backgroundColor: routeColors[i % routeColors.length]
+                                backgroundColor: getRouteColor(seg.routeNum)
                             }}>
                                 {seg.routeNum}
                             </span>
@@ -82,7 +86,7 @@ export default function TrackingPanel({ tripOption, onStopTracking }: TrackingPa
 
                 {/* Bus segments */}
                 {tripOption.segments.map((seg, i) => {
-                    const segColor = routeColors[i % routeColors.length];
+                    const segColor = getRouteColor(seg.routeNum);
                     const boardTime = new Date(now.getTime() + (i === 0 ?
                         Math.round((tripOption.walkingDistance / 1000) / 5 * 60) : // walk time
                         tripOption.segments.slice(0, i).reduce((acc, s) => acc + s.estimatedTime, 0) + 5 // + transfer wait
