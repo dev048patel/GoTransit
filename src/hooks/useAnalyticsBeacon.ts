@@ -11,7 +11,7 @@ import { useEffect } from 'react';
 const HEARTBEAT_INTERVAL = 60 * 1000; // 60 seconds
 
 export function useAnalyticsBeacon() {
-    const baseUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001';
+    const baseUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001'; // Will remove local host @ End
 
     useEffect(() => {
         // Send initial beacon — "a real user just opened the site"
