@@ -7,7 +7,7 @@ interface NavbarProps {
 }
 
 // Function is for giving autocomplete suggestions for places
-export default function Navbar({ onPlaceSelect, onTripPlannerClick }: NavbarProps = {}) {
+export default function Navbar({ onPlaceSelect, onTripPlannerClick }: NavbarProps) {
     const [showResults, setShowResults] = useState(false);
 
     // Use Google Places Autocomplete hook
@@ -55,9 +55,6 @@ export default function Navbar({ onPlaceSelect, onTripPlannerClick }: NavbarProp
         }
     };
 
-import { Link } from 'react-router-dom';
-
-export default function Navbar() {
     return (
         <nav style={{
             position: 'absolute',

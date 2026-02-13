@@ -167,8 +167,6 @@ export const useMapController = (): MapControllerOutput => {
     containerStyle: MapModel.containerStyle,
     zoom,
     setZoom,
-    stops,
-    zoom: MapModel.defaultZoom,
     stops: visibleStops,
     routes: routesWithColors,
     selectedRoute,
@@ -177,7 +175,7 @@ export const useMapController = (): MapControllerOutput => {
     liveBuses,
     handlePlaceSelect,
     selectedPlaceMarker,
-    setSelectedPlaceMarker
+    setSelectedPlaceMarker,
     currentZoom,
     onZoomChanged,
   };
