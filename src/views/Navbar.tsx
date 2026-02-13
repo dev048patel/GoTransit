@@ -55,6 +55,9 @@ export default function Navbar({ onPlaceSelect, onTripPlannerClick }: NavbarProp
         }
     };
 
+import { Link } from 'react-router-dom';
+
+export default function Navbar() {
     return (
         <nav style={{
             position: 'absolute',
@@ -214,9 +217,7 @@ export default function Navbar({ onPlaceSelect, onTripPlannerClick }: NavbarProp
                     </svg>
                     Future Trip Planner
                 </button>
-                <div>
-                    Admin
-                </div>
+                {/* Admin link hidden from public users — access via /admin URL directly */}
                 {/* Profile Icon */}
                 <div style={{
                     width: '36px',

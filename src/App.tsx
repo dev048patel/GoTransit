@@ -11,8 +11,24 @@ import './App.css';
 import { useMapController } from './controllers/useMapController';
 import { MapView } from './views/MapView';
 
-export default function App() {
-  // Controller: Handles logic and state
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import AdminLayout from './layouts/AdminLayout';
+import Dashboard from './views/admin/Dashboard';
+import RouteManager from './views/admin/RouteManager';
+import UserManager from './views/admin/UserManager';
+import NotificationCenter from './views/admin/NotificationCenter';
+import SystemHealth from './views/admin/SystemHealth';
+import Reports from './views/admin/Reports';
+import VisitorAnalytics from './views/admin/VisitorAnalytics';
+import LandingPage from './views/landing/LandingPage';
+import { useAnalyticsBeacon } from './hooks/useAnalyticsBeacon';
+
+/**
+ * MapPage — Wrapper that scopes the map controller to this route only.
+ * The controller (Google Maps loading, API polling, data fetching)
+ * now only runs when the user is on the "/" route.
+ */
+function MapPage() {
   const {
     isLoaded,
     loadError,
@@ -31,9 +47,10 @@ export default function App() {
     handlePlaceSelect,
     selectedPlaceMarker,
     setSelectedPlaceMarker
+    currentZoom,
+    onZoomChanged
   } = useMapController();
 
-  // View: Renders the UI with data from the controller
   return (
     <MapView
       isLoaded={isLoaded}
@@ -53,6 +70,38 @@ export default function App() {
       handlePlaceSelect={handlePlaceSelect}
       selectedPlaceMarker={selectedPlaceMarker}
       setSelectedPlaceMarker={setSelectedPlaceMarker}
+      currentZoom={currentZoom}
+      onZoomChanged={onZoomChanged}
     />
   );
 }
+
+export default function App() {
+  // Send analytics beacon once on site load, heartbeat every 60s
+  useAnalyticsBeacon();
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* Landing Page */}
+        <Route path="/landing" element={<LandingPage />} />
+
+        {/* Map View — Controller only runs on this route */}
+        <Route path="/" element={<MapPage />} />
+
+        {/* Admin Routes */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="routes" element={<RouteManager />} />
+          <Route path="users" element={<UserManager />} />
+          <Route path="notifications" element={<NotificationCenter />} />
+          <Route path="health" element={<SystemHealth />} />
+          <Route path="reports" element={<Reports />} />
+          <Route path="analytics" element={<VisitorAnalytics />} />
+          <Route path="settings" element={<div>Settings Component Coming Soon</div>} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
+}
+

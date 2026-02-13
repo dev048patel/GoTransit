@@ -4,6 +4,8 @@
  */
 import React, { useState } from 'react';
 import { GoogleMap, Marker, Polyline, InfoWindow } from '@react-google-maps/api';
+import React, { useCallback, useRef } from 'react';
+import { GoogleMap, Marker, Polyline } from '@react-google-maps/api';
 import { Coordinates, MapOptions } from '../models/MapModel';
 import { Stop } from '../models/Stop';
 import { Route } from '../models/Route';
@@ -33,6 +35,8 @@ interface MapViewProps {
   handlePlaceSelect: (place: any) => void;
   selectedPlaceMarker: { location: Coordinates; name: string } | null;
   setSelectedPlaceMarker: (marker: { location: Coordinates; name: string } | null) => void;
+  currentZoom: number;
+  onZoomChanged: (newZoom: number) => void;
 }
 
 /*
@@ -86,6 +90,21 @@ export const MapView: React.FC<MapViewProps> = ({
     setSelectedPlaceMarker(null); // Remove the destination marker from map
   };
 
+  currentZoom,
+  onZoomChanged
+}) => {
+  // Use a ref to track the map instance for zoom change events
+  const mapRef = useRef<google.maps.Map | null>(null);
+
+  const onMapLoad = useCallback((map: google.maps.Map) => {
+    mapRef.current = map;
+  }, []);
+
+  const handleZoomChanged = useCallback(() => {
+    if (mapRef.current) {
+      onZoomChanged(mapRef.current.getZoom() || 11);
+    }
+  }, [onZoomChanged]);
   if (loadError) return <div>Error Loading maps</div>;
   if (!isLoaded) return <div>Loading Maps...</div>;
 
@@ -122,6 +141,7 @@ export const MapView: React.FC<MapViewProps> = ({
       {activeTracking && (
         <TrackingPanel tripOption={activeTracking} onStopTracking={handleStopTracking} />
       )}
+      <Navbar />
 
       {/* GoogleMap Component */}
       <GoogleMap
@@ -130,6 +150,8 @@ export const MapView: React.FC<MapViewProps> = ({
         zoom={zoom}
         center={center}
         options={options}
+        onLoad={onMapLoad}
+        onZoomChanged={handleZoomChanged}
       >
         {/* Route Tracking Overlay (when tracking is active) */}
         {activeTracking && (
