@@ -12,6 +12,7 @@ import transitRoutes from '../data/transitRoutes';
 import transitColors from '../data/transitColors';
 import { Route } from '../models/Route';
 import { BusPosition } from '../models/BusPosition';
+import { getStopsForRoute } from '../services/StopToRouteIndex';
 
 interface MapControllerOutput {
   isLoaded: boolean;
@@ -119,11 +120,12 @@ export const useMapController = (): MapControllerOutput => {
     });
   }, []);
 
-  // Only show stops when zoomed in enough (≥14) to avoid rendering 1,400 DOM markers
+  // Show stops only for the selected route (solves 1,440 stop lag)
   const visibleStops = useMemo(() => {
-    if (currentZoom < 14) return [];
-    return allStops;
-  }, [allStops, currentZoom]);
+    if (!selectedRoute) return []; // No route selected → no stops
+    const routeStopIds = getStopsForRoute(selectedRoute);
+    return allStops.filter(stop => routeStopIds.has(stop.STOP_ID));
+  }, [allStops, selectedRoute]);
 
   const routePaths = useMemo(() => {
     if (!selectedRoute || !shapesData) return [];
@@ -172,7 +174,9 @@ export const useMapController = (): MapControllerOutput => {
     selectedRoute,
     setSelectedRoute,
     routePaths,
-    liveBuses,
+    liveBuses: selectedRoute
+      ? liveBuses.filter(b => String(b.route_num) === selectedRoute)
+      : liveBuses,
     handlePlaceSelect,
     selectedPlaceMarker,
     setSelectedPlaceMarker,

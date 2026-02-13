@@ -112,7 +112,13 @@ export const MapView: React.FC<MapViewProps> = ({
     <div className="relative h-screen w-full">
       {/* Hide Navbar when tracking is active for clean view */}
       {!activeTracking && (
-        <Navbar onPlaceSelect={handlePlaceSelectWithPopup} onTripPlannerClick={() => setShowTripPlanner(true)} />
+        <Navbar
+          onPlaceSelect={handlePlaceSelectWithPopup}
+          onTripPlannerClick={() => setShowTripPlanner(true)}
+          routes={routes}
+          selectedRoute={selectedRoute}
+          onRouteSelect={setSelectedRoute}
+        />
       )}
 
       <TripPlannerModal
@@ -262,29 +268,31 @@ export const MapView: React.FC<MapViewProps> = ({
         ).map((bus) => {
           // Look up this bus's route color from the routes prop
           const matchedRoute = routes.find(r => r.ROUTE_NUM === String(bus.route_num));
-          const busColor = matchedRoute?.ROUTE_COLO ? `#${matchedRoute.ROUTE_COLO}` : '#00CC00';
+          const busColor = matchedRoute?.ROUTE_COLO ? `#${matchedRoute.ROUTE_COLO}` : '#1a73e8';
+
+          // Create an SVG bus icon as a data URL
+          const busSvg = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+              <rect x="4" y="6" width="28" height="20" rx="4" fill="${busColor}" stroke="white" stroke-width="2"/>
+              <rect x="8" y="9" width="8" height="7" rx="1" fill="white" opacity="0.9"/>
+              <rect x="20" y="9" width="8" height="7" rx="1" fill="white" opacity="0.9"/>
+              <circle cx="11" cy="28" r="3" fill="${busColor}" stroke="white" stroke-width="1.5"/>
+              <circle cx="25" cy="28" r="3" fill="${busColor}" stroke="white" stroke-width="1.5"/>
+              <rect x="4" y="18" width="28" height="3" fill="${busColor}" opacity="0.8"/>
+              <text x="18" y="23" text-anchor="middle" font-size="7" font-weight="bold" fill="white" font-family="Arial">${bus.route_num}</text>
+            </svg>
+          `)}`;
 
           return (
             <Marker
               key={bus.bus_id}
               position={{ lat: bus.lat, lng: bus.lng }}
               icon={{
-                path: (window as any).google?.maps?.SymbolPath?.FORWARD_CLOSED_ARROW,
-                scale: 5,
-                fillColor: busColor,
-                fillOpacity: 1,
-                strokeWeight: 1.5,
-                strokeColor: '#FFFFFF',
-                rotation: bus.heading,
+                url: busSvg,
+                scaledSize: new google.maps.Size(36, 36),
+                anchor: new google.maps.Point(18, 18),
               }}
               title={`Bus #${bus.bus_id} — Route ${bus.route_num} (${bus.line_name})`}
-              label={{
-                text: bus.route_num?.toString() || "",
-                color: busColor,
-                fontWeight: "bold",
-                fontSize: "12px",
-                className: "bg-white px-1 rounded"
-              }}
               zIndex={100}
             />
           );
