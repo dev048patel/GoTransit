@@ -11,6 +11,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Marker, Polyline, Circle } from '@react-google-maps/api';
 import { TripOption } from '../models/RoutePlanning';
 import transitShapesData from '../data/transitShapes.json';
+import transitColors from '../data/transitColors';
 
 interface RouteTrackingOverlayProps {
     tripOption: TripOption;
@@ -171,7 +172,10 @@ export default function RouteTrackingOverlay({ tripOption }: RouteTrackingOverla
         );
     }, [tripOption]);
 
-    const routeColors = ['#1a73e8', '#9334e6', '#ea4335', '#34a853'];
+    const getRouteColor = (routeNum: string): string => {
+        const match = transitColors.find(c => c.route_id === parseInt(routeNum));
+        return match ? match.colour : '#1a73e8';
+    };
 
     return (
         <>
@@ -228,7 +232,7 @@ export default function RouteTrackingOverlay({ tripOption }: RouteTrackingOverla
                     key={`bus-seg-${i}`}
                     path={path}
                     options={{
-                        strokeColor: routeColors[i % routeColors.length],
+                        strokeColor: getRouteColor(tripOption.segments[i]?.routeNum),
                         strokeOpacity: 0.9,
                         strokeWeight: 6,
                         zIndex: 201
@@ -267,7 +271,7 @@ export default function RouteTrackingOverlay({ tripOption }: RouteTrackingOverla
                         icon={{
                             path: (window as any).google?.maps?.SymbolPath?.CIRCLE,
                             scale: 8,
-                            fillColor: routeColors[i % routeColors.length],
+                            fillColor: getRouteColor(tripOption.segments[i]?.routeNum),
                             fillOpacity: 1,
                             strokeWeight: 3,
                             strokeColor: '#ffffff'

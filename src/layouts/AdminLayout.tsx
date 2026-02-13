@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, Link } from 'react-router-dom';
-import { LayoutDashboard, Map, Users, Bell, FileText, Settings, Activity } from 'lucide-react';
+import { LayoutDashboard, Map, Users, Bell, FileText, Settings, Activity, Eye } from 'lucide-react';
 
 const SidebarItem = ({ icon: Icon, label, to }: { icon: any, label: string, to: string }) => (
     <Link to={to} className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-slate-700 hover:text-white transition-colors rounded-lg mb-1">
@@ -26,6 +26,7 @@ export default function AdminLayout() {
                     <SidebarItem icon={Users} label="User Management" to="/admin/users" />
                     <SidebarItem icon={Bell} label="Notifications" to="/admin/notifications" />
                     <SidebarItem icon={Activity} label="System Health" to="/admin/health" />
+                    <SidebarItem icon={Eye} label="Visitor Analytics" to="/admin/analytics" />
                     <SidebarItem icon={FileText} label="Reports" to="/admin/reports" />
                 </nav>
 
