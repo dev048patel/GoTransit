@@ -6,7 +6,7 @@ Select the "Transit" and then "Stops" to get the data.
 */
 
 
-import { Stop } from '../models/Stop';
+import { Stop } from '../models/transit/Stop';
 
 const transitStops: Stop[] = [
      

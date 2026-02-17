@@ -7,22 +7,9 @@
 
 import transitStops from '../data/transitStops';
 import transitRoutes from '../data/transitRoutes';
-import { TripOption, RouteSegment } from '../models/RoutePlanning';
+import { TripOption, RouteSegment } from '../models/transit/Planner';
 import { getRoutesForStop, getStopsForRoute } from './StopToRouteIndex';
-
-interface Location {
-    lat: number;
-    lng: number;
-}
-
-interface NearbyStop {
-    STOP_ID: string;
-    STOP_NAME: string;
-    LAT: string;
-    LON: string;
-    distance: number;
-    [key: string]: any;
-}
+import { Location, NearbyStop } from '../models/transit/RoutePlanService';
 
 export class RoutePlanningService {
     private readonly WALKING_DISTANCE = 500; // meters — max walking to a stop

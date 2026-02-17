@@ -7,11 +7,11 @@ This is Frontend Part, which controls behaviour of the map.
 import { useLoadScript } from '@react-google-maps/api';
 import { MapModel, Coordinates, MapOptions } from '../models/MapModel';
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import { Stop } from '../models/Stop';
+import { Stop } from '../models/transit/Stop';
 import transitRoutes from '../data/transitRoutes';
 import transitColors from '../data/transitColors';
-import { Route } from '../models/Route';
-import { BusPosition } from '../models/BusPosition';
+import { Route } from '../models/transit/Route';
+import { BusPosition } from '../models/transit/BusPosition';
 
 interface MapControllerOutput {
   isLoaded: boolean;
@@ -165,9 +165,7 @@ export const useMapController = (): MapControllerOutput => {
     setCenter,
     options: MapModel.options,
     containerStyle: MapModel.containerStyle,
-    zoom,
     setZoom,
-    stops,
     zoom: MapModel.defaultZoom,
     stops: visibleStops,
     routes: routesWithColors,
@@ -177,7 +175,7 @@ export const useMapController = (): MapControllerOutput => {
     liveBuses,
     handlePlaceSelect,
     selectedPlaceMarker,
-    setSelectedPlaceMarker
+    setSelectedPlaceMarker,
     currentZoom,
     onZoomChanged,
   };

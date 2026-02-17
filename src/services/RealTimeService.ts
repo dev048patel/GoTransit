@@ -4,7 +4,7 @@
 3. Returns parsed BusPosition objects.
 */
 
-import { BusPosition } from '../models/BusPosition';
+import { BusPosition } from '../models/transit/BusPosition';
 
 //Handle interaction with the Transit Live Public API.
 export class RealTimeService {

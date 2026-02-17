@@ -45,3 +45,27 @@ export interface RouteSuggestionResponse {
     options: TripOption[];
     message?: string; // Optional message if no routes found
 }
+
+export interface TripPlannerModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    onSelectRoute?: (option: TripOption) => void;
+}
+
+export interface LocationState {
+    lat: number;
+    lng: number;
+    label: string;
+}
+
+export interface RoutePlanningPanelProps {
+    hasOrigin: boolean;
+    hasDestination: boolean;
+    onGetLocation: () => void;
+    onGetRoutes: () => void;
+}
+
+export interface TrackingPanelProps {
+    tripOption: TripOption;
+    onStopTracking: () => void;
+}

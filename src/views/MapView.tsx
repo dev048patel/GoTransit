@@ -2,20 +2,18 @@
  Only responsible for UX/UI rendering. 
  It receives all data as props and determines how the map looks on screen. It contains NO business logic.
  */
-import React, { useState } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { GoogleMap, Marker, Polyline, InfoWindow } from '@react-google-maps/api';
-import React, { useCallback, useRef } from 'react';
-import { GoogleMap, Marker, Polyline } from '@react-google-maps/api';
 import { Coordinates, MapOptions } from '../models/MapModel';
-import { Stop } from '../models/Stop';
-import { Route } from '../models/Route';
-import { BusPosition } from '../models/BusPosition';
-import { TripOption } from '../models/RoutePlanning';
+import { Stop } from '../models/transit/Stop';
+import { Route } from '../models/transit/Route';
+import { BusPosition } from '../models/transit/BusPosition';
+import { TripOption } from '../models/transit/Planner';
 import Navbar from './Navbar';
-import TripPlannerModal from '../components/TripPlannerModal';
-import BusSuggestionPanel from '../components/BusSuggestionPanel';
-import RouteTrackingOverlay from '../components/RouteTrackingOverlay';
-import TrackingPanel from '../components/TrackingPanel';
+import TripPlannerModal from '../components/transit/TripPlannerModal';
+import BusSuggestionPanel from '../components/transit/BusSuggestionPanel';
+import RouteTrackingOverlay from '../components/transit/RouteTrackingOverlay';
+import TrackingPanel from '../components/transit/TrackingPanel';
 
 interface MapViewProps {
   isLoaded: boolean;
@@ -59,12 +57,22 @@ export const MapView: React.FC<MapViewProps> = ({
   liveBuses,
   handlePlaceSelect,
   selectedPlaceMarker,
-  setSelectedPlaceMarker
+  setSelectedPlaceMarker,
+  currentZoom,
+  onZoomChanged
 }) => {
   const [showTripPlanner, setShowTripPlanner] = useState(false);
   const [showInfoWindow, setShowInfoWindow] = useState(false);
   const [showBusSuggestions, setShowBusSuggestions] = useState(false);
   const [activeTracking, setActiveTracking] = useState<TripOption | null>(null);
+  const [selectedBus, setSelectedBus] = useState<BusPosition | null>(null);
+
+  // Convert heading degrees to compass direction
+  const getDirection = (heading: number): string => {
+    const dirs = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+    const index = Math.round(heading / 45) % 8;
+    return dirs[index];
+  };
 
   // When a place is selected, also show the InfoWindow
   const handlePlaceSelectWithPopup = (place: any) => {
@@ -90,9 +98,6 @@ export const MapView: React.FC<MapViewProps> = ({
     setSelectedPlaceMarker(null); // Remove the destination marker from map
   };
 
-  currentZoom,
-  onZoomChanged
-}) => {
   // Use a ref to track the map instance for zoom change events
   const mapRef = useRef<google.maps.Map | null>(null);
 
@@ -115,7 +120,13 @@ export const MapView: React.FC<MapViewProps> = ({
     <div className="relative h-screen w-full">
       {/* Hide Navbar when tracking is active for clean view */}
       {!activeTracking && (
-        <Navbar onPlaceSelect={handlePlaceSelectWithPopup} onTripPlannerClick={() => setShowTripPlanner(true)} />
+        <Navbar
+          onPlaceSelect={handlePlaceSelectWithPopup}
+          onTripPlannerClick={() => setShowTripPlanner(true)}
+          routes={routes}
+          selectedRoute={selectedRoute}
+          onRouteSelect={setSelectedRoute}
+        />
       )}
 
       <TripPlannerModal
@@ -141,7 +152,7 @@ export const MapView: React.FC<MapViewProps> = ({
       {activeTracking && (
         <TrackingPanel tripOption={activeTracking} onStopTracking={handleStopTracking} />
       )}
-      <Navbar />
+
 
       {/* GoogleMap Component */}
       <GoogleMap
@@ -255,37 +266,96 @@ export const MapView: React.FC<MapViewProps> = ({
           </Marker>
         )}
 
-        {/* Render Live Buses (filter to selected route during tracking) */}
+        {/* Render Live Buses — colored by route using transitColors data */}
         {(activeTracking
           ? liveBuses.filter(bus => {
             const trackingRoutes = new Set(activeTracking.segments.map(s => s.routeNum));
             return trackingRoutes.has(String(bus.route_num));
           })
           : liveBuses
-        ).map((bus) => (
-          <Marker
-            key={bus.bus_id}
-            position={{ lat: bus.lat, lng: bus.lng }}
-            icon={{
-              path: (window as any).google?.maps?.SymbolPath?.FORWARD_CLOSED_ARROW,
-              scale: 5,
-              fillColor: '#00CC00',
-              fillOpacity: 1,
-              strokeWeight: 1,
-              strokeColor: '#000000',
-              rotation: bus.heading,
-            }}
-            title={`Bus #${bus.bus_id} (${bus.line_name})`}
-            label={{
-              text: bus.route_num?.toString() || "",
-              color: "#000000",
-              fontWeight: "bold",
-              fontSize: "12px",
-              className: "bg-white px-1 rounded"
-            }}
-            zIndex={100}
-          />
-        ))}
+        ).map((bus) => {
+          // Look up this bus's route color from the routes prop
+          const matchedRoute = routes.find(r => r.ROUTE_NUM === String(bus.route_num));
+          const busColor = matchedRoute?.ROUTE_COLO ? `#${matchedRoute.ROUTE_COLO}` : '#1a73e8';
+
+          // Rotation: heading is 0=N, 90=E, 180=S, 270=W
+          // Top-down bus faces up (North = 0°), so heading maps directly
+          const rotation = bus.heading || 0;
+
+          // Top-down bus SVG — rotates naturally in any direction
+          const busSvg = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+              <g transform="rotate(${rotation}, 20, 20)">
+                <!-- Shadow -->
+                <ellipse cx="20" cy="20" rx="10" ry="16" fill="rgba(0,0,0,0.15)"/>
+                <!-- Bus body -->
+                <rect x="11" y="5" width="18" height="30" rx="5" fill="${busColor}" stroke="white" stroke-width="1.5"/>
+                <!-- Windshield (front/top) -->
+                <rect x="13" y="6" width="14" height="6" rx="3" fill="white" opacity="0.8"/>
+                <!-- Side windows -->
+                <rect x="12" y="14" width="4" height="4" rx="1" fill="white" opacity="0.6"/>
+                <rect x="24" y="14" width="4" height="4" rx="1" fill="white" opacity="0.6"/>
+                <rect x="12" y="20" width="4" height="4" rx="1" fill="white" opacity="0.6"/>
+                <rect x="24" y="20" width="4" height="4" rx="1" fill="white" opacity="0.6"/>
+                <!-- Rear window -->
+                <rect x="14" y="30" width="12" height="3" rx="1.5" fill="white" opacity="0.5"/>
+                <!-- Route number -->
+                <text x="20" y="29" text-anchor="middle" font-size="8" font-weight="bold" fill="white" font-family="Arial, sans-serif">${bus.route_num}</text>
+              </g>
+            </svg>
+          `)}`;
+
+          return (
+            <Marker
+              key={bus.bus_id}
+              position={{ lat: bus.lat, lng: bus.lng }}
+              icon={{
+                url: busSvg,
+                scaledSize: new google.maps.Size(40, 40),
+                anchor: new google.maps.Point(20, 20),
+              }}
+              title={`Bus #${bus.bus_id} — Route ${bus.route_num} (${bus.line_name})`}
+              zIndex={100}
+              onClick={() => {
+                setSelectedBus(bus);
+                setSelectedRoute(String(bus.route_num));
+              }}
+            >
+              {/* Bus Info Window */}
+              {selectedBus && selectedBus.bus_id === bus.bus_id && (
+                <InfoWindow
+                  position={{ lat: bus.lat, lng: bus.lng }}
+                  onCloseClick={() => setSelectedBus(null)}
+                >
+                  <div style={{
+                    padding: '8px 4px',
+                    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                    minWidth: '200px'
+                  }}>
+                    <div style={{ fontWeight: '700', fontSize: '15px', color: '#202124', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <span style={{
+                        display: 'inline-block',
+                        backgroundColor: busColor,
+                        color: 'white',
+                        borderRadius: '6px',
+                        padding: '2px 8px',
+                        fontSize: '13px',
+                        fontWeight: '700'
+                      }}>Route {bus.route_num}</span>
+                      {bus.line_name}
+                    </div>
+                    <div style={{ fontSize: '13px', color: '#5f6368', lineHeight: '1.8' }}>
+                      <div>🚌 <strong>Bus ID:</strong> {bus.bus_id}</div>
+                      <div>🧭 <strong>Heading:</strong> {bus.heading}° ({getDirection(bus.heading)})</div>
+                      <div>💨 <strong>Speed:</strong> {bus.speed > 0 ? `${bus.speed} km/h` : 'Stopped'}</div>
+                      <div>📍 <strong>Position:</strong> {bus.lat.toFixed(5)}, {bus.lng.toFixed(5)}</div>
+                    </div>
+                  </div>
+                </InfoWindow>
+              )}
+            </Marker>
+          );
+        })}
       </GoogleMap>
     </div>
   );

@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
+import { Route } from '../models/transit/Route';
 
 interface NavbarProps {
     onPlaceSelect?: (place: any) => void;
     onTripPlannerClick?: () => void;
+    routes?: Route[];
+    selectedRoute?: string | null;
+    onRouteSelect?: (routeNum: string | null) => void;
 }
 
 // Function is for giving autocomplete suggestions for places
@@ -40,10 +44,10 @@ export default function Navbar({ onPlaceSelect, onTripPlannerClick }: NavbarProp
         try {
             // Get place details
             const results = await getGeocode({ address: description });
-            const { lat, lng } = await getLatLng(results[0]); // await has no effect on this line 
+            const { lat, lng } = await getLatLng(results[0]);
 
             // Call the onPlaceSelect callback if provided
-            if (onPlaceSelect) { // if onPlaceSelect is provided
+            if (onPlaceSelect) {
                 onPlaceSelect({
                     id: placeId,
                     displayName: description,
@@ -55,35 +59,10 @@ export default function Navbar({ onPlaceSelect, onTripPlannerClick }: NavbarProp
         }
     };
 
-import { Link } from 'react-router-dom';
-
-export default function Navbar() {
     return (
-        <nav style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            height: '45px',
-            backgroundColor: 'white',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-            zIndex: 1001,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '0 20px',
-            maxWidth: '100vw',
-            overflow: 'visible'
-        }}>
+        <nav className="absolute top-0 left-0 right-0 h-[45px] bg-white shadow-[0_2px_8px_rgba(0,0,0,0.15)] z-[1001] flex items-center justify-between px-5 max-w-[100vw] overflow-visible">
             {/* Logo/Title */}
-            <div style={{
-                fontSize: '20px',
-                fontWeight: 'bold',
-                color: '#1a73e8',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-            }}>
+            <div className="text-xl font-bold text-[#1a73e8] flex items-center gap-2">
                 <span>🚌</span>
                 <span>Go
                     <span role="img" aria-label="Bus Stop">🚏</span>ransit
@@ -91,20 +70,8 @@ export default function Navbar() {
             </div>
 
             {/* Center - Search with Autocomplete */}
-            <div style={{
-                flex: 1,
-                maxWidth: '500px',
-                margin: '0 40px',
-                position: 'relative'
-            }}>
-                <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    backgroundColor: '#f1f3f4',
-                    borderRadius: '24px',
-                    padding: '8px 16px',
-                    gap: '8px'
-                }}>
+            <div className="flex-1 max-w-[500px] mx-10 relative">
+                <div className="flex items-center bg-[#f1f3f4] rounded-3xl px-4 py-2 gap-2">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5f6368" strokeWidth="2">
                         <circle cx="11" cy="11" r="8"></circle>
                         <path d="m21 21-4.35-4.35"></path>
@@ -113,46 +80,20 @@ export default function Navbar() {
                         type="text"
                         placeholder="Search for places..."
                         value={value}
-                        onChange={handleInput} // calling handleInput on change
+                        onChange={handleInput}
                         onFocus={() => data.length > 0 && setShowResults(true)}
                         disabled={!ready}
-                        style={{
-                            border: 'none',
-                            backgroundColor: 'transparent',
-                            outline: 'none',
-                            fontSize: '14px',
-                            width: '100%',
-                            color: '#202124'
-                        }}
+                        className="border-none bg-transparent outline-none text-sm w-full text-[#202124]"
                     />
                     {!ready && (
-                        <div style={{
-                            width: '16px',
-                            height: '16px',
-                            border: '2px solid #f1f3f4',
-                            borderTop: '2px solid #1a73e8',
-                            borderRadius: '50%',
-                            animation: 'spin 1s linear infinite'
-                        }} />
+                        <div className="w-4 h-4 border-2 border-[#f1f3f4] border-t-[#1a73e8] rounded-full animate-spin" />
                     )}
                 </div>
 
                 {/* Autocomplete Results Dropdown */}
                 {showResults && status === 'OK' && data.length > 0 && (
-                    <div style={{
-                        position: 'absolute',
-                        top: '100%',
-                        left: 0,
-                        right: 0,
-                        marginTop: '8px',
-                        backgroundColor: 'white',
-                        borderRadius: '8px',
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-                        maxHeight: '300px',
-                        overflowY: 'auto',
-                        zIndex: 1002
-                    }}>
-                        {data.map((suggestion) => {  // combobox options for suggestions
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.15)] max-h-[300px] overflow-y-auto z-[1002]">
+                        {data.map((suggestion) => {
                             const {
                                 place_id,
                                 structured_formatting: { main_text, secondary_text },
@@ -161,21 +102,14 @@ export default function Navbar() {
                             return (
                                 <div
                                     key={place_id}
-                                    onClick={() => handleSelect(suggestion.description, place_id)} // call handleSelect with the selected place for updating the place state
-                                    style={{
-                                        padding: '12px 16px',
-                                        cursor: 'pointer',
-                                        borderBottom: '1px solid #f1f3f4',
-                                        transition: 'background-color 0.2s'
-                                    }}
-                                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f8f9fa'}
-                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
+                                    onClick={() => handleSelect(suggestion.description, place_id)}
+                                    className="px-4 py-3 cursor-pointer border-b border-[#f1f3f4] transition-colors duration-200 hover:bg-[#f8f9fa]"
                                 >
-                                    <div style={{ fontWeight: '500', color: '#202124', fontSize: '14px' }}> {/*Main address*/}
+                                    <div className="font-medium text-[#202124] text-sm">
                                         {main_text}
                                     </div>
                                     {secondary_text && (
-                                        <div style={{ fontSize: '12px', color: '#5f6368', marginTop: '4px' }}> {/* other detials like street name */}
+                                        <div className="text-xs text-[#5f6368] mt-1">
                                             {secondary_text}
                                         </div>
                                     )}
@@ -187,30 +121,11 @@ export default function Navbar() {
             </div>
 
             {/* Right side - Actions */}
-            <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '16px'
-            }}>
+            <div className="flex items-center gap-4">
                 {/* Trip Planner Button */}
                 <button
                     onClick={onTripPlannerClick}
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        padding: '8px 16px',
-                        backgroundColor: '#1a73e8',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '20px',
-                        fontSize: '14px',
-                        fontWeight: '500',
-                        cursor: 'pointer',
-                        transition: 'background-color 0.2s'
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1557b0'}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1a73e8'}
+                    className="flex items-center gap-2 px-4 py-2 bg-[#1a73e8] text-white border-none rounded-[20px] text-sm font-medium cursor-pointer transition-colors duration-200 hover:bg-[#1557b0]"
                 >
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
@@ -219,33 +134,13 @@ export default function Navbar() {
                 </button>
                 {/* Admin link hidden from public users — access via /admin URL directly */}
                 {/* Profile Icon */}
-                <div style={{
-                    width: '36px',
-                    height: '36px',
-                    borderRadius: '50%',
-                    backgroundColor: '#1a73e8',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    color: 'white',
-                    fontSize: '16px',
-                    fontWeight: '500'
-                }}>
+                <div className="w-9 h-9 rounded-full bg-[#1a73e8] flex items-center justify-center cursor-pointer text-white text-base font-medium">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
                         <circle cx="12" cy="7" r="4"></circle>
                     </svg>
                 </div>
             </div>
-
-            {/* CSS for loading spinner animation */}
-            <style>{`
-                @keyframes spin {
-                    0% { transform: rotate(0deg); }
-                    100% { transform: rotate(360deg); }
-                }
-            `}</style>
         </nav>
     );
 }

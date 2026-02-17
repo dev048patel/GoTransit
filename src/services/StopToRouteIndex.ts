@@ -4,21 +4,8 @@
  */
 import transitStops from '../data/transitStops';
 import transitShapesData from '../data/transitShapes.json';
+import { ShapeFeature } from '../models/transit/StoptoRouteIndex';
 
-interface ShapeFeature {
-    type: string;
-    geometry: {
-        type: string;
-        coordinates: number[][][]; // MultiLineString: array of lines, each line is array of [lng, lat]
-    };
-    properties: {
-        ROUTE_NAME: string;
-        ROUTE_NUM: string;
-        ROUTE_ID: string;
-        SHAPE_ID: string;
-        [key: string]: any;
-    };
-}
 
 // Singleton index
 let stopToRoutes: Map<string, Set<string>> | null = null;

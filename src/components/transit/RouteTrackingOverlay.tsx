@@ -9,12 +9,9 @@
  */
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Marker, Polyline, Circle } from '@react-google-maps/api';
-import { TripOption } from '../models/RoutePlanning';
-import transitShapesData from '../data/transitShapes.json';
+import transitShapesData from '../../data/transitShapes.json';
+import { RouteTrackingOverlayProps } from '../../models/transit/RouteTrackingOverlayProps';
 
-interface RouteTrackingOverlayProps {
-    tripOption: TripOption;
-}
 
 /** Squared distance between two points (no need for sqrt for comparison). */
 function distSq(a: { lat: number; lng: number }, b: { lat: number; lng: number }): number {

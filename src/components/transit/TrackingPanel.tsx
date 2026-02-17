@@ -5,12 +5,7 @@
  * and a Stop Tracking button.
  */
 import React from 'react';
-import { TripOption } from '../models/RoutePlanning';
-
-interface TrackingPanelProps {
-    tripOption: TripOption;
-    onStopTracking: () => void;
-}
+import { TrackingPanelProps } from '../../models/transit/Planner';
 
 export default function TrackingPanel({ tripOption, onStopTracking }: TrackingPanelProps) {
     const now = new Date();
@@ -20,44 +15,44 @@ export default function TrackingPanel({ tripOption, onStopTracking }: TrackingPa
     const routeColors = ['#1a73e8', '#9334e6', '#ea4335', '#34a853'];
 
     return (
-        <div style={panelStyle}>
+        <div className="absolute bottom-0 left-0 right-0 max-h-[55vh] bg-white rounded-t-[20px] shadow-[0_-4px_24px_rgba(0,0,0,0.15)] z-[1500] flex flex-col overflow-hidden">
             {/* Drag handle */}
-            <div style={handleBarStyle}><div style={handleStyle} /></div>
+            <div className="flex justify-center pt-2.5 pb-1"><div className="w-9 h-1 bg-[#dadce0] rounded-sm" /></div>
 
             {/* Header */}
-            <div style={headerStyle}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ fontSize: '20px' }}>🚌</span>
+            <div className="flex justify-between items-center px-[18px] pt-1 pb-3 border-b border-[#e8eaed]">
+                <div className="flex items-center gap-2">
+                    <span className="text-xl">🚌</span>
                     <div>
-                        <div style={{ fontWeight: '700', fontSize: '18px', color: '#202124' }}>
+                        <div className="font-bold text-lg text-[#202124]">
                             {tripOption.totalTime} min
                         </div>
-                        <div style={{ fontSize: '12px', color: '#5f6368' }}>
+                        <div className="text-xs text-[#5f6368]">
                             Arrive {formatTime(arrivalTime)}
                         </div>
                     </div>
                 </div>
                 {/* Route summary icons */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' }}>
-                    <span style={miniIconStyle}>🚶</span>
+                <div className="flex items-center gap-1 flex-wrap">
+                    <span className="text-sm">🚶</span>
                     {tripOption.segments.map((seg, i) => (
                         <React.Fragment key={i}>
-                            <span style={{ color: '#5f6368', fontSize: '12px' }}>›</span>
-                            <span style={{
-                                ...routeBadgeSmallStyle,
-                                backgroundColor: routeColors[i % routeColors.length]
-                            }}>
+                            <span className="text-[#5f6368] text-xs">›</span>
+                            <span
+                                className="text-white px-2 py-0.5 rounded-[10px] text-[11px] font-semibold"
+                                style={{ backgroundColor: routeColors[i % routeColors.length] }}
+                            >
                                 {seg.routeNum}
                             </span>
                         </React.Fragment>
                     ))}
-                    <span style={{ color: '#5f6368', fontSize: '12px' }}>›</span>
-                    <span style={miniIconStyle}>🚶</span>
+                    <span className="text-[#5f6368] text-xs">›</span>
+                    <span className="text-sm">🚶</span>
                 </div>
             </div>
 
             {/* Step-by-step timeline */}
-            <div style={timelineContainerStyle}>
+            <div className="px-[18px] py-3 overflow-y-auto flex-1">
                 {/* Your location */}
                 <TimelineStep
                     color="#4285F4"
@@ -96,8 +91,8 @@ export default function TrackingPanel({ tripOption, onStopTracking }: TrackingPa
                                 icon="🚏"
                                 title={seg.fromStop}
                                 subtitle={
-                                    <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                        <span style={{ ...routeBadgeTinyStyle, backgroundColor: segColor }}>{seg.routeNum}</span>
+                                    <span className="flex items-center gap-1.5">
+                                        <span className="text-white px-1.5 py-px rounded-lg text-[10px] font-semibold" style={{ backgroundColor: segColor }}>{seg.routeNum}</span>
                                         <span>{seg.routeName}</span>
                                     </span>
                                 }
@@ -161,8 +156,8 @@ export default function TrackingPanel({ tripOption, onStopTracking }: TrackingPa
             </div>
 
             {/* Buttons */}
-            <div style={buttonsStyle}>
-                <button onClick={onStopTracking} style={stopBtnStyle}>
+            <div className="px-[18px] pt-2.5 pb-4 border-t border-[#e8eaed] flex gap-2.5">
+                <button onClick={onStopTracking} className="flex-1 p-3 bg-[#ea4335] text-white border-none rounded-3xl text-sm font-semibold cursor-pointer">
                     Stop Tracking
                 </button>
             </div>
@@ -176,58 +171,51 @@ function TimelineStep({ color, icon, title, subtitle, time, lineColor, dashed, s
     lineColor: string; dashed: boolean; small?: boolean; lineThick?: boolean; last?: boolean;
 }) {
     return (
-        <div style={{ display: 'flex', alignItems: 'stretch', minHeight: small ? '28px' : '48px' }}>
+        <div className="flex items-stretch" style={{ minHeight: small ? '28px' : '48px' }}>
             {/* Left timeline column */}
-            <div style={{ width: '32px', display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 }}>
+            <div className="w-8 flex flex-col items-center shrink-0">
                 {/* Dot */}
                 {small ? (
-                    <div style={{
-                        width: '8px', height: '8px', borderRadius: '50%',
-                        backgroundColor: color, marginTop: '8px', flexShrink: 0
-                    }} />
+                    <div
+                        className="w-2 h-2 rounded-full mt-2 shrink-0"
+                        style={{ backgroundColor: color }}
+                    />
                 ) : (
-                    <div style={{
-                        width: '14px', height: '14px', borderRadius: '50%',
-                        backgroundColor: color, border: '2px solid white',
-                        boxShadow: `0 0 0 1px ${color}`, flexShrink: 0, marginTop: '4px'
-                    }} />
+                    <div
+                        className="w-3.5 h-3.5 rounded-full border-2 border-white shrink-0 mt-1"
+                        style={{ backgroundColor: color, boxShadow: `0 0 0 1px ${color}` }}
+                    />
                 )}
                 {/* Line */}
                 {!last && (
-                    <div style={{
-                        flex: 1, width: lineThick ? '4px' : '2px',
-                        backgroundColor: dashed ? 'transparent' : lineColor,
-                        backgroundImage: dashed ? `linear-gradient(${lineColor} 50%, transparent 50%)` : 'none',
-                        backgroundSize: dashed ? '2px 8px' : 'auto',
-                        backgroundRepeat: 'repeat-y',
-                        marginTop: '2px', borderRadius: '1px'
-                    }} />
+                    <div
+                        className="flex-1 mt-0.5 rounded-sm"
+                        style={{
+                            width: lineThick ? '4px' : '2px',
+                            backgroundColor: dashed ? 'transparent' : lineColor,
+                            backgroundImage: dashed ? `linear-gradient(${lineColor} 50%, transparent 50%)` : 'none',
+                            backgroundSize: dashed ? '2px 8px' : 'auto',
+                            backgroundRepeat: 'repeat-y'
+                        }}
+                    />
                 )}
             </div>
 
             {/* Content */}
-            <div style={{
-                flex: 1, paddingLeft: '10px', paddingBottom: small ? '4px' : '12px',
-                display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'
-            }}>
+            <div className={`flex-1 pl-2.5 flex justify-between items-start ${small ? 'pb-1' : 'pb-3'}`}>
                 <div>
-                    <div style={{
-                        display: 'flex', alignItems: 'center', gap: '6px',
-                        fontSize: small ? '12px' : '14px',
-                        fontWeight: small ? '400' : '500',
-                        color: small ? '#5f6368' : '#202124'
-                    }}>
-                        {icon && <span style={{ fontSize: small ? '12px' : '14px' }}>{icon}</span>}
+                    <div className={`flex items-center gap-1.5 ${small ? 'text-xs text-[#5f6368]' : 'text-sm font-medium text-[#202124]'}`}>
+                        {icon && <span className={small ? 'text-xs' : 'text-sm'}>{icon}</span>}
                         <span>{title}</span>
                     </div>
                     {subtitle && (
-                        <div style={{ fontSize: '12px', color: '#5f6368', marginTop: '2px' }}>
+                        <div className="text-xs text-[#5f6368] mt-0.5">
                             {subtitle}
                         </div>
                     )}
                 </div>
                 {time && (
-                    <div style={{ fontSize: '13px', fontWeight: '600', color: '#202124', whiteSpace: 'nowrap', marginLeft: '8px' }}>
+                    <div className="text-[13px] font-semibold text-[#202124] whitespace-nowrap ml-2">
                         {time}
                     </div>
                 )}
@@ -236,85 +224,4 @@ function TimelineStep({ color, icon, title, subtitle, time, lineColor, dashed, s
     );
 }
 
-// -------- Styles --------
 
-const panelStyle: React.CSSProperties = {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    maxHeight: '55vh',
-    backgroundColor: 'white',
-    borderRadius: '20px 20px 0 0',
-    boxShadow: '0 -4px 24px rgba(0,0,0,0.15)',
-    zIndex: 1500,
-    display: 'flex',
-    flexDirection: 'column',
-    overflow: 'hidden'
-};
-
-const handleBarStyle: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'center',
-    padding: '10px 0 4px'
-};
-
-const handleStyle: React.CSSProperties = {
-    width: '36px',
-    height: '4px',
-    backgroundColor: '#dadce0',
-    borderRadius: '2px'
-};
-
-const headerStyle: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '4px 18px 12px',
-    borderBottom: '1px solid #e8eaed'
-};
-
-const timelineContainerStyle: React.CSSProperties = {
-    padding: '12px 18px',
-    overflowY: 'auto',
-    flex: 1
-};
-
-const buttonsStyle: React.CSSProperties = {
-    padding: '10px 18px 16px',
-    borderTop: '1px solid #e8eaed',
-    display: 'flex',
-    gap: '10px'
-};
-
-const stopBtnStyle: React.CSSProperties = {
-    flex: 1,
-    padding: '12px',
-    backgroundColor: '#ea4335',
-    color: 'white',
-    border: 'none',
-    borderRadius: '24px',
-    fontSize: '14px',
-    fontWeight: '600',
-    cursor: 'pointer'
-};
-
-const miniIconStyle: React.CSSProperties = {
-    fontSize: '14px'
-};
-
-const routeBadgeSmallStyle: React.CSSProperties = {
-    color: 'white',
-    padding: '2px 8px',
-    borderRadius: '10px',
-    fontSize: '11px',
-    fontWeight: '600'
-};
-
-const routeBadgeTinyStyle: React.CSSProperties = {
-    color: 'white',
-    padding: '1px 6px',
-    borderRadius: '8px',
-    fontSize: '10px',
-    fontWeight: '600'
-};

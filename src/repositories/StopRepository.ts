@@ -1,7 +1,7 @@
 /*
     Data Access Layer for Stop entities.
 */
-import { Stop } from '../models/Stop';
+import { Stop } from '../models/transit/Stop';
 import transitStops from '../data/transitStops';
 
 export class StopRepository {
