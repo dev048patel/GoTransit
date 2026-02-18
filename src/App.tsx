@@ -22,6 +22,7 @@ import Reports from './views/admin/Reports';
 import VisitorAnalytics from './views/admin/VisitorAnalytics';
 import LandingPage from './views/landing/LandingPage';
 import { useAnalyticsBeacon } from './hooks/useAnalyticsBeacon';
+import { Divide } from 'lucide-react';
 
 /**
  * MapPage — Wrapper that scopes the map controller to this route only.
@@ -83,13 +84,19 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Landing Page */}
+        {/* Landing Page -> Need to add Login Page and Sign up. */}
         <Route path="/landing" element={<LandingPage />} />
+
+        {/* Login Page {Future Scope} */}
+        <Route path="/login" element={<div>Login Page will be added soon...</div>} />
+
+        {/* Sign-Up Page {Future Scope} */}
+        <Route path="/signup" element={<div>Sign-Up Page will be added soon...</div>}/>
 
         {/* Map View — Controller only runs on this route */}
         <Route path="/" element={<MapPage />} />
 
-        {/* Admin Routes */}
+        {/* Admin Routes -> Here I'm going to cut down some components -> For University Project specific. */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="routes" element={<RouteManager />} />

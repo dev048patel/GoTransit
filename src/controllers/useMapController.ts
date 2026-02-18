@@ -37,8 +37,8 @@ interface MapControllerOutput {
 }
 
 export const useMapController = (): MapControllerOutput => {
-  // 1. Fetch Configuration from Model
-  const { libraries } = MapModel;
+  // 1. Fetch Configuration from Model and initialize state variables
+  const { libraries } = MapModel; // Destructuring way of writing const libraries = MapModel.libraries
 
   // 2. Initialize State / External APIs (Business Logic)
   const { isLoaded, loadError } = useLoadScript({
@@ -46,9 +46,10 @@ export const useMapController = (): MapControllerOutput => {
     libraries,
   });
 
-  const [allStops, setAllStops] = useState<Stop[]>([]);
-  const [selectedRoute, setSelectedRoute] = useState<string | null>(null);
-  const [liveBuses, setLiveBuses] = useState<BusPosition[]>([]);
+  // using useState so it remembers the value even after re-renders so it has 2 values : current value and a function to update it
+  const [allStops, setAllStops] = useState<Stop[]>([]); // here storing all stops in form of array : [allStops, setAllStops] : [current value, function to update it]
+  const [selectedRoute, setSelectedRoute] = useState<string | null>(null); // It will store the selected route number from RouteManager -> Navbar and will return null if no route is selected
+  const [liveBuses, setLiveBuses] = useState<BusPosition[]>([]); // Store live bus positions 
   const [center, setCenter] = useState<Coordinates>(MapModel.center);
   const [zoom, setZoom] = useState<number>(MapModel.defaultZoom);
   const [selectedPlaceMarker, setSelectedPlaceMarker] = useState<{ location: Coordinates; name: string } | null>(null);
@@ -60,8 +61,8 @@ export const useMapController = (): MapControllerOutput => {
     setCurrentZoom(newZoom);
   }, []);
 
+  // Fetch Stops from Backend API -> API Call
   useEffect(() => {
-    // Fetch Stops from Backend API
     const fetchStops = async () => {
       try {
         const baseUrl = import.meta.env.VITE_SERVER_URL;
@@ -77,7 +78,7 @@ export const useMapController = (): MapControllerOutput => {
     fetchStops();
   }, []);
 
-  // Poll for Live Buses
+  // Poll for Live Buses -> API Call
   useEffect(() => {
     const fetchLiveBuses = async () => {
       try {
@@ -95,26 +96,32 @@ export const useMapController = (): MapControllerOutput => {
       }
     };
 
-    fetchLiveBuses();
+    fetchLiveBuses(); // First we are showing bus at the moment and then we will fetch it again after 1.5 seconds so map does not show without bus at the begning.
     const interval = setInterval(fetchLiveBuses, 1500); // Poll every 1.5 seconds for real-time feel
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval); // Clearing interval to prevent memory leaks meaning it will not run again and again
   }, []);
 
-  // Lazy-load the 3.4MB shapes file only when needed
+  /*
+    Lazy-load the 3.4MB transitShapes.json file which includes:
+    Lat, Long, Properties(Route_NUM, ROUTE_NAME, ROUTE_ID, SHAPE_ID) 
+  */
   useEffect(() => {
     if (selectedRoute && !shapesData) {
       import('../data/transitShapes.json').then((module) => {
         setShapesData(module.default);
       });
-    }
+    } 
   }, [selectedRoute, shapesData]);
 
+  // Take all TransitRoute -> Look up their color in array -> Marge the color into each route -> Caches the results using useMemo()
   const routesWithColors = useMemo(() => {
+    // Searching for color & parseInt will convert the route.Route_NUM in string to int
     return transitRoutes.map(route => {
       const colorData = transitColors.find(c => c.route_id === parseInt(route.ROUTE_NUM));
       return {
-        ...route,
+        ...route, // Spreader operator -> It copies all existing properties of route and overrides it below
+        // Cleaning color repersentation by removing # 
         ROUTE_COLO: colorData ? colorData.colour.replace('#', '') : route.ROUTE_COLO
       };
     });
@@ -122,7 +129,7 @@ export const useMapController = (): MapControllerOutput => {
 
   // Show stops only for the selected route (solves 1,440 stop lag)
   const visibleStops = useMemo(() => {
-    if (!selectedRoute) return []; // No route selected → no stops
+    if (!selectedRoute) return []; // No route selected -> no stops
     const routeStopIds = getStopsForRoute(selectedRoute);
     return allStops.filter(stop => routeStopIds.has(stop.STOP_ID));
   }, [allStops, selectedRoute]);
