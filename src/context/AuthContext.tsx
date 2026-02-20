@@ -10,7 +10,7 @@
 
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import type { User, AuthSession } from '../models/auth/AuthModel';
-import { loadSession, saveSession, clearSession, SESSION_TTL_MS } from '../models/auth/AuthModel';
+import { loadSession, saveSession, clearSession, SESSION_TTL_MS, validateCredential } from '../models/auth/AuthModel';
 import { recordLogin, recordLogout } from '../services/UserRegistry';
 
 /* ── Shape of what the context exposes ───────────────────────── */
@@ -42,23 +42,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     /**
-     * login() — mock login until backend is connected.
-     * Accepts any non-empty email + password (≥6 chars) and stores a session.
+     * login() — validates password against the stored credential hash.
+     * Returns false if the account doesn't exist or password is wrong.
      */
     const login = useCallback(async (email: string, password: string, fullName: string = 'User'): Promise<boolean> => {
-        // TODO: replace with real API call
         if (!email || password.length < 6) return false;
 
+        // ── Validate password ──
+        const valid = validateCredential(email, password);
+        if (!valid) return false;
+
+        // Look up the user's real full name from the registry cache
+        const raw = localStorage.getItem('gotransit_users');
+        const users: Array<{ email: string; fullName: string; mobile?: string }> =
+            raw ? JSON.parse(raw) : [];
+        const found = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+        const resolvedName = found?.fullName ?? fullName;
+        const resolvedMobile = found?.mobile;
+
         const newSession: AuthSession = {
-            user: { fullName, email },
-            token: `mock-token-${Date.now()}`,
+            user: { fullName: resolvedName, email, mobile: resolvedMobile },
+            token: `token-${Date.now()}`,
             expiresAt: Date.now() + SESSION_TTL_MS,
         };
         saveSession(newSession);
         setSession(newSession);
 
-        // Record login event → visible in admin panel + persisted to PostgreSQL
-        await recordLogin(email, fullName);
+        // Record login event → persisted to PostgreSQL
+        await recordLogin(email, resolvedName);
 
         return true;
     }, []);

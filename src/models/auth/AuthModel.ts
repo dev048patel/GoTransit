@@ -48,3 +48,38 @@ export function saveSession(session: AuthSession): void {
 export function clearSession(): void {
     localStorage.removeItem(SESSION_STORAGE_KEY);
 }
+
+/* ── Password credential store ───────────────────────────────────
+   Stores a simple hash of each user's password keyed by email.
+   This is client-side only — suitable for this demo app.
+   Never store real passwords like this in production; use a backend.
+ ─────────────────────────────────────────────────────────────── */
+const CRED_KEY = 'gotransit_creds';
+
+/** djb2 hash — fast, deterministic, good enough for demo validation */
+function hashPassword(pw: string): string {
+    let h = 5381;
+    for (let i = 0; i < pw.length; i++) h = ((h << 5) + h) ^ pw.charCodeAt(i);
+    return (h >>> 0).toString(36);
+}
+
+type CredStore = Record<string, string>; // email → hashed password
+
+function loadCreds(): CredStore {
+    try { return JSON.parse(localStorage.getItem(CRED_KEY) || '{}'); } catch { return {}; }
+}
+
+/** Save a password for a new account */
+export function saveCredential(email: string, password: string): void {
+    const creds = loadCreds();
+    creds[email.toLowerCase()] = hashPassword(password);
+    localStorage.setItem(CRED_KEY, JSON.stringify(creds));
+}
+
+/** Returns true if the password matches what was stored at signup */
+export function validateCredential(email: string, password: string): boolean {
+    const creds = loadCreds();
+    const stored = creds[email.toLowerCase()];
+    if (!stored) return false; // no account found
+    return stored === hashPassword(password);
+}

@@ -101,15 +101,20 @@ function InfoRow({ label, value, verified }: { label: string; value: string; ver
 /* ================================================================== */
 export default function ProfilePage() {
     const navigate = useNavigate();
-    const { logout } = useAuth();
+    const { logout, user } = useAuth();
+
+    // Real user from session — fall back to SAMPLE for optional fields not yet in auth
+    const fullName = user?.fullName ?? SAMPLE.fullName;
+    const email = user?.email ?? SAMPLE.email;
+    const phone = user?.mobile ?? SAMPLE.phone;
+    const initials = fullName.split(' ').map((n) => n[0]).join('').toUpperCase();
+
     const [notifAlerts, setNotifAlerts] = useState(true);
     const [notifDelays, setNotifDelays] = useState(true);
     const [notifPromos, setNotifPromos] = useState(false);
     const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('system');
     const [largerText, setLargerText] = useState(false);
     const [highContrast, setHighContrast] = useState(false);
-
-    const initials = SAMPLE.fullName.split(' ').map((n) => n[0]).join('').toUpperCase();
 
     const themes: { value: typeof theme; icon: React.ElementType; label: string }[] = [
         { value: 'light', icon: Sun, label: 'Light' },
@@ -146,8 +151,8 @@ export default function ProfilePage() {
                         {initials}
                     </div>
                     <div className="flex-1 min-w-0">
-                        <h2 className="text-lg font-bold text-gray-900 truncate">{SAMPLE.fullName}</h2>
-                        <p className="text-sm text-gray-500 truncate">{SAMPLE.email}</p>
+                        <h2 className="text-lg font-bold text-gray-900 truncate">{fullName}</h2>
+                        <p className="text-sm text-gray-500 truncate">{email}</p>
                     </div>
                     <button className="flex items-center gap-1 text-sm font-medium text-transit-800 hover:text-transit-900 bg-transit-50 hover:bg-transit-100 px-3 py-1.5 rounded-lg transition">
                         <Pencil className="w-3.5 h-3.5" /> Edit
@@ -158,9 +163,9 @@ export default function ProfilePage() {
                 {/*  PERSONAL INFO                                                */}
                 {/* ============================================================ */}
                 <SectionCard title="Personal Info" icon={Eye}>
-                    <InfoRow label="Full Name" value={SAMPLE.fullName} />
-                    <InfoRow label="Email" value={SAMPLE.email} verified={SAMPLE.emailVerified} />
-                    <InfoRow label="Phone" value={SAMPLE.phone} verified={SAMPLE.phoneVerified} />
+                    <InfoRow label="Full Name" value={fullName} />
+                    <InfoRow label="Email" value={email} verified={SAMPLE.emailVerified} />
+                    <InfoRow label="Phone" value={phone} verified={!!user?.mobile && SAMPLE.phoneVerified} />
                 </SectionCard>
 
                 {/* ============================================================ */}
