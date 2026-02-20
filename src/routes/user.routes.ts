@@ -52,11 +52,11 @@ router.get('/:id', async (req: Request, res: Response) => {
 /* ── POST /api/users/upsert ─────────────────────────────────────── */
 router.post('/upsert', async (req: Request, res: Response) => {
     try {
-        const { id, full_name, email, mobile_number } = req.body;
-        if (!id || !full_name || !email) {
-            return res.status(400).json({ error: 'id, full_name, and email are required' });
+        const { full_name, email, mobile_number } = req.body;
+        if (!full_name || !email) {
+            return res.status(400).json({ error: 'full_name and email are required' });
         }
-        const user = await repo.upsertOnSignup({ id, full_name, email, mobile_number });
+        const user = await repo.upsertOnSignup({ full_name, email, mobile_number });
         res.status(201).json(user);
     } catch (err) {
         console.error('[Users] upsert error', err);

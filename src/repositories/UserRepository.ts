@@ -60,21 +60,20 @@ export class UserRepository {
      * Returns the created or existing user.
      */
     async upsertOnSignup(params: {
-        id: string;
         full_name: string;
         email: string;
         mobile_number?: string;
     }): Promise<DBUser> {
-        const { id, full_name, email, mobile_number } = params;
+        const { full_name, email, mobile_number } = params;
         const { rows } = await pool.query<DBUser>(
-            `INSERT INTO users (id, full_name, email, mobile_number, password_hash, account_status)
-             VALUES ($1, $2, $3, $4, 'oauth', 'active')
+            `INSERT INTO users (full_name, email, mobile_number, password_hash, account_status)
+             VALUES ($1, $2, $3, 'app-auth', 'active')
              ON CONFLICT (email) DO UPDATE SET
                  full_name    = EXCLUDED.full_name,
                  updated_at   = now()
              RETURNING id, full_name, email, mobile_number, mobile_verified,
                        email_verified, created_at, last_login_at, is_active, account_status`,
-            [id, full_name, email, mobile_number ?? null]
+            [full_name, email, mobile_number ?? null]
         );
         return rows[0];
     }

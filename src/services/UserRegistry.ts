@@ -66,23 +66,31 @@ function formatDate(iso: string): string {
  */
 export async function registerUser(fullName: string, email: string, mobile?: string): Promise<RegisteredUser> {
     const now = new Date().toISOString();
-    const id = `usr-${Date.now()}`;
+    let id = `usr-${Date.now()}`; // fallback if API unreachable
+
+    // ── Persist to PostgreSQL via Express API ──
+    try {
+        const res = await fetch(`${API_BASE}/upsert`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            // Do NOT send id — let Postgres generate the UUID
+            body: JSON.stringify({ full_name: fullName, email, mobile_number: mobile || null }),
+        });
+        if (res.ok) {
+            const data = await res.json() as { id?: string };
+            if (data.id) id = data.id; // use DB-assigned UUID
+        } else {
+            const errText = await res.text();
+            console.warn('[GoTransit] upsert failed:', res.status, errText);
+        }
+    } catch (e) {
+        console.warn('[GoTransit] API unreachable — saved to localStorage only', e);
+    }
 
     const newUser: RegisteredUser = {
         id, fullName, email, mobile,
         registeredAt: now, lastLoginAt: now, loginCount: 0, status: 'Active',
     };
-
-    // ── Persist to PostgreSQL via Express API ──
-    try {
-        await fetch(`${API_BASE}/upsert`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id, full_name: fullName, email, mobile_number: mobile }),
-        });
-    } catch {
-        console.warn('[GoTransit] API unreachable — saved to localStorage only');
-    }
 
     // ── Update local cache ──
     const users = load();
