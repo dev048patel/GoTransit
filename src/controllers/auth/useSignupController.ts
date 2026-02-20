@@ -8,6 +8,8 @@
  */
 
 import { useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import { registerUser } from '../../services/UserRegistry';
 import { saveCredential } from '../../models/auth/AuthModel';
 
@@ -64,6 +66,8 @@ interface SignupControllerOutput {
 
 /* ── Controller ─────────────────────────────────────────────────── */
 export function useSignupController(): SignupControllerOutput {
+    const navigate = useNavigate();
+    const { login } = useAuth();
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -101,8 +105,13 @@ export function useSignupController(): SignupControllerOutput {
         // Persist to UserRegistry → saves to PostgreSQL + localStorage cache
         await registerUser(fullName, email, mobile || undefined);
 
+        // Auto-login so the session is immediately populated (profile shows real name)
+        await login(email, password, fullName);
+
         setSuccess(true);
-    }, [fullName, email, password, mobile]);
+        // Redirect to map after a brief success flash
+        setTimeout(() => navigate('/map'), 1500);
+    }, [fullName, email, password, mobile, login, navigate]);
 
     return {
         fullName, setFullName,
