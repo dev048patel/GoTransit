@@ -19,7 +19,7 @@ const iconMap: { [key: string]: React.FC<{ size?: number, className?: string }> 
 
 export default function HowItWorks({ steps }: HowItWorksProps) {
     return (
-        <section className="py-24 bg-white">
+        <section className="py-24 relative">
             <div className="max-w-7xl mx-auto px-6">
                 {/* Section Header */}
                 <motion.div
@@ -29,7 +29,7 @@ export default function HowItWorks({ steps }: HowItWorksProps) {
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
                 >
-                    <h2 className="text-5xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-[#003DA5] to-[#FF6B35] bg-clip-text text-transparent">
+                    <h2 className="text-5xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-[#003DA5] to-[#003DA5] bg-clip-text text-transparent">
                         How It Works
                     </h2>
                     <p className="text-xl text-gray-600 max-w-2xl mx-auto">
@@ -46,7 +46,13 @@ export default function HowItWorks({ steps }: HowItWorksProps) {
                             <React.Fragment key={step.number}>
                                 {/* Step Card */}
                                 <motion.div
-                                    className="relative flex-1 bg-white rounded-3xl p-10 shadow-[0_20px_80px_rgba(0,0,0,0.08)] hover:shadow-[0_25px_100px_rgba(0,0,0,0.12)] transition-all duration-500"
+                                    className="relative flex-1 rounded-3xl p-10 transition-all duration-500 hover:-translate-y-2"
+                                    style={{
+                                        background: 'rgba(255,255,255,0.85)',
+                                        backdropFilter: 'blur(20px)',
+                                        border: '1px solid rgba(0,61,165,0.10)',
+                                        boxShadow: '0 8px 40px rgba(0,0,0,0.08)',
+                                    }}
                                     initial={{ opacity: 0, y: 50 }}
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true }}
@@ -58,7 +64,7 @@ export default function HowItWorks({ steps }: HowItWorksProps) {
                                     </div>
 
                                     {/* Icon */}
-                                    <div className="w-20 h-20 mx-auto mb-6 mt-4 rounded-2xl bg-gradient-to-br from-blue-50 to-orange-50 flex items-center justify-center">
+                                    <div className="w-20 h-20 mx-auto mb-6 mt-4 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-50 flex items-center justify-center">
                                         <Icon size={40} className="text-[#003DA5]" />
                                     </div>
 
@@ -66,7 +72,7 @@ export default function HowItWorks({ steps }: HowItWorksProps) {
                                     <h3 className="text-2xl font-bold text-gray-900 mb-3 text-center">
                                         {step.title}
                                     </h3>
-                                    <p className="text-gray-600 text-center leading-relaxed">
+                                    <p className="text-lg text-gray-600 text-center leading-relaxed">
                                         {step.description}
                                     </p>
                                 </motion.div>
@@ -75,11 +81,11 @@ export default function HowItWorks({ steps }: HowItWorksProps) {
                                 {index < steps.length - 1 && (
                                     <div className="hidden md:block relative w-24 h-1">
                                         {/* Gradient Line */}
-                                        <div className="absolute top-0 w-full h-1 bg-gradient-to-r from-[#003DA5] to-[#FF6B35] rounded-full" />
+                                        <div className="absolute top-0 w-full h-1 bg-gradient-to-r from-[#003DA5] to-[#003DA5] rounded-full" />
 
                                         {/* Animated Dot */}
                                         <motion.div
-                                            className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-[#FF6B35] rounded-full shadow-lg"
+                                            className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-[#003DA5] rounded-full shadow-lg"
                                             animate={{
                                                 x: [0, 84, 0],
                                             }}

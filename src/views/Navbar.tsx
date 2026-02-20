@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
 import { Route } from '../models/Route';
 
@@ -76,20 +77,22 @@ export default function Navbar({ onPlaceSelect, onTripPlannerClick, routes, sele
             maxWidth: '100vw',
             overflow: 'visible'
         }}>
-            {/* Logo/Title */}
-            <div style={{
-                fontSize: '20px',
-                fontWeight: 'bold',
-                color: '#1a73e8',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-            }}>
-                <span>🚌</span>
-                <span>Go
-                    <span role="img" aria-label="Bus Stop">🚏</span>ransit
-                </span>
-            </div>
+            {/* Logo/Title — links to landing page */}
+            <Link to="/" style={{ textDecoration: 'none' }}>
+                <div style={{
+                    fontSize: '20px',
+                    fontWeight: 'bold',
+                    color: '#1a73e8',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                }}>
+                    <span>🚌</span>
+                    <span>Go
+                        <span role="img" aria-label="Bus Stop">🚏</span>ransit
+                    </span>
+                </div>
+            </Link>
 
             {/* Center - Search with Autocomplete */}
             <div style={{
@@ -264,25 +267,27 @@ export default function Navbar({ onPlaceSelect, onTripPlannerClick, routes, sele
                     Future Trip Planner
                 </button>
                 {/* Admin link hidden from public users — access via /admin URL directly */}
-                {/* Profile Icon */}
-                <div style={{
-                    width: '36px',
-                    height: '36px',
-                    borderRadius: '50%',
-                    backgroundColor: '#1a73e8',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    color: 'white',
-                    fontSize: '16px',
-                    fontWeight: '500'
-                }}>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
-                </div>
+                {/* Profile Icon — links to /profile */}
+                <Link to="/profile" style={{ textDecoration: 'none' }}>
+                    <div style={{
+                        width: '36px',
+                        height: '36px',
+                        borderRadius: '50%',
+                        backgroundColor: '#1a73e8',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        color: 'white',
+                        fontSize: '16px',
+                        fontWeight: '500'
+                    }}>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                </Link>
             </div>
 
             {/* CSS for loading spinner animation */}

@@ -25,7 +25,7 @@ export default function FeaturesCarousel({ features }: FeaturesCarouselProps) {
     const [activeFeature, setActiveFeature] = useState(0);
 
     return (
-        <section className="py-24 bg-gradient-to-b from-white to-blue-50">
+        <section className="py-24 relative">
             <div className="max-w-7xl mx-auto px-6">
                 {/* Section Header */}
                 <motion.div
@@ -35,7 +35,7 @@ export default function FeaturesCarousel({ features }: FeaturesCarouselProps) {
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
                 >
-                    <h2 className="text-5xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-[#003DA5] to-[#FF6B35] bg-clip-text text-transparent">
+                    <h2 className="text-5xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-[#003DA5] to-[#003DA5] bg-clip-text text-transparent">
                         Powerful Features
                     </h2>
                     <p className="text-xl text-gray-600 max-w-2xl mx-auto">
@@ -55,8 +55,8 @@ export default function FeaturesCarousel({ features }: FeaturesCarouselProps) {
                                 <motion.button
                                     key={feature.id}
                                     className={`w-full text-left p-6 rounded-2xl transition-all duration-300 border-l-4 ${isActive
-                                            ? 'bg-gradient-to-r from-[#FF6B35]/20 to-transparent border-[#FF6B35] shadow-[0_0_30px_rgba(255,107,53,0.3)]'
-                                            : 'bg-white/50 border-transparent hover:bg-white/80 hover:border-gray-200'
+                                        ? 'bg-white border-[#003DA5] shadow-lg shadow-blue-100'
+                                        : 'bg-white/70 border-transparent hover:bg-white hover:border-gray-200 hover:shadow-md'
                                         }`}
                                     onClick={() => setActiveFeature(index)}
                                     whileHover={{ x: 8 }}
@@ -67,8 +67,8 @@ export default function FeaturesCarousel({ features }: FeaturesCarouselProps) {
                                 >
                                     <div className="flex items-center gap-4">
                                         <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${isActive
-                                                ? 'bg-gradient-to-br from-[#003DA5] to-[#0066FF] text-white'
-                                                : 'bg-gray-100 text-gray-600'
+                                            ? 'bg-gradient-to-br from-[#003DA5] to-[#0066FF] text-white'
+                                            : 'bg-gray-100 text-gray-600'
                                             }`}>
                                             <Icon size={24} />
                                         </div>
@@ -108,9 +108,9 @@ export default function FeaturesCarousel({ features }: FeaturesCarouselProps) {
                                         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-7 bg-gray-900 rounded-b-3xl z-10" />
 
                                         {/* Screen */}
-                                        <div className="relative h-[650px] bg-white rounded-[2.5rem] overflow-hidden">
+                                        <div className="relative h-[650px] rounded-[2.5rem] overflow-hidden">
                                             {/* Feature Screenshot Placeholder */}
-                                            <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-orange-50 flex items-center justify-center p-8">
+                                            <div className="absolute inset-0 bg-white flex items-center justify-center p-8">
                                                 <div className="text-center">
                                                     <div className="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
                                                         {React.createElement(iconMap[features[activeFeature].icon] || Map, {
@@ -121,7 +121,7 @@ export default function FeaturesCarousel({ features }: FeaturesCarouselProps) {
                                                     <h3 className="text-2xl font-bold text-gray-900 mb-4">
                                                         {features[activeFeature].title}
                                                     </h3>
-                                                    <p className="text-gray-600 leading-relaxed">
+                                                    <p className="text-lg text-gray-600 leading-relaxed">
                                                         {features[activeFeature].description}
                                                     </p>
                                                 </div>

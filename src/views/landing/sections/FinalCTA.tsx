@@ -1,10 +1,11 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Map } from 'lucide-react';
 
 export default function FinalCTA() {
     return (
-        <section className="relative py-32 overflow-hidden bg-gradient-to-br from-[#FF6B35] via-[#003DA5] to-[#0066FF]">
+        <section className="relative py-32 overflow-hidden bg-gradient-to-br from-[#003DA5] via-[#003DA5] to-[#0066FF]">
             {/* Animated Background Shapes */}
             <div className="absolute inset-0 overflow-hidden opacity-30">
                 <motion.div
@@ -45,14 +46,21 @@ export default function FinalCTA() {
 
                     {/* CTA Buttons */}
                     <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-                        <button className="group px-12 py-5 bg-white text-[#003DA5] rounded-2xl font-bold text-xl shadow-[0_20px_60px_rgba(0,0,0,0.3)] hover:shadow-[0_30px_80px_rgba(0,0,0,0.4)] hover:scale-105 hover:-translate-y-2 transition-all duration-300 flex items-center gap-3">
-                            Start Using GoTransit
+                        <Link
+                            to="/login"
+                            className="group px-12 py-5 bg-white text-[#003DA5] rounded-2xl font-bold text-xl shadow-[0_20px_60px_rgba(0,0,0,0.3)] hover:shadow-[0_30px_80px_rgba(0,0,0,0.4)] hover:scale-105 hover:-translate-y-2 transition-all duration-300 flex items-center gap-3 no-underline"
+                        >
+                            Get Started Free
                             <ArrowRight size={24} className="group-hover:translate-x-1 transition-transform" />
-                        </button>
+                        </Link>
 
-                        <button className="px-12 py-5 bg-white/10 backdrop-blur-md text-white rounded-2xl font-bold text-xl border-2 border-white/30 hover:bg-white/20 hover:border-white/50 transition-all duration-300">
-                            Learn More
-                        </button>
+                        <Link
+                            to="/map"
+                            className="px-12 py-5 bg-white/10 backdrop-blur-md text-white rounded-2xl font-bold text-xl border-2 border-white/30 hover:bg-white/20 hover:border-white/50 transition-all duration-300 flex items-center gap-3 no-underline"
+                        >
+                            <Map size={22} />
+                            Open Map
+                        </Link>
                     </div>
 
                     {/* Trust Badge */}

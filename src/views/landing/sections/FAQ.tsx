@@ -17,7 +17,7 @@ export default function FAQ({ faqItems }: FAQProps) {
     };
 
     return (
-        <section className="py-24 bg-white">
+        <section className="py-24 relative">
             <div className="max-w-4xl mx-auto px-6">
                 {/* Section Header */}
                 <motion.div
@@ -27,7 +27,7 @@ export default function FAQ({ faqItems }: FAQProps) {
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
                 >
-                    <h2 className="text-5xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-[#003DA5] to-[#FF6B35] bg-clip-text text-transparent">
+                    <h2 className="text-5xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-[#003DA5] to-[#003DA5] bg-clip-text text-transparent">
                         Frequently Asked Questions
                     </h2>
                     <p className="text-xl text-gray-600">
@@ -40,7 +40,7 @@ export default function FAQ({ faqItems }: FAQProps) {
                     {faqItems.map((item, index) => (
                         <motion.div
                             key={index}
-                            className="backdrop-blur-xl bg-gradient-to-br from-white/60 to-white/40 rounded-2xl border border-gray-200 overflow-hidden hover:border-[#FF6B35]/30 hover:bg-white/70 transition-all duration-300"
+                            className="backdrop-blur-xl bg-gradient-to-br from-white/60 to-white/40 rounded-2xl border border-gray-200 overflow-hidden hover:border-[#003DA5]/30 hover:bg-white/70 transition-all duration-300"
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
@@ -62,7 +62,7 @@ export default function FAQ({ faqItems }: FAQProps) {
                                     transition={{ duration: 0.3 }}
                                 >
                                     {openIndex === index ? (
-                                        <X size={24} className="text-[#FF6B35]" />
+                                        <X size={24} className="text-[#003DA5]" />
                                     ) : (
                                         <Plus size={24} className="text-gray-400" />
                                     )}
@@ -79,7 +79,7 @@ export default function FAQ({ faqItems }: FAQProps) {
                                         transition={{ duration: 0.3, ease: 'easeInOut' }}
                                         className="overflow-hidden"
                                     >
-                                        <div className="px-8 pb-6 text-gray-600 leading-relaxed">
+                                        <div className="px-8 pb-6 text-lg text-gray-600 leading-relaxed">
                                             {item.answer}
                                         </div>
                                     </motion.div>
