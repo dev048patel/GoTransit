@@ -9,6 +9,7 @@
 
 import { useState, useCallback } from 'react';
 import { registerUser } from '../../services/UserRegistry';
+import { saveCredential } from '../../models/auth/AuthModel';
 
 /* ── Password strength ─────────────────────────────────────────── */
 export interface PasswordStrength {
@@ -95,6 +96,8 @@ export function useSignupController(): SignupControllerOutput {
         await new Promise(resolve => setTimeout(resolve, 1100));
         setIsLoading(false);
 
+        // Save credential hash so login can validate the password
+        saveCredential(email, password);
         // Persist to UserRegistry → saves to PostgreSQL + localStorage cache
         await registerUser(fullName, email, mobile || undefined);
 
