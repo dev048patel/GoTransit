@@ -22,7 +22,7 @@ export default function VisualDemo() {
     }, []);
 
     return (
-        <section className="py-24 bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 relative overflow-hidden">
+        <section className="py-24 relative overflow-hidden">
             {/* Background Effects */}
             <div className="absolute inset-0">
                 <motion.div
@@ -69,12 +69,12 @@ export default function VisualDemo() {
                         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-44 h-8 bg-gray-900 rounded-b-3xl z-10" />
 
                         {/* Screen */}
-                        <div className="relative h-[700px] bg-white rounded-[3rem] overflow-hidden">
+                        <div className="relative h-[700px] rounded-[3rem] overflow-hidden">
                             {/* Animated Content */}
                             <AnimatePresence mode="wait">
                                 <motion.div
                                     key={currentStep}
-                                    className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-orange-50 flex items-center justify-center p-12"
+                                    className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-blue-50 flex items-center justify-center p-12"
                                     initial={{ opacity: 0, scale: 0.9, rotateY: 90 }}
                                     animate={{ opacity: 1, scale: 1, rotateY: 0 }}
                                     exit={{ opacity: 0, scale: 0.9, rotateY: -90 }}
@@ -98,7 +98,7 @@ export default function VisualDemo() {
 
                                         {/* Animation Indicator */}
                                         <motion.div
-                                            className="w-16 h-16 mx-auto mt-8 rounded-full border-4 border-[#FF6B35] border-t-transparent"
+                                            className="w-16 h-16 mx-auto mt-8 rounded-full border-4 border-[#003DA5] border-t-transparent"
                                             animate={{ rotate: 360 }}
                                             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
                                         />
@@ -118,7 +118,7 @@ export default function VisualDemo() {
                         <button
                             key={step.id}
                             className={`transition-all duration-300 rounded-full ${index === currentStep
-                                    ? 'w-12 h-3 bg-gradient-to-r from-[#003DA5] to-[#FF6B35]'
+                                    ? 'w-12 h-3 bg-gradient-to-r from-[#003DA5] to-[#003DA5]'
                                     : 'w-3 h-3 bg-gray-300 hover:bg-gray-400'
                                 }`}
                             onClick={() => setCurrentStep(index)}

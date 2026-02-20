@@ -4,6 +4,19 @@ This file is the Frontend Root("Brain of Frontend UI"). It is rendered by index.
 2. Sets up layout
 3. Parent component for all other components
 4. Passes data from controller to view
+
+Auth Architecture:
+- <AuthProvider> wraps the entire app — provides isAuthenticated + login/logout to all children
+- <ProtectedRoute>  — redirects to /login if user is not authenticated
+- <PublicOnlyRoute> — redirects to /map if user IS already authenticated (prevents re-visiting login)
+
+Route Map:
+  /          → LandingPage          (public)
+  /login     → LoginPage            (public only — bounces logged-in users to /map)
+  /signup    → SignupPage           (public only — bounces logged-in users to /map)
+  /map       → MapPage              (protected — requires login)
+  /profile   → ProfilePage         (protected — requires login)
+  /admin/*   → Admin panel         (protected — requires login)
 */
 
 import React from 'react';
@@ -11,7 +24,7 @@ import './App.css';
 import { useMapController } from './controllers/useMapController';
 import { MapView } from './views/MapView';
 
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AdminLayout from './layouts/AdminLayout';
 import Dashboard from './views/admin/Dashboard';
 import RouteManager from './views/admin/RouteManager';
@@ -21,13 +34,19 @@ import SystemHealth from './views/admin/SystemHealth';
 import Reports from './views/admin/Reports';
 import VisitorAnalytics from './views/admin/VisitorAnalytics';
 import LandingPage from './views/landing/LandingPage';
+import LoginPage from './views/auth/LoginPage';
+import SignupPage from './views/auth/SignupPage';
+import ProfilePage from './views/auth/ProfilePage';
 import { useAnalyticsBeacon } from './hooks/useAnalyticsBeacon';
-import { Divide } from 'lucide-react';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import PublicOnlyRoute from './components/PublicOnlyRoute';
+import ConnectPage from './views/ConnectPage';
 
 /**
  * MapPage — Wrapper that scopes the map controller to this route only.
  * The controller (Google Maps loading, API polling, data fetching)
- * now only runs when the user is on the "/" route.
+ * now only runs when the user is on the "/map" route.
  */
 function MapPage() {
   const {
@@ -83,32 +102,82 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <Routes>
-        {/* Landing Page -> Need to add Login Page and Sign up. */}
-        <Route path="/landing" element={<LandingPage />} />
+      {/* AuthProvider must wrap everything so all routes can access auth state */}
+      <AuthProvider>
+        <Routes>
 
-        {/* Login Page {Future Scope} */}
-        <Route path="/login" element={<div>Login Page will be added soon...</div>} />
+          {/* ── Landing Page (default) ─────────────────────────────── */}
+          <Route path="/" element={<LandingPage />} />
 
-        {/* Sign-Up Page {Future Scope} */}
-        <Route path="/signup" element={<div>Sign-Up Page will be added soon...</div>}/>
+          {/* ── Public-only Auth Pages ─────────────────────────────── */}
+          {/* Logged-in users are bounced to /map if they try to visit these */}
+          <Route
+            path="/login"
+            element={
+              <PublicOnlyRoute>
+                <LoginPage />
+              </PublicOnlyRoute>
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <PublicOnlyRoute>
+                <SignupPage />
+              </PublicOnlyRoute>
+            }
+          />
 
-        {/* Map View — Controller only runs on this route */}
-        <Route path="/" element={<MapPage />} />
+          {/* ── Protected Pages ────────────────────────────────────── */}
+          {/* Unauthenticated users are redirected to /login */}
+          <Route
+            path="/map"
+            element={
+              <ProtectedRoute>
+                <MapPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
 
-        {/* Admin Routes -> Here I'm going to cut down some components -> For University Project specific. */}
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="routes" element={<RouteManager />} />
-          <Route path="users" element={<UserManager />} />
-          <Route path="notifications" element={<NotificationCenter />} />
-          <Route path="health" element={<SystemHealth />} />
-          <Route path="reports" element={<Reports />} />
-          <Route path="analytics" element={<VisitorAnalytics />} />
-          <Route path="settings" element={<div>Settings Component Coming Soon</div>} />
-        </Route>
-      </Routes>
+          {/* ── Admin Routes (protected) ───────────────────────────── */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Dashboard />} />
+            <Route path="routes" element={<RouteManager />} />
+            <Route path="users" element={<UserManager />} />
+            <Route path="notifications" element={<NotificationCenter />} />
+            <Route path="health" element={<SystemHealth />} />
+            <Route path="reports" element={<Reports />} />
+            <Route path="analytics" element={<VisitorAnalytics />} />
+            <Route path="settings" element={<div>Settings Component Coming Soon</div>} />
+          </Route>
+
+
+          {/* ── Public: /connect — Meet the Team ─────────────────── */}
+          <Route path="/connect" element={<ConnectPage />} />
+
+          {/* ── Legacy redirect: /landing still works ─────────────── */}
+          <Route path="/landing" element={<LandingPage />} />
+
+          {/* ── 404 fallback ──────────────────────────────────────── */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 }
-

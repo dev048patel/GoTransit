@@ -540,15 +540,15 @@
  * ---------------
  * - Brand Blue: #003DA5 (Regina Transit inspired)
  * - Secondary Blue: #0066FF
- * - Accent Orange: #FF6B35
+ * - Accent Orange: #003DA5
  * - Dark: #0a0a0f (footer)
  *
  * Gradients:
  * ----------
- * - Hero: linear-gradient(135deg, #003DA5, #0066FF, #FF6B35)
+ * - Hero: linear-gradient(135deg, #003DA5, #0066FF, #003DA5)
  * - Card: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))
- * - Button: linear-gradient(135deg, #FF6B35, #FF8C42)
- * - Text: linear-gradient(to right, #003DA5, #0066FF, #FF6B35)
+ * - Button: linear-gradient(135deg, #003DA5, #1a56db)
+ * - Text: linear-gradient(to right, #003DA5, #0066FF, #003DA5)
  */
 
 // ============================================================================

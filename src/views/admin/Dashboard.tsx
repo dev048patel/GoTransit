@@ -6,7 +6,7 @@ import { useDashboardController } from '../../controllers/admin/useDashboardCont
 
 export default function Dashboard() {
     // Controller: Handles logic and state
-    const { metrics, usageChartData, costChartData } = useDashboardController();
+    const { metrics, usageChartData, costChartData, realCount } = useDashboardController();
 
     // View: Renders the UI with data from the controller
     return (
