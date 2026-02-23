@@ -4,14 +4,13 @@
  * Controller layer for the Signup page (MVC).
  * - Owns all form state: fullName, email, password, mobile, errors, loading, success
  * - Validates fields and calculates password strength
- * - On success: sets success=true so the View shows the success screen
+ * - On submit: calls supabase.auth.signUp() — Supabase creates the user and
+ *   the on_auth_user_created trigger auto-creates the profiles row.
  */
 
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import { registerUser } from '../../services/UserRegistry';
-import { saveCredential } from '../../models/auth/AuthModel';
+import { supabase } from '../../lib/supabase';
 
 /* ── Password strength ─────────────────────────────────────────── */
 export interface PasswordStrength {
@@ -67,7 +66,6 @@ interface SignupControllerOutput {
 /* ── Controller ─────────────────────────────────────────────────── */
 export function useSignupController(): SignupControllerOutput {
     const navigate = useNavigate();
-    const { login } = useAuth();
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -87,6 +85,7 @@ export function useSignupController(): SignupControllerOutput {
 
     const handleSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
+
         const errs: Record<string, string> = {};
         if (!fullName.trim()) errs.fullName = 'Full name is required';
         if (!isValidEmail(email)) errs.email = 'Enter a valid email address';
@@ -96,22 +95,30 @@ export function useSignupController(): SignupControllerOutput {
         if (Object.keys(errs).length) return;
 
         setIsLoading(true);
-        // TODO: wire to backend API
-        await new Promise(resolve => setTimeout(resolve, 1100));
+
+        const { error } = await supabase.auth.signUp({
+            email: email.trim(),
+            password,
+            options: {
+                data: {
+                    full_name: fullName.trim(),
+                    mobile_number: mobile || null,
+                },
+            },
+        });
+
         setIsLoading(false);
 
-        // Save credential hash so login can validate the password
-        saveCredential(email, password);
-        // Persist to UserRegistry → saves to PostgreSQL + localStorage cache
-        await registerUser(fullName, email, mobile || undefined);
-
-        // Auto-login so the session is immediately populated (profile shows real name)
-        await login(email, password, fullName);
+        if (error) {
+            setErrors({ form: error.message });
+            return;
+        }
 
         setSuccess(true);
-        // Redirect to map after a brief success flash
+        // Redirect to map — onAuthStateChange fires automatically if email
+        // confirmation is disabled, or to login if confirmation is required.
         setTimeout(() => navigate('/map'), 1500);
-    }, [fullName, email, password, mobile, login, navigate]);
+    }, [fullName, email, password, mobile, navigate]);
 
     return {
         fullName, setFullName,
