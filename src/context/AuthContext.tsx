@@ -2,10 +2,14 @@
  * AuthContext.tsx — GoTransit Regina
  *
  * React Context that wraps the entire app to provide auth state globally.
- * Session management is handled by Supabase Auth — no localStorage tokens needed.
+ * Session management is handled by Supabase Auth.
+ *
+ * Role (user | admin) is fetched from the public.profiles table after login.
+ * Changing a user's role in the Supabase dashboard takes effect on the next
+ * page load — no re-login required.
  *
  * Usage:
- *   const { isAuthenticated, user, login, logout } = useAuth();
+ *   const { isAuthenticated, isAdmin, user, login, logout } = useAuth();
  */
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
@@ -16,31 +20,61 @@ import { recordLogout } from '../services/UserRegistry';
 
 interface AuthContextValue {
     isAuthenticated: boolean;
+    /** True only when the authenticated user has role = 'admin' in profiles. */
+    isAdmin: boolean;
+    /** Null while session is loading; populated once auth state is known. */
     user: User | null;
+    /** True until the initial session + role fetch completes — prevents flash redirects. */
+    isLoading: boolean;
     login: (email: string, password: string) => Promise<boolean>;
     logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-function sessionToUser(session: Session): User {
+async function fetchRole(userId: string): Promise<'user' | 'admin'> {
+    const { data } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', userId)
+        .single();
+    return (data?.role === 'admin') ? 'admin' : 'user';
+}
+
+function sessionToUser(session: Session, role: 'user' | 'admin'): User {
     return {
         fullName: session.user.user_metadata?.full_name ?? session.user.email ?? 'User',
         email: session.user.email ?? '',
         mobile: session.user.user_metadata?.mobile_number ?? undefined,
+        role,
     };
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [session, setSession] = useState<Session | null>(null);
+    const [role, setRole] = useState<'user' | 'admin'>('user');
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        // Load the current session on mount
-        supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
+        // Load the current session and fetch role on mount
+        supabase.auth.getSession().then(async ({ data: { session } }) => {
+            setSession(session);
+            if (session) {
+                const r = await fetchRole(session.user.id);
+                setRole(r);
+            }
+            setIsLoading(false);
+        });
 
         // Keep state in sync across tabs and on token refresh
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
             setSession(session);
+            if (session) {
+                const r = await fetchRole(session.user.id);
+                setRole(r);
+            } else {
+                setRole('user');
+            }
         });
 
         return () => subscription.unsubscribe();
@@ -54,13 +88,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const logout = useCallback(async () => {
         const email = session?.user?.email ?? 'unknown';
         await supabase.auth.signOut();
+        setRole('user');
         recordLogout(email);
     }, [session]);
 
-    const user = session ? sessionToUser(session) : null;
+    const user = session ? sessionToUser(session, role) : null;
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated: !!session, user, login, logout }}>
+        <AuthContext.Provider value={{
+            isAuthenticated: !!session,
+            isAdmin: role === 'admin',
+            user,
+            isLoading,
+            login,
+            logout,
+        }}>
             {children}
         </AuthContext.Provider>
     );

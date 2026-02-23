@@ -9,4 +9,5 @@ export interface User {
     fullName: string;
     email: string;
     mobile?: string;
+    role: 'user' | 'admin';
 }
