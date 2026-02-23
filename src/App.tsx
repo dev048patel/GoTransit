@@ -16,7 +16,7 @@ Route Map:
   /signup    → SignupPage           (public only — bounces logged-in users to /map)
   /map       → MapPage              (protected — requires login)
   /profile   → ProfilePage         (protected — requires login)
-  /admin/*   → Admin panel         (protected — requires login)
+  /admin/*   → Admin panel         (admin only — requires role = 'admin' in profiles)
 */
 
 import React from 'react';
@@ -41,6 +41,7 @@ import { useAnalyticsBeacon } from './hooks/useAnalyticsBeacon';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import PublicOnlyRoute from './components/PublicOnlyRoute';
+import AdminRoute from './components/AdminRoute';
 import ConnectPage from './views/ConnectPage';
 
 /**
@@ -147,13 +148,13 @@ export default function App() {
             }
           />
 
-          {/* ── Admin Routes (protected) ───────────────────────────── */}
+          {/* ── Admin Routes (admin role only) ─────────────────────── */}
           <Route
             path="/admin"
             element={
-              <ProtectedRoute>
+              <AdminRoute>
                 <AdminLayout />
-              </ProtectedRoute>
+              </AdminRoute>
             }
           >
             <Route index element={<Dashboard />} />
