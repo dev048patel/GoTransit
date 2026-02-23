@@ -2,98 +2,70 @@
  * AuthContext.tsx — GoTransit Regina
  *
  * React Context that wraps the entire app to provide auth state globally.
- * This is the bridge between the Controller (useAuthController) and all Views.
+ * Session management is handled by Supabase Auth — no localStorage tokens needed.
  *
  * Usage:
  *   const { isAuthenticated, user, login, logout } = useAuth();
  */
 
-import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import type { User, AuthSession } from '../models/auth/AuthModel';
-import { loadSession, saveSession, clearSession, SESSION_TTL_MS, validateCredential } from '../models/auth/AuthModel';
-import { recordLogin, recordLogout } from '../services/UserRegistry';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import type { Session } from '@supabase/supabase-js';
+import { supabase } from '../lib/supabase';
+import type { User } from '../models/auth/AuthModel';
+import { recordLogout } from '../services/UserRegistry';
 
-/* ── Shape of what the context exposes ───────────────────────── */
 interface AuthContextValue {
     isAuthenticated: boolean;
     user: User | null;
-    /** Simulates a login; stores session in localStorage. Returns true on success. */
-    login: (email: string, password: string, fullName?: string) => Promise<boolean>;
-    /** Clears the session and resets auth state. */
+    login: (email: string, password: string) => Promise<boolean>;
     logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-/* ── Provider ─────────────────────────────────────────────────── */
+function sessionToUser(session: Session): User {
+    return {
+        fullName: session.user.user_metadata?.full_name ?? session.user.email ?? 'User',
+        email: session.user.email ?? '',
+        mobile: session.user.user_metadata?.mobile_number ?? undefined,
+    };
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-    // Boot from persisted session so a page refresh keeps the user logged in
-    const [session, setSession] = useState<AuthSession | null>(() => loadSession());
+    const [session, setSession] = useState<Session | null>(null);
 
-    // Keep auth state in sync if localStorage changes in another tab
     useEffect(() => {
-        const onStorage = (e: StorageEvent) => {
-            if (e.key === 'gotransit_session') {
-                setSession(loadSession());
-            }
-        };
-        window.addEventListener('storage', onStorage);
-        return () => window.removeEventListener('storage', onStorage);
+        // Load the current session on mount
+        supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
+
+        // Keep state in sync across tabs and on token refresh
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            setSession(session);
+        });
+
+        return () => subscription.unsubscribe();
     }, []);
 
-    /**
-     * login() — validates password against the stored credential hash.
-     * Returns false if the account doesn't exist or password is wrong.
-     */
-    const login = useCallback(async (email: string, password: string, fullName: string = 'User'): Promise<boolean> => {
-        if (!email || password.length < 6) return false;
-
-        // ── Validate password ──
-        const valid = validateCredential(email, password);
-        if (!valid) return false;
-
-        // Look up the user's real full name from the registry cache
-        const raw = localStorage.getItem('gotransit_users');
-        const users: Array<{ email: string; fullName: string; mobile?: string }> =
-            raw ? JSON.parse(raw) : [];
-        const found = users.find(u => u.email.toLowerCase() === email.toLowerCase());
-        const resolvedName = found?.fullName ?? fullName;
-        const resolvedMobile = found?.mobile;
-
-        const newSession: AuthSession = {
-            user: { fullName: resolvedName, email, mobile: resolvedMobile },
-            token: `token-${Date.now()}`,
-            expiresAt: Date.now() + SESSION_TTL_MS,
-        };
-        saveSession(newSession);
-        setSession(newSession);
-
-        // Record login event → persisted to PostgreSQL
-        await recordLogin(email, resolvedName);
-
-        return true;
+    const login = useCallback(async (email: string, password: string): Promise<boolean> => {
+        const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
+        return !error;
     }, []);
 
-    const logout = useCallback(() => {
-        // Record logout event → visible in browser console
+    const logout = useCallback(async () => {
         const email = session?.user?.email ?? 'unknown';
-        clearSession();
-        setSession(null);
+        await supabase.auth.signOut();
         recordLogout(email);
     }, [session]);
 
-    const value: AuthContextValue = {
-        isAuthenticated: session !== null,
-        user: session?.user ?? null,
-        login,
-        logout,
-    };
+    const user = session ? sessionToUser(session) : null;
 
-    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+    return (
+        <AuthContext.Provider value={{ isAuthenticated: !!session, user, login, logout }}>
+            {children}
+        </AuthContext.Provider>
+    );
 }
 
-/* ── Hook ─────────────────────────────────────────────────────── */
-/** Must be used inside <AuthProvider>. Throws if used outside. */
 export function useAuth(): AuthContextValue {
     const ctx = useContext(AuthContext);
     if (!ctx) throw new Error('useAuth must be used within <AuthProvider>');
