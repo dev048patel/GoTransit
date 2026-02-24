@@ -2,10 +2,9 @@
  * ProtectedRoute.tsx — GoTransit Regina
  *
  * Wraps any route that requires authentication.
- * - If the user IS authenticated → renders children normally.
- * - If the user is NOT authenticated → redirects to /login,
- *   preserving the attempted URL in `state.from` so LoginPage
- *   can redirect back after a successful login.
+ * - While auth is loading  → shows a spinner (prevents flash redirect on page refresh)
+ * - If authenticated       → renders children normally
+ * - If not authenticated   → redirects to /login, preserving the attempted URL
  */
 
 import React from 'react';
@@ -17,11 +16,18 @@ interface ProtectedRouteProps {
 }
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, isLoading } = useAuth();
     const location = useLocation();
 
+    if (isLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <div className="w-8 h-8 border-4 border-[#003DA5] border-t-transparent rounded-full animate-spin" />
+            </div>
+        );
+    }
+
     if (!isAuthenticated) {
-        // Replace: so the user can't press Back to reach the protected page
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
