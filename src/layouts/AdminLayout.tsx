@@ -1,4 +1,3 @@
-import React from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import { LayoutDashboard, Map, Users, Eye, ArrowLeft } from 'lucide-react';
 
@@ -41,13 +40,8 @@ export default function AdminLayout() {
                 <header className="h-16 bg-white shadow-sm border-b px-6 flex items-center justify-between z-10">
                     <h1 className="text-xl font-semibold text-gray-800">Overview</h1>
 
-                    <div className="flex items-center gap-4">
-                        <button className="p-2 text-gray-500 hover:bg-gray-100 rounded-full">
-                            <Bell size={20} />
-                        </button>
-                        <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
-                            A
-                        </div>
+                    <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
+                        A
                     </div>
                 </header>
 

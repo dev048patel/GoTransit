@@ -17,161 +17,124 @@ Route Map:
   /map       → MapPage              (protected — requires login)
   /profile   → ProfilePage         (protected — requires login)
   /admin/*   → Admin panel         (admin only — requires role = 'admin' in profiles)
+
+Performance:
+  All route components are lazy-loaded with React.lazy().
+  Each page's JS is only downloaded when the user first navigates there.
+  The initial bundle (landing page) is therefore a fraction of the total.
 */
 
-import React from 'react';
+import { Suspense, lazy } from 'react';
 import './App.css';
-import { useMapController } from './controllers/useMapController';
-import { MapView } from './views/MapView';
 
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import AdminLayout from './layouts/AdminLayout';
-import Dashboard from './views/admin/Dashboard';
-import RouteManager from './views/admin/RouteManager';
-import UserManager from './views/admin/UserManager';
-import VisitorAnalytics from './views/admin/VisitorAnalytics';
-import LandingPage from './views/landing/LandingPage';
-import LoginPage from './views/auth/LoginPage';
-import SignupPage from './views/auth/SignupPage';
-import ProfilePage from './views/auth/ProfilePage';
 import { useAnalyticsBeacon } from './hooks/useAnalyticsBeacon';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import PublicOnlyRoute from './components/PublicOnlyRoute';
 import AdminRoute from './components/AdminRoute';
-import ConnectPage from './views/ConnectPage';
 
-/**
- * MapPage — Wrapper that scopes the map controller to this route only.
- * The controller (Google Maps loading, API polling, data fetching)
- * now only runs when the user is on the "/map" route.
- */
-function MapPage() {
-  const {
-    isLoaded,
-    loadError,
-    center,
-    setCenter,
-    options,
-    containerStyle,
-    zoom,
-    setZoom,
-    stops,
-    routes,
-    selectedRoute,
-    setSelectedRoute,
-    routePaths,
-    liveBuses,
-    handlePlaceSelect,
-    selectedPlaceMarker,
-    setSelectedPlaceMarker,
-    currentZoom,
-    onZoomChanged
-  } = useMapController();
+/* ── Lazy-loaded route components ────────────────────────────────── */
+const MapPage          = lazy(() => import('./views/MapPage'));
+const LandingPage      = lazy(() => import('./views/landing/LandingPage'));
+const LoginPage        = lazy(() => import('./views/auth/LoginPage'));
+const SignupPage       = lazy(() => import('./views/auth/SignupPage'));
+const ProfilePage      = lazy(() => import('./views/auth/ProfilePage'));
+const ConnectPage      = lazy(() => import('./views/ConnectPage'));
+const AdminLayout      = lazy(() => import('./layouts/AdminLayout'));
+const Dashboard        = lazy(() => import('./views/admin/Dashboard'));
+const RouteManager     = lazy(() => import('./views/admin/RouteManager'));
+const UserManager      = lazy(() => import('./views/admin/UserManager'));
+const VisitorAnalytics = lazy(() => import('./views/admin/VisitorAnalytics'));
 
-  return (
-    <MapView
-      isLoaded={isLoaded}
-      loadError={loadError}
-      center={center}
-      setCenter={setCenter}
-      options={options}
-      containerStyle={containerStyle}
-      zoom={zoom}
-      setZoom={setZoom}
-      stops={stops}
-      routes={routes}
-      selectedRoute={selectedRoute}
-      setSelectedRoute={setSelectedRoute}
-      routePaths={routePaths}
-      liveBuses={liveBuses}
-      handlePlaceSelect={handlePlaceSelect}
-      selectedPlaceMarker={selectedPlaceMarker}
-      setSelectedPlaceMarker={setSelectedPlaceMarker}
-      currentZoom={currentZoom}
-      onZoomChanged={onZoomChanged}
-    />
-  );
+/* ── Suspense fallback — same spinner used by route guards ───────── */
+function Spinner() {
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+            <div className="w-8 h-8 border-4 border-[#003DA5] border-t-transparent rounded-full animate-spin" />
+        </div>
+    );
 }
 
 export default function App() {
-  // Send analytics beacon once on site load, heartbeat every 60s
-  useAnalyticsBeacon();
+    // Send analytics beacon once on site load, heartbeat every 60s
+    useAnalyticsBeacon();
 
-  return (
-    <BrowserRouter>
-      {/* AuthProvider must wrap everything so all routes can access auth state */}
-      <AuthProvider>
-        <Routes>
+    return (
+        <BrowserRouter>
+            {/* AuthProvider must wrap everything so all routes can access auth state */}
+            <AuthProvider>
+                <Suspense fallback={<Spinner />}>
+                    <Routes>
 
-          {/* ── Landing Page (default) ─────────────────────────────── */}
-          <Route path="/" element={<LandingPage />} />
+                        {/* ── Landing Page (default) ─────────────────────────────── */}
+                        <Route path="/" element={<LandingPage />} />
 
-          {/* ── Public-only Auth Pages ─────────────────────────────── */}
-          {/* Logged-in users are bounced to /map if they try to visit these */}
-          <Route
-            path="/login"
-            element={
-              <PublicOnlyRoute>
-                <LoginPage />
-              </PublicOnlyRoute>
-            }
-          />
-          <Route
-            path="/signup"
-            element={
-              <PublicOnlyRoute>
-                <SignupPage />
-              </PublicOnlyRoute>
-            }
-          />
+                        {/* ── Public-only Auth Pages ─────────────────────────────── */}
+                        {/* Logged-in users are bounced to /map if they try to visit these */}
+                        <Route
+                            path="/login"
+                            element={
+                                <PublicOnlyRoute>
+                                    <LoginPage />
+                                </PublicOnlyRoute>
+                            }
+                        />
+                        <Route
+                            path="/signup"
+                            element={
+                                <PublicOnlyRoute>
+                                    <SignupPage />
+                                </PublicOnlyRoute>
+                            }
+                        />
 
-          {/* ── Protected Pages ────────────────────────────────────── */}
-          {/* Unauthenticated users are redirected to /login */}
-          <Route
-            path="/map"
-            element={
-              <ProtectedRoute>
-                <MapPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <ProfilePage />
-              </ProtectedRoute>
-            }
-          />
+                        {/* ── Protected Pages ────────────────────────────────────── */}
+                        {/* Unauthenticated users are redirected to /login */}
+                        <Route
+                            path="/map"
+                            element={
+                                <ProtectedRoute>
+                                    <MapPage />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/profile"
+                            element={
+                                <ProtectedRoute>
+                                    <ProfilePage />
+                                </ProtectedRoute>
+                            }
+                        />
 
-          {/* ── Admin Routes (admin role only) ─────────────────────── */}
-          <Route
-            path="/admin"
-            element={
-              <AdminRoute>
-                <AdminLayout />
-              </AdminRoute>
-            }
-          >
-            <Route index element={<Dashboard />} />
-            <Route path="routes" element={<RouteManager />} />
-            <Route path="users" element={<UserManager />} />
-            <Route path="analytics" element={<VisitorAnalytics />} />
-          </Route>
+                        {/* ── Admin Routes (admin role only) ─────────────────────── */}
+                        <Route
+                            path="/admin"
+                            element={
+                                <AdminRoute>
+                                    <AdminLayout />
+                                </AdminRoute>
+                            }
+                        >
+                            <Route index element={<Dashboard />} />
+                            <Route path="routes" element={<RouteManager />} />
+                            <Route path="users" element={<UserManager />} />
+                            <Route path="analytics" element={<VisitorAnalytics />} />
+                        </Route>
 
+                        {/* ── Public: /connect — Meet the Team ─────────────────── */}
+                        <Route path="/connect" element={<ConnectPage />} />
 
-          {/* ── Public: /connect — Meet the Team ─────────────────── */}
-          <Route path="/connect" element={<ConnectPage />} />
+                        {/* ── Legacy redirect: /landing still works ─────────────── */}
+                        <Route path="/landing" element={<LandingPage />} />
 
-          {/* ── Legacy redirect: /landing still works ─────────────── */}
-          <Route path="/landing" element={<LandingPage />} />
+                        {/* ── 404 fallback ──────────────────────────────────────── */}
+                        <Route path="*" element={<Navigate to="/" replace />} />
 
-          {/* ── 404 fallback ──────────────────────────────────────── */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-
-        </Routes>
-      </AuthProvider>
-    </BrowserRouter>
-  );
+                    </Routes>
+                </Suspense>
+            </AuthProvider>
+        </BrowserRouter>
+    );
 }

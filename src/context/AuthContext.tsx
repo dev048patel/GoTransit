@@ -94,8 +94,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     const login = useCallback(async (email: string, password: string): Promise<boolean> => {
-        const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
-        return !error;
+        const { error, data } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
+        if (error || !data.user) return false;
+
+        // Block suspended or soft-deleted accounts from logging in
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('account_status')
+            .eq('id', data.user.id)
+            .single();
+
+        if (profile?.account_status === 'suspended' || profile?.account_status === 'deleted') {
+            await supabase.auth.signOut();
+            return false;
+        }
+
+        return true;
     }, []);
 
     const logout = useCallback(async () => {
