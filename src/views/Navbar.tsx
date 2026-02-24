@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
 import { Route } from '../models/Route';
+import { useAuth } from '../context/AuthContext';
 
 interface NavbarProps {
     onPlaceSelect?: (place: any) => void;
@@ -14,6 +15,7 @@ interface NavbarProps {
 // Function is for giving autocomplete suggestions for places
 export default function Navbar({ onPlaceSelect, onTripPlannerClick, routes, selectedRoute, onRouteSelect }: NavbarProps) {
     const [showResults, setShowResults] = useState(false);
+    const { isAdmin } = useAuth();
 
     // Use Google Places Autocomplete hook
     const {
@@ -266,7 +268,31 @@ export default function Navbar({ onPlaceSelect, onTripPlannerClick, routes, sele
                     </svg>
                     Future Trip Planner
                 </button>
-                {/* Admin link hidden from public users — access via /admin URL directly */}
+                {/* Admin link — only visible to users with role = 'admin' */}
+                {isAdmin && (
+                    <Link to="/admin" style={{ textDecoration: 'none' }}>
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                            padding: '6px 14px',
+                            backgroundColor: '#003DA5',
+                            color: 'white',
+                            borderRadius: '20px',
+                            fontSize: '13px',
+                            fontWeight: '600',
+                            cursor: 'pointer',
+                        }}>
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <rect x="3" y="3" width="7" height="7" rx="1" />
+                                <rect x="14" y="3" width="7" height="7" rx="1" />
+                                <rect x="3" y="14" width="7" height="7" rx="1" />
+                                <rect x="14" y="14" width="7" height="7" rx="1" />
+                            </svg>
+                            Admin
+                        </div>
+                    </Link>
+                )}
                 {/* Profile Icon — links to /profile */}
                 <Link to="/profile" style={{ textDecoration: 'none' }}>
                     <div style={{
