@@ -24,7 +24,8 @@ Performance:
   The initial bundle (landing page) is therefore a fraction of the total.
 */
 
-import { Suspense, lazy } from 'react';
+import { Component, Suspense, lazy } from 'react';
+import type { ReactNode, ErrorInfo } from 'react';
 import './App.css';
 
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
@@ -47,13 +48,42 @@ const RouteManager     = lazy(() => import('./views/admin/RouteManager'));
 const UserManager      = lazy(() => import('./views/admin/UserManager'));
 const VisitorAnalytics = lazy(() => import('./views/admin/VisitorAnalytics'));
 
-/* ── Suspense fallback — same spinner used by route guards ───────── */
-function Spinner() {
+/* ── Suspense wrapper — each lazy component gets its own boundary ── */
+function Lazy({ children }: { children: ReactNode }) {
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
-            <div className="w-8 h-8 border-4 border-[#003DA5] border-t-transparent rounded-full animate-spin" />
-        </div>
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <div className="w-8 h-8 border-4 border-[#003DA5] border-t-transparent rounded-full animate-spin" />
+            </div>
+        }>
+            {children}
+        </Suspense>
     );
+}
+
+/* ── Error Boundary — catches render errors from lazy imports ────── */
+class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {
+    state = { hasError: false };
+    static getDerivedStateFromError() { return { hasError: true }; }
+    componentDidCatch(error: Error, info: ErrorInfo) {
+        console.error('[GoTransit] Route load failed:', error, info);
+    }
+    render() {
+        if (this.state.hasError) {
+            return (
+                <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 gap-4">
+                    <p className="text-gray-600 text-lg">Something went wrong loading this page.</p>
+                    <button
+                        onClick={() => { this.setState({ hasError: false }); window.location.reload(); }}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm"
+                    >
+                        Reload
+                    </button>
+                </div>
+            );
+        }
+        return this.props.children;
+    }
 }
 
 export default function App() {
@@ -64,19 +94,18 @@ export default function App() {
         <BrowserRouter>
             {/* AuthProvider must wrap everything so all routes can access auth state */}
             <AuthProvider>
-                <Suspense fallback={<Spinner />}>
+                <ErrorBoundary>
                     <Routes>
 
                         {/* ── Landing Page (default) ─────────────────────────────── */}
-                        <Route path="/" element={<LandingPage />} />
+                        <Route path="/" element={<Lazy><LandingPage /></Lazy>} />
 
                         {/* ── Public-only Auth Pages ─────────────────────────────── */}
-                        {/* Logged-in users are bounced to /map if they try to visit these */}
                         <Route
                             path="/login"
                             element={
                                 <PublicOnlyRoute>
-                                    <LoginPage />
+                                    <Lazy><LoginPage /></Lazy>
                                 </PublicOnlyRoute>
                             }
                         />
@@ -84,18 +113,17 @@ export default function App() {
                             path="/signup"
                             element={
                                 <PublicOnlyRoute>
-                                    <SignupPage />
+                                    <Lazy><SignupPage /></Lazy>
                                 </PublicOnlyRoute>
                             }
                         />
 
                         {/* ── Protected Pages ────────────────────────────────────── */}
-                        {/* Unauthenticated users are redirected to /login */}
                         <Route
                             path="/map"
                             element={
                                 <ProtectedRoute>
-                                    <MapPage />
+                                    <Lazy><MapPage /></Lazy>
                                 </ProtectedRoute>
                             }
                         />
@@ -103,7 +131,7 @@ export default function App() {
                             path="/profile"
                             element={
                                 <ProtectedRoute>
-                                    <ProfilePage />
+                                    <Lazy><ProfilePage /></Lazy>
                                 </ProtectedRoute>
                             }
                         />
@@ -113,27 +141,27 @@ export default function App() {
                             path="/admin"
                             element={
                                 <AdminRoute>
-                                    <AdminLayout />
+                                    <Lazy><AdminLayout /></Lazy>
                                 </AdminRoute>
                             }
                         >
-                            <Route index element={<Dashboard />} />
-                            <Route path="routes" element={<RouteManager />} />
-                            <Route path="users" element={<UserManager />} />
-                            <Route path="analytics" element={<VisitorAnalytics />} />
+                            <Route index element={<Lazy><Dashboard /></Lazy>} />
+                            <Route path="routes" element={<Lazy><RouteManager /></Lazy>} />
+                            <Route path="users" element={<Lazy><UserManager /></Lazy>} />
+                            <Route path="analytics" element={<Lazy><VisitorAnalytics /></Lazy>} />
                         </Route>
 
                         {/* ── Public: /connect — Meet the Team ─────────────────── */}
-                        <Route path="/connect" element={<ConnectPage />} />
+                        <Route path="/connect" element={<Lazy><ConnectPage /></Lazy>} />
 
                         {/* ── Legacy redirect: /landing still works ─────────────── */}
-                        <Route path="/landing" element={<LandingPage />} />
+                        <Route path="/landing" element={<Lazy><LandingPage /></Lazy>} />
 
                         {/* ── 404 fallback ──────────────────────────────────────── */}
                         <Route path="*" element={<Navigate to="/" replace />} />
 
                     </Routes>
-                </Suspense>
+                </ErrorBoundary>
             </AuthProvider>
         </BrowserRouter>
     );
