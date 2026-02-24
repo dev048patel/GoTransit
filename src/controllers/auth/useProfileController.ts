@@ -75,40 +75,43 @@ export function useProfileController() {
 
     async function loadAll() {
         setIsLoading(true);
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) { setIsLoading(false); return; }
+        try {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) return;
 
-        const uid = session.user.id;
+            const uid = session.user.id;
 
-        // Format last login from the session
-        if (session.user.last_sign_in_at) {
-            setLastLogin(new Date(session.user.last_sign_in_at).toLocaleString('en-CA', {
-                month: 'short', day: 'numeric', year: 'numeric',
-                hour: '2-digit', minute: '2-digit',
-            }));
+            if (session.user.last_sign_in_at) {
+                setLastLogin(new Date(session.user.last_sign_in_at).toLocaleString('en-CA', {
+                    month: 'short', day: 'numeric', year: 'numeric',
+                    hour: '2-digit', minute: '2-digit',
+                }));
+            }
+
+            const [profileRes, prefsRes, stopsRes, routesRes] = await Promise.all([
+                supabase.from('profiles')
+                    .select('full_name, mobile_number, mobile_verified, account_status')
+                    .eq('id', uid).single(),
+                supabase.from('user_preferences')
+                    .select('theme, larger_text, high_contrast, notif_alerts, notif_delays, notif_promos')
+                    .eq('id', uid).single(),
+                supabase.from('favourite_stops')
+                    .select('id, stop_id, stop_name, label')
+                    .eq('user_id', uid).order('created_at'),
+                supabase.from('favourite_routes')
+                    .select('id, route_number, route_name')
+                    .eq('user_id', uid).order('created_at'),
+            ]);
+
+            if (profileRes.data) setProfile(profileRes.data);
+            if (prefsRes.data) setPrefs(prefsRes.data as Preferences);
+            if (stopsRes.data) setFavStops(stopsRes.data);
+            if (routesRes.data) setFavRoutes(routesRes.data);
+        } catch (err) {
+            console.error('[Profile] Failed to load profile data:', err);
+        } finally {
+            setIsLoading(false);
         }
-
-        const [profileRes, prefsRes, stopsRes, routesRes] = await Promise.all([
-            supabase.from('profiles')
-                .select('full_name, mobile_number, mobile_verified, account_status')
-                .eq('id', uid).single(),
-            supabase.from('user_preferences')
-                .select('theme, larger_text, high_contrast, notif_alerts, notif_delays, notif_promos')
-                .eq('id', uid).single(),
-            supabase.from('favourite_stops')
-                .select('id, stop_id, stop_name, label')
-                .eq('user_id', uid).order('created_at'),
-            supabase.from('favourite_routes')
-                .select('id, route_number, route_name')
-                .eq('user_id', uid).order('created_at'),
-        ]);
-
-        if (profileRes.data) setProfile(profileRes.data);
-        if (prefsRes.data) setPrefs(prefsRes.data as Preferences);
-        if (stopsRes.data) setFavStops(stopsRes.data);
-        if (routesRes.data) setFavRoutes(routesRes.data);
-
-        setIsLoading(false);
     }
 
     /* ── Logout ─────────────────────────────────────────────────── */

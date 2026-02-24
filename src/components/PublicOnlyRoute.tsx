@@ -1,8 +1,10 @@
 /**
  * PublicOnlyRoute.tsx — GoTransit Regina
  *
- * Wraps Login and Signup so that already-logged-in users who navigate
- * to /login or /signup via the URL bar are redirected to /map instead.
+ * Wraps Login and Signup so that already-logged-in users are redirected to /map.
+ * - While auth is loading  → shows nothing (avoids flash of login page on refresh)
+ * - If authenticated       → redirects to /map
+ * - If not authenticated   → renders children normally
  */
 
 import React from 'react';
@@ -14,7 +16,9 @@ interface PublicOnlyRouteProps {
 }
 
 export default function PublicOnlyRoute({ children }: PublicOnlyRouteProps) {
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, isLoading } = useAuth();
+
+    if (isLoading) return null;
 
     if (isAuthenticated) {
         return <Navigate to="/map" replace />;
