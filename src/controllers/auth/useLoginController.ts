@@ -53,7 +53,7 @@ export function useLoginController(): LoginControllerOutput {
         if (Object.keys(errs).length) return;
 
         setIsLoading(true);
-        const ok = await login(identifier, password, identifier.split('@')[0]);
+        const ok = await login(identifier, password);
         setIsLoading(false);
 
         if (ok) {

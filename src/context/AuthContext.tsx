@@ -27,7 +27,7 @@ interface AuthContextValue {
     /** True until the initial session + role fetch completes — prevents flash redirects. */
     isLoading: boolean;
     login: (email: string, password: string) => Promise<boolean>;
-    logout: () => void;
+    logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -57,21 +57,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     useEffect(() => {
         // Load the current session and fetch role on mount
-        supabase.auth.getSession().then(async ({ data: { session } }) => {
-            setSession(session);
-            if (session) {
-                const r = await fetchRole(session.user.id);
-                setRole(r);
+        async function init() {
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                setSession(session);
+                if (session) {
+                    const r = await fetchRole(session.user.id);
+                    setRole(r);
+                }
+            } catch (err) {
+                console.error('[Auth] Failed to initialize session:', err);
+            } finally {
+                setIsLoading(false);
             }
-            setIsLoading(false);
-        });
+        }
+        init();
 
-        // Keep state in sync across tabs and on token refresh
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+        // Keep state in sync across tabs and on token refresh.
+        // Skip INITIAL_SESSION — init() above already handles the first load.
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+            if (event === 'INITIAL_SESSION') return;
             setSession(session);
             if (session) {
-                const r = await fetchRole(session.user.id);
-                setRole(r);
+                try {
+                    const r = await fetchRole(session.user.id);
+                    setRole(r);
+                } catch {
+                    setRole('user');
+                }
             } else {
                 setRole('user');
             }

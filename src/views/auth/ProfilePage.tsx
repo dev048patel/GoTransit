@@ -13,11 +13,11 @@
  *   Account        – Logout, delete account (with confirmation)
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import {
     MapPin, Star, Bell, Sun, Moon, Monitor,
-    Shield, LogOut, Trash2, Pencil, CheckCircle2,
+    Shield, LogOut, Trash2, CheckCircle2, Pencil,
     ChevronRight, Eye, Type, Clock,
     Route as RouteIcon, X, ArrowLeft, KeyRound,
 } from 'lucide-react';
@@ -41,12 +41,15 @@ function Toggle({ enabled, onChange }: { enabled: boolean; onChange: (v: boolean
 }
 
 /* ── Section Card ───────────────────────────────────────────────── */
-function SectionCard({ title, icon: Icon, children }: { title: string; icon: React.ElementType; children: React.ReactNode }) {
+function SectionCard({ title, icon: Icon, children, action }: {
+    title: string; icon: React.ElementType; children: React.ReactNode; action?: React.ReactNode;
+}) {
     return (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="flex items-center gap-2.5 px-5 py-3.5 border-b border-gray-50">
                 <Icon className="w-4 h-4 text-[#003DA5]" />
-                <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
+                <h3 className="text-sm font-semibold text-gray-900 flex-1">{title}</h3>
+                {action}
             </div>
             <div className="px-5 py-4">{children}</div>
         </div>
@@ -131,10 +134,10 @@ function PasswordModal({
 }
 
 /* ── Delete Confirmation ────────────────────────────────────────── */
-function DeleteConfirm({ onConfirm, onCancel }: { onConfirm: () => void; onCancel: () => void }) {
+function DeleteConfirm({ onConfirm, onCancel, loading }: { onConfirm: () => void; onCancel: () => void; loading: boolean }) {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onCancel} />
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={loading ? undefined : onCancel} />
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -151,15 +154,17 @@ function DeleteConfirm({ onConfirm, onCancel }: { onConfirm: () => void; onCance
                 <div className="flex gap-3">
                     <button
                         onClick={onCancel}
-                        className="flex-1 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition"
+                        disabled={loading}
+                        className="flex-1 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition disabled:opacity-50"
                     >
                         Cancel
                     </button>
                     <button
                         onClick={onConfirm}
-                        className="flex-1 py-2.5 rounded-xl bg-red-500 text-white text-sm font-medium hover:bg-red-600 transition"
+                        disabled={loading}
+                        className="flex-1 py-2.5 rounded-xl bg-red-500 text-white text-sm font-medium hover:bg-red-600 transition disabled:opacity-60"
                     >
-                        Delete
+                        {loading ? 'Deleting…' : 'Delete'}
                     </button>
                 </div>
             </motion.div>
@@ -177,7 +182,14 @@ export default function ProfilePage() {
         newPassword, setNewPassword,
         passwordError, passwordSuccess, passwordLoading,
         handleChangePassword, closePasswordModal,
+        isEditingProfile,
+        editName, setEditName,
+        editEmail, setEditEmail,
+        editMobile, setEditMobile,
+        editLoading, editError, editEmailSent,
+        startEditProfile, cancelEditProfile, saveProfile,
         showDeleteConfirm, setShowDeleteConfirm,
+        deleteLoading,
         handleDeleteAccount,
         handleLogout,
         updatePref,
@@ -187,7 +199,7 @@ export default function ProfilePage() {
     const fullName = profile?.full_name ?? user?.fullName ?? '—';
     const email = user?.email ?? '—';
     const phone = profile?.mobile_number ?? user?.mobile ?? null;
-    const initials = fullName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    const initials = fullName.split(' ').filter(Boolean).map(n => n[0]).join('').toUpperCase().slice(0, 2) || '?';
 
     const themes: { value: 'light' | 'dark' | 'system'; icon: React.ElementType; label: string }[] = [
         { value: 'light', icon: Sun, label: 'Light' },
@@ -210,6 +222,7 @@ export default function ProfilePage() {
                     <DeleteConfirm
                         onConfirm={handleDeleteAccount}
                         onCancel={() => setShowDeleteConfirm(false)}
+                        loading={deleteLoading}
                     />
                 )}
             </AnimatePresence>
@@ -250,14 +263,101 @@ export default function ProfilePage() {
                     </div>
 
                     {/* PERSONAL INFO */}
-                    <SectionCard title="Personal Info" icon={Eye}>
-                        <InfoRow label="Full Name" value={fullName} />
-                        <InfoRow label="Email" value={email} verified />
-                        <InfoRow
-                            label="Phone"
-                            value={phone ?? 'Not set'}
-                            verified={profile?.mobile_verified}
-                        />
+                    <SectionCard
+                        title="Personal Info"
+                        icon={Eye}
+                        action={
+                            !isEditingProfile ? (
+                                <button
+                                    onClick={startEditProfile}
+                                    className="flex items-center gap-1 text-xs font-medium text-[#003DA5] hover:text-[#002d7a] transition"
+                                >
+                                    <Pencil className="w-3 h-3" /> Edit
+                                </button>
+                            ) : undefined
+                        }
+                    >
+                        {isEditingProfile ? (
+                            <div className="space-y-4">
+                                {/* Name */}
+                                <div>
+                                    <label className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1.5 block">Full Name</label>
+                                    <input
+                                        type="text"
+                                        value={editName}
+                                        onChange={e => setEditName(e.target.value)}
+                                        placeholder="Jane Doe"
+                                        autoFocus
+                                        className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#003DA5]/30 focus:border-[#003DA5] transition"
+                                    />
+                                </div>
+                                {/* Email */}
+                                <div>
+                                    <label className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1.5 block">Email</label>
+                                    <input
+                                        type="email"
+                                        value={editEmail}
+                                        onChange={e => setEditEmail(e.target.value)}
+                                        placeholder="jane@example.com"
+                                        className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#003DA5]/30 focus:border-[#003DA5] transition"
+                                    />
+                                    <p className="text-xs text-gray-400 mt-1">Changing email sends a confirmation link to the new address.</p>
+                                </div>
+                                {/* Mobile */}
+                                <div>
+                                    <label className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1.5 block">
+                                        Mobile <span className="normal-case font-normal text-gray-400">(optional)</span>
+                                    </label>
+                                    <input
+                                        type="tel"
+                                        value={editMobile}
+                                        onChange={e => setEditMobile(e.target.value)}
+                                        placeholder="+1 306-555-0199"
+                                        className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#003DA5]/30 focus:border-[#003DA5] transition"
+                                    />
+                                </div>
+                                {/* Error */}
+                                {editError && (
+                                    <p className="text-red-500 text-xs">{editError}</p>
+                                )}
+                                {/* Email confirmation notice */}
+                                {editEmailSent && (
+                                    <div className="flex items-start gap-2 bg-blue-50 border border-blue-100 text-blue-700 text-xs rounded-xl px-3 py-2.5">
+                                        <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
+                                        <span>Confirmation link sent to <strong>{editEmail}</strong>. Check your inbox to finalize the email change.</span>
+                                    </div>
+                                )}
+                                {/* Save / Cancel */}
+                                <div className="flex gap-2 pt-1">
+                                    <button
+                                        onClick={cancelEditProfile}
+                                        disabled={editLoading}
+                                        className="flex-1 py-2 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition disabled:opacity-50"
+                                    >
+                                        {editEmailSent ? 'Done' : 'Cancel'}
+                                    </button>
+                                    {!editEmailSent && (
+                                        <button
+                                            onClick={saveProfile}
+                                            disabled={editLoading}
+                                            className="flex-1 py-2 rounded-xl bg-[#003DA5] text-white text-sm font-medium hover:bg-[#002d7a] transition disabled:opacity-60"
+                                        >
+                                            {editLoading ? 'Saving…' : 'Save'}
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        ) : (
+                            <>
+                                <InfoRow label="Full Name" value={fullName} />
+                                <InfoRow label="Email" value={email} verified />
+                                <InfoRow
+                                    label="Phone"
+                                    value={phone ?? 'Not set'}
+                                    verified={profile?.mobile_verified}
+                                />
+                            </>
+                        )}
                     </SectionCard>
 
                     {/* TRANSIT PREFERENCES */}

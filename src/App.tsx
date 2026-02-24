@@ -29,9 +29,6 @@ import AdminLayout from './layouts/AdminLayout';
 import Dashboard from './views/admin/Dashboard';
 import RouteManager from './views/admin/RouteManager';
 import UserManager from './views/admin/UserManager';
-import NotificationCenter from './views/admin/NotificationCenter';
-import SystemHealth from './views/admin/SystemHealth';
-import Reports from './views/admin/Reports';
 import VisitorAnalytics from './views/admin/VisitorAnalytics';
 import LandingPage from './views/landing/LandingPage';
 import LoginPage from './views/auth/LoginPage';
@@ -160,11 +157,7 @@ export default function App() {
             <Route index element={<Dashboard />} />
             <Route path="routes" element={<RouteManager />} />
             <Route path="users" element={<UserManager />} />
-            <Route path="notifications" element={<NotificationCenter />} />
-            <Route path="health" element={<SystemHealth />} />
-            <Route path="reports" element={<Reports />} />
             <Route path="analytics" element={<VisitorAnalytics />} />
-            <Route path="settings" element={<div>Settings Component Coming Soon</div>} />
           </Route>
 
 

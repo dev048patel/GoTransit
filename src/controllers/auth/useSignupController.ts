@@ -9,7 +9,6 @@
  */
 
 import { useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 
 /* ── Password strength ─────────────────────────────────────────── */
@@ -65,7 +64,6 @@ interface SignupControllerOutput {
 
 /* ── Controller ─────────────────────────────────────────────────── */
 export function useSignupController(): SignupControllerOutput {
-    const navigate = useNavigate();
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -115,10 +113,7 @@ export function useSignupController(): SignupControllerOutput {
         }
 
         setSuccess(true);
-        // Redirect to map — onAuthStateChange fires automatically if email
-        // confirmation is disabled, or to login if confirmation is required.
-        setTimeout(() => navigate('/map'), 1500);
-    }, [fullName, email, password, mobile, navigate]);
+    }, [fullName, email, password, mobile]);
 
     return {
         fullName, setFullName,

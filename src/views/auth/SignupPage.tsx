@@ -44,18 +44,22 @@ export default function SignupPage() {
                     animate={{ opacity: 1, scale: 1 }}
                     className="text-center max-w-sm"
                 >
-                    <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center shadow-[0_10px_40px_rgba(34,197,94,0.3)]">
+                    <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#003DA5] to-[#1a56db] flex items-center justify-center shadow-[0_10px_40px_rgba(0,61,165,0.3)]">
                         <CheckCircle2 className="w-10 h-10 text-white" />
                     </div>
-                    <h2 className="text-3xl font-bold bg-gradient-to-r from-[#003DA5] to-[#003DA5] bg-clip-text text-transparent mb-3">
-                        Account Created!
+                    <h2 className="text-3xl font-bold bg-gradient-to-r from-[#003DA5] to-[#1a56db] bg-clip-text text-transparent mb-3">
+                        Check Your Email
                     </h2>
-                    <p className="text-gray-500 mb-8">Welcome to GoTransit Regina, {fullName.split(' ')[0]}.</p>
+                    <p className="text-gray-600 font-medium mb-2">Hi {fullName.split(' ')[0]}, you're almost there!</p>
+                    <p className="text-gray-500 text-sm mb-8">
+                        We sent a confirmation link to <span className="font-semibold text-gray-700">{email}</span>.
+                        Click the link in your inbox to activate your account, then sign in.
+                    </p>
                     <Link
                         to="/login"
-                        className="inline-flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-[#003DA5] to-[#1a56db] text-white rounded-xl font-bold shadow-[0_10px_40px_rgba(255,107,53,0.3)] hover:scale-105 transition-all duration-300"
+                        className="inline-flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-[#003DA5] to-[#1a56db] text-white rounded-xl font-bold shadow-[0_10px_40px_rgba(0,61,165,0.3)] hover:scale-105 transition-all duration-300"
                     >
-                        Sign In Now <ArrowRight className="w-4 h-4" />
+                        Go to Sign In <ArrowRight className="w-4 h-4" />
                     </Link>
                 </motion.div>
             </div>
