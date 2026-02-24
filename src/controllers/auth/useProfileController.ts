@@ -65,8 +65,18 @@ export function useProfileController() {
     const [passwordSuccess, setPasswordSuccess] = useState(false);
     const [passwordLoading, setPasswordLoading] = useState(false);
 
+    // Edit personal info
+    const [isEditingProfile, setIsEditingProfile] = useState(false);
+    const [editName, setEditName] = useState('');
+    const [editEmail, setEditEmail] = useState('');
+    const [editMobile, setEditMobile] = useState('');
+    const [editLoading, setEditLoading] = useState(false);
+    const [editError, setEditError] = useState('');
+    const [editEmailSent, setEditEmailSent] = useState(false);
+
     // Delete account confirmation
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [deleteLoading, setDeleteLoading] = useState(false);
 
     /* ── Load all profile data on mount ────────────────────────── */
     useEffect(() => {
@@ -173,16 +183,83 @@ export function useProfileController() {
         await supabase.from('favourite_routes').delete().eq('id', id);
     }, []);
 
+    /* ── Edit Personal Info ─────────────────────────────────────── */
+    const startEditProfile = useCallback(() => {
+        setEditName(profile?.full_name ?? user?.fullName ?? '');
+        setEditEmail(user?.email ?? '');
+        setEditMobile(profile?.mobile_number ?? '');
+        setEditError('');
+        setEditEmailSent(false);
+        setIsEditingProfile(true);
+    }, [profile, user]);
+
+    const cancelEditProfile = useCallback(() => {
+        setIsEditingProfile(false);
+        setEditError('');
+        setEditEmailSent(false);
+    }, []);
+
+    const saveProfile = useCallback(async () => {
+        if (!editName.trim()) {
+            setEditError('Full name is required');
+            return;
+        }
+        setEditError('');
+        setEditLoading(true);
+        try {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) return;
+
+            // Update name and mobile in profiles table
+            const { error: profileError } = await supabase
+                .from('profiles')
+                .update({
+                    full_name: editName.trim(),
+                    mobile_number: editMobile.trim() || null,
+                    updated_at: new Date().toISOString(),
+                })
+                .eq('id', session.user.id);
+            if (profileError) throw profileError;
+
+            // Reflect changes in local state immediately
+            setProfile(prev => prev
+                ? { ...prev, full_name: editName.trim(), mobile_number: editMobile.trim() || null }
+                : prev
+            );
+
+            // If email changed, trigger Supabase email update (sends confirmation)
+            if (editEmail.trim() && editEmail.trim() !== session.user.email) {
+                const { error: emailError } = await supabase.auth.updateUser({ email: editEmail.trim() });
+                if (emailError) throw emailError;
+                setEditEmailSent(true);
+                // Don't close edit mode yet — show the "check email" notice
+                return;
+            }
+
+            setIsEditingProfile(false);
+        } catch (err: any) {
+            setEditError(err?.message ?? 'Failed to save changes. Please try again.');
+        } finally {
+            setEditLoading(false);
+        }
+    }, [editName, editEmail, editMobile]);
+
     /* ── Delete Account ─────────────────────────────────────────── */
     const handleDeleteAccount = useCallback(async () => {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
-            // Soft-delete: mark as deleted, then sign out
-            await supabase.from('profiles')
-                .update({ account_status: 'deleted', updated_at: new Date().toISOString() })
-                .eq('id', session.user.id);
+        setDeleteLoading(true);
+        try {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                // Soft-delete: mark as deleted, then sign out
+                await supabase.from('profiles')
+                    .update({ account_status: 'deleted', updated_at: new Date().toISOString() })
+                    .eq('id', session.user.id);
+            }
+            await logout();
+        } catch (err) {
+            console.error('[Profile] Failed to delete account:', err);
+            setDeleteLoading(false);
         }
-        await logout();
     }, [logout]);
 
     return {
@@ -201,8 +278,16 @@ export function useProfileController() {
         passwordLoading,
         handleChangePassword,
         closePasswordModal,
+        // Edit personal info
+        isEditingProfile,
+        editName, setEditName,
+        editEmail, setEditEmail,
+        editMobile, setEditMobile,
+        editLoading, editError, editEmailSent,
+        startEditProfile, cancelEditProfile, saveProfile,
         // Delete confirm
         showDeleteConfirm, setShowDeleteConfirm,
+        deleteLoading,
         handleDeleteAccount,
         // Actions
         handleLogout,
