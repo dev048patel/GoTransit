@@ -109,6 +109,14 @@ export default function TripPlannerModal({ isOpen, onClose, onSelectRoute }: Tri
                 { lat: destination.lat, lng: destination.lng }
             );
             setRouteResults(results);
+
+            // Track "directions" event for admin dashboard analytics
+            const baseUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001';
+            fetch(`${baseUrl}/api/features/track`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'directions' }),
+            }).catch(() => { }); // Silent fail — analytics should never break the app
         } catch (error) {
             console.error('Error finding routes:', error);
             setRouteResults([]);

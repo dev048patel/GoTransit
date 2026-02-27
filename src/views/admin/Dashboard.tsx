@@ -39,7 +39,7 @@ function MetricCard({ title, value, icon: Icon, color, sub }: {
 }
 
 export default function Dashboard() {
-    const { registeredUsers, activeRoutes, isLoading, featureUsageData, trafficPieData } = useDashboardController();
+    const { registeredUsers, activeRoutes, isLoading, featureUsageData, trafficPieData, totalInteractions } = useDashboardController();
 
     return (
         <div className="space-y-6">
@@ -65,11 +65,11 @@ export default function Dashboard() {
                     sub="From Supabase — live"
                 />
                 <MetricCard
-                    title="Avg. Daily Interactions"
-                    value="1,294"
+                    title="Total Interactions"
+                    value={isLoading ? '…' : totalInteractions.toLocaleString()}
                     icon={TrendingUp}
                     color="purple"
-                    sub="Places + Directions (weekly avg)"
+                    sub="Places + Directions (all time)"
                 />
             </div>
 

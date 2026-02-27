@@ -4,48 +4,48 @@
  * Real data sources:
  *  - registeredUsers   → Supabase profiles table (polled every 10s)
  *  - activeRoutes      → count of routes from static transitRoutes.ts
- *  - featureUsage      → static weekly bar-chart (no real tracking yet)
- *  - trafficByDay      → static pie-chart showing distribution placeholder
+ *  - featureUsage      → LIVE from /api/features/weekly (polled every 10s)
+ *  - trafficByDay      → LIVE from /api/features/daily (polled every 10s)
+ *  - totalInteractions  → LIVE from /api/features/total
  */
 
 import { useState, useEffect } from 'react';
 import { getRealUserCount } from '../../services/UserRegistry';
 import transitRoutes from '../../data/transitRoutes';
 
-/* Weekly feature-usage bar chart (Places searched vs Saved directions) */
-const featureUsageData = [
-    { day: 'Mon', places: 124, directions: 83 },
-    { day: 'Tue', places: 198, directions: 112 },
-    { day: 'Wed', places: 175, directions: 97 },
-    { day: 'Thu', places: 210, directions: 140 },
-    { day: 'Fri', places: 262, directions: 158 },
-    { day: 'Sat', places: 180, directions: 95 },
-    { day: 'Sun', places: 145, directions: 72 },
-];
-
-/* Traffic/day pie chart — distribution across weekdays */
-const trafficPieData = [
-    { name: 'Mon', value: 124 },
-    { name: 'Tue', value: 198 },
-    { name: 'Wed', value: 175 },
-    { name: 'Thu', value: 210 },
-    { name: 'Fri', value: 262 },
-    { name: 'Sat', value: 180 },
-    { name: 'Sun', value: 145 },
-];
+const baseUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001';
 
 export function useDashboardController() {
     const [registeredUsers, setRegisteredUsers] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
+    const [featureUsageData, setFeatureUsageData] = useState<{ day: string; places: number; directions: number }[]>([]);
+    const [trafficPieData, setTrafficPieData] = useState<{ name: string; value: number }[]>([]);
+    const [totalInteractions, setTotalInteractions] = useState(0);
 
     const activeRoutes = transitRoutes.length;   // All routes from static data are "active"
 
     useEffect(() => {
         const refresh = async () => {
-            const count = await getRealUserCount();
-            setRegisteredUsers(count);
-            setIsLoading(false);
+            try {
+                // Fetch all data in parallel
+                const [userCount, weeklyRes, dailyRes, totalRes] = await Promise.all([
+                    getRealUserCount(),
+                    fetch(`${baseUrl}/api/features/weekly`).then(r => r.ok ? r.json() : []),
+                    fetch(`${baseUrl}/api/features/daily`).then(r => r.ok ? r.json() : []),
+                    fetch(`${baseUrl}/api/features/total`).then(r => r.ok ? r.json() : { total: 0 }),
+                ]);
+
+                setRegisteredUsers(userCount);
+                setFeatureUsageData(weeklyRes);
+                setTrafficPieData(dailyRes);
+                setTotalInteractions(totalRes.total);
+            } catch (err) {
+                console.error('[Dashboard] Error fetching data:', err);
+            } finally {
+                setIsLoading(false);
+            }
         };
+
         refresh();
         const interval = setInterval(refresh, 10_000);
         return () => clearInterval(interval);
@@ -57,5 +57,6 @@ export function useDashboardController() {
         isLoading,
         featureUsageData,
         trafficPieData,
+        totalInteractions,
     };
 }
