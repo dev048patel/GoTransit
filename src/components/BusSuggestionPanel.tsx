@@ -55,6 +55,14 @@ export default function BusSuggestionPanel({ destination, onClose, onSelectRoute
                 { lat: destination.lat, lng: destination.lng }
             );
             setResults(options);
+
+            // Track "directions" event for admin dashboard analytics
+            const baseUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001';
+            fetch(`${baseUrl}/api/features/track`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'directions' }),
+            }).catch(() => { }); // Silent fail
         } catch (err) {
             console.error('[BusSuggestionPanel] Error:', err);
         }

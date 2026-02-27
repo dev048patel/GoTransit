@@ -55,6 +55,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [role, setRole] = useState<'user' | 'admin'>('user');
     const [isLoading, setIsLoading] = useState(true);
 
+    // useEffect will only run when the component is mounted.
     useEffect(() => {
         // Load the current session and fetch role on mount
         async function init() {
@@ -120,6 +121,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, [session]);
 
     const user = session ? sessionToUser(session, role) : null;
+
 
     return (
         <AuthContext.Provider value={{
