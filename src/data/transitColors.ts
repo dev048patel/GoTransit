@@ -5,7 +5,7 @@ Select the "Transit" and then "Route Colors" to get the data.
 */
 
 
-import { RouteColor } from '../models/RouteColor';
+import { RouteColor } from '../models/transit/RouteColor';
 
 // Flattening the provided nested array [ [ ... ] ] structure
 const transitColors: RouteColor[] = [

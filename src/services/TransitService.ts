@@ -6,11 +6,11 @@ This is the Business/Backend Logic Layer. "Decision making"
 4. Returns data to controller
 */
 import { RouteRepository } from '../repositories/RouteRepository';
-import { Route } from '../models/Route';
+import { Route } from '../models/transit/Route';
 import { StopRepository } from '../repositories/StopRepository';
-import { Stop } from '../models/Stop';
+import { Stop } from '../models/transit/Stop';
 
-import { RouteColor } from '../models/RouteColor';
+import { RouteColor } from '../models/transit/RouteColor';
 import transitColors from '../data/transitColors';
 
 export class TransitService {

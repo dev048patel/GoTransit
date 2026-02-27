@@ -3,7 +3,7 @@ Data Access Layer for Route entities.
 Directly interacts with the database (or mock data source).
 It isolates the database query logic from the rest of the application.
 */
-import { Route } from '../models/Route';
+import { Route } from '../models/transit/Route';
 import transitRoutes from '../data/transitRoutes';
 
 export class RouteRepository {
