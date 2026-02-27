@@ -4,7 +4,7 @@ Link: https://openregina.ca
 Select the "Transit" and then "Routes " to get the data.
 */
 
-import { Route } from '../models/Route';
+import { Route } from '../models/transit/Route';
 
 const transitRoutes: Route[] = [
     {
