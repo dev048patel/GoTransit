@@ -19,8 +19,7 @@ const port = Number(process.env.PORT) || 3001; // Railway assigns PORT dynamical
 const allowedOrigins = [
     'https://www.gotransitregina.ca',
     'https://gotransitregina.ca',
-    'http://localhost:5173', // Keep this for local development
-    'http://localhost:3000'
+    'http://localhost:5173' // Keep this for local development
 ];
 
 app.use(cors({
@@ -45,8 +44,8 @@ app.get('/api/status', (req, res) => {
 });
 
 // Start Server
-app.listen(port, 'localhost', () => {
-    console.log(`Server running at http://localhost:${port}`);
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Server running at http://0.0.0.0:${port}`);
 });
 
 export default app;
