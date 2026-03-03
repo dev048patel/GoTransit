@@ -1,48 +1,66 @@
 /**
  * TrackingPanel
  * Bottom panel displayed when route tracking is active.
- * Shows trip summary, step-by-step timeline with colored left border,
- * and a Stop Tracking button.
+ * Shows trip summary with live bus ETA, step-by-step timeline,
+ * and a Stop Tracking button. Responsive for mobile viewports.
  */
 import React from 'react';
-import { TripOption } from '../models/RoutePlanning';
-import transitColors from '../data/transitColors';
+import { TripOption } from '../../models/transit/RoutePlanning';
+import transitColors from '../../data/transitColors';
+import { TrackingPanelProps } from '../../models/components/TrackingPanelProps';
 
-interface TrackingPanelProps {
-    tripOption: TripOption;
-    onStopTracking: () => void;
-}
-
-export default function TrackingPanel({ tripOption, onStopTracking }: TrackingPanelProps) {
+export default function TrackingPanel({ tripOption, onStopTracking, onBack }: TrackingPanelProps) {
     const now = new Date();
-    const arrivalTime = new Date(now.getTime() + tripOption.totalTime * 60000);
+    const effectiveTime = tripOption.totalTimeWithWait ?? tripOption.totalTime;
+    const arrivalTime = new Date(now.getTime() + effectiveTime * 60000);
     const formatTime = (d: Date) => d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
 
+    /** Look up the official bus route color from transitColors. */
     const getRouteColor = (routeNum: string): string => {
-        const match = transitColors.find(c => c.route_id === parseInt(routeNum));
-        return match ? match.colour : '#1a73e8';
+        const colorData = transitColors.find(c => c.route_id === parseInt(routeNum));
+        return colorData ? colorData.colour : '#1a73e8';
     };
+
+    const primaryColor = getRouteColor(tripOption.segments[0]?.routeNum);
 
     return (
         <div style={panelStyle}>
             {/* Drag handle */}
             <div style={handleBarStyle}><div style={handleStyle} /></div>
 
-            {/* Header */}
-            <div style={headerStyle}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ fontSize: '20px' }}>🚌</span>
-                    <div>
+            {/* Header with gradient accent */}
+            <div style={{
+                ...headerStyle,
+                background: `linear-gradient(135deg, ${primaryColor}10 0%, ${primaryColor}05 100%)`
+            }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1 }}>
+                    <div style={{
+                        width: '42px', height: '42px', borderRadius: '12px',
+                        background: `linear-gradient(135deg, ${primaryColor}, ${primaryColor}cc)`,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        color: 'white', fontSize: '18px', flexShrink: 0,
+                        boxShadow: `0 2px 8px ${primaryColor}40`
+                    }}>🚌</div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontWeight: '700', fontSize: '18px', color: '#202124' }}>
-                            {tripOption.totalTime} min
+                            {effectiveTime} min
                         </div>
                         <div style={{ fontSize: '12px', color: '#5f6368' }}>
                             Arrive {formatTime(arrivalTime)}
+                            {tripOption.isLivePrediction && (
+                                <span style={{
+                                    marginLeft: '6px', color: '#2e7d32',
+                                    fontWeight: '600', fontSize: '11px'
+                                }}>
+                                    • Live
+                                </span>
+                            )}
                         </div>
                     </div>
                 </div>
-                {/* Route summary icons */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' }}>
+
+                {/* Route summary chips */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap', flexShrink: 0 }}>
                     <span style={miniIconStyle}>🚶</span>
                     {tripOption.segments.map((seg, i) => (
                         <React.Fragment key={i}>
@@ -59,6 +77,36 @@ export default function TrackingPanel({ tripOption, onStopTracking }: TrackingPa
                     <span style={miniIconStyle}>🚶</span>
                 </div>
             </div>
+
+            {/* Live bus ETA banner */}
+            {tripOption.isLivePrediction && tripOption.waitTime !== undefined && (
+                <div style={{
+                    margin: '0 14px',
+                    padding: '8px 12px',
+                    background: 'linear-gradient(135deg, #e8f5e9, #f1f8e9)',
+                    borderRadius: '10px',
+                    display: 'flex', alignItems: 'center', gap: '8px',
+                    marginTop: '8px'
+                }}>
+                    <span style={{
+                        width: '10px', height: '10px', borderRadius: '50%',
+                        backgroundColor: '#4caf50', display: 'inline-block',
+                        boxShadow: '0 0 6px #4caf5080',
+                        animation: 'pulse 2s infinite'
+                    }} />
+                    <span style={{ fontSize: '13px', fontWeight: '500', color: '#2e7d32' }}>
+                        {tripOption.waitTime <= 1
+                            ? '🎉 Bus arriving now!'
+                            : `Next bus in ~${tripOption.waitTime} min`
+                        }
+                        {tripOption.segments[0]?.busDistanceAway && (
+                            <span style={{ color: '#5f6368', fontWeight: '400', fontSize: '12px' }}>
+                                {' '}· {(tripOption.segments[0].busDistanceAway / 1000).toFixed(1)} km away
+                            </span>
+                        )}
+                    </span>
+                </div>
+            )}
 
             {/* Step-by-step timeline */}
             <div style={timelineContainerStyle}>
@@ -77,7 +125,7 @@ export default function TrackingPanel({ tripOption, onStopTracking }: TrackingPa
                 <TimelineStep
                     color="#5f6368"
                     icon="🚶"
-                    title={`Walk ${tripOption.walkingDistance}m`}
+                    title={`Walk ${tripOption.walkToFirstStop ?? tripOption.walkingDistance}m`}
                     subtitle={`to ${tripOption.segments[0].fromStop}`}
                     time=""
                     lineColor="#5f6368"
@@ -87,10 +135,38 @@ export default function TrackingPanel({ tripOption, onStopTracking }: TrackingPa
                 {/* Bus segments */}
                 {tripOption.segments.map((seg, i) => {
                     const segColor = getRouteColor(seg.routeNum);
-                    const boardTime = new Date(now.getTime() + (i === 0 ?
-                        Math.round((tripOption.walkingDistance / 1000) / 5 * 60) : // walk time
-                        tripOption.segments.slice(0, i).reduce((acc, s) => acc + s.estimatedTime, 0) + 5 // + transfer wait
-                    ) * 60000);
+                    const walkMinutes = Math.round((tripOption.walkingDistance / 1000) / 5 * 60);
+                    let boardTime: Date;
+
+                    // Use live predicted time from API for ANY segment that has it
+                    if (seg.predTime) {
+                        const match = seg.predTime.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+                        if (match) {
+                            let h = parseInt(match[1], 10);
+                            const m = parseInt(match[2], 10);
+                            const ap = match[3].toUpperCase();
+                            if (ap === 'PM' && h !== 12) h += 12;
+                            if (ap === 'AM' && h === 12) h = 0;
+                            boardTime = new Date(now);
+                            boardTime.setHours(h, m, 0, 0);
+                        } else {
+                            // predTime exists but doesn't parse — fall back to estimate
+                            boardTime = this_fallbackBoardTime(i);
+                        }
+                    } else {
+                        boardTime = this_fallbackBoardTime(i);
+                    }
+
+                    // Fallback estimate when no live prediction
+                    function this_fallbackBoardTime(segIndex: number): Date {
+                        if (segIndex === 0) {
+                            return new Date(now.getTime() + Math.max(walkMinutes, tripOption.waitTime ?? walkMinutes) * 60000);
+                        } else {
+                            const prevMinutes = tripOption.segments.slice(0, segIndex).reduce((acc, s) => acc + s.estimatedTime, 0) + 5;
+                            const firstWait = tripOption.waitTime ?? walkMinutes;
+                            return new Date(now.getTime() + (Math.max(walkMinutes, firstWait) + prevMinutes) * 60000);
+                        }
+                    }
 
                     return (
                         <React.Fragment key={i}>
@@ -103,6 +179,14 @@ export default function TrackingPanel({ tripOption, onStopTracking }: TrackingPa
                                     <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                                         <span style={{ ...routeBadgeTinyStyle, backgroundColor: segColor }}>{seg.routeNum}</span>
                                         <span>{seg.routeName}</span>
+                                        {i === 0 && seg.nextBusETA !== undefined && (
+                                            <span style={{
+                                                fontSize: '10px', fontWeight: '600', color: '#2e7d32',
+                                                backgroundColor: '#e8f5e9', padding: '1px 6px', borderRadius: '6px'
+                                            }}>
+                                                {seg.nextBusETA <= 1 ? 'Now!' : `~${seg.nextBusETA}m wait`}
+                                            </span>
+                                        )}
                                     </span>
                                 }
                                 time={formatTime(boardTime)}
@@ -136,17 +220,36 @@ export default function TrackingPanel({ tripOption, onStopTracking }: TrackingPa
                             />
 
                             {/* Transfer */}
-                            {i < tripOption.segments.length - 1 && (
-                                <TimelineStep
-                                    color="#e37400"
-                                    icon="🔄"
-                                    title="Transfer"
-                                    subtitle="Wait for next bus (~5 min)"
-                                    time=""
-                                    lineColor="#e37400"
-                                    dashed
-                                />
-                            )}
+                            {i < tripOption.segments.length - 1 && (() => {
+                                const nextSeg = tripOption.segments[i + 1];
+                                const isWalkTransfer = seg.toStop !== nextSeg?.fromStop;
+                                return (
+                                    <>
+                                        {isWalkTransfer && tripOption.transferWalkDistance && (
+                                            <TimelineStep
+                                                color="#5f6368"
+                                                icon="🚶"
+                                                title={`Walk ${tripOption.transferWalkDistance}m`}
+                                                subtitle={`to ${nextSeg?.fromStop}`}
+                                                time=""
+                                                lineColor="#5f6368"
+                                                dashed
+                                            />
+                                        )}
+                                        <TimelineStep
+                                            color="#e37400"
+                                            icon="🔄"
+                                            title="Transfer"
+                                            subtitle={isWalkTransfer
+                                                ? `Board at ${nextSeg?.fromStop} (~5 min wait)`
+                                                : 'Wait for next bus (~5 min)'}
+                                            time=""
+                                            lineColor="#e37400"
+                                            dashed
+                                        />
+                                    </>
+                                );
+                            })()}
                         </React.Fragment>
                     );
                 })}
@@ -164,12 +267,31 @@ export default function TrackingPanel({ tripOption, onStopTracking }: TrackingPa
                 />
             </div>
 
-            {/* Buttons */}
+            {/* Button area */}
             <div style={buttonsStyle}>
-                <button onClick={onStopTracking} style={stopBtnStyle}>
-                    Stop Tracking
+                {onBack && (
+                    <button onClick={onBack} style={backBtnStyle}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e8f0fe'}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
+                    >
+                        ← Back to Routes
+                    </button>
+                )}
+                <button onClick={onStopTracking} style={stopBtnStyle}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#c62828'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ea4335'}
+                >
+                    ✕ Stop Tracking
                 </button>
             </div>
+
+            {/* Animations */}
+            <style>{`
+                @keyframes pulse {
+                    0%, 100% { opacity: 1; transform: scale(1); }
+                    50% { opacity: 0.6; transform: scale(1.2); }
+                }
+            `}</style>
         </div>
     );
 }
@@ -214,15 +336,15 @@ function TimelineStep({ color, icon, title, subtitle, time, lineColor, dashed, s
                 flex: 1, paddingLeft: '10px', paddingBottom: small ? '4px' : '12px',
                 display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'
             }}>
-                <div>
+                <div style={{ minWidth: 0, flex: 1 }}>
                     <div style={{
                         display: 'flex', alignItems: 'center', gap: '6px',
                         fontSize: small ? '12px' : '14px',
                         fontWeight: small ? '400' : '500',
                         color: small ? '#5f6368' : '#202124'
                     }}>
-                        {icon && <span style={{ fontSize: small ? '12px' : '14px' }}>{icon}</span>}
-                        <span>{title}</span>
+                        {icon && <span style={{ fontSize: small ? '12px' : '14px', flexShrink: 0 }}>{icon}</span>}
+                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{title}</span>
                     </div>
                     {subtitle && (
                         <div style={{ fontSize: '12px', color: '#5f6368', marginTop: '2px' }}>
@@ -300,7 +422,21 @@ const stopBtnStyle: React.CSSProperties = {
     borderRadius: '24px',
     fontSize: '14px',
     fontWeight: '600',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    transition: 'background-color 0.2s'
+};
+
+const backBtnStyle: React.CSSProperties = {
+    flex: 1,
+    padding: '12px',
+    backgroundColor: 'white',
+    color: '#1a73e8',
+    border: '2px solid #1a73e8',
+    borderRadius: '24px',
+    fontSize: '14px',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: 'background-color 0.2s'
 };
 
 const miniIconStyle: React.CSSProperties = {

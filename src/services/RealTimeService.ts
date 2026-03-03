@@ -4,7 +4,7 @@
 3. Returns parsed BusPosition objects.
 */
 
-import { BusPosition } from '../models/BusPosition';
+import { BusPosition } from '../models/transit/BusPosition';
 
 //Handle interaction with the Transit Live Public API.
 export class RealTimeService {
@@ -24,8 +24,19 @@ export class RealTimeService {
             }
 
             // The API returns a direct JSON array of features.
-            const geoJsonData = await response.json();
-
+            // Guard against empty or malformed responses
+            const text = await response.text();
+            if (!text || text.trim().length === 0) {
+                console.warn('Live bus API returned empty response');
+                return [];
+            }
+            let geoJsonData: any[];
+            try {
+                geoJsonData = JSON.parse(text);
+            } catch {
+                console.warn('Live bus API returned invalid JSON:', text.substring(0, 100));
+                return [];
+            }
             // Transform GeoJSON to internal BusPosition model.
             const parsedBuses: BusPosition[] = (geoJsonData as any[]).map((feature: any) => ({
                 bus_id: feature.properties.b,

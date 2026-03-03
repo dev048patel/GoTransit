@@ -4,38 +4,15 @@
  */
 import React, { useState, useCallback, useRef } from 'react';
 import { GoogleMap, Marker, Polyline, InfoWindow } from '@react-google-maps/api';
-import { Coordinates, MapOptions } from '../models/MapModel';
-import { Stop } from '../models/Stop';
-import { Route } from '../models/Route';
-import { BusPosition } from '../models/BusPosition';
-import { TripOption } from '../models/RoutePlanning';
+import { Coordinates } from '../models/MapModel';
+import { TripOption } from '../models/transit/RoutePlanning';
+import { BusPosition } from '../models/transit/BusPosition';
+import { MapViewProps } from '../models/views/MapViewProps';
 import Navbar from './Navbar';
-import TripPlannerModal from '../components/TripPlannerModal';
-import BusSuggestionPanel from '../components/BusSuggestionPanel';
-import RouteTrackingOverlay from '../components/RouteTrackingOverlay';
-import TrackingPanel from '../components/TrackingPanel';
-
-interface MapViewProps {
-  isLoaded: boolean;
-  loadError: Error | undefined;
-  center: Coordinates;
-  setCenter: (c: Coordinates) => void;
-  options: MapOptions;
-  containerStyle: React.CSSProperties;
-  zoom: number;
-  setZoom: (z: number) => void;
-  stops: Stop[];
-  routes: Route[];
-  selectedRoute: string | null;
-  setSelectedRoute: (routeNum: string | null) => void;
-  routePaths: { lat: number; lng: number }[][];
-  liveBuses: BusPosition[];
-  handlePlaceSelect: (place: any) => void;
-  selectedPlaceMarker: { location: Coordinates; name: string } | null;
-  setSelectedPlaceMarker: (marker: { location: Coordinates; name: string } | null) => void;
-  currentZoom: number;
-  onZoomChanged: (newZoom: number) => void;
-}
+import TripPlannerModal from '../components/transit/TripPlannerModal';
+import BusSuggestionPanel from '../components/transit/BusSuggestionPanel';
+import RouteTrackingOverlay from '../components/transit/RouteTrackingOverlay';
+import TrackingPanel from '../components/transit/TrackingPanel';
 
 /*
  -> <MapView isLoaded={...} center={...} />
@@ -98,6 +75,12 @@ export const MapView: React.FC<MapViewProps> = ({
     setSelectedPlaceMarker(null); // Remove the destination marker from map
   };
 
+  // Go back to suggestions without clearing the destination
+  const handleBackToSuggestions = () => {
+    setActiveTracking(null);
+    setShowBusSuggestions(true);
+  };
+
   // Use a ref to track the map instance for zoom change events
   const mapRef = useRef<google.maps.Map | null>(null);
 
@@ -133,6 +116,7 @@ export const MapView: React.FC<MapViewProps> = ({
         isOpen={showTripPlanner}
         onClose={() => setShowTripPlanner(false)}
         onSelectRoute={handleSelectRoute}
+        liveBuses={liveBuses}
       />
 
       {/* Bus Suggestion Panel (shown after user clicks Yes on InfoWindow) */}
@@ -145,12 +129,13 @@ export const MapView: React.FC<MapViewProps> = ({
           }}
           onClose={() => setShowBusSuggestions(false)}
           onSelectRoute={handleSelectRoute}
+          liveBuses={liveBuses}
         />
       )}
 
       {/* Tracking Panel (bottom sheet) */}
       {activeTracking && (
-        <TrackingPanel tripOption={activeTracking} onStopTracking={handleStopTracking} />
+        <TrackingPanel tripOption={activeTracking} onStopTracking={handleStopTracking} onBack={handleBackToSuggestions} />
       )}
 
 

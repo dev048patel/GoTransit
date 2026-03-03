@@ -7,6 +7,7 @@ This file is Backend Part, where all the logic is implemented. ( Answer API call
 import { Request, Response } from 'express';
 import { TransitService } from '../services/TransitService';
 import { RealTimeService } from '../services/RealTimeService';
+import { StopPredictionService } from '../services/StopPredictionService';
 
 // Initialize the Service
 const transitService = new TransitService();
@@ -65,5 +66,21 @@ export const getLiveBuses = async (req: Request, res: Response) => {
     } catch (error) {
         console.error("Controller Error fetching live buses:", error);
         res.status(500).json({ error: 'Failed to fetch live buses' });
+    }
+};
+
+// getStopPredictions : handle the request to get predicted arrival times for a stop.
+export const getStopPredictions = async (req: Request, res: Response) => {
+    try {
+        const stopId = req.params.stopId;
+        if (!stopId) {
+            res.status(400).json({ error: 'Stop ID is required' });
+            return;
+        }
+        const predictions = await StopPredictionService.getPredictions(stopId);
+        res.json(predictions);
+    } catch (error) {
+        console.error("Controller Error fetching stop predictions:", error);
+        res.status(500).json({ error: 'Failed to fetch stop predictions' });
     }
 };

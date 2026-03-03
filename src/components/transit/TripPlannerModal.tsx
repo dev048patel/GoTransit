@@ -7,25 +7,15 @@
  */
 import React, { useState } from 'react';
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
-import { RoutePlanningService } from '../services/RoutePlanningService';
-import { TripOption } from '../models/RoutePlanning';
-import transitColors from '../data/transitColors';
-
-interface TripPlannerModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    onSelectRoute?: (option: TripOption) => void;
-}
-
-interface LocationState {
-    lat: number;
-    lng: number;
-    label: string;
-}
+import { RoutePlanningService } from '../../services/RoutePlanningService';
+import { TripOption } from '../../models/transit/RoutePlanning';
+import transitColors from '../../data/transitColors';
+import { TripPlannerModalProps } from '../../models/components/TripPlannerModalProps';
+import { LocationState } from '../../models/transit/LocationState';
 
 const routePlanningService = new RoutePlanningService();
 
-export default function TripPlannerModal({ isOpen, onClose, onSelectRoute }: TripPlannerModalProps) {
+export default function TripPlannerModal({ isOpen, onClose, onSelectRoute, liveBuses }: TripPlannerModalProps) {
     const [origin, setOrigin] = useState<LocationState | null>(null);
     const [destination, setDestination] = useState<LocationState | null>(null);
     const [gpsLoading, setGpsLoading] = useState(false);
@@ -106,7 +96,8 @@ export default function TripPlannerModal({ isOpen, onClose, onSelectRoute }: Tri
         try {
             const results = await routePlanningService.calculateTripOptions(
                 { lat: origin.lat, lng: origin.lng },
-                { lat: destination.lat, lng: destination.lng }
+                { lat: destination.lat, lng: destination.lng },
+                liveBuses
             );
             setRouteResults(results);
 
@@ -276,6 +267,18 @@ export default function TripPlannerModal({ isOpen, onClose, onSelectRoute }: Tri
 
 // --- Route Card Subcomponent ---
 function RouteCard({ option, index }: { option: TripOption; index: number }) {
+    const [expandedStops, setExpandedStops] = React.useState<Set<number>>(new Set());
+
+    const toggleStops = (segIndex: number, e: React.MouseEvent) => {
+        e.stopPropagation();
+        setExpandedStops(prev => {
+            const next = new Set(prev);
+            if (next.has(segIndex)) next.delete(segIndex);
+            else next.add(segIndex);
+            return next;
+        });
+    };
+
     // Look up actual transit color for each segment's route
     const getRouteColor = (routeNum: string): string => {
         const match = transitColors.find(c => c.route_id === parseInt(routeNum));
@@ -317,9 +320,49 @@ function RouteCard({ option, index }: { option: TripOption; index: number }) {
                     )}
                 </div>
                 <span style={{ fontWeight: '700', fontSize: '16px', color: '#202124' }}>
-                    ~{option.totalTime} min
+                    {option.isLivePrediction && option.totalTimeWithWait
+                        ? `~${option.totalTimeWithWait} min`
+                        : `~${option.totalTime} min`
+                    }
                 </span>
             </div>
+
+            {/* Live ETA info */}
+            {option.isLivePrediction && option.waitTime !== undefined && (
+                <div style={{
+                    display: 'flex', alignItems: 'center', gap: '6px',
+                    padding: '6px 10px', backgroundColor: '#e8f5e9', borderRadius: '8px',
+                    marginBottom: '10px', fontSize: '12px', fontWeight: '500'
+                }}>
+                    <span style={{ fontSize: '14px' }}>🟢</span>
+                    <span style={{ color: '#2e7d32' }}>
+                        {option.waitTime <= 1
+                            ? 'Bus arriving now!'
+                            : `Next bus in ~${option.waitTime} min`
+                        }
+                        {option.segments[0]?.predTime && (
+                            <span style={{ color: '#1a73e8', fontWeight: '600' }}>
+                                {' '}· arrives {option.segments[0].predTime}
+                            </span>
+                        )}
+                        {option.segments[0]?.busId && (
+                            <span style={{ color: '#5f6368', fontWeight: '500' }}>
+                                {' '}· Bus #{option.segments[0].busId}
+                            </span>
+                        )}
+                    </span>
+                </div>
+            )}
+            {!option.isLivePrediction && (
+                <div style={{
+                    display: 'flex', alignItems: 'center', gap: '6px',
+                    padding: '6px 10px', backgroundColor: '#fff3e0', borderRadius: '8px',
+                    marginBottom: '10px', fontSize: '12px', fontWeight: '500'
+                }}>
+                    <span style={{ fontSize: '14px' }}>⏱️</span>
+                    <span style={{ color: '#e65100' }}>Estimated time (no live bus data)</span>
+                </div>
+            )}
 
             {/* Step-by-step instructions with timeline */}
             <div style={{ fontSize: '13px', color: '#202124', position: 'relative', paddingLeft: '28px' }}>
@@ -343,21 +386,93 @@ function RouteCard({ option, index }: { option: TripOption; index: number }) {
                             <span>
                                 Board <strong style={{ color: getRouteColor(seg.routeNum) }}>Route {seg.routeNum}</strong>
                                 <span style={{ color: '#5f6368' }}> ({seg.routeName})</span>
+                                {seg.busId && (
+                                    <span style={{
+                                        marginLeft: '6px', fontSize: '11px', fontWeight: '600',
+                                        color: '#1a73e8', backgroundColor: '#e8f0fe',
+                                        padding: '1px 6px', borderRadius: '6px'
+                                    }}>
+                                        Bus #{seg.busId}
+                                    </span>
+                                )}
                             </span>
                         </div>
-                        <div style={{ ...timelineStepStyle, paddingLeft: '12px', color: '#5f6368', fontSize: '12px' }}>
-                            <span style={timelineSmallDotStyle} />
-                            <span>{seg.fromStop} → {seg.toStop} · ~{seg.estimatedTime} min</span>
-                        </div>
+
+                        {/* Intermediate stops - collapsible */}
+                        {seg.intermediateStops && seg.intermediateStops.length > 0 && (
+                            <div style={{ paddingLeft: '12px' }}>
+                                <div
+                                    onClick={(e) => toggleStops(i, e)}
+                                    style={{
+                                        ...timelineStepStyle,
+                                        cursor: 'pointer',
+                                        color: '#1a73e8',
+                                        fontSize: '12px',
+                                        userSelect: 'none'
+                                    }}
+                                >
+                                    <span style={timelineSmallDotStyle} />
+                                    <span style={{ fontWeight: '500' }}>
+                                        {expandedStops.has(i) ? '▾' : '▸'} {seg.intermediateStops.length} stop{seg.intermediateStops.length !== 1 ? 's' : ''}
+                                    </span>
+                                </div>
+                                {expandedStops.has(i) && seg.intermediateStops.map((stopName, si) => (
+                                    <div key={si} style={{
+                                        ...timelineStepStyle,
+                                        paddingLeft: '12px',
+                                        color: '#5f6368',
+                                        fontSize: '11px',
+                                        padding: '2px 0'
+                                    }}>
+                                        <span style={{
+                                            ...timelineSmallDotStyle,
+                                            width: '4px', height: '4px',
+                                            marginLeft: '-15px', marginTop: '6px'
+                                        }} />
+                                        <span>{stopName}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Ride info line (fallback when no intermediate stops) */}
+                        {!seg.intermediateStops || seg.intermediateStops.length === 0 ? (
+                            <div style={{ ...timelineStepStyle, paddingLeft: '12px', color: '#5f6368', fontSize: '12px' }}>
+                                <span style={timelineSmallDotStyle} />
+                                <span>Ride ~{seg.estimatedTime} min</span>
+                            </div>
+                        ) : null}
+
                         <div style={timelineStepStyle}>
                             <span style={timelineDotStyle('#ea4335')} />
                             <span>Get off at <strong>{seg.toStop}</strong></span>
                         </div>
-                        {/* Transfer instruction */}
+
+                        {/* Transfer section - enhanced */}
                         {i < option.segments.length - 1 && (
-                            <div style={{ ...timelineStepStyle, color: '#e37400', fontWeight: '500' }}>
+                            <div style={{
+                                ...timelineStepStyle,
+                                padding: '8px 0',
+                            }}>
                                 <span style={timelineDotStyle('#e37400')} />
-                                <span>Transfer — wait for next bus at this stop</span>
+                                <div style={{
+                                    backgroundColor: '#fef7e0',
+                                    borderRadius: '8px',
+                                    padding: '8px 12px',
+                                    border: '1px solid #fdd835',
+                                    flex: 1
+                                }}>
+                                    <div style={{ fontWeight: '600', color: '#e37400', fontSize: '12px', marginBottom: '4px' }}>
+                                        🔄 Transfer at {seg.toStop}
+                                    </div>
+                                    <div style={{ fontSize: '11px', color: '#5f6368' }}>
+                                        Wait for <strong style={{ color: getRouteColor(option.segments[i + 1].routeNum) }}>
+                                            Route {option.segments[i + 1].routeNum}
+                                        </strong>
+                                        <span> ({option.segments[i + 1].routeName})</span>
+                                        <span> · ~5 min wait</span>
+                                    </div>
+                                </div>
                             </div>
                         )}
                     </div>

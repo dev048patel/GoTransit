@@ -43,5 +43,12 @@ router.get('/colors', TransitController.getColors);
  */
 router.get('/live', TransitController.getLiveBuses);
 
+/*
+ -> @route GET /api/stop-predictions/:stopId
+ -> Fetch predicted bus arrival times for a specific stop
+ -> @access Public
+ */
+router.get('/stop-predictions/:stopId', TransitController.getStopPredictions);
+
 
 export default router;

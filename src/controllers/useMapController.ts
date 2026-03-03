@@ -7,34 +7,13 @@ This is Frontend Part, which controls behaviour of the map.
 import { useLoadScript } from '@react-google-maps/api';
 import { MapModel, Coordinates, MapOptions } from '../models/MapModel';
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import { Stop } from '../models/Stop';
+import { Stop } from '../models/transit/Stop';
 import transitRoutes from '../data/transitRoutes';
 import transitColors from '../data/transitColors';
-import { Route } from '../models/Route';
-import { BusPosition } from '../models/BusPosition';
+import { Route } from '../models/transit/Route';
+import { BusPosition } from '../models/transit/BusPosition';
 import { getStopsForRoute } from '../services/StopToRouteIndex';
-
-interface MapControllerOutput {
-  isLoaded: boolean;
-  loadError: Error | undefined;
-  center: Coordinates;
-  setCenter: (c: Coordinates) => void;
-  options: MapOptions;
-  containerStyle: React.CSSProperties;
-  zoom: number;
-  setZoom: (z: number) => void;
-  stops: Stop[];
-  routes: Route[];
-  selectedRoute: string | null;
-  setSelectedRoute: (routeNum: string | null) => void;
-  routePaths: { lat: number; lng: number }[][];
-  liveBuses: BusPosition[];
-  handlePlaceSelect: (place: any) => void;
-  selectedPlaceMarker: { location: Coordinates; name: string } | null;
-  setSelectedPlaceMarker: (marker: { location: Coordinates; name: string } | null) => void;
-  currentZoom: number;
-  onZoomChanged: (newZoom: number) => void;
-}
+import { MapControllerOutput } from '../models/controllers/MapControllerOutput';
 
 export const useMapController = (): MapControllerOutput => {
   // 1. Fetch Configuration from Model and initialize state variables
