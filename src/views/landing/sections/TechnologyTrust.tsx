@@ -19,7 +19,7 @@ export default function TechnologyTrust({ technologies }: TechnologyTrustProps) 
     };
 
     return (
-        <section className="py-24 bg-white">
+        <section className="py-24 relative">
             <div className="max-w-7xl mx-auto px-6">
                 {/* Section Header */}
                 <motion.div
@@ -42,21 +42,26 @@ export default function TechnologyTrust({ technologies }: TechnologyTrustProps) 
                     {technologies.map((tech, index) => (
                         <motion.div
                             key={tech.name}
-                            className="group relative bg-white/80 backdrop-blur-md rounded-3xl p-8 border border-gray-200 hover:border-[#FF6B35]/30 transition-all duration-500 hover:-translate-y-3 hover:shadow-[0_20px_60px_rgba(0,61,165,0.2)]"
+                            className="group relative backdrop-blur-md rounded-3xl p-8 border transition-all duration-500 hover:-translate-y-3"
+                            style={{
+                                background: 'rgba(255,255,255,0.85)',
+                                border: '1px solid rgba(0,61,165,0.10)',
+                                boxShadow: '0 4px 30px rgba(0,0,0,0.07)',
+                            }}
                             initial={{ opacity: 0, y: 50 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.6, delay: index * 0.1 }}
                         >
                             {/* Logo/Icon Container */}
-                            <div className="relative w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center overflow-hidden group-hover:scale-110 transition-transform duration-500">
+                            <div className="relative w-24 h-24 mx-auto mb-6 rounded-2xl  flex items-center justify-center overflow-hidden group-hover:scale-110 transition-transform duration-500">
                                 {/* Icon */}
                                 <span className="text-5xl filter grayscale group-hover:grayscale-0 transition-all duration-500">
                                     {techIcons[tech.name] || '⚙️'}
                                 </span>
 
                                 {/* Gradient Overlay on Hover */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-[#003DA5]/0 to-[#FF6B35]/0 group-hover:from-[#003DA5]/10 group-hover:to-[#FF6B35]/10 transition-all duration-500" />
+                                <div className="absolute inset-0 bg-gradient-to-br from-[#003DA5]/0 to-[#003DA5]/0 group-hover:from-[#003DA5]/10 group-hover:to-[#003DA5]/10 transition-all duration-500" />
                             </div>
 
                             {/* Technology Name */}
@@ -65,7 +70,7 @@ export default function TechnologyTrust({ technologies }: TechnologyTrustProps) 
                             </h3>
 
                             {/* Description */}
-                            <p className="text-gray-600 text-center text-sm leading-relaxed">
+                            <p className="text-base text-gray-600 text-center leading-relaxed">
                                 {tech.description}
                             </p>
 
@@ -104,7 +109,7 @@ export default function TechnologyTrust({ technologies }: TechnologyTrustProps) 
                         <defs>
                             <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="0%">
                                 <stop offset="0%" stopColor="#003DA5" />
-                                <stop offset="100%" stopColor="#FF6B35" />
+                                <stop offset="100%" stopColor="#003DA5" />
                             </linearGradient>
                         </defs>
                     </svg>

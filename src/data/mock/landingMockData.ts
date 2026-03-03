@@ -17,17 +17,17 @@ export const heroContent: HeroContent = {
 export const stats: Stat[] = [
     {
         label: "Regina Routes Covered",
-        value: "25+",
+        value: "22",
         icon: "Route"
     },
     {
-        label: "Saved Stops Mapped",
-        value: "10,000+",
+        label: "Bus Stops Mapped",
+        value: "1,400+",
         icon: "MapPin"
     },
     {
         label: "On-time Accuracy",
-        value: "98%",
+        value: "88%",
         icon: "Target"
     }
 ];
@@ -53,20 +53,6 @@ export const features: Feature[] = [
         description: "Name your frequent stops for instant access. Your daily commute, simplified with one tap.",
         visual: "saved-stops-mockup.png",
         icon: "Heart"
-    },
-    {
-        id: "detour",
-        title: "Detour Detective",
-        description: "Route closed? We automatically detect detours via GTFS data and suggest the nearest alternative stop with clear instructions.",
-        visual: "detour-mockup.png",
-        icon: "AlertTriangle"
-    },
-    {
-        id: "schedule",
-        title: "Future Schedule Planner",
-        description: "Plan ahead with full-day schedules. See all upcoming times for any route or bus to coordinate your entire day.",
-        visual: "schedule-mockup.png",
-        icon: "Calendar"
     },
     {
         id: "route-planner",
@@ -106,9 +92,9 @@ export const problemSolutions: ProblemSolution[] = [
         icon: "Snowflake"
     },
     {
-        title: "Detour Confusion",
-        problem: "Construction closed your route with no clear alternative",
-        solution: "Instant notifications with the nearest alternative stop and directions",
+        title: "Late & Out of the Loop",
+        problem: "Static schedules show planned times but never actual delays or bus positions",
+        solution: "Live bus tracking on your phone shows exactly where your bus is right now",
         icon: "Construction"
     },
     {
@@ -137,8 +123,8 @@ export const faqItems: FAQItem[] = [
         answer: "You need to sign in with Google OAuth to personalize your experience and receive SMS alerts."
     },
     {
-        question: "What happens if my route has a detour?",
-        answer: "You'll get an instant notification with the nearest alternative stop and directions to get there."
+        question: "What happens if my bus is delayed?",
+        answer: "Live tracking shows the real-time position of your bus so you always know if it's running late — no more relying on static schedules."
     },
     {
         question: "Does this work offline?",

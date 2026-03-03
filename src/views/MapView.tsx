@@ -44,7 +44,7 @@ export const MapView: React.FC<MapViewProps> = ({
   const [activeTracking, setActiveTracking] = useState<TripOption | null>(null);
   const [selectedBus, setSelectedBus] = useState<BusPosition | null>(null);
 
-  // Convert heading degrees to compass direction
+  // Convert heading degrees to compass direction 
   const getDirection = (heading: number): string => {
     const dirs = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
     const index = Math.round(heading / 45) % 8;

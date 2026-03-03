@@ -1,6 +1,22 @@
+/**
+ * HeroSection.tsx — GoTransit Regina
+ *
+ * Theme: CLEAN TRANSIT MAP — WHITE / OFF-WHITE
+ *
+ * Design concept:
+ *  - Off-white (#F7F8FA) paper-map background — like a printed transit map
+ *  - Dark charcoal route lines + bus beacons on the background (not neon)
+ *  - Clean glassmorphic card with dark text — maximum readability
+ *  - Solid brand blue (#003DA5) as the ONLY accent — no orange anywhere
+ *  - Phone mockup with white screen showing a mini transit map
+ *
+ * This reads as: professional, trustworthy, clean — like a real transit authority app.
+ */
+
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Play } from 'lucide-react';
+import { ArrowRight, MapPin } from 'lucide-react';
 
 interface HeroSectionProps {
     headline: string;
@@ -10,66 +26,78 @@ interface HeroSectionProps {
     trustIndicators: string[];
 }
 
+
 export default function HeroSection({ headline, subheadline, primaryCTA, secondaryCTA, trustIndicators }: HeroSectionProps) {
     return (
-        <section className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-[#003DA5] via-[#0066FF] to-[#FF6B35]">
-            {/* Animated Background Orbs */}
-            <div className="absolute inset-0 overflow-hidden">
-                <motion.div
-                    className="absolute top-20 left-10 w-96 h-96 bg-purple-500/30 rounded-full blur-3xl"
-                    animate={{
-                        x: [0, 100, 0],
-                        y: [0, -50, 0],
-                        scale: [1, 1.2, 1],
-                    }}
-                    transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-                />
-                <motion.div
-                    className="absolute bottom-20 right-10 w-[500px] h-[500px] bg-orange-500/20 rounded-full blur-3xl"
-                    animate={{
-                        x: [0, -80, 0],
-                        y: [0, 80, 0],
-                        scale: [1, 1.1, 1],
-                    }}
-                    transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
-                />
-                <motion.div
-                    className="absolute top-1/2 left-1/2 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl"
-                    animate={{
-                        x: [0, 50, 0],
-                        y: [0, -80, 0],
-                        scale: [1, 1.3, 1],
-                    }}
-                    transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-                />
-            </div>
+        <section className="relative min-h-screen flex items-center overflow-hidden">
+            {/* Soft vignette to bring focus to the card */}
+            <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                    background: 'radial-gradient(ellipse 80% 70% at 50% 50%, transparent 30%, rgba(247,248,250,0.55) 100%)',
+                }}
+            />
 
+            {/* ── Content ───────────────────────────────────────────────── */}
             <div className="relative z-10 max-w-7xl mx-auto px-6 py-20 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                {/* Left Content (60%) */}
+
+                {/* Left — Text & CTAs */}
                 <motion.div
                     className="lg:col-span-7 space-y-8"
-                    initial={{ opacity: 0, y: 50 }}
+                    initial={{ opacity: 0, y: 40 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.2 }}
+                    transition={{ duration: 0.7, delay: 0.2 }}
                 >
-                    {/* Glassmorphic Card */}
-                    <div className="backdrop-blur-xl bg-white/10 rounded-3xl p-10 border border-white/20 shadow-2xl">
-                        {/* Headline with Gradient Text */}
+                    {/* Live badge */}
+                    <motion.div
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full border bg-white"
+                        style={{ borderColor: '#003DA5', borderWidth: 1, color: '#003DA5' }}
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.1 }}
+                    >
+                        <span className="relative flex h-2 w-2">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+                        </span>
+                        <span className="text-sm font-medium">Live bus tracking · Regina Transit</span>
+                    </motion.div>
+
+                    {/* Card */}
+                    <div
+                        className="rounded-3xl p-10 border"
+                        style={{
+                            background: 'rgba(255,255,255,0.82)',
+                            backdropFilter: 'blur(20px)',
+                            borderColor: 'rgba(0,61,165,0.12)',
+                            boxShadow: '0 8px 40px rgba(0,61,165,0.10)',
+                        }}
+                    >
+                        {/* Headline */}
                         <motion.h1
-                            className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-blue-100 to-orange-200 bg-clip-text text-transparent leading-tight"
+                            className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
+                            style={{ color: '#0f172a' }}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.4 }}
+                            transition={{ duration: 0.7, delay: 0.4 }}
                         >
-                            {headline}
+                            {headline.split(' ').map((word, i) => (
+                                <span key={i}>
+                                    {i === 3
+                                        ? <span style={{ color: '#003DA5' }}>{word} </span>
+                                        : `${word} `
+                                    }
+                                </span>
+                            ))}
                         </motion.h1>
 
                         {/* Subheadline */}
                         <motion.p
-                            className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed max-w-2xl"
+                            className="text-xl md:text-2xl mb-8 leading-relaxed max-w-2xl"
+                            style={{ color: '#475569' }}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.6 }}
+                            transition={{ duration: 0.7, delay: 0.6 }}
                         >
                             {subheadline}
                         </motion.p>
@@ -79,31 +107,56 @@ export default function HeroSection({ headline, subheadline, primaryCTA, seconda
                             className="flex flex-col sm:flex-row gap-4"
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.8 }}
+                            transition={{ duration: 0.7, delay: 0.8 }}
                         >
-                            {/* Primary CTA */}
-                            <button className="group px-8 py-4 bg-gradient-to-r from-[#FF6B35] to-[#FF8C42] text-white rounded-xl font-bold text-lg shadow-[0_20px_60px_rgba(255,107,53,0.4)] hover:shadow-[0_25px_80px_rgba(255,107,53,0.5)] hover:scale-105 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2">
+                            {/* Primary — solid brand blue, no orange */}
+                            <Link
+                                to="/login"
+                                className="group px-8 py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 no-underline transition-all duration-300 hover:scale-105 hover:-translate-y-1"
+                                style={{
+                                    background: '#003DA5',
+                                    color: 'white',
+                                    boxShadow: '0 8px 32px rgba(0,61,165,0.30)',
+                                }}
+                            >
                                 {primaryCTA}
                                 <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-                            </button>
+                            </Link>
 
-                            {/* Secondary CTA */}
-                            <button className="px-8 py-4 bg-white/10 backdrop-blur-md text-white rounded-xl font-bold text-lg border-2 border-white/30 hover:bg-white/20 hover:border-white/50 transition-all duration-300 flex items-center justify-center gap-2">
-                                <Play size={20} />
+                            {/* Secondary — outlined */}
+                            <Link
+                                to="/map"
+                                className="px-8 py-4 rounded-xl font-bold text-lg border-2 transition-all duration-300 flex items-center justify-center gap-2 no-underline"
+                                style={{
+                                    color: '#003DA5',
+                                    borderColor: '#003DA5',
+                                    background: 'transparent',
+                                }}
+                                onMouseEnter={e => {
+                                    (e.currentTarget as HTMLElement).style.background = '#003DA5';
+                                    (e.currentTarget as HTMLElement).style.color = 'white';
+                                }}
+                                onMouseLeave={e => {
+                                    (e.currentTarget as HTMLElement).style.background = 'transparent';
+                                    (e.currentTarget as HTMLElement).style.color = '#003DA5';
+                                }}
+                            >
+                                <MapPin size={20} />
                                 {secondaryCTA}
-                            </button>
+                            </Link>
                         </motion.div>
 
                         {/* Trust Indicators */}
                         <motion.div
-                            className="flex flex-wrap gap-4 mt-8 text-white/80 text-sm"
+                            className="flex flex-wrap gap-4 mt-8 text-sm"
+                            style={{ color: '#64748b' }}
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            transition={{ duration: 0.8, delay: 1 }}
+                            transition={{ duration: 0.7, delay: 1 }}
                         >
                             {trustIndicators.map((indicator, index) => (
                                 <span key={index} className="flex items-center gap-2">
-                                    {index > 0 && <span className="text-white/40">•</span>}
+                                    {index > 0 && <span style={{ color: '#cbd5e1' }}>•</span>}
                                     {indicator}
                                 </span>
                             ))}
@@ -111,43 +164,110 @@ export default function HeroSection({ headline, subheadline, primaryCTA, seconda
                     </div>
                 </motion.div>
 
-                {/* Right Phone Mockup (40%) */}
+                {/* Right — Phone mockup */}
                 <motion.div
                     className="lg:col-span-5 flex justify-center"
-                    initial={{ opacity: 0, x: 100, rotateY: -15 }}
-                    animate={{ opacity: 1, x: 0, rotateY: 0 }}
-                    transition={{ duration: 1, delay: 0.4 }}
+                    initial={{ opacity: 0, x: 80 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.9, delay: 0.5 }}
                     style={{ perspective: 1000 }}
                 >
                     <div
-                        className="relative"
                         style={{
-                            transform: 'rotateY(15deg) rotateX(-10deg)',
+                            transform: 'rotateY(-10deg) rotateX(5deg)',
                             transformStyle: 'preserve-3d',
                         }}
+                        className="relative"
                     >
-                        {/* Phone Frame */}
-                        <div className="relative w-80 h-[600px] bg-gradient-to-br from-gray-800 to-gray-900 rounded-[3rem] p-3 shadow-[0_50px_100px_rgba(0,0,0,0.5)]">
+                        {/* Phone shell */}
+                        <div
+                            className="relative w-72 h-[560px] rounded-[3rem] p-3"
+                            style={{
+                                background: 'linear-gradient(145deg, #1e293b, #0f172a)',
+                                boxShadow: '0 60px 120px rgba(0,0,0,0.25), inset 0 0 0 1px rgba(255,255,255,0.08)',
+                            }}
+                        >
                             {/* Notch */}
-                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-7 bg-gray-900 rounded-b-3xl z-10" />
+                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-slate-900 rounded-b-3xl z-10" />
 
-                            {/* Screen */}
-                            <div className="relative h-full bg-gradient-to-br from-blue-50 to-orange-50 rounded-[2.5rem] overflow-hidden">
-                                {/* Mockup Content Placeholder */}
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <div className="text-center p-8">
-                                        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
-                                            <span className="text-3xl">🚌</span>
+                            {/* Screen — white mini transit map */}
+                            <div className="relative h-full rounded-[2.5rem] overflow-hidden" style={{ background: '#F7F8FA' }}>
+                                {/* Grid */}
+                                <div
+                                    className="absolute inset-0"
+                                    style={{
+                                        backgroundImage: `linear-gradient(rgba(0,61,165,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,61,165,0.06) 1px, transparent 1px)`,
+                                        backgroundSize: '20px 20px',
+                                    }}
+                                />
+
+                                {/* Mini route SVG in screen */}
+                                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 280 560" preserveAspectRatio="xMidYMid slice">
+                                    <path d="M 20,100 L 140,80 L 260,120" fill="none" stroke="#003DA5" strokeWidth="2" strokeOpacity="0.3" />
+                                    <path d="M 20,280 L 100,240 L 200,270 L 260,240" fill="none" stroke="#1a2744" strokeWidth="2" strokeOpacity="0.3" />
+                                    <path d="M 140,20 L 130,180 L 150,380 L 140,520" fill="none" stroke="#374151" strokeWidth="2" strokeOpacity="0.3" />
+                                    {/* Moving bus dots */}
+                                    <circle r="5" fill="#003DA5" fillOpacity="0.8">
+                                        <animateMotion dur="4s" repeatCount="indefinite" path="M 20,100 L 140,80 L 260,120" />
+                                    </circle>
+                                    <circle r="4" fill="#1a2744" fillOpacity="0.7">
+                                        <animateMotion dur="5.5s" repeatCount="indefinite" path="M 20,280 L 100,240 L 200,270 L 260,240" />
+                                    </circle>
+                                    <circle r="4" fill="#374151" fillOpacity="0.6">
+                                        <animateMotion dur="7s" repeatCount="indefinite" path="M 140,20 L 130,180 L 150,380 L 140,520" />
+                                    </circle>
+                                    {/* Stop rings */}
+                                    <circle cx="140" cy="80" r="4" fill="white" stroke="#003DA5" strokeWidth="1.5" strokeOpacity="0.5" />
+                                    <circle cx="100" cy="240" r="4" fill="white" stroke="#1a2744" strokeWidth="1.5" strokeOpacity="0.5" />
+                                </svg>
+
+                                {/* Top card */}
+                                <div className="absolute top-10 left-3 right-3">
+                                    <div
+                                        className="rounded-2xl px-4 py-3 border"
+                                        style={{ background: 'rgba(255,255,255,0.92)', borderColor: 'rgba(0,61,165,0.12)', boxShadow: '0 2px 12px rgba(0,0,0,0.08)' }}
+                                    >
+                                        <div className="text-xs font-medium mb-0.5" style={{ color: '#64748b' }}>Tracking</div>
+                                        <div className="font-bold text-sm" style={{ color: '#0f172a' }}>Route 3 — University</div>
+                                        <div className="flex items-center gap-1.5 mt-1">
+                                            <span className="relative flex h-1.5 w-1.5">
+                                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                                                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500" />
+                                            </span>
+                                            <span className="text-xs font-medium text-green-600">2 buses nearby</span>
                                         </div>
-                                        <p className="text-gray-700 font-semibold text-lg">App Screen Mockup</p>
-                                        <p className="text-gray-500 text-sm mt-2">Bus tracking interface</p>
+                                    </div>
+                                </div>
+
+                                {/* Bottom ETA */}
+                                <div className="absolute bottom-10 left-3 right-3">
+                                    <div
+                                        className="rounded-2xl px-4 py-3 border"
+                                        style={{ background: 'rgba(255,255,255,0.92)', borderColor: 'rgba(0,61,165,0.12)', boxShadow: '0 2px 12px rgba(0,0,0,0.08)' }}
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <div className="text-xs" style={{ color: '#94a3b8' }}>Next bus</div>
+                                                <div className="font-bold text-xs" style={{ color: '#0f172a' }}>Victoria Ave & Albert St</div>
+                                            </div>
+                                            <div
+                                                className="rounded-xl px-3 py-1.5 text-center"
+                                                style={{ background: '#003DA5' }}
+                                            >
+                                                <div className="text-white font-bold text-lg leading-none">3</div>
+                                                <div className="text-white/70 text-[9px]">min</div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Glowing Shadow */}
-                        <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-64 h-32 bg-blue-500/30 blur-3xl rounded-full" />
+                        {/* Shadow beneath */}
+                        <div
+                            className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-52 h-16 rounded-full"
+                            style={{ background: 'rgba(0,61,165,0.15)', filter: 'blur(24px)' }}
+                        />
                     </div>
                 </motion.div>
             </div>

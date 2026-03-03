@@ -44,6 +44,7 @@ const DEVICE_CODES: [string, string][] = [
     ['Spider', 'Bot/Crawler'],
 ];
 
+
 function parseUserAgent(ua: string): { browser: string; os: string; device: string } {
     const browser = BROWSER_CODES.find(([code]) => ua.includes(code))?.[1] ?? 'Unknown';
     const os = OS_CODES.find(([code]) => ua.includes(code))?.[1] ?? 'Unknown';
