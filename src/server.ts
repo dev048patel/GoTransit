@@ -11,21 +11,33 @@ import express from 'express';
 import cors from 'cors'; // Cross Origin Resource Sharing : Allow cross-origin requests (Frontend -> Backend) like React -> Node.js ( Port 3000 -> Port 3001)
 import transitRoutes from './routes/transit.routes';
 import analyticsRoutes from './routes/analytics.routes';
+import featureRoutes from './routes/feature.routes';
 
 const app = express();
 const port = Number(process.env.PORT) || 3001; // Railway assigns PORT dynamically
 
 // Allow only specific origins to access the backend
+// Access-Control-Allow-Origin : Allow this domain to access our API
 const allowedOrigins = [
     'https://www.gotransitregina.ca',
     'https://gotransitregina.ca',
-    'http://localhost:5173' // Keep this for local development
+    'https://gotransit-production.up.railway.app', // Railway deployment
+    'http://localhost:3000', // Vite dev (npm run start)
+    'http://localhost:5173', // Vite dev (npm run dev)
 ];
 
 app.use(cors({
-    origin: allowedOrigins,
-    methods: ['GET', 'POST'],
-    credentials: true
+    origin: (origin, callback) => {
+        // Allow requests with no origin (curl, Postman, server-to-server)
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error(`CORS: origin ${origin} not allowed`));
+        }
+    },
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
 }));
 
 
@@ -37,6 +49,7 @@ app.use(express.json()); // Parse incoming JSON request bodies
 // Usage: All transit-related endpoints will start with /api
 app.use('/api', transitRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/features', featureRoutes);
 
 // Health Check Endpoint
 app.get('/api/status', (req, res) => {

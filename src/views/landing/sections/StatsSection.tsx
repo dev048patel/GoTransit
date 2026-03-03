@@ -57,8 +57,8 @@ function AnimatedCounter({ targetValue }: { targetValue: string }) {
 
 export default function StatsSection({ stats }: StatsSectionProps) {
     return (
-        <section className="py-20 bg-gradient-to-b from-[#FF6B35] to-[#003DA5]">
-            <div className="max-w-7xl mx-auto px-6">
+        <section className="relative py-24 overflow-hidden">
+            <div className="relative z-10 max-w-7xl mx-auto px-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {stats.map((stat, index) => {
                         const Icon = iconMap[stat.icon] || MapPin;
@@ -66,29 +66,34 @@ export default function StatsSection({ stats }: StatsSectionProps) {
                         return (
                             <motion.div
                                 key={stat.label}
-                                className="group relative backdrop-blur-xl bg-white/10 rounded-3xl p-10 border border-white/20 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-3"
+                                className="group relative rounded-3xl p-10 border transition-all duration-500 hover:-translate-y-3 text-center"
+                                style={{
+                                    background: 'rgba(255,255,255,0.82)',
+                                    backdropFilter: 'blur(20px)',
+                                    borderColor: 'rgba(0,61,165,0.12)',
+                                    boxShadow: '0 4px 30px rgba(0,0,0,0.06)',
+                                }}
                                 initial={{ opacity: 0, y: 50 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.6, delay: index * 0.15 }}
-                                whileHover={{
-                                    rotateX: 5,
-                                    boxShadow: '0 20px 60px rgba(0, 61, 165, 0.3)',
-                                }}
-                                style={{ perspective: 1000 }}
+                                whileHover={{ boxShadow: index % 2 === 0 ? '0 20px 60px rgba(59,130,246,0.25)' : '0 20px 60px rgba(255,107,53,0.25)' }}
                             >
-                                {/* Icon with gradient background */}
-                                <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-white/20 to-white/5 flex items-center justify-center border border-white/20 group-hover:scale-110 transition-transform duration-300">
-                                    <Icon size={40} className="text-white" />
+                                {/* Icon */}
+                                <div
+                                    className="w-20 h-20 mx-auto mb-6 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                                    style={{ background: 'rgba(0,61,165,0.08)', border: '1px solid rgba(0,61,165,0.12)' }}
+                                >
+                                    <Icon size={40} className="text-[#003DA5]" />
                                 </div>
 
                                 {/* Animated Number */}
-                                <div className="text-6xl font-bold text-white mb-3 bg-gradient-to-r from-white via-blue-100 to-orange-200 bg-clip-text text-transparent">
+                                <div className="text-6xl font-bold mb-3" style={{ color: '#003DA5' }}>
                                     <AnimatedCounter targetValue={stat.value} />
                                 </div>
 
                                 {/* Label */}
-                                <p className="text-xl text-white/90 font-medium">
+                                <p className="text-xl font-medium" style={{ color: '#475569' }}>
                                     {stat.label}
                                 </p>
 

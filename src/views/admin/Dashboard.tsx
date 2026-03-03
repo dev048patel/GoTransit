@@ -1,105 +1,137 @@
+/**
+ * Dashboard.tsx — GoTransit Regina  [VIEW — MVC]
+ *
+ * Shows:
+ *  - Traffic/day  → Pie chart
+ *  - Active Routes → metric card (real count from static data)
+ *  - Registered Users → metric card (real count from Supabase)
+ *  - Feature Usage Analytics → Bar chart (Places vs Saved Directions, weekly)
+ */
+
 import React from 'react';
-import MetricCard from '../../components/admin/MetricCard';
-import { Users, Route, Activity, DollarSign } from 'lucide-react';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, AreaChart, Area, CartesianGrid } from 'recharts';
+import { Users, Route, TrendingUp } from 'lucide-react';
+import {
+    PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, Legend,
+    ResponsiveContainer, CartesianGrid,
+} from 'recharts';
 import { useDashboardController } from '../../controllers/admin/useDashboardController';
 
-export default function Dashboard() {
-    // Controller: Handles logic and state
-    const { metrics, usageChartData, costChartData } = useDashboardController();
+const PIE_COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4'];
 
-    // View: Renders the UI with data from the controller
+function MetricCard({ title, value, icon: Icon, color, sub }: {
+    title: string; value: string | number; icon: React.ElementType;
+    color: 'blue' | 'green' | 'purple'; sub?: string;
+}) {
+    const bg = { blue: 'bg-blue-50', green: 'bg-green-50', purple: 'bg-purple-50' }[color];
+    const ic = { blue: 'text-blue-500', green: 'text-green-500', purple: 'text-purple-500' }[color];
+    return (
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
+            <div className={`p-3 rounded-xl ${bg}`}>
+                <Icon className={`w-6 h-6 ${ic}`} />
+            </div>
+            <div>
+                <p className="text-sm text-gray-500 font-medium">{title}</p>
+                <p className="text-2xl font-bold text-gray-900">{value}</p>
+                {sub && <p className="text-xs text-gray-400 mt-0.5">{sub}</p>}
+            </div>
+        </div>
+    );
+}
+
+export default function Dashboard() {
+    const { registeredUsers, activeRoutes, isLoading, featureUsageData, trafficPieData, totalInteractions } = useDashboardController();
+
     return (
         <div className="space-y-6">
-            <div className="flex flex-col gap-2">
-                <h1 className="text-3xl font-bold text-gray-900">Dashboard Overview</h1>
-                <p className="text-gray-500">Welcome back, Admin. Here's what's happening with GoTransit today.</p>
+            <div>
+                <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+                <p className="text-gray-500 mt-1">GoTransit Regina — Admin Overview</p>
             </div>
 
-            {/* Metrics Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <MetricCard
-                    title="Total Active Users"
-                    value={metrics.totalUsers.value.toLocaleString()}
-                    icon={Users}
-                    color="blue"
-                    trend={{ value: metrics.totalUsers.trend, isPositive: true }}
-                    subtext="vs last month"
-                />
+            {/* Metric Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <MetricCard
                     title="Active Routes"
-                    value={metrics.activeRoutes.value.toString()}
+                    value={activeRoutes}
                     icon={Route}
                     color="green"
-                    trend={{ value: metrics.activeRoutes.trend, isPositive: metrics.activeRoutes.trend >= 0 }}
-                    subtext="4 Hidden"
+                    sub="From Regina Transit open data"
                 />
                 <MetricCard
-                    title="Daily API Calls"
-                    value={metrics.dailyTraffic.value}
-                    icon={Activity}
+                    title="Registered Users"
+                    value={isLoading ? '…' : registeredUsers}
+                    icon={Users}
+                    color="blue"
+                    sub="From Supabase — live"
+                />
+                <MetricCard
+                    title="Total Interactions"
+                    value={isLoading ? '…' : totalInteractions.toLocaleString()}
+                    icon={TrendingUp}
                     color="purple"
-                    trend={{ value: metrics.dailyTraffic.trend, isPositive: true }}
-                    subtext="vs yesterday"
-                />
-                <MetricCard
-                    title="Est. Monthly Cost"
-                    value={metrics.apiCost.value}
-                    icon={DollarSign}
-                    trend={{ value: Math.abs(metrics.apiCost.trend), isPositive: metrics.apiCost.trend < 0 }} // Negative cost trend is positive!
-                    color="yellow"
-                    subtext="vs last month"
+                    sub="Places + Directions (all time)"
                 />
             </div>
 
-            {/* Charts Row 1 */}
+            {/* Charts Row */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Feature Usage */}
+
+                {/* Feature Usage — Bar chart (2/3 width) */}
                 <div className="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                    <h3 className="text-lg font-bold text-gray-800 mb-4">Feature Usage Analytics</h3>
-                    <div className="h-80 w-full">
+                    <h3 className="text-lg font-bold text-gray-800 mb-1">Feature Usage Analytics</h3>
+                    <p className="text-xs text-gray-400 mb-4">Places Searched vs Saved Directions — Weekly</p>
+                    <div className="h-72">
                         <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={usageChartData}>
+                            <BarChart data={featureUsageData}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
-                                <XAxis dataKey="name" tickLine={false} axisLine={false} dy={10} />
-                                <YAxis tickLine={false} axisLine={false} />
+                                <XAxis dataKey="day" tickLine={false} axisLine={false} dy={8} tick={{ fontSize: 12 }} />
+                                <YAxis tickLine={false} axisLine={false} tick={{ fontSize: 12 }} />
                                 <Tooltip
                                     cursor={{ fill: '#F3F4F6' }}
-                                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
+                                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0,0,0,.1)' }}
                                 />
-                                <Legend wrapperStyle={{ paddingTop: '20px' }} />
+                                <Legend wrapperStyle={{ paddingTop: '16px', fontSize: '13px' }} />
                                 <Bar dataKey="places" name="Place Searches" fill="#3B82F6" radius={[4, 4, 0, 0]} />
-                                <Bar dataKey="directions" name="Route Directions" fill="#10B981" radius={[4, 4, 0, 0]} />
+                                <Bar dataKey="directions" name="Saved Directions" fill="#10B981" radius={[4, 4, 0, 0]} />
                             </BarChart>
                         </ResponsiveContainer>
                     </div>
                 </div>
 
-                {/* Cost Projection */}
+                {/* Traffic / Day — Pie chart (1/3 width) */}
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                    <h3 className="text-lg font-bold text-gray-800 mb-4">API Cost Tracker</h3>
-                    <div className="h-80 w-full">
+                    <h3 className="text-lg font-bold text-gray-800 mb-1">Traffic / Day</h3>
+                    <p className="text-xs text-gray-400 mb-4">Interaction distribution by weekday</p>
+                    <div className="h-48">
                         <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={costChartData}>
-                                <defs>
-                                    <linearGradient id="colorActual" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#F59E0B" stopOpacity={0.8} />
-                                        <stop offset="95%" stopColor="#F59E0B" stopOpacity={0} />
-                                    </linearGradient>
-                                </defs>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
-                                <XAxis dataKey="date" tickLine={false} axisLine={false} hide />
-                                <YAxis tickLine={false} axisLine={false} unit="$" />
+                            <PieChart>
+                                <Pie
+                                    data={trafficPieData}
+                                    cx="50%"
+                                    cy="50%"
+                                    innerRadius={42}
+                                    outerRadius={72}
+                                    dataKey="value"
+                                    nameKey="name"
+                                >
+                                    {trafficPieData.map((_, i) => (
+                                        <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
+                                    ))}
+                                </Pie>
                                 <Tooltip />
-                                <Area type="monotone" dataKey="actual" stroke="#F59E0B" fillOpacity={1} fill="url(#colorActual)" />
-                                <Line type="monotone" dataKey="projected" stroke="#9CA3AF" strokeDasharray="5 5" dot={false} />
-                            </AreaChart>
+                            </PieChart>
                         </ResponsiveContainer>
                     </div>
-                    <div className="mt-4 text-sm text-gray-500 text-center">
-                        Projected to stay under budget ($500 limit)
+                    <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5">
+                        {trafficPieData.map((d, i) => (
+                            <div key={d.name} className="flex items-center gap-1.5 text-xs text-gray-600">
+                                <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: PIE_COLORS[i] }} />
+                                {d.name}: <span className="font-medium text-gray-800 ml-0.5">{d.value}</span>
+                            </div>
+                        ))}
                     </div>
                 </div>
+
             </div>
         </div>
     );

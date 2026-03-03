@@ -1,70 +1,59 @@
+/**
+ * LandingFooter.tsx — GoTransit Regina (Simplified)
+ *
+ * Clean minimal footer:
+ *  - Brand logo + tagline
+ *  - A single "Meet the Team" / Connect link → /connect
+ *  - Copyright bar
+ *
+ * No fake Product / Support / Legal link columns.
+ */
+
 import React from 'react';
-import { Facebook, Twitter, Instagram, Mail } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Users, Github } from 'lucide-react';
 
 export default function LandingFooter() {
-    const footerLinks = {
-        Product: ['Features', 'How It Works', 'Pricing', 'Testimonials'],
-        Support: ['Help Center', 'Contact Us', 'Report an Issue', 'Status'],
-        Legal: ['Privacy Policy', 'Terms of Service', 'Cookie Policy', 'Licenses'],
-        Connect: ['About Us', 'Blog', 'Careers', 'Press Kit']
-    };
-
     return (
-        <footer className="bg-[#0a0a0f] text-white pt-20 pb-10">
-            <div className="max-w-7xl mx-auto px-6">
-                {/* Main Footer Content */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-16">
-                    {/* Brand Column */}
-                    <div className="lg:col-span-1">
-                        <h3 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-orange-400 bg-clip-text text-transparent mb-4">
-                            GoTransit
-                        </h3>
-                        <p className="text-gray-400 text-sm leading-relaxed">
-                            Built by students of University of Regina for Regina commuters. Never miss your bus again.
-                        </p>
+        <footer
+            className="relative py-14"
+            style={{ borderTop: '1px solid rgba(0,61,165,0.1)' }}
+        >
+            <div className="max-w-5xl mx-auto px-6">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-8">
 
-                        {/* Social Icons */}
-                        <div className="flex gap-4 mt-6">
-                            {[Facebook, Twitter, Instagram, Mail].map((Icon, index) => (
-                                <a
-                                    key={index}
-                                    href="#"
-                                    className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 hover:text-[#FF6B35] transition-all duration-300"
-                                >
-                                    <Icon size={18} />
-                                </a>
-                            ))}
-                        </div>
+                    {/* Brand */}
+                    <div className="text-center md:text-left">
+                        <h3 className="text-2xl font-bold mb-1" style={{ color: '#003DA5' }}>
+                            GoTransit Regina
+                        </h3>
+                        <p className="text-sm" style={{ color: '#64748b' }}>
+                            Built by students of University of Regina for Regina commuters.
+                        </p>
                     </div>
 
-                    {/* Link Columns */}
-                    {Object.entries(footerLinks).map(([category, links]) => (
-                        <div key={category}>
-                            <h4 className="font-semibold text-white mb-4">{category}</h4>
-                            <ul className="space-y-3">
-                                {links.map((link) => (
-                                    <li key={link}>
-                                        <a
-                                            href="#"
-                                            className="text-gray-400 hover:text-[#FF6B35] hover:translate-x-1 inline-block transition-all duration-300"
-                                        >
-                                            {link}
-                                        </a>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    ))}
+                    {/* Connect CTA */}
+                    <Link
+                        to="/connect"
+                        className="inline-flex items-center gap-3 px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-300 hover:scale-105 hover:-translate-y-0.5 no-underline"
+                        style={{
+                            background: '#003DA5',
+                            color: 'white',
+                            boxShadow: '0 4px 20px rgba(0,61,165,0.25)',
+                        }}
+                    >
+                        <Users size={18} />
+                        Meet the Team
+                    </Link>
                 </div>
 
-                {/* Bottom Bar */}
-                <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
-                    <p className="text-gray-500 text-sm text-center md:text-left">
-                        © 2026 GoTransit Regina. Built with ❤️ for Regina commuters.
-                    </p>
-                    <p className="text-gray-500 text-sm text-center md:text-right">
-                        Powered by Regina Transit • Google Maps • Twilio
-                    </p>
+                {/* Bottom bar */}
+                <div
+                    className="mt-10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs"
+                    style={{ borderTop: '1px solid rgba(0,0,0,0.06)', color: '#94a3b8' }}
+                >
+                    <p>© 2026 GoTransit Regina. Built with ❤️ for Regina commuters.</p>
+                    <p>Powered by Regina Transit · Google Maps · Twilio</p>
                 </div>
             </div>
         </footer>

@@ -1,67 +1,46 @@
+/**
+ * ComparisonTable.tsx — GoTransit Regina
+ *
+ * "Why GoTransit Regina?" section — bold VS battle card design.
+ *
+ * Layout: two large glass panels side-by-side with a glowing VS badge
+ * in the centre. Each panel lists what you get (or don't get). No table,
+ * no rows — purely visual and punchy.
+ */
+
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Check, X, AlertTriangle } from 'lucide-react';
+import { X, Check, Wifi, Bell, MapPin, Navigation, Snowflake, Bus } from 'lucide-react';
 
-interface ComparisonRow {
-    feature: string;
-    traditional: 'yes' | 'no' | 'partial';
-    goTransit: 'yes' | 'no' | 'partial';
+interface Feature {
+    label: string;
+    icon: React.FC<{ size?: number; className?: string }>;
 }
 
-const comparisonData: ComparisonRow[] = [
-    { feature: 'Real-time Tracking', traditional: 'partial', goTransit: 'yes' },
-    { feature: 'SMS Notifications', traditional: 'no', goTransit: 'yes' },
-    { feature: 'Saved Locations', traditional: 'no', goTransit: 'yes' },
-    { feature: 'Detour Alerts', traditional: 'no', goTransit: 'yes' },
-    { feature: 'Regina-Specific', traditional: 'no', goTransit: 'yes' },
-    { feature: 'Proximity Alerts', traditional: 'no', goTransit: 'yes' },
-    { feature: 'Route Planning', traditional: 'yes', goTransit: 'yes' },
-    { feature: 'Weather-Aware', traditional: 'no', goTransit: 'yes' },
+const goTransitFeatures: Feature[] = [
+    { label: 'Live bus positions on your phone', icon: Navigation },
+    { label: 'SMS alerts before your bus arrives', icon: Bell },
+    { label: 'Save your favourite stops', icon: MapPin },
+    { label: 'Regina-specific routes & schedules', icon: Bus },
+    { label: 'Proximity arrival notifications', icon: Wifi },
+    { label: 'Weather-aware commute tips', icon: Snowflake },
 ];
 
-function StatusIcon({ status }: { status: 'yes' | 'no' | 'partial' }) {
-    switch (status) {
-        case 'yes':
-            return (
-                <motion.div
-                    initial={{ scale: 0, rotate: -180 }}
-                    whileInView={{ scale: 1, rotate: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ type: "spring", duration: 0.6 }}
-                >
-                    <Check size={28} className="text-green-500" strokeWidth={3} />
-                </motion.div>
-            );
-        case 'no':
-            return (
-                <motion.div
-                    initial={{ scale: 0, rotate: 180 }}
-                    whileInView={{ scale: 1, rotate: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ type: "spring", duration: 0.6 }}
-                >
-                    <X size={28} className="text-red-500" strokeWidth={3} />
-                </motion.div>
-            );
-        case 'partial':
-            return (
-                <motion.div
-                    initial={{ scale: 0 }}
-                    whileInView={{ scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ type: "spring", duration: 0.6 }}
-                >
-                    <AlertTriangle size={28} className="text-yellow-500" strokeWidth={2} />
-                </motion.div>
-            );
-    }
-}
+const traditionalMissing: string[] = [
+    'No real-time positions',
+    'No SMS / push notifications',
+    'No saved stops',
+    'Generic, city-agnostic data',
+    'No proximity alerts',
+    'No weather awareness',
+];
 
 export default function ComparisonTable() {
     return (
-        <section className="py-24 bg-gradient-to-b from-white to-gray-50">
+        <section className="py-24 relative">
             <div className="max-w-6xl mx-auto px-6">
-                {/* Section Header */}
+
+                {/* Header */}
                 <motion.div
                     className="text-center mb-16"
                     initial={{ opacity: 0, y: 30 }}
@@ -69,97 +48,130 @@ export default function ComparisonTable() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
                 >
-                    <h2 className="text-5xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-[#003DA5] to-[#FF6B35] bg-clip-text text-transparent">
-                        Why GoTransit Regina?
+                    <h2 className="text-5xl font-bold mb-5" style={{ color: '#0f172a' }}>
+                        Why <span style={{ color: '#003DA5' }}>GoTransit</span> Regina?
                     </h2>
-                    <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                        See how we compare to traditional transit apps
+                    <p className="text-xl max-w-xl mx-auto" style={{ color: '#64748b' }}>
+                        Purpose-built for Regina riders, not a generic transit clone
                     </p>
                 </motion.div>
 
-                {/* Comparison Table */}
-                <motion.div
-                    className="backdrop-blur-xl bg-white/60 rounded-3xl border border-gray-200 overflow-hidden shadow-xl"
-                    initial={{ opacity: 0, y: 50 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8 }}
-                >
-                    {/* Table Header */}
-                    <div className="bg-gradient-to-r from-[#003DA5] to-[#0066FF] text-white grid grid-cols-3 py-6 px-8">
-                        <div className="text-lg font-semibold">Feature</div>
-                        <div className="text-lg font-semibold text-center">Traditional App</div>
-                        <div className="text-lg font-semibold text-center bg-white/10 backdrop-blur-sm rounded-xl py-2">
-                            GoTransit Regina ⭐
+                {/* Battle cards */}
+                <div className="relative grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 items-stretch">
+
+                    {/* Left — Traditional App (grey/muted) */}
+                    <motion.div
+                        className="rounded-3xl p-8 md:p-10 flex flex-col"
+                        style={{
+                            background: 'rgba(255,255,255,0.70)',
+                            border: '1px solid rgba(0,0,0,0.08)',
+                            boxShadow: '0 4px 30px rgba(0,0,0,0.06)',
+                        }}
+                        initial={{ opacity: 0, x: -40 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6 }}
+                    >
+                        <div className="mb-8">
+                            <span className="inline-block px-4 py-1.5 rounded-full text-sm font-semibold mb-4"
+                                style={{ background: 'rgba(0,0,0,0.06)', color: '#64748b' }}>
+                                Traditional Transit App
+                            </span>
+                            <h3 className="text-3xl font-bold" style={{ color: '#64748b' }}>Other Apps</h3>
+                            <p className="text-base mt-2" style={{ color: '#94a3b8' }}>Generic tools not built for you</p>
                         </div>
-                    </div>
 
-                    {/* Table Rows */}
-                    <div>
-                        {comparisonData.map((row, index) => (
-                            <motion.div
-                                key={row.feature}
-                                className={`grid grid-cols-3 py-5 px-8 border-b border-gray-200 last:border-b-0 transition-all duration-300 hover:bg-blue-50/50 ${index % 2 === 0 ? 'bg-white/50' : 'bg-gray-50/50'
-                                    }`}
-                                initial={{ opacity: 0, x: -20 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.4, delay: index * 0.05 }}
-                                whileHover={{ x: 4 }}
-                            >
-                                {/* Feature Name */}
-                                <div className="font-medium text-gray-900 flex items-center">
-                                    {row.feature}
-                                </div>
-
-                                {/* Traditional App Status */}
-                                <div className="flex justify-center items-center">
-                                    <StatusIcon status={row.traditional} />
-                                </div>
-
-                                {/* GoTransit Status */}
-                                <div className="flex justify-center items-center relative">
-                                    <div className="relative">
-                                        <StatusIcon status={row.goTransit} />
-                                        {/* Glow effect for GoTransit checkmarks */}
-                                        {row.goTransit === 'yes' && (
-                                            <div className="absolute inset-0 bg-green-500/20 blur-xl rounded-full animate-pulse" />
-                                        )}
+                        <div className="space-y-4 flex-1">
+                            {traditionalMissing.map((label) => (
+                                <div key={label} className="flex items-center gap-3">
+                                    <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+                                        style={{ background: 'rgba(239,68,68,0.1)' }}>
+                                        <X size={16} className="text-red-400" strokeWidth={2.5} />
                                     </div>
+                                    <span className="text-base" style={{ color: '#94a3b8' }}>{label}</span>
                                 </div>
-                            </motion.div>
-                        ))}
+                            ))}
+                        </div>
+                    </motion.div>
+
+                    {/* Centre VS badge — absolute on md, inline on mobile */}
+                    <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+                        <motion.div
+                            className="w-16 h-16 rounded-full flex items-center justify-center text-white font-black text-xl select-none"
+                            style={{
+                                background: '#003DA5',
+                                boxShadow: '0 0 0 6px rgba(0,61,165,0.12), 0 8px 32px rgba(0,61,165,0.35)',
+                            }}
+                            initial={{ scale: 0, rotate: -20 }}
+                            whileInView={{ scale: 1, rotate: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ type: 'spring', stiffness: 300, damping: 18, delay: 0.4 }}
+                        >
+                            VS
+                        </motion.div>
                     </div>
 
-                    {/* Footer Note */}
-                    <div className="bg-gradient-to-r from-gray-50 to-blue-50 py-6 px-8 text-center">
-                        <p className="text-gray-600 text-sm">
-                            <span className="font-semibold text-[#003DA5]">GoTransit Regina</span> is specifically designed for Regina's transit system and weather conditions
-                        </p>
-                    </div>
-                </motion.div>
+                    {/* Right — GoTransit Regina (brand blue glow) */}
+                    <motion.div
+                        className="rounded-3xl p-8 md:p-10 flex flex-col relative overflow-hidden"
+                        style={{
+                            background: 'rgba(255,255,255,0.92)',
+                            border: '2px solid rgba(0,61,165,0.22)',
+                            boxShadow: '0 8px 60px rgba(0,61,165,0.14)',
+                        }}
+                        initial={{ opacity: 0, x: 40 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6, delay: 0.1 }}
+                    >
+                        {/* Blue corner glow */}
+                        <div className="absolute -top-12 -right-12 w-40 h-40 rounded-full"
+                            style={{ background: 'rgba(0,61,165,0.10)', filter: 'blur(40px)' }} />
 
-                {/* Legend */}
-                <motion.div
-                    className="mt-8 flex justify-center gap-8 text-sm text-gray-600"
+                        <div className="mb-8 relative">
+                            <span className="inline-block px-4 py-1.5 rounded-full text-sm font-semibold mb-4 text-white"
+                                style={{ background: '#003DA5' }}>
+                                ⭐ GoTransit Regina
+                            </span>
+                            <h3 className="text-3xl font-bold" style={{ color: '#003DA5' }}>GoTransit Regina</h3>
+                            <p className="text-base mt-2" style={{ color: '#475569' }}>Designed for every Regina commuter</p>
+                        </div>
+
+                        <div className="space-y-4 flex-1 relative">
+                            {goTransitFeatures.map(({ label, icon: Icon }, i) => (
+                                <motion.div
+                                    key={label}
+                                    className="flex items-center gap-3"
+                                    initial={{ opacity: 0, x: 20 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.35, delay: 0.3 + i * 0.07 }}
+                                >
+                                    <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+                                        style={{ background: 'rgba(0,61,165,0.10)' }}>
+                                        <Check size={16} className="text-[#003DA5]" strokeWidth={2.5} />
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <Icon size={15} className="text-[#003DA5] flex-shrink-0" />
+                                        <span className="text-base font-medium" style={{ color: '#0f172a' }}>{label}</span>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </motion.div>
+                </div>
+
+                <motion.p
+                    className="text-center text-sm mt-10"
+                    style={{ color: '#94a3b8' }}
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: 0.5 }}
+                    transition={{ duration: 0.6, delay: 0.6 }}
                 >
-                    <div className="flex items-center gap-2">
-                        <Check size={20} className="text-green-500" />
-                        <span>Fully Supported</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <AlertTriangle size={20} className="text-yellow-500" />
-                        <span>Limited Support</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <X size={20} className="text-red-500" />
-                        <span>Not Available</span>
-                    </div>
-                </motion.div>
+                    GoTransit Regina is built specifically for{' '}
+                    <span className="font-medium" style={{ color: '#003DA5' }}>Regina's transit system and weather conditions</span>
+                </motion.p>
             </div>
         </section>
     );
