@@ -128,38 +128,34 @@ export default function TripPlannerModal({ isOpen, onClose, onSelectRoute, liveB
     };
 
     return (
-        <div style={overlayStyle} onClick={handleClose}>
-            <div style={modalStyle} onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[2000] p-5" onClick={handleClose}>
+            <div className="bg-white rounded-2xl w-full max-w-[480px] max-h-[85vh] overflow-y-auto shadow-[0_20px_60px_rgba(0,0,0,0.3)] p-6" onClick={(e) => e.stopPropagation()}>
                 {/* Header */}
-                <div style={headerStyle}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <span style={{ fontSize: '22px' }}>🗺️</span>
-                        <span style={{ fontSize: '18px', fontWeight: '600', color: '#1a73e8' }}>Plan Your Trip</span>
+                <div className="flex justify-between items-center mb-5 pb-4 border-b border-[#e8eaed]">
+                    <div className="flex items-center gap-2.5">
+                        <span className="text-[22px]">🗺️</span>
+                        <span className="text-lg font-semibold text-[#1a73e8]">Plan Your Trip</span>
                     </div>
-                    <button onClick={handleClose} style={closeButtonStyle}>✕</button>
+                    <button onClick={handleClose} className="bg-transparent border-none text-xl text-[#5f6368] cursor-pointer px-2 py-1 rounded-full leading-none">✕</button>
                 </div>
 
                 {/* Origin Section */}
-                <div style={sectionStyle}>
-                    <label style={labelStyle}>From</label>
+                <div className="mb-4">
+                    <label className="block text-xs font-semibold text-[#5f6368] uppercase tracking-[0.5px] mb-1.5">From</label>
                     {origin ? (
-                        <div style={locationDisplayStyle}>
-                            <span style={{ flex: 1, fontSize: '14px', color: '#202124' }}>{origin.label}</span>
-                            <button onClick={() => { setOrigin(null); setRouteResults(null); }} style={clearBtnStyle}>×</button>
+                        <div className="flex items-center bg-[#e8f0fe] rounded-[10px] px-3.5 py-2.5 gap-2">
+                            <span className="flex-1 text-sm text-[#202124]">{origin.label}</span>
+                            <button onClick={() => { setOrigin(null); setRouteResults(null); }} className="bg-transparent border-none text-lg text-[#5f6368] cursor-pointer px-1 py-0 leading-none">×</button>
                         </div>
                     ) : (
                         <button
                             onClick={handleUseMyLocation}
                             disabled={gpsLoading}
-                            style={{
-                                ...useLocationBtnStyle,
-                                opacity: gpsLoading ? 0.6 : 1,
-                                cursor: gpsLoading ? 'wait' : 'pointer'
-                            }}
+                            className={`w-full p-3 bg-[#f8f9fa] border-2 border-dashed border-[#dadce0] rounded-[10px] text-sm font-medium text-[#1a73e8] cursor-pointer transition-all duration-200 ${gpsLoading ? 'opacity-60 cursor-wait' : ''}`}
                         >
                             {gpsLoading ? (
-                                <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                    <span style={spinnerStyle} />
+                                <span className="flex items-center gap-2">
+                                    <span className="inline-block w-3.5 h-3.5 border-2 border-[#dadce0] border-t-[#1a73e8] rounded-full animate-spin" />
                                     Detecting location...
                                 </span>
                             ) : (
@@ -167,19 +163,19 @@ export default function TripPlannerModal({ isOpen, onClose, onSelectRoute, liveB
                             )}
                         </button>
                     )}
-                    {gpsError && <div style={errorStyle}>{gpsError}</div>}
+                    {gpsError && <div className="text-[#ea4335] text-[13px] mt-1.5 px-2.5 py-1.5 bg-[#fce8e6] rounded-lg">{gpsError}</div>}
                 </div>
 
                 {/* Destination Section */}
-                <div style={sectionStyle}>
-                    <label style={labelStyle}>To</label>
+                <div className="mb-4">
+                    <label className="block text-xs font-semibold text-[#5f6368] uppercase tracking-[0.5px] mb-1.5">To</label>
                     {destination ? (
-                        <div style={locationDisplayStyle}>
-                            <span style={{ flex: 1, fontSize: '14px', color: '#202124' }}>{destination.label}</span>
-                            <button onClick={() => { setDestination(null); setDestValue('', false); setRouteResults(null); }} style={clearBtnStyle}>×</button>
+                        <div className="flex items-center bg-[#e8f0fe] rounded-[10px] px-3.5 py-2.5 gap-2">
+                            <span className="flex-1 text-sm text-[#202124]">{destination.label}</span>
+                            <button onClick={() => { setDestination(null); setDestValue('', false); setRouteResults(null); }} className="bg-transparent border-none text-lg text-[#5f6368] cursor-pointer px-1 py-0 leading-none">×</button>
                         </div>
                     ) : (
-                        <div style={{ position: 'relative' }}>
+                        <div className="relative">
                             <input
                                 type="text"
                                 placeholder="Search for your destination..."
@@ -187,23 +183,21 @@ export default function TripPlannerModal({ isOpen, onClose, onSelectRoute, liveB
                                 onChange={(e) => { setDestValue(e.target.value); setShowDestSuggestions(true); }}
                                 onFocus={() => data.length > 0 && setShowDestSuggestions(true)}
                                 disabled={!ready}
-                                style={inputStyle}
+                                className="w-full px-3.5 py-3 border-2 border-[#dadce0] rounded-[10px] text-sm outline-none text-[#202124] box-border transition-colors duration-200"
                             />
                             {showDestSuggestions && status === 'OK' && data.length > 0 && (
-                                <div style={suggestionsDropdownStyle}>
+                                <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-[10px] shadow-[0_4px_16px_rgba(0,0,0,0.15)] max-h-[200px] overflow-y-auto z-[2001]">
                                     {data.map((suggestion) => {
                                         const { place_id, structured_formatting: { main_text, secondary_text } } = suggestion;
                                         return (
                                             <div
                                                 key={place_id}
                                                 onClick={() => handleDestSelect(suggestion.description)}
-                                                style={suggestionItemStyle}
-                                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e8f0fe'}
-                                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
+                                                className="px-3.5 py-2.5 cursor-pointer border-b border-[#f1f3f4] transition-colors duration-150 hover:bg-[#e8f0fe]"
                                             >
-                                                <div style={{ fontWeight: '500', color: '#202124', fontSize: '14px' }}>{main_text}</div>
+                                                <div className="font-medium text-[#202124] text-sm">{main_text}</div>
                                                 {secondary_text && (
-                                                    <div style={{ fontSize: '12px', color: '#5f6368', marginTop: '2px' }}>{secondary_text}</div>
+                                                    <div className="text-xs text-[#5f6368] mt-0.5">{secondary_text}</div>
                                                 )}
                                             </div>
                                         );
@@ -218,15 +212,11 @@ export default function TripPlannerModal({ isOpen, onClose, onSelectRoute, liveB
                 <button
                     onClick={handleFindRoutes}
                     disabled={!origin || !destination || searching}
-                    style={{
-                        ...findRoutesBtnStyle,
-                        opacity: (!origin || !destination || searching) ? 0.5 : 1,
-                        cursor: (!origin || !destination || searching) ? 'not-allowed' : 'pointer'
-                    }}
+                    className={`w-full p-3.5 bg-[#1a73e8] text-white border-none rounded-xl text-[15px] font-semibold cursor-pointer transition-all duration-200 mb-4 ${(!origin || !destination || searching) ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                     {searching ? (
-                        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                            <span style={spinnerStyleWhite} />
+                        <span className="flex items-center justify-center gap-2">
+                            <span className="inline-block w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                             Finding routes...
                         </span>
                     ) : (
@@ -236,17 +226,17 @@ export default function TripPlannerModal({ isOpen, onClose, onSelectRoute, liveB
 
                 {/* Results Section */}
                 {routeResults !== null && (
-                    <div style={resultsContainerStyle}>
+                    <div className="border-t border-[#e8eaed] pt-4">
                         {routeResults.length === 0 ? (
-                            <div style={noResultsStyle}>
-                                <span style={{ fontSize: '32px' }}>🔍</span>
-                                <p style={{ margin: '8px 0 0', color: '#5f6368', fontSize: '14px' }}>
+                            <div className="text-center px-4 py-6">
+                                <span className="text-[32px]">🔍</span>
+                                <p className="mt-2 mb-0 text-[#5f6368] text-sm">
                                     No routes found. Try locations closer to transit stops.
                                 </p>
                             </div>
                         ) : (
                             routeResults.map((option, idx) => (
-                                <div key={idx} onClick={() => onSelectRoute?.(option)} style={{ cursor: 'pointer' }}>
+                                <div key={idx} onClick={() => onSelectRoute?.(option)} className="cursor-pointer">
                                     <RouteCard option={option} index={idx} />
                                 </div>
                             ))
@@ -254,13 +244,6 @@ export default function TripPlannerModal({ isOpen, onClose, onSelectRoute, liveB
                     </div>
                 )}
             </div>
-
-            <style>{`
-                @keyframes spin {
-                    0% { transform: rotate(0deg); }
-                    100% { transform: rotate(360deg); }
-                }
-            `}</style>
         </div>
     );
 }
@@ -287,39 +270,29 @@ function RouteCard({ option, index }: { option: TripOption; index: number }) {
     const primaryColor = getRouteColor(option.segments[0]?.routeNum);
 
     return (
-        <div style={{
-            ...cardStyle,
-            borderLeft: `4px solid ${primaryColor}`
-        }}>
+        <div className="bg-[#f8f9fa] rounded-xl p-3.5 mb-2.5 transition-shadow duration-200 border-l-4" style={{ borderLeftColor: primaryColor }}>
             {/* Recommended tag for first result */}
             {index === 0 && (
-                <div style={{
-                    fontSize: '11px', fontWeight: '600', color: '#34a853',
-                    backgroundColor: '#e6f4ea', padding: '3px 10px', borderRadius: '8px',
-                    display: 'inline-block', marginBottom: '8px'
-                }}>
+                <div className="text-[11px] font-semibold text-[#34a853] bg-[#e6f4ea] px-2.5 py-[3px] rounded-lg inline-block mb-2">
                     ⭐ Recommended
                 </div>
             )}
 
             {/* Card Header */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+            <div className="flex justify-between items-center mb-3">
+                <div className="flex items-center gap-2 flex-wrap">
                     {option.segments.map((seg, i) => (
-                        <span key={i} style={{
-                            ...routeBadgeStyle,
-                            backgroundColor: getRouteColor(seg.routeNum)
-                        }}>
+                        <span key={i} className="text-white px-2.5 py-[3px] rounded-xl text-xs font-semibold" style={{ backgroundColor: getRouteColor(seg.routeNum) }}>
                             Route {seg.routeNum}
                         </span>
                     ))}
                     {option.transfers === 0 ? (
-                        <span style={directBadgeStyle}>✅ Direct</span>
+                        <span className="text-[#137333] bg-[#e6f4ea] px-2 py-[3px] rounded-[10px] text-[11px] font-medium">✅ Direct</span>
                     ) : (
-                        <span style={transferBadgeStyle}>🔄 {option.transfers} transfer</span>
+                        <span className="text-[#e37400] bg-[#fef7e0] px-2 py-[3px] rounded-[10px] text-[11px] font-medium">🔄 {option.transfers} transfer</span>
                     )}
                 </div>
-                <span style={{ fontWeight: '700', fontSize: '16px', color: '#202124' }}>
+                <span className="font-bold text-base text-[#202124]">
                     {option.isLivePrediction && option.totalTimeWithWait
                         ? `~${option.totalTimeWithWait} min`
                         : `~${option.totalTime} min`
@@ -329,24 +302,20 @@ function RouteCard({ option, index }: { option: TripOption; index: number }) {
 
             {/* Live ETA info */}
             {option.isLivePrediction && option.waitTime !== undefined && (
-                <div style={{
-                    display: 'flex', alignItems: 'center', gap: '6px',
-                    padding: '6px 10px', backgroundColor: '#e8f5e9', borderRadius: '8px',
-                    marginBottom: '10px', fontSize: '12px', fontWeight: '500'
-                }}>
-                    <span style={{ fontSize: '14px' }}>🟢</span>
-                    <span style={{ color: '#2e7d32' }}>
+                <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-[#e8f5e9] rounded-lg mb-2.5 text-xs font-medium">
+                    <span className="text-sm">🟢</span>
+                    <span className="text-[#2e7d32]">
                         {option.waitTime <= 1
                             ? 'Bus arriving now!'
                             : `Next bus in ~${option.waitTime} min`
                         }
                         {option.segments[0]?.predTime && (
-                            <span style={{ color: '#1a73e8', fontWeight: '600' }}>
+                            <span className="text-[#1a73e8] font-semibold">
                                 {' '}· arrives {option.segments[0].predTime}
                             </span>
                         )}
                         {option.segments[0]?.busId && (
-                            <span style={{ color: '#5f6368', fontWeight: '500' }}>
+                            <span className="text-[#5f6368] font-medium">
                                 {' '}· Bus #{option.segments[0].busId}
                             </span>
                         )}
@@ -354,44 +323,35 @@ function RouteCard({ option, index }: { option: TripOption; index: number }) {
                 </div>
             )}
             {!option.isLivePrediction && (
-                <div style={{
-                    display: 'flex', alignItems: 'center', gap: '6px',
-                    padding: '6px 10px', backgroundColor: '#fff3e0', borderRadius: '8px',
-                    marginBottom: '10px', fontSize: '12px', fontWeight: '500'
-                }}>
-                    <span style={{ fontSize: '14px' }}>⏱️</span>
-                    <span style={{ color: '#e65100' }}>Estimated time (no live bus data)</span>
+                <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-[#fff3e0] rounded-lg mb-2.5 text-xs font-medium">
+                    <span className="text-sm">⏱️</span>
+                    <span className="text-[#e65100]">Estimated time (no live bus data)</span>
                 </div>
             )}
 
             {/* Step-by-step instructions with timeline */}
-            <div style={{ fontSize: '13px', color: '#202124', position: 'relative', paddingLeft: '28px' }}>
+            <div className="text-[13px] text-[#202124] relative pl-7">
                 {/* Vertical timeline line */}
-                <div style={{
-                    position: 'absolute', left: '9px', top: '10px', bottom: '10px',
-                    width: '2px', backgroundColor: '#dadce0', borderRadius: '1px'
-                }} />
+                <div className="absolute left-[9px] top-2.5 bottom-2.5 w-0.5 bg-[#dadce0] rounded-sm" />
 
                 {/* Step 1: Walk to first stop */}
-                <div style={timelineStepStyle}>
-                    <span style={timelineDotStyle('#34a853')} />
+                <div className="flex items-start gap-2.5 py-[5px] relative">
+                    <span className="w-3 h-3 rounded-full border-2 border-white shrink-0 mt-0.5 -ml-[22px] relative z-[1]" style={{ backgroundColor: '#34a853', boxShadow: '0 0 0 1px #34a853' }} />
                     <span>Walk to <strong>{option.originStop}</strong> ({option.walkingDistance}m)</span>
                 </div>
 
                 {/* Segments with board/ride/alight */}
-                {option.segments.map((seg, i) => (
+                {option.segments.map((seg, i) => {
+                    const routeColor = getRouteColor(seg.routeNum);
+                    return (
                     <div key={i}>
-                        <div style={timelineStepStyle}>
-                            <span style={timelineDotStyle(getRouteColor(seg.routeNum))} />
+                        <div className="flex items-start gap-2.5 py-[5px] relative">
+                            <span className="w-3 h-3 rounded-full border-2 border-white shrink-0 mt-0.5 -ml-[22px] relative z-[1]" style={{ backgroundColor: routeColor, boxShadow: `0 0 0 1px ${routeColor}` }} />
                             <span>
-                                Board <strong style={{ color: getRouteColor(seg.routeNum) }}>Route {seg.routeNum}</strong>
-                                <span style={{ color: '#5f6368' }}> ({seg.routeName})</span>
+                                Board <strong style={{ color: routeColor }}>Route {seg.routeNum}</strong>
+                                <span className="text-[#5f6368]"> ({seg.routeName})</span>
                                 {seg.busId && (
-                                    <span style={{
-                                        marginLeft: '6px', fontSize: '11px', fontWeight: '600',
-                                        color: '#1a73e8', backgroundColor: '#e8f0fe',
-                                        padding: '1px 6px', borderRadius: '6px'
-                                    }}>
+                                    <span className="ml-1.5 text-[11px] font-semibold text-[#1a73e8] bg-[#e8f0fe] px-1.5 py-px rounded-md">
                                         Bus #{seg.busId}
                                     </span>
                                 )}
@@ -400,35 +360,19 @@ function RouteCard({ option, index }: { option: TripOption; index: number }) {
 
                         {/* Intermediate stops - collapsible */}
                         {seg.intermediateStops && seg.intermediateStops.length > 0 && (
-                            <div style={{ paddingLeft: '12px' }}>
+                            <div className="pl-3">
                                 <div
                                     onClick={(e) => toggleStops(i, e)}
-                                    style={{
-                                        ...timelineStepStyle,
-                                        cursor: 'pointer',
-                                        color: '#1a73e8',
-                                        fontSize: '12px',
-                                        userSelect: 'none'
-                                    }}
+                                    className="flex items-start gap-2.5 py-[5px] relative cursor-pointer text-[#1a73e8] text-xs select-none"
                                 >
-                                    <span style={timelineSmallDotStyle} />
-                                    <span style={{ fontWeight: '500' }}>
+                                    <span className="w-1.5 h-1.5 rounded-full bg-[#dadce0] shrink-0 mt-[5px] -ml-[17px] relative z-[1]" />
+                                    <span className="font-medium">
                                         {expandedStops.has(i) ? '▾' : '▸'} {seg.intermediateStops.length} stop{seg.intermediateStops.length !== 1 ? 's' : ''}
                                     </span>
                                 </div>
                                 {expandedStops.has(i) && seg.intermediateStops.map((stopName, si) => (
-                                    <div key={si} style={{
-                                        ...timelineStepStyle,
-                                        paddingLeft: '12px',
-                                        color: '#5f6368',
-                                        fontSize: '11px',
-                                        padding: '2px 0'
-                                    }}>
-                                        <span style={{
-                                            ...timelineSmallDotStyle,
-                                            width: '4px', height: '4px',
-                                            marginLeft: '-15px', marginTop: '6px'
-                                        }} />
+                                    <div key={si} className="flex items-start gap-2.5 py-0.5 relative pl-3 text-[#5f6368] text-[11px]">
+                                        <span className="w-1 h-1 rounded-full bg-[#dadce0] shrink-0 mt-1.5 -ml-[15px] relative z-[1]" />
                                         <span>{stopName}</span>
                                     </div>
                                 ))}
@@ -437,35 +381,26 @@ function RouteCard({ option, index }: { option: TripOption; index: number }) {
 
                         {/* Ride info line (fallback when no intermediate stops) */}
                         {!seg.intermediateStops || seg.intermediateStops.length === 0 ? (
-                            <div style={{ ...timelineStepStyle, paddingLeft: '12px', color: '#5f6368', fontSize: '12px' }}>
-                                <span style={timelineSmallDotStyle} />
+                            <div className="flex items-start gap-2.5 py-[5px] relative pl-3 text-[#5f6368] text-xs">
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#dadce0] shrink-0 mt-[5px] -ml-[17px] relative z-[1]" />
                                 <span>Ride ~{seg.estimatedTime} min</span>
                             </div>
                         ) : null}
 
-                        <div style={timelineStepStyle}>
-                            <span style={timelineDotStyle('#ea4335')} />
+                        <div className="flex items-start gap-2.5 py-[5px] relative">
+                            <span className="w-3 h-3 rounded-full border-2 border-white shrink-0 mt-0.5 -ml-[22px] relative z-[1]" style={{ backgroundColor: '#ea4335', boxShadow: '0 0 0 1px #ea4335' }} />
                             <span>Get off at <strong>{seg.toStop}</strong></span>
                         </div>
 
                         {/* Transfer section - enhanced */}
                         {i < option.segments.length - 1 && (
-                            <div style={{
-                                ...timelineStepStyle,
-                                padding: '8px 0',
-                            }}>
-                                <span style={timelineDotStyle('#e37400')} />
-                                <div style={{
-                                    backgroundColor: '#fef7e0',
-                                    borderRadius: '8px',
-                                    padding: '8px 12px',
-                                    border: '1px solid #fdd835',
-                                    flex: 1
-                                }}>
-                                    <div style={{ fontWeight: '600', color: '#e37400', fontSize: '12px', marginBottom: '4px' }}>
+                            <div className="flex items-start gap-2.5 py-2 relative">
+                                <span className="w-3 h-3 rounded-full border-2 border-white shrink-0 mt-0.5 -ml-[22px] relative z-[1]" style={{ backgroundColor: '#e37400', boxShadow: '0 0 0 1px #e37400' }} />
+                                <div className="bg-[#fef7e0] rounded-lg px-3 py-2 border border-[#fdd835] flex-1">
+                                    <div className="font-semibold text-[#e37400] text-xs mb-1">
                                         🔄 Transfer at {seg.toStop}
                                     </div>
-                                    <div style={{ fontSize: '11px', color: '#5f6368' }}>
+                                    <div className="text-[11px] text-[#5f6368]">
                                         Wait for <strong style={{ color: getRouteColor(option.segments[i + 1].routeNum) }}>
                                             Route {option.segments[i + 1].routeNum}
                                         </strong>
@@ -476,266 +411,15 @@ function RouteCard({ option, index }: { option: TripOption; index: number }) {
                             </div>
                         )}
                     </div>
-                ))}
+                    );
+                })}
 
                 {/* Final step: walk to destination */}
-                <div style={timelineStepStyle}>
-                    <span style={timelineDotStyle('#1a73e8')} />
+                <div className="flex items-start gap-2.5 py-[5px] relative">
+                    <span className="w-3 h-3 rounded-full border-2 border-white shrink-0 mt-0.5 -ml-[22px] relative z-[1]" style={{ backgroundColor: '#1a73e8', boxShadow: '0 0 0 1px #1a73e8' }} />
                     <span>Walk to your destination</span>
                 </div>
             </div>
         </div>
     );
 }
-
-// Dot indicator for stops
-const dotStyle = (color: string): React.CSSProperties => ({
-    width: '8px',
-    height: '8px',
-    borderRadius: '50%',
-    backgroundColor: color,
-    display: 'inline-block',
-    flexShrink: 0
-});
-
-// --- Styles ---
-const overlayStyle: React.CSSProperties = {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 2000,
-    padding: '20px'
-};
-
-const modalStyle: React.CSSProperties = {
-    backgroundColor: 'white',
-    borderRadius: '16px',
-    width: '100%',
-    maxWidth: '480px',
-    maxHeight: '85vh',
-    overflowY: 'auto',
-    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-    padding: '24px'
-};
-
-const headerStyle: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '20px',
-    paddingBottom: '16px',
-    borderBottom: '1px solid #e8eaed'
-};
-
-const closeButtonStyle: React.CSSProperties = {
-    background: 'none',
-    border: 'none',
-    fontSize: '20px',
-    color: '#5f6368',
-    cursor: 'pointer',
-    padding: '4px 8px',
-    borderRadius: '50%',
-    lineHeight: 1
-};
-
-const sectionStyle: React.CSSProperties = {
-    marginBottom: '16px'
-};
-
-const labelStyle: React.CSSProperties = {
-    display: 'block',
-    fontSize: '12px',
-    fontWeight: '600',
-    color: '#5f6368',
-    textTransform: 'uppercase',
-    letterSpacing: '0.5px',
-    marginBottom: '6px'
-};
-
-const locationDisplayStyle: React.CSSProperties = {
-    display: 'flex',
-    alignItems: 'center',
-    backgroundColor: '#e8f0fe',
-    borderRadius: '10px',
-    padding: '10px 14px',
-    gap: '8px'
-};
-
-const clearBtnStyle: React.CSSProperties = {
-    background: 'none',
-    border: 'none',
-    fontSize: '18px',
-    color: '#5f6368',
-    cursor: 'pointer',
-    padding: '0 4px',
-    lineHeight: 1
-};
-
-const useLocationBtnStyle: React.CSSProperties = {
-    width: '100%',
-    padding: '12px',
-    backgroundColor: '#f8f9fa',
-    border: '2px dashed #dadce0',
-    borderRadius: '10px',
-    fontSize: '14px',
-    fontWeight: '500',
-    color: '#1a73e8',
-    cursor: 'pointer',
-    transition: 'all 0.2s'
-};
-
-const inputStyle: React.CSSProperties = {
-    width: '100%',
-    padding: '12px 14px',
-    border: '2px solid #dadce0',
-    borderRadius: '10px',
-    fontSize: '14px',
-    outline: 'none',
-    color: '#202124',
-    boxSizing: 'border-box',
-    transition: 'border-color 0.2s'
-};
-
-const suggestionsDropdownStyle: React.CSSProperties = {
-    position: 'absolute',
-    top: '100%',
-    left: 0,
-    right: 0,
-    marginTop: '4px',
-    backgroundColor: 'white',
-    borderRadius: '10px',
-    boxShadow: '0 4px 16px rgba(0, 0, 0, 0.15)',
-    maxHeight: '200px',
-    overflowY: 'auto',
-    zIndex: 2001
-};
-
-const suggestionItemStyle: React.CSSProperties = {
-    padding: '10px 14px',
-    cursor: 'pointer',
-    borderBottom: '1px solid #f1f3f4',
-    transition: 'background-color 0.15s'
-};
-
-const findRoutesBtnStyle: React.CSSProperties = {
-    width: '100%',
-    padding: '14px',
-    backgroundColor: '#1a73e8',
-    color: 'white',
-    border: 'none',
-    borderRadius: '12px',
-    fontSize: '15px',
-    fontWeight: '600',
-    cursor: 'pointer',
-    transition: 'all 0.2s',
-    marginBottom: '16px'
-};
-
-const resultsContainerStyle: React.CSSProperties = {
-    borderTop: '1px solid #e8eaed',
-    paddingTop: '16px'
-};
-
-const noResultsStyle: React.CSSProperties = {
-    textAlign: 'center',
-    padding: '24px 16px'
-};
-
-const cardStyle: React.CSSProperties = {
-    backgroundColor: '#f8f9fa',
-    borderRadius: '12px',
-    padding: '14px',
-    marginBottom: '10px',
-    transition: 'box-shadow 0.2s'
-};
-
-const routeBadgeStyle: React.CSSProperties = {
-    color: 'white',
-    padding: '3px 10px',
-    borderRadius: '12px',
-    fontSize: '12px',
-    fontWeight: '600'
-};
-
-const transferBadgeStyle: React.CSSProperties = {
-    color: '#e37400',
-    backgroundColor: '#fef7e0',
-    padding: '3px 8px',
-    borderRadius: '10px',
-    fontSize: '11px',
-    fontWeight: '500'
-};
-
-const directBadgeStyle: React.CSSProperties = {
-    color: '#137333',
-    backgroundColor: '#e6f4ea',
-    padding: '3px 8px',
-    borderRadius: '10px',
-    fontSize: '11px',
-    fontWeight: '500'
-};
-
-const timelineStepStyle: React.CSSProperties = {
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: '10px',
-    padding: '5px 0',
-    position: 'relative'
-};
-
-const timelineDotStyle = (color: string): React.CSSProperties => ({
-    width: '12px',
-    height: '12px',
-    borderRadius: '50%',
-    backgroundColor: color,
-    border: '2px solid white',
-    boxShadow: '0 0 0 1px ' + color,
-    flexShrink: 0,
-    marginTop: '2px',
-    marginLeft: '-22px',
-    position: 'relative',
-    zIndex: 1
-});
-
-const timelineSmallDotStyle: React.CSSProperties = {
-    width: '6px',
-    height: '6px',
-    borderRadius: '50%',
-    backgroundColor: '#dadce0',
-    flexShrink: 0,
-    marginTop: '5px',
-    marginLeft: '-17px',
-    position: 'relative',
-    zIndex: 1
-};
-
-const errorStyle: React.CSSProperties = {
-    color: '#ea4335',
-    fontSize: '13px',
-    marginTop: '6px',
-    padding: '6px 10px',
-    backgroundColor: '#fce8e6',
-    borderRadius: '8px'
-};
-
-const spinnerStyle: React.CSSProperties = {
-    width: '14px',
-    height: '14px',
-    border: '2px solid #dadce0',
-    borderTop: '2px solid #1a73e8',
-    borderRadius: '50%',
-    animation: 'spin 1s linear infinite',
-    display: 'inline-block'
-};
-
-const spinnerStyleWhite: React.CSSProperties = {
-    ...spinnerStyle,
-    border: '2px solid rgba(255,255,255,0.3)',
-    borderTop: '2px solid white'
-};
