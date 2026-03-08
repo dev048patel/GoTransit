@@ -12,7 +12,7 @@
  *   const { isAuthenticated, isAdmin, user, login, logout } = useAuth();
  */
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 import type { User } from '../models/auth/AuthModel';
@@ -43,6 +43,7 @@ async function fetchRole(userId: string): Promise<'user' | 'admin'> {
 
 function sessionToUser(session: Session, role: 'user' | 'admin'): User {
     return {
+        id: session.user.id,
         fullName: session.user.user_metadata?.full_name ?? session.user.email ?? 'User',
         email: session.user.email ?? '',
         mobile: session.user.user_metadata?.mobile_number ?? undefined,
@@ -54,45 +55,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [session, setSession] = useState<Session | null>(null);
     const [role, setRole] = useState<'user' | 'admin'>('user');
     const [isLoading, setIsLoading] = useState(true);
+    const initializedRef = useRef(false);
 
-    // useEffect will only run when the component is mounted.
+    // Listen for auth changes — ONLY synchronous state updates here.
+    // Making async Supabase calls inside onAuthStateChange can deadlock
+    // due to the internal auth lock in Supabase JS v2.
     useEffect(() => {
-        // Load the current session and fetch role on mount
-        async function init() {
-            try {
-                const { data: { session } } = await supabase.auth.getSession();
-                setSession(session);
-                if (session) {
-                    const r = await fetchRole(session.user.id);
-                    setRole(r);
-                }
-            } catch (err) {
-                console.error('[Auth] Failed to initialize session:', err);
-            } finally {
-                setIsLoading(false);
-            }
-        }
-        init();
-
-        // Keep state in sync across tabs and on token refresh.
-        // Skip INITIAL_SESSION — init() above already handles the first load.
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-            if (event === 'INITIAL_SESSION') return;
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
             setSession(session);
-            if (session) {
-                try {
-                    const r = await fetchRole(session.user.id);
-                    setRole(r);
-                } catch {
-                    setRole('user');
-                }
-            } else {
-                setRole('user');
+
+            if (!initializedRef.current) {
+                initializedRef.current = true;
+                setIsLoading(false);
             }
         });
 
-        return () => subscription.unsubscribe();
+        const timeout = setTimeout(() => {
+            if (!initializedRef.current) {
+                initializedRef.current = true;
+                setIsLoading(false);
+            }
+        }, 3000);
+
+        return () => {
+            subscription.unsubscribe();
+            clearTimeout(timeout);
+        };
     }, []);
+
+    // Fetch role in a separate effect — safe to call Supabase here.
+    useEffect(() => {
+        if (session) {
+            fetchRole(session.user.id)
+                .then(r => setRole(r))
+                .catch(() => setRole('user'));
+        } else {
+            setRole('user');
+        }
+    }, [session?.user?.id]);
 
     const login = useCallback(async (email: string, password: string): Promise<boolean> => {
         const { error, data } = await supabase.auth.signInWithPassword({ email: email.trim(), password });

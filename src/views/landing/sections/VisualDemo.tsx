@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+/* ── App screenshots for demo steps ── */
+import ssMapOverview from '../../../SS01.png';
+import ssRouteSelect from '../../../SS02.png';
+import ssRouteTrack from '../../../SS03.png';
+import ssRoutePlanner from '../../../SS04.png';
+
 const demoSteps = [
-    { id: 1, title: 'Open App', description: 'Launch GoTransit Regina' },
-    { id: 2, title: 'View Map', description: 'See nearby buses in real-time' },
-    { id: 3, title: 'Track Bus', description: 'Watch your bus approach' },
-    { id: 4, title: 'Get Notified', description: 'Receive SMS alert' },
-    { id: 5, title: 'Board Bus', description: 'Arrive at stop on time' }
+    { id: 1, title: 'Open App', description: 'Launch GoTransit Regina', screenshot: ssRouteSelect },
+    { id: 2, title: 'View Map', description: 'See nearby buses in real-time', screenshot: ssMapOverview },
+    { id: 3, title: 'Track Bus', description: 'Watch your bus approach', screenshot: ssRouteTrack },
+    { id: 4, title: 'Plan Route', description: 'Get route suggestions', screenshot: ssRoutePlanner },
+    { id: 5, title: 'Board Bus', description: 'Arrive at stop on time', screenshot: ssMapOverview },
 ];
 
 export default function VisualDemo() {
@@ -62,54 +68,75 @@ export default function VisualDemo() {
                     </p>
                 </motion.div>
 
-                {/* Phone Mockup */}
-                <div className="relative mx-auto mb-12" style={{ maxWidth: '500px' }}>
-                    <div className="relative bg-gradient-to-br from-gray-800 to-gray-900 rounded-[3.5rem] p-4 shadow-[0_50px_120px_rgba(0,0,0,0.4)]">
-                        {/* Notch */}
-                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-44 h-8 bg-gray-900 rounded-b-3xl z-10" />
+                {/* Laptop / Browser Mockup */}
+                <div className="relative mx-auto mb-12" style={{ maxWidth: '750px' }}>
+                    {/* Browser Window Frame */}
+                    <div className="relative bg-gradient-to-b from-gray-700 to-gray-800 rounded-xl shadow-[0_30px_80px_rgba(0,0,0,0.25)] overflow-hidden">
+                        {/* Browser Toolbar */}
+                        <div className="flex items-center gap-2 px-4 py-3 bg-gray-800/90 border-b border-gray-700">
+                            {/* Window Controls */}
+                            <div className="flex gap-1.5">
+                                <div className="w-3 h-3 rounded-full bg-red-500" />
+                                <div className="w-3 h-3 rounded-full bg-yellow-500" />
+                                <div className="w-3 h-3 rounded-full bg-green-500" />
+                            </div>
+                            {/* URL Bar */}
+                            <div className="flex-1 mx-3">
+                                <div className="bg-gray-900/60 rounded-md px-3 py-1.5 text-xs text-gray-400 font-mono flex items-center gap-2">
+                                    <svg className="w-3 h-3 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                    </svg>
+                                    gotransitregina.ca
+                                </div>
+                            </div>
+                        </div>
 
-                        {/* Screen */}
-                        <div className="relative h-[700px] rounded-[3rem] overflow-hidden">
-                            {/* Animated Content */}
+                        {/* Screen Content */}
+                        <div className="relative" style={{ aspectRatio: '16 / 9.5' }}>
                             <AnimatePresence mode="wait">
                                 <motion.div
                                     key={currentStep}
-                                    className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-blue-50 flex items-center justify-center p-12"
-                                    initial={{ opacity: 0, scale: 0.9, rotateY: 90 }}
-                                    animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-                                    exit={{ opacity: 0, scale: 0.9, rotateY: -90 }}
+                                    className="absolute inset-0"
+                                    initial={{ opacity: 0, scale: 0.98 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.98 }}
                                     transition={{ duration: 0.5 }}
                                 >
-                                    <div className="text-center">
-                                        {/* Step Number */}
-                                        <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#003DA5] to-[#0066FF] flex items-center justify-center text-white text-3xl font-bold shadow-lg">
-                                            {demoSteps[currentStep].id}
+                                    {/* Screenshot */}
+                                    <img
+                                        src={demoSteps[currentStep].screenshot}
+                                        alt={demoSteps[currentStep].title}
+                                        className="w-full h-full object-cover object-center"
+                                    />
+                                    {/* Step Label Overlay */}
+                                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-5 pt-12">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white text-lg font-bold border border-white/30">
+                                                {demoSteps[currentStep].id}
+                                            </div>
+                                            <div>
+                                                <h3 className="text-xl font-bold text-white">
+                                                    {demoSteps[currentStep].title}
+                                                </h3>
+                                                <p className="text-sm text-white/80">
+                                                    {demoSteps[currentStep].description}
+                                                </p>
+                                            </div>
                                         </div>
-
-                                        {/* Step Title */}
-                                        <h3 className="text-3xl font-bold text-gray-900 mb-4">
-                                            {demoSteps[currentStep].title}
-                                        </h3>
-
-                                        {/* Step Description */}
-                                        <p className="text-xl text-gray-600">
-                                            {demoSteps[currentStep].description}
-                                        </p>
-
-                                        {/* Animation Indicator */}
-                                        <motion.div
-                                            className="w-16 h-16 mx-auto mt-8 rounded-full border-4 border-[#003DA5] border-t-transparent"
-                                            animate={{ rotate: 360 }}
-                                            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                                        />
                                     </div>
                                 </motion.div>
                             </AnimatePresence>
                         </div>
                     </div>
 
-                    {/* Radial Glow */}
-                    <div className="absolute -inset-20 bg-gradient-radial from-blue-500/20 via-transparent to-transparent blur-3xl -z-10" />
+                    {/* Laptop Base */}
+                    <div className="relative mx-auto mt-0" style={{ width: '110%', marginLeft: '-5%' }}>
+                        <div className="h-4 bg-gradient-to-b from-gray-600 to-gray-700 rounded-b-xl mx-auto" style={{ width: '80%' }} />
+                        <div className="h-1.5 bg-gray-700 rounded-b-lg mx-auto" style={{ width: '40%' }} />
+                    </div>
+
+                    {/* Glowing Shadow */}
+                    <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-3/4 h-20 bg-blue-500/20 blur-3xl rounded-full" />
                 </div>
 
                 {/* Step Indicators */}
@@ -118,8 +145,8 @@ export default function VisualDemo() {
                         <button
                             key={step.id}
                             className={`transition-all duration-300 rounded-full ${index === currentStep
-                                    ? 'w-12 h-3 bg-gradient-to-r from-[#003DA5] to-[#003DA5]'
-                                    : 'w-3 h-3 bg-gray-300 hover:bg-gray-400'
+                                ? 'w-12 h-3 bg-gradient-to-r from-[#003DA5] to-[#003DA5]'
+                                : 'w-3 h-3 bg-gray-300 hover:bg-gray-400'
                                 }`}
                             onClick={() => setCurrentStep(index)}
                             aria-label={`Go to step ${step.id}`}

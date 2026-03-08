@@ -4,41 +4,24 @@
  * All data and logic lives in useProfileController.
  * Sections:
  *   Header        – Avatar, full name, email
- *   Personal Info  – Name, email (verified), phone
+ *   Personal Info  – Name, email (verified), phone, change password
  *   Transit Prefs  – Favourite stops (removable), favourite routes (removable)
- *   Notifications  – Toggles persisted to user_preferences
- *   Appearance     – Theme persisted to user_preferences
- *   Accessibility  – Larger text, high-contrast persisted to user_preferences
- *   Security       – Change password (modal), last login
  *   Account        – Logout, delete account (with confirmation)
  */
 
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
-    MapPin, Star, Bell, Sun, Moon, Monitor,
-    Shield, LogOut, Trash2, CheckCircle2, Pencil,
-    ChevronRight, Eye, Type, Clock,
-    Route as RouteIcon, X, ArrowLeft, KeyRound,
+    MapPin,
+    LogOut, Trash2, CheckCircle2, Pencil,
+    Eye,
+    ArrowLeft, KeyRound,
 } from 'lucide-react';
-import logo from '../../image.jpg';
+import logo from '../../New-Image.jpeg';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useProfileController } from '../../controllers/auth/useProfileController';
 
-/* ── Toggle Switch ──────────────────────────────────────────────── */
-function Toggle({ enabled, onChange }: { enabled: boolean; onChange: (v: boolean) => void }) {
-    return (
-        <button
-            type="button"
-            role="switch"
-            aria-checked={enabled}
-            onClick={() => onChange(!enabled)}
-            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ${enabled ? 'bg-[#003DA5]' : 'bg-gray-200'}`}
-        >
-            <span className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow-sm transform transition-transform duration-200 ${enabled ? 'translate-x-5' : 'translate-x-0'}`} />
-        </button>
-    );
-}
+
 
 /* ── Section Card ───────────────────────────────────────────────── */
 function SectionCard({ title, icon: Icon, children, action }: {
@@ -56,14 +39,25 @@ function SectionCard({ title, icon: Icon, children, action }: {
     );
 }
 
+/* ── Skeleton shimmer for loading fields ──────────────────────── */
+function Shimmer({ width = 'w-24' }: { width?: string }) {
+    return (
+        <div className={`${width} h-4 rounded-md bg-gray-100 animate-pulse`} />
+    );
+}
+
 /* ── Info Row ───────────────────────────────────────────────────── */
-function InfoRow({ label, value, verified }: { label: string; value: string; verified?: boolean }) {
+function InfoRow({ label, value, verified, loading }: { label: string; value: string; verified?: boolean; loading?: boolean }) {
     return (
         <div className="flex items-center justify-between py-2">
             <span className="text-sm text-gray-500">{label}</span>
             <div className="flex items-center gap-1.5">
-                <span className="text-sm font-medium text-gray-900">{value}</span>
-                {verified && <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />}
+                {loading ? <Shimmer width="w-28" /> : (
+                    <>
+                        <span className="text-sm font-medium text-gray-900">{value}</span>
+                        {verified && <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />}
+                    </>
+                )}
             </div>
         </div>
     );
@@ -96,8 +90,10 @@ function PasswordModal({
                 </div>
 
                 {success ? (
-                    <div className="flex items-center gap-2 text-green-600 font-medium py-2">
-                        <CheckCircle2 className="w-5 h-5" /> Password updated!
+                    <div className="bg-green-50 border border-green-200 rounded-xl px-4 py-4 text-center">
+                        <CheckCircle2 className="w-10 h-10 text-green-500 mx-auto mb-2" />
+                        <p className="text-green-700 font-semibold text-base">Hey, your password has been changed!</p>
+                        <p className="text-green-600 text-xs mt-1">You can now use your new password to log in.</p>
                     </div>
                 ) : (
                     <>
@@ -177,7 +173,8 @@ function DeleteConfirm({ onConfirm, onCancel, loading }: { onConfirm: () => void
 /* ================================================================== */
 export default function ProfilePage() {
     const {
-        user, profile, prefs, favStops, favRoutes, lastLogin, isLoading,
+        user, profile, prefs,
+        profileLoading,
         showPasswordModal, setShowPasswordModal,
         newPassword, setNewPassword,
         passwordError, passwordSuccess, passwordLoading,
@@ -193,19 +190,12 @@ export default function ProfilePage() {
         handleDeleteAccount,
         handleLogout,
         updatePref,
-        removeFavStop, removeFavRoute,
     } = useProfileController();
 
     const fullName = profile?.full_name ?? user?.fullName ?? '—';
     const email = user?.email ?? '—';
     const phone = profile?.mobile_number ?? user?.mobile ?? null;
     const initials = fullName.split(' ').filter(Boolean).map(n => n[0]).join('').toUpperCase().slice(0, 2) || '?';
-
-    const themes: { value: 'light' | 'dark' | 'system'; icon: React.ElementType; label: string }[] = [
-        { value: 'light', icon: Sun, label: 'Light' },
-        { value: 'dark', icon: Moon, label: 'Dark' },
-        { value: 'system', icon: Monitor, label: 'System' },
-    ];
 
     return (
         <div className="min-h-screen bg-gray-50 font-sans">
@@ -240,292 +230,160 @@ export default function ProfilePage() {
                 </div>
             </div>
 
-            {isLoading ? (
-                <div className="flex items-center justify-center py-24">
-                    <div className="w-8 h-8 border-4 border-[#003DA5] border-t-transparent rounded-full animate-spin" />
+            <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="max-w-lg mx-auto px-4 pb-16 pt-6 space-y-4"
+            >
+                {/* HEADER */}
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 px-5 py-6 flex items-center gap-4">
+                    <div className="w-16 h-16 rounded-full bg-[#003DA5] flex items-center justify-center text-white text-xl font-bold shrink-0 select-none">
+                        {initials}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                        <h2 className="text-lg font-bold text-gray-900 truncate">{fullName}</h2>
+                        <p className="text-sm text-gray-500 truncate">{email}</p>
+                    </div>
                 </div>
-            ) : (
-                <motion.div
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4 }}
-                    className="max-w-lg mx-auto px-4 pb-16 pt-6 space-y-4"
-                >
-                    {/* HEADER */}
-                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 px-5 py-6 flex items-center gap-4">
-                        <div className="w-16 h-16 rounded-full bg-[#003DA5] flex items-center justify-center text-white text-xl font-bold shrink-0 select-none">
-                            {initials}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                            <h2 className="text-lg font-bold text-gray-900 truncate">{fullName}</h2>
-                            <p className="text-sm text-gray-500 truncate">{email}</p>
-                        </div>
-                    </div>
 
-                    {/* PERSONAL INFO */}
-                    <SectionCard
-                        title="Personal Info"
-                        icon={Eye}
-                        action={
-                            !isEditingProfile ? (
-                                <button
-                                    onClick={startEditProfile}
-                                    className="flex items-center gap-1 text-xs font-medium text-[#003DA5] hover:text-[#002d7a] transition"
-                                >
-                                    <Pencil className="w-3 h-3" /> Edit
-                                </button>
-                            ) : undefined
-                        }
-                    >
-                        {isEditingProfile ? (
-                            <div className="space-y-4">
-                                {/* Name */}
-                                <div>
-                                    <label className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1.5 block">Full Name</label>
-                                    <input
-                                        type="text"
-                                        value={editName}
-                                        onChange={e => setEditName(e.target.value)}
-                                        placeholder="Jane Doe"
-                                        autoFocus
-                                        className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#003DA5]/30 focus:border-[#003DA5] transition"
-                                    />
-                                </div>
-                                {/* Email */}
-                                <div>
-                                    <label className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1.5 block">Email</label>
-                                    <input
-                                        type="email"
-                                        value={editEmail}
-                                        onChange={e => setEditEmail(e.target.value)}
-                                        placeholder="jane@example.com"
-                                        className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#003DA5]/30 focus:border-[#003DA5] transition"
-                                    />
-                                    <p className="text-xs text-gray-400 mt-1">Changing email sends a confirmation link to the new address.</p>
-                                </div>
-                                {/* Mobile */}
-                                <div>
-                                    <label className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1.5 block">
-                                        Mobile <span className="normal-case font-normal text-gray-400">(optional)</span>
-                                    </label>
-                                    <input
-                                        type="tel"
-                                        value={editMobile}
-                                        onChange={e => setEditMobile(e.target.value)}
-                                        placeholder="+1 306-555-0199"
-                                        className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#003DA5]/30 focus:border-[#003DA5] transition"
-                                    />
-                                </div>
-                                {/* Error */}
-                                {editError && (
-                                    <p className="text-red-500 text-xs">{editError}</p>
-                                )}
-                                {/* Email confirmation notice */}
-                                {editEmailSent && (
-                                    <div className="flex items-start gap-2 bg-blue-50 border border-blue-100 text-blue-700 text-xs rounded-xl px-3 py-2.5">
-                                        <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
-                                        <span>Confirmation link sent to <strong>{editEmail}</strong>. Check your inbox to finalize the email change.</span>
-                                    </div>
-                                )}
-                                {/* Save / Cancel */}
-                                <div className="flex gap-2 pt-1">
-                                    <button
-                                        onClick={cancelEditProfile}
-                                        disabled={editLoading}
-                                        className="flex-1 py-2 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition disabled:opacity-50"
-                                    >
-                                        {editEmailSent ? 'Done' : 'Cancel'}
-                                    </button>
-                                    {!editEmailSent && (
-                                        <button
-                                            onClick={saveProfile}
-                                            disabled={editLoading}
-                                            className="flex-1 py-2 rounded-xl bg-[#003DA5] text-white text-sm font-medium hover:bg-[#002d7a] transition disabled:opacity-60"
-                                        >
-                                            {editLoading ? 'Saving…' : 'Save'}
-                                        </button>
-                                    )}
-                                </div>
-                            </div>
-                        ) : (
-                            <>
-                                <InfoRow label="Full Name" value={fullName} />
-                                <InfoRow label="Email" value={email} verified />
-                                <InfoRow
-                                    label="Phone"
-                                    value={phone ?? 'Not set'}
-                                    verified={profile?.mobile_verified}
-                                />
-                            </>
-                        )}
-                    </SectionCard>
-
-                    {/* TRANSIT PREFERENCES */}
-                    <SectionCard title="Transit Preferences" icon={MapPin}>
-                        {/* Favourite Stops */}
-                        <div className="mb-4">
-                            <div className="flex items-center justify-between mb-2">
-                                <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Favourite Stops</label>
-                                <span className="text-xs text-gray-400">{favStops.length}/5</span>
-                            </div>
-                            {favStops.length === 0 ? (
-                                <p className="text-sm text-gray-400 italic">No favourite stops saved yet.</p>
-                            ) : (
-                                <div className="space-y-2">
-                                    {favStops.map(stop => (
-                                        <div key={stop.id} className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-lg">
-                                            <div className="flex items-center gap-2">
-                                                <Star className="w-3.5 h-3.5 text-yellow-500" />
-                                                <span className="text-sm text-gray-900">{stop.stop_name}</span>
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                {stop.label && (
-                                                    <span className="text-xs bg-blue-50 text-[#003DA5] px-2 py-0.5 rounded-full font-medium">{stop.label}</span>
-                                                )}
-                                                <button
-                                                    onClick={() => removeFavStop(stop.id)}
-                                                    className="text-gray-300 hover:text-red-400 transition"
-                                                    aria-label="Remove stop"
-                                                >
-                                                    <X className="w-3.5 h-3.5" />
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Favourite Routes */}
-                        <div>
-                            <label className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2 block">Favourite Routes</label>
-                            {favRoutes.length === 0 ? (
-                                <p className="text-sm text-gray-400 italic">No favourite routes saved yet.</p>
-                            ) : (
-                                <div className="space-y-2">
-                                    {favRoutes.map(route => (
-                                        <div key={route.id} className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-lg">
-                                            <div className="flex items-center gap-2">
-                                                <RouteIcon className="w-3.5 h-3.5 text-[#003DA5]" />
-                                                <span className="text-sm font-semibold text-[#003DA5]">#{route.route_number}</span>
-                                                <span className="text-sm text-gray-600">{route.route_name}</span>
-                                            </div>
-                                            <button
-                                                onClick={() => removeFavRoute(route.id)}
-                                                className="text-gray-300 hover:text-red-400 transition"
-                                                aria-label="Remove route"
-                                            >
-                                                <X className="w-3.5 h-3.5" />
-                                            </button>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    </SectionCard>
-
-                    {/* NOTIFICATIONS */}
-                    <SectionCard title="Notifications" icon={Bell}>
-                        <div className="space-y-4">
-                            {[
-                                { key: 'notif_alerts' as const, label: 'Service Alerts', desc: 'Route changes, detours & cancellations' },
-                                { key: 'notif_delays' as const, label: 'Delays', desc: 'Real-time delay notifications' },
-                                { key: 'notif_promos' as const, label: 'Promotions', desc: 'Deals, news & GoTransit updates' },
-                            ].map(({ key, label, desc }) => (
-                                <div key={key} className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm font-medium text-gray-900">{label}</p>
-                                        <p className="text-xs text-gray-500">{desc}</p>
-                                    </div>
-                                    <Toggle
-                                        enabled={prefs[key]}
-                                        onChange={v => updatePref(key, v)}
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                    </SectionCard>
-
-                    {/* APPEARANCE */}
-                    <SectionCard title="Appearance" icon={Sun}>
-                        <label className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2 block">Theme</label>
-                        <div className="inline-flex bg-gray-100 rounded-lg p-0.5 w-full">
-                            {themes.map(t => (
-                                <button
-                                    key={t.value}
-                                    onClick={() => updatePref('theme', t.value)}
-                                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 text-sm font-medium rounded-md transition-all duration-200 ${prefs.theme === t.value ? 'bg-white text-[#003DA5] shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
-                                >
-                                    <t.icon className="w-4 h-4" /> {t.label}
-                                </button>
-                            ))}
-                        </div>
-                    </SectionCard>
-
-                    {/* ACCESSIBILITY */}
-                    <SectionCard title="Accessibility" icon={Type}>
-                        <div className="space-y-4">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-sm font-medium text-gray-900">Larger Text</p>
-                                    <p className="text-xs text-gray-500">Increase text size throughout the app</p>
-                                </div>
-                                <Toggle enabled={prefs.larger_text} onChange={v => updatePref('larger_text', v)} />
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-sm font-medium text-gray-900">High Contrast</p>
-                                    <p className="text-xs text-gray-500">Improve colour contrast for readability</p>
-                                </div>
-                                <Toggle enabled={prefs.high_contrast} onChange={v => updatePref('high_contrast', v)} />
-                            </div>
-                        </div>
-                    </SectionCard>
-
-                    {/* SECURITY */}
-                    <SectionCard title="Security" icon={Shield}>
-                        <div className="space-y-3">
+                {/* PERSONAL INFO */}
+                <SectionCard
+                    title="Personal Info"
+                    icon={Eye}
+                    action={
+                        !isEditingProfile ? (
                             <button
-                                onClick={() => setShowPasswordModal(true)}
-                                className="w-full flex items-center justify-between py-2 text-sm text-gray-900 hover:text-[#003DA5] transition group"
+                                onClick={startEditProfile}
+                                className="flex items-center gap-1 text-xs font-medium text-[#003DA5] hover:text-[#002d7a] transition"
                             >
-                                <span className="font-medium">Change Password</span>
-                                <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-[#003DA5] transition" />
+                                <Pencil className="w-3 h-3" /> Edit
                             </button>
-                            {lastLogin && (
-                                <>
-                                    <div className="border-t border-gray-50" />
-                                    <div className="flex items-center justify-between py-2">
-                                        <span className="text-sm text-gray-500">Last Login</span>
-                                        <div className="flex items-center gap-1.5 text-sm text-gray-600">
-                                            <Clock className="w-3.5 h-3.5" />
-                                            {lastLogin}
-                                        </div>
-                                    </div>
-                                </>
+                        ) : undefined
+                    }
+                >
+                    {isEditingProfile ? (
+                        <div className="space-y-4">
+                            {/* Name */}
+                            <div>
+                                <label className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1.5 block">Full Name</label>
+                                <input
+                                    type="text"
+                                    value={editName}
+                                    onChange={e => setEditName(e.target.value)}
+                                    placeholder="Jane Doe"
+                                    autoFocus
+                                    className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#003DA5]/30 focus:border-[#003DA5] transition"
+                                />
+                            </div>
+                            {/* Email */}
+                            <div>
+                                <label className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1.5 block">Email</label>
+                                <input
+                                    type="email"
+                                    value={editEmail}
+                                    onChange={e => setEditEmail(e.target.value)}
+                                    placeholder="jane@example.com"
+                                    className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#003DA5]/30 focus:border-[#003DA5] transition"
+                                />
+                                <p className="text-xs text-gray-400 mt-1">Changing email sends a confirmation link to the new address.</p>
+                            </div>
+                            {/* Mobile */}
+                            <div>
+                                <label className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1.5 block">
+                                    Mobile <span className="normal-case font-normal text-gray-400">(optional)</span>
+                                </label>
+                                <input
+                                    type="tel"
+                                    value={editMobile}
+                                    onChange={e => setEditMobile(e.target.value)}
+                                    placeholder="+1 306-555-0199"
+                                    className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#003DA5]/30 focus:border-[#003DA5] transition"
+                                />
+                            </div>
+                            {/* Error */}
+                            {editError && (
+                                <p className="text-red-500 text-xs">{editError}</p>
                             )}
+                            {/* Email confirmation notice */}
+                            {editEmailSent && (
+                                <div className="flex items-start gap-2 bg-blue-50 border border-blue-100 text-blue-700 text-xs rounded-xl px-3 py-2.5">
+                                    <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
+                                    <span>Confirmation link sent to <strong>{editEmail}</strong>. Check your inbox to finalize the email change.</span>
+                                </div>
+                            )}
+                            {/* Save / Cancel */}
+                            <div className="flex gap-2 pt-1">
+                                <button
+                                    onClick={cancelEditProfile}
+                                    disabled={editLoading}
+                                    className="flex-1 py-2 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition disabled:opacity-50"
+                                >
+                                    {editEmailSent ? 'Done' : 'Cancel'}
+                                </button>
+                                {!editEmailSent && (
+                                    <button
+                                        onClick={saveProfile}
+                                        disabled={editLoading}
+                                        className="flex-1 py-2 rounded-xl bg-[#003DA5] text-white text-sm font-medium hover:bg-[#002d7a] transition disabled:opacity-60"
+                                    >
+                                        {editLoading ? 'Saving…' : 'Save'}
+                                    </button>
+                                )}
+                            </div>
                         </div>
-                    </SectionCard>
+                    ) : (
+                        <>
+                            <InfoRow label="Full Name" value={fullName} />
+                            <InfoRow label="Email" value={email} verified />
+                            <InfoRow
+                                label="Phone"
+                                value={phone ?? 'Not set'}
+                                verified={profile?.mobile_verified}
+                                loading={profileLoading && !profile}
+                            />
+                        </>
+                    )}
+                </SectionCard>
 
-                    {/* ACCOUNT */}
-                    <div className="space-y-3 pb-4">
-                        <button
-                            onClick={handleLogout}
-                            className="w-full flex items-center justify-center gap-2 text-red-600 border border-red-200 hover:bg-red-50 py-2.5 rounded-xl font-medium text-sm transition"
-                        >
-                            <LogOut className="w-4 h-4" /> Logout
-                        </button>
-                        <button
-                            onClick={() => setShowDeleteConfirm(true)}
-                            className="w-full text-center text-sm text-red-400 hover:text-red-600 transition font-medium"
-                        >
-                            <span className="inline-flex items-center gap-1">
-                                <Trash2 className="w-3.5 h-3.5" /> Delete Account
-                            </span>
-                        </button>
+                {/* TRANSIT PREFERENCES */}
+                <SectionCard title="Transit Preferences" icon={MapPin}>
+                    <div className="mb-4">
+                        <label className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2 block">Favourite Stops</label>
+                        <p className="text-sm text-gray-400 italic">No favourite stops selected yet.</p>
                     </div>
-                </motion.div>
-            )}
+                    <div>
+                        <label className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2 block">Favourite Routes</label>
+                        <p className="text-sm text-gray-400 italic">No favourite routes selected yet.</p>
+                    </div>
+                </SectionCard>
+
+
+
+                {/* ACCOUNT */}
+                <div className="space-y-3 pb-4">
+                    <button
+                        onClick={() => setShowPasswordModal(true)}
+                        className="w-full flex items-center justify-center gap-2 text-[#003DA5] border border-[#003DA5]/20 hover:bg-[#003DA5]/5 py-2.5 rounded-xl font-medium text-sm transition"
+                    >
+                        <KeyRound className="w-4 h-4" /> Change Password
+                    </button>
+                    <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center justify-center gap-2 text-red-600 border border-red-200 hover:bg-red-50 py-2.5 rounded-xl font-medium text-sm transition"
+                    >
+                        <LogOut className="w-4 h-4" /> Logout
+                    </button>
+                    <button
+                        onClick={() => setShowDeleteConfirm(true)}
+                        className="w-full text-center text-sm text-red-400 hover:text-red-600 transition font-medium"
+                    >
+                        <span className="inline-flex items-center gap-1">
+                            <Trash2 className="w-3.5 h-3.5" /> Delete Account
+                        </span>
+                    </button>
+                </div>
+            </motion.div>
         </div>
     );
 }

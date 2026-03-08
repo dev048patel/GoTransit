@@ -9,6 +9,7 @@
 /* ── Authenticated user (used by AuthContext) ────────────────────── */
 
 export interface User {
+    id: string;
     fullName: string;
     email: string;
     mobile?: string;

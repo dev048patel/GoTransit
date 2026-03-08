@@ -11,7 +11,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Eye, EyeOff, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import logo from '../../image.jpg';
+import logo from '../../New-Image.jpeg';
 import { useSignupController } from '../../controllers/auth/useSignupController';
 
 /* ── Shared input class ─────────────────────────────────────────── */

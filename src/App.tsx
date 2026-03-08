@@ -21,99 +21,138 @@ Route Map:
 
 import './App.css';
 
+import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAnalyticsBeacon } from './hooks/useAnalyticsBeacon';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import PublicOnlyRoute from './components/PublicOnlyRoute';
 import AdminRoute from './components/AdminRoute';
-
-import MapPage from './views/MapPage';
-import LandingPage from './views/landing/LandingPage';
-import LoginPage from './views/auth/LoginPage';
-import SignupPage from './views/auth/SignupPage';
 import ProfilePage from './views/auth/ProfilePage';
-import ConnectPage from './views/ConnectPage';
-import AdminLayout from './layouts/AdminLayout';
-import Dashboard from './views/admin/Dashboard';
-import RouteManager from './views/admin/RouteManager';
-import UserManager from './views/admin/UserManager';
-import VisitorAnalytics from './views/admin/VisitorAnalytics';
+import logo from './New-Image.jpeg';
 
-export default function App() {
-    // Send analytics beacon once on site load, heartbeat every 60s
+/* ── Lazy-loaded pages (code-split per route) ────────────────────── */
+const MapPage = React.lazy(() => import('./views/MapPage'));
+const LandingPage = React.lazy(() => import('./views/landing/LandingPage'));
+const LoginPage = React.lazy(() => import('./views/auth/LoginPage'));
+const SignupPage = React.lazy(() => import('./views/auth/SignupPage'));
+const ConnectPage = React.lazy(() => import('./views/ConnectPage'));
+const AdminLayout = React.lazy(() => import('./layouts/AdminLayout'));
+const Dashboard = React.lazy(() => import('./views/admin/Dashboard'));
+const RouteManager = React.lazy(() => import('./views/admin/RouteManager'));
+const UserManager = React.lazy(() => import('./views/admin/UserManager'));
+const VisitorAnalytics = React.lazy(() => import('./views/admin/VisitorAnalytics'));
+
+/**
+ * AppRoutes — renders all routes ONLY after auth state has been resolved.
+ * While isLoading is true (Supabase session check in progress), a branded
+ * full-screen loader is shown instead. This prevents blank screens on refresh.
+ */
+function AppRoutes() {
+    const { isLoading } = useAuth();
     useAnalyticsBeacon();
 
+    if (isLoading) {
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center bg-[#F7F8FA]">
+                {/* Logo */}
+                <img
+                    src={logo}
+                    alt="GoTransit Regina"
+                    className="w-16 h-16 rounded-2xl object-cover mb-6"
+                    style={{ boxShadow: '0 8px 24px rgba(0,61,165,0.2)' }}
+                />
+                {/* Spinner ring */}
+                <div
+                    className="w-8 h-8 border-[3px] border-[#003DA5]/20 border-t-[#003DA5] rounded-full animate-spin"
+                />
+                <p className="mt-4 text-sm font-medium text-gray-400 tracking-wide">Loading…</p>
+            </div>
+        );
+    }
+
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center bg-[#F7F8FA]">
+                <div className="w-7 h-7 border-[3px] border-[#003DA5]/20 border-t-[#003DA5] rounded-full animate-spin" />
+            </div>
+        }>
+            <Routes>
+
+                {/* ── Landing Page (default) ─────────────────────────────── */}
+                <Route path="/" element={<LandingPage />} />
+
+                {/* ── Public-only Auth Pages ─────────────────────────────── */}
+                <Route
+                    path="/login"
+                    element={
+                        <PublicOnlyRoute>
+                            <LoginPage />
+                        </PublicOnlyRoute>
+                    }
+                />
+                <Route
+                    path="/signup"
+                    element={
+                        <PublicOnlyRoute>
+                            <SignupPage />
+                        </PublicOnlyRoute>
+                    }
+                />
+
+                {/* ── Protected Pages ────────────────────────────────────── */}
+                <Route
+                    path="/map"
+                    element={
+                        <ProtectedRoute>
+                            <MapPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/profile"
+                    element={
+                        <ProtectedRoute>
+                            <ProfilePage />
+                        </ProtectedRoute>
+                    }
+                />
+
+                {/* ── Admin Routes (admin role only) ─────────────────────── */}
+                <Route
+                    path="/admin"
+                    element={
+                        <AdminRoute>
+                            <AdminLayout />
+                        </AdminRoute>
+                    }
+                >
+                    <Route index element={<Dashboard />} />
+                    <Route path="routes" element={<RouteManager />} />
+                    <Route path="users" element={<UserManager />} />
+                    <Route path="analytics" element={<VisitorAnalytics />} />
+                </Route>
+
+                {/* ── Public: /connect — Meet the Team ─────────────────── */}
+                <Route path="/connect" element={<ConnectPage />} />
+
+                {/* ── Legacy redirect: /landing still works ─────────────── */}
+                <Route path="/landing" element={<LandingPage />} />
+
+                {/* ── 404 fallback ──────────────────────────────────────── */}
+                <Route path="*" element={<Navigate to="/" replace />} />
+
+            </Routes>
+        </Suspense>
+    );
+}
+
+export default function App() {
     return (
         <BrowserRouter>
             {/* AuthProvider must wrap everything so all routes can access auth state */}
             <AuthProvider>
-                <Routes>
-
-                    {/* ── Landing Page (default) ─────────────────────────────── */}
-                    <Route path="/" element={<LandingPage />} />
-
-                    {/* ── Public-only Auth Pages ─────────────────────────────── */}
-                    <Route
-                        path="/login"
-                        element={
-                            <PublicOnlyRoute>
-                                <LoginPage />
-                            </PublicOnlyRoute>
-                        }
-                    />
-                    <Route
-                        path="/signup"
-                        element={
-                            <PublicOnlyRoute>
-                                <SignupPage />
-                            </PublicOnlyRoute>
-                        }
-                    />
-
-                    {/* ── Protected Pages ────────────────────────────────────── */}
-                    <Route
-                        path="/map"
-                        element={
-                            <ProtectedRoute>
-                                <MapPage />
-                            </ProtectedRoute>
-                        }
-                    />
-                    <Route
-                        path="/profile"
-                        element={
-                            <ProtectedRoute>
-                                <ProfilePage />
-                            </ProtectedRoute>
-                        }
-                    />
-
-                    {/* ── Admin Routes (admin role only) ─────────────────────── */}
-                    <Route
-                        path="/admin"
-                        element={
-                            <AdminRoute>
-                                <AdminLayout />
-                            </AdminRoute>
-                        }
-                    >
-                        <Route index element={<Dashboard />} />
-                        <Route path="routes" element={<RouteManager />} />
-                        <Route path="users" element={<UserManager />} />
-                        <Route path="analytics" element={<VisitorAnalytics />} />
-                    </Route>
-
-                    {/* ── Public: /connect — Meet the Team ─────────────────── */}
-                    <Route path="/connect" element={<ConnectPage />} />
-
-                    {/* ── Legacy redirect: /landing still works ─────────────── */}
-                    <Route path="/landing" element={<LandingPage />} />
-
-                    {/* ── 404 fallback ──────────────────────────────────────── */}
-                    <Route path="*" element={<Navigate to="/" replace />} />
-
-                </Routes>
+                <AppRoutes />
             </AuthProvider>
         </BrowserRouter>
     );

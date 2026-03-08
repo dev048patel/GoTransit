@@ -26,9 +26,9 @@ export const stats: Stat[] = [
         icon: "MapPin"
     },
     {
-        label: "On-time Accuracy",
-        value: "88%",
-        icon: "Target"
+        label: "SMS Alerts",
+        value: "Hands-Free",
+        icon: "Bell"
     }
 ];
 

@@ -8,6 +8,7 @@ import { Request, Response } from 'express';
 import { TransitService } from '../services/TransitService';
 import { RealTimeService } from '../services/RealTimeService';
 import { StopPredictionService } from '../services/StopPredictionService';
+import { getOverrides, setOverride } from '../services/routeOverrides';
 
 // Initialize the Service
 const transitService = new TransitService();
@@ -69,18 +70,41 @@ export const getLiveBuses = async (req: Request, res: Response) => {
     }
 };
 
-// getStopPredictions : handle the request to get predicted arrival times for a stop.
-export const getStopPredictions = async (req: Request, res: Response) => {
+// getAdminRoutes : fetch all routes with override data merged in for admin panel.
+export const getAdminRoutes = async (req: Request, res: Response) => {
     try {
-        const stopId = req.params.stopId;
-        if (!stopId) {
-            res.status(400).json({ error: 'Stop ID is required' });
-            return;
-        }
-        const predictions = await StopPredictionService.getPredictions(stopId);
-        res.json(predictions);
+        const routes = await transitService.getAvailableRoutes();
+        const overrides = getOverrides();
+
+        const adminRoutes = routes.map((route: any) => {
+            const override = overrides[route.id] || {};
+            return {
+                ...route,
+                route_name: override.route_name ?? route.route_name,
+                status: override.hidden ? 'Hidden' : 'Active',
+                last_updated: override.route_name || override.hidden !== undefined ? 'Admin Override' : route.last_updated,
+            };
+        });
+
+        res.json(adminRoutes);
     } catch (error) {
-        console.error("Controller Error fetching stop predictions:", error);
-        res.status(500).json({ error: 'Failed to fetch stop predictions' });
+        res.status(500).json({ error: 'Failed to fetch admin routes' });
+    }
+};
+
+// updateRoute : handle PATCH to rename or hide/show a route.
+export const updateRoute = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const { route_name, hidden } = req.body;
+
+        const data: Record<string, any> = {};
+        if (route_name !== undefined) data.route_name = route_name;
+        if (hidden !== undefined) data.hidden = hidden;
+
+        setOverride(id, data);
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to update route' });
     }
 };

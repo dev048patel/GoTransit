@@ -14,12 +14,23 @@ import { Route } from '../../models/admin/AdminTypes';
 
 export default function RouteManager() {
     const {
-        routes, totalRoutes, activeRoutes,
+        routes, totalRoutes, activeRoutes, loading,
         searchTerm, setSearchTerm,
         isRenameOpen, selectedRoute, renameValue, setRenameValue,
         openRename, confirmRename, closeRename,
         toggleStatus,
     } = useRouteManagerController();
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center py-24">
+                <div className="text-center">
+                    <div className="w-10 h-10 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4" />
+                    <p className="text-gray-500 text-sm">Loading routes…</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-6">
@@ -81,11 +92,10 @@ export default function RouteManager() {
                                             <button
                                                 onClick={() => toggleStatus(route.id)}
                                                 title={route.status === 'Active' ? 'Hide route' : 'Show route'}
-                                                className={`flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium rounded-lg transition ${
-                                                    route.status === 'Active'
+                                                className={`flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium rounded-lg transition ${route.status === 'Active'
                                                         ? 'text-gray-600 bg-gray-100 hover:bg-gray-200'
                                                         : 'text-green-600 bg-green-50 hover:bg-green-100'
-                                                }`}
+                                                    }`}
                                             >
                                                 {route.status === 'Active' ? <><EyeOff size={12} /> Hide</> : <><Eye size={12} /> Show</>}
                                             </button>

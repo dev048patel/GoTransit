@@ -44,11 +44,17 @@ router.get('/colors', TransitController.getColors);
 router.get('/live', TransitController.getLiveBuses);
 
 /*
- -> @route GET /api/stop-predictions/:stopId
- -> Fetch predicted bus arrival times for a specific stop
- -> @access Public
+
+ /* route = GET /api/admin/routes
+ Fetch all routes for the admin panel (includes hidden routes + status)
  */
-router.get('/stop-predictions/:stopId', TransitController.getStopPredictions);
+router.get('/admin/routes', TransitController.getAdminRoutes);
+
+/*
+ route = PATCH /api/admin/routes/:id
+ Update a route's name or visibility (admin only)
+ */
+router.patch('/admin/routes/:id', TransitController.updateRoute);
 
 
 export default router;

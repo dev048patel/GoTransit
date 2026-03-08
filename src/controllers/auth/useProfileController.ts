@@ -56,7 +56,11 @@ export function useProfileController() {
     const [favStops, setFavStops] = useState<FavStop[]>([]);
     const [favRoutes, setFavRoutes] = useState<FavRoute[]>([]);
     const [lastLogin, setLastLogin] = useState<string | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
+
+    // Per-section loading flags — each resolves independently
+    const [profileLoading, setProfileLoading] = useState(true);
+    const [stopsLoading, setStopsLoading] = useState(true);
+    const [routesLoading, setRoutesLoading] = useState(true);
 
     // Change password modal
     const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -78,51 +82,54 @@ export function useProfileController() {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(false);
 
-    /* ── Load all profile data on mount ────────────────────────── */
+    /* ── Load all profile data when user is available ───────────── */
     useEffect(() => {
-        loadAll();
-    }, []);
-
-    async function loadAll() {
-        setIsLoading(true);
-        try {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (!session) return;
-
-            const uid = session.user.id;
-
-            if (session.user.last_sign_in_at) {
-                setLastLogin(new Date(session.user.last_sign_in_at).toLocaleString('en-CA', {
-                    month: 'short', day: 'numeric', year: 'numeric',
-                    hour: '2-digit', minute: '2-digit',
-                }));
-            }
-
-            const [profileRes, prefsRes, stopsRes, routesRes] = await Promise.all([
-                supabase.from('profiles')
-                    .select('full_name, mobile_number, mobile_verified, account_status')
-                    .eq('id', uid).single(),
-                supabase.from('user_preferences')
-                    .select('theme, larger_text, high_contrast, notif_alerts, notif_delays, notif_promos')
-                    .eq('id', uid).single(),
-                supabase.from('favourite_stops')
-                    .select('id, stop_id, stop_name, label')
-                    .eq('user_id', uid).order('created_at'),
-                supabase.from('favourite_routes')
-                    .select('id, route_number, route_name')
-                    .eq('user_id', uid).order('created_at'),
-            ]);
-
-            if (profileRes.data) setProfile(profileRes.data);
-            if (prefsRes.data) setPrefs(prefsRes.data as Preferences);
-            if (stopsRes.data) setFavStops(stopsRes.data);
-            if (routesRes.data) setFavRoutes(routesRes.data);
-        } catch (err) {
-            console.error('[Profile] Failed to load profile data:', err);
-        } finally {
-            setIsLoading(false);
+        if (!user) {
+            setProfileLoading(false);
+            setStopsLoading(false);
+            setRoutesLoading(false);
+            return;
         }
-    }
+
+        const uid = user.id;
+
+        // Fire all queries in parallel — each resolves its own loading flag
+        (async () => {
+            try {
+                const { data } = await supabase.from('profiles')
+                    .select('full_name, mobile_number, mobile_verified, account_status')
+                    .eq('id', uid).single();
+                if (data) setProfile(data);
+            } finally { setProfileLoading(false); }
+        })();
+
+        (async () => {
+            try {
+                const { data } = await supabase.from('user_preferences')
+                    .select('theme, larger_text, high_contrast, notif_alerts, notif_delays, notif_promos')
+                    .eq('id', uid).single();
+                if (data) setPrefs(data as Preferences);
+            } finally { setProfileLoading(false); }
+        })();
+
+        (async () => {
+            try {
+                const { data } = await supabase.from('favourite_stops')
+                    .select('id, stop_id, stop_name, label')
+                    .eq('user_id', uid).order('created_at');
+                if (data) setFavStops(data);
+            } finally { setStopsLoading(false); }
+        })();
+
+        (async () => {
+            try {
+                const { data } = await supabase.from('favourite_routes')
+                    .select('id, route_number, route_name')
+                    .eq('user_id', uid).order('created_at');
+                if (data) setFavRoutes(data);
+            } finally { setRoutesLoading(false); }
+        })();
+    }, [user?.id]);
 
     /* ── Logout ─────────────────────────────────────────────────── */
     // Just call logout() — ProtectedRoute detects isAuthenticated=false
@@ -135,13 +142,12 @@ export function useProfileController() {
     const updatePref = useCallback(async <K extends keyof Preferences>(
         key: K, value: Preferences[K]
     ) => {
+        if (!user) return;
         setPrefs(prev => ({ ...prev, [key]: value }));
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) return;
         await supabase.from('user_preferences')
             .update({ [key]: value, updated_at: new Date().toISOString() })
-            .eq('id', session.user.id);
-    }, []);
+            .eq('id', user.id);
+    }, [user]);
 
     /* ── Change Password ────────────────────────────────────────── */
     const handleChangePassword = useCallback(async () => {
@@ -161,7 +167,7 @@ export function useProfileController() {
             setTimeout(() => {
                 setShowPasswordModal(false);
                 setPasswordSuccess(false);
-            }, 1500);
+            }, 4000);
         }
     }, [newPassword]);
 
@@ -207,8 +213,7 @@ export function useProfileController() {
         setEditError('');
         setEditLoading(true);
         try {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (!session) return;
+            if (!user) return;
 
             // Update name and mobile in profiles table
             const { error: profileError } = await supabase
@@ -218,7 +223,7 @@ export function useProfileController() {
                     mobile_number: editMobile.trim() || null,
                     updated_at: new Date().toISOString(),
                 })
-                .eq('id', session.user.id);
+                .eq('id', user.id);
             if (profileError) throw profileError;
 
             // Reflect changes in local state immediately
@@ -228,7 +233,7 @@ export function useProfileController() {
             );
 
             // If email changed, trigger Supabase email update (sends confirmation)
-            if (editEmail.trim() && editEmail.trim() !== session.user.email) {
+            if (editEmail.trim() && editEmail.trim() !== user.email) {
                 const { error: emailError } = await supabase.auth.updateUser({ email: editEmail.trim() });
                 if (emailError) throw emailError;
                 setEditEmailSent(true);
@@ -242,25 +247,24 @@ export function useProfileController() {
         } finally {
             setEditLoading(false);
         }
-    }, [editName, editEmail, editMobile]);
+    }, [user, editName, editEmail, editMobile]);
 
     /* ── Delete Account ─────────────────────────────────────────── */
     const handleDeleteAccount = useCallback(async () => {
         setDeleteLoading(true);
         try {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
+            if (user) {
                 // Soft-delete: mark as deleted, then sign out
                 await supabase.from('profiles')
                     .update({ account_status: 'deleted', updated_at: new Date().toISOString() })
-                    .eq('id', session.user.id);
+                    .eq('id', user.id);
             }
             await logout();
         } catch (err) {
             console.error('[Profile] Failed to delete account:', err);
             setDeleteLoading(false);
         }
-    }, [logout]);
+    }, [user, logout]);
 
     return {
         user,
@@ -269,7 +273,9 @@ export function useProfileController() {
         favStops,
         favRoutes,
         lastLogin,
-        isLoading,
+        profileLoading,
+        stopsLoading,
+        routesLoading,
         // Password modal
         showPasswordModal, setShowPasswordModal,
         newPassword, setNewPassword,

@@ -2,6 +2,13 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Navigation, Bell, Heart, AlertTriangle, Calendar, Map } from 'lucide-react';
 
+/* ── App screenshots for each feature ── */
+import ssRealTime from '../../../SS01.png';
+import ssRouteSelect from '../../../SS02.png';
+import ssRouteTrack from '../../../SS03.png';
+import ssRoutePlanner from '../../../SS04.png';
+import ssSavedStops from '../../../SS06.png';
+
 interface FeaturesCarouselProps {
     features: Array<{
         id: string;
@@ -20,6 +27,79 @@ const iconMap: { [key: string]: React.FC<{ size?: number, className?: string }> 
     Calendar,
     Map
 };
+
+/* Map feature IDs to their screenshot + mockup type */
+const screenshotMap: { [key: string]: { src: string; mockup: 'laptop' | 'phone' } } = {
+    'real-time': { src: ssRealTime, mockup: 'laptop' },
+    'sms-alerts': { src: ssRealTime, mockup: 'laptop' },      // placeholder until notification is built
+    'saved-stops': { src: ssSavedStops, mockup: 'phone' },
+    'route-planner': { src: ssRoutePlanner, mockup: 'phone' },
+};
+
+const defaultScreenshot = { src: ssRealTime, mockup: 'laptop' as const };
+
+/* ── Phone Mockup ── */
+function PhoneMockup({ src, alt }: { src: string; alt: string }) {
+    return (
+        <div className="relative mx-auto" style={{ maxWidth: '320px' }}>
+            <div className="relative bg-gradient-to-br from-gray-800 to-gray-900 rounded-[2.5rem] p-2.5 shadow-[0_30px_80px_rgba(0,0,0,0.3)]">
+                {/* Notch */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-6 bg-gray-900 rounded-b-2xl z-10" />
+                {/* Screen */}
+                <div className="relative rounded-[2rem] overflow-hidden bg-white" style={{ aspectRatio: '9 / 17' }}>
+                    <img
+                        src={src}
+                        alt={alt}
+                        className="w-full h-full object-contain object-top"
+                    />
+                </div>
+            </div>
+            {/* Glowing Shadow */}
+            <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-48 h-16 bg-blue-500/20 blur-3xl rounded-full" />
+        </div>
+    );
+}
+
+/* ── Laptop Mockup ── */
+function LaptopMockup({ src, alt }: { src: string; alt: string }) {
+    return (
+        <div className="relative mx-auto" style={{ maxWidth: '680px' }}>
+            <div className="relative bg-gradient-to-b from-gray-700 to-gray-800 rounded-xl shadow-[0_30px_80px_rgba(0,0,0,0.25)] overflow-hidden">
+                {/* Browser Toolbar */}
+                <div className="flex items-center gap-2 px-4 py-3 bg-gray-800/90 border-b border-gray-700">
+                    <div className="flex gap-1.5">
+                        <div className="w-3 h-3 rounded-full bg-red-500" />
+                        <div className="w-3 h-3 rounded-full bg-yellow-500" />
+                        <div className="w-3 h-3 rounded-full bg-green-500" />
+                    </div>
+                    <div className="flex-1 mx-3">
+                        <div className="bg-gray-900/60 rounded-md px-3 py-1.5 text-xs text-gray-400 font-mono flex items-center gap-2">
+                            <svg className="w-3 h-3 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                            gotransitregina.ca
+                        </div>
+                    </div>
+                </div>
+                {/* Screen */}
+                <div className="relative" style={{ aspectRatio: '16 / 9.5' }}>
+                    <img
+                        src={src}
+                        alt={alt}
+                        className="w-full h-full object-cover object-center"
+                    />
+                </div>
+            </div>
+            {/* Laptop Base */}
+            <div className="relative mx-auto mt-0" style={{ width: '110%', marginLeft: '-5%' }}>
+                <div className="h-4 bg-gradient-to-b from-gray-600 to-gray-700 rounded-b-xl mx-auto" style={{ width: '80%' }} />
+                <div className="h-1.5 bg-gray-700 rounded-b-lg mx-auto" style={{ width: '40%' }} />
+            </div>
+            {/* Glowing Shadow */}
+            <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-3/4 h-20 bg-blue-500/20 blur-3xl rounded-full" />
+        </div>
+    );
+}
 
 export default function FeaturesCarousel({ features }: FeaturesCarouselProps) {
     const [activeFeature, setActiveFeature] = useState(0);
@@ -89,49 +169,24 @@ export default function FeaturesCarousel({ features }: FeaturesCarouselProps) {
                     </div>
 
                     {/* Content Area (70%) */}
-                    <div className="lg:col-span-8">
+                    <div className="lg:col-span-8 flex items-center justify-center min-h-[500px]">
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={activeFeature}
-                                className="relative"
-                                initial={{ opacity: 0, x: 50, rotateY: -10 }}
-                                animate={{ opacity: 1, x: 0, rotateY: 0 }}
-                                exit={{ opacity: 0, x: -50 }}
+                                className="relative w-full"
+                                initial={{ opacity: 0, y: 20, scale: 0.97 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, y: -20, scale: 0.97 }}
                                 transition={{ duration: 0.5 }}
-                                style={{ perspective: 1000 }}
                             >
-                                {/* Phone Mockup */}
-                                <div className="relative mx-auto" style={{ maxWidth: '400px' }}>
-                                    {/* Phone Frame */}
-                                    <div className="relative bg-gradient-to-br from-gray-800 to-gray-900 rounded-[3rem] p-3 shadow-[0_40px_100px_rgba(0,0,0,0.3)]">
-                                        {/* Notch */}
-                                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-7 bg-gray-900 rounded-b-3xl z-10" />
+                                {(() => {
+                                    const current = screenshotMap[features[activeFeature].id] || defaultScreenshot;
+                                    const alt = features[activeFeature].title;
 
-                                        {/* Screen */}
-                                        <div className="relative h-[650px] rounded-[2.5rem] overflow-hidden">
-                                            {/* Feature Screenshot Placeholder */}
-                                            <div className="absolute inset-0 bg-white flex items-center justify-center p-8">
-                                                <div className="text-center">
-                                                    <div className="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
-                                                        {React.createElement(iconMap[features[activeFeature].icon] || Map, {
-                                                            size: 48,
-                                                            className: "text-white"
-                                                        })}
-                                                    </div>
-                                                    <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                                                        {features[activeFeature].title}
-                                                    </h3>
-                                                    <p className="text-lg text-gray-600 leading-relaxed">
-                                                        {features[activeFeature].description}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Glowing Shadow */}
-                                    <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-64 h-32 bg-blue-500/30 blur-3xl rounded-full" />
-                                </div>
+                                    return current.mockup === 'phone'
+                                        ? <PhoneMockup src={current.src} alt={alt} />
+                                        : <LaptopMockup src={current.src} alt={alt} />;
+                                })()}
                             </motion.div>
                         </AnimatePresence>
                     </div>

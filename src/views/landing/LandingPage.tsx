@@ -13,7 +13,9 @@
  */
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useLandingController } from '../../controllers/landing/useLandingController';
+import logo from '../../New-Image.jpeg';
 import HeroSection from './sections/HeroSection';
 import StatsSection from './sections/StatsSection';
 import FeaturesCarousel from './sections/FeaturesCarousel';
@@ -149,9 +151,26 @@ export default function LandingPage() {
                 </svg>
             </div>
 
-            {/* ════════════════════════════════════════════════════════
+            {/* =========================================================
                 PAGE SECTIONS — transparent backgrounds, float above bg
-                ════════════════════════════════════════════════════════ */}
+                ========================================================= */}
+            {/* =========================================================
+                FIXED LOGO — top-left, seamless glassmorphic pill
+                ========================================================= */}
+            <div className="fixed top-0 left-0 z-50 p-4">
+                <Link
+                    to="/"
+                    className="flex items-center gap-2.5 no-underline px-4 py-2 rounded-full transition-all duration-300 hover:scale-105"
+                >
+                    <img
+                        src={logo}
+
+                        alt="GoTransit Regina"
+                        className="w-20 h-20 rounded-xl object-cover"
+                    />
+                </Link>
+            </div>
+
             <div className="relative" style={{ zIndex: 1 }}>
                 <HeroSection
                     headline={hero.headline}
