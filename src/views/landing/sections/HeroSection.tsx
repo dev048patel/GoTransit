@@ -39,7 +39,7 @@ export default function HeroSection({ headline, subheadline, primaryCTA, seconda
             />
 
             {/* ── Content ───────────────────────────────────────────────── */}
-            <div className="relative z-10 max-w-7xl mx-auto px-6 py-20 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div className="relative z-10 max-w-7xl mx-auto px-6 pt-32 pb-20 lg:py-20 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
 
                 {/* Left — Text & CTAs */}
                 <motion.div

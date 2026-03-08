@@ -8,7 +8,7 @@ import { Request, Response } from 'express';
 import { TransitService } from '../services/TransitService';
 import { RealTimeService } from '../services/RealTimeService';
 import { StopPredictionService } from '../services/StopPredictionService';
-import { getOverrides, setOverride } from '../services/routeOverrides';
+import { setOverride } from '../services/routeOverrides';
 
 // Initialize the Service
 const transitService = new TransitService();
@@ -73,19 +73,7 @@ export const getLiveBuses = async (req: Request, res: Response) => {
 // getAdminRoutes : fetch all routes with override data merged in for admin panel.
 export const getAdminRoutes = async (req: Request, res: Response) => {
     try {
-        const routes = await transitService.getAvailableRoutes();
-        const overrides = getOverrides();
-
-        const adminRoutes = routes.map((route: any) => {
-            const override = overrides[route.id] || {};
-            return {
-                ...route,
-                route_name: override.route_name ?? route.route_name,
-                status: override.hidden ? 'Hidden' : 'Active',
-                last_updated: override.route_name || override.hidden !== undefined ? 'Admin Override' : route.last_updated,
-            };
-        });
-
+        const adminRoutes = await transitService.getAllRoutesAdmin();
         res.json(adminRoutes);
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch admin routes' });
