@@ -22,13 +22,13 @@ function getClientIP(req: Request): string {
  * POST /api/analytics/beacon
  * Called once when a user opens the site. Creates or reactivates their session.
  */
-router.post('/beacon', (req: Request, res: Response) => {
+router.post('/beacon', async (req: Request, res: Response) => {
     try {
         const ip = getClientIP(req);
         const userAgent = req.headers['user-agent'] || 'Unknown';
         const page = req.body?.page || '/';
 
-        const sessionId = registerSession(ip, userAgent, page);
+        const sessionId = await registerSession(ip, userAgent, page);
         res.json({ ok: true, sessionId });
     } catch (error) {
         console.error('Beacon error:', error);
@@ -40,13 +40,13 @@ router.post('/beacon', (req: Request, res: Response) => {
  * POST /api/analytics/heartbeat
  * Called every 60s by the frontend to keep the session alive.
  */
-router.post('/heartbeat', (req: Request, res: Response) => {
+router.post('/heartbeat', async (req: Request, res: Response) => {
     try {
         const ip = getClientIP(req);
         const userAgent = req.headers['user-agent'] || 'Unknown';
         const page = req.body?.page;
 
-        heartbeat(ip, userAgent, page);
+        await heartbeat(ip, userAgent, page);
         res.json({ ok: true });
     } catch (error) {
         console.error('Heartbeat error:', error);
@@ -58,11 +58,11 @@ router.post('/heartbeat', (req: Request, res: Response) => {
  * GET /api/analytics/visitors
  * Returns unique visitor sessions (newest first).
  */
-router.get('/visitors', (req: Request, res: Response) => {
+router.get('/visitors', async (req: Request, res: Response) => {
     try {
         const from = req.query.from as string | undefined;
         const to = req.query.to as string | undefined;
-        const records = getVisitorRecords(from, to);
+        const records = await getVisitorRecords(from, to);
         res.json(records);
     } catch (error) {
         console.error('Error fetching visitor records:', error);
@@ -74,11 +74,11 @@ router.get('/visitors', (req: Request, res: Response) => {
  * GET /api/analytics/summary
  * Returns aggregated analytics.
  */
-router.get('/summary', (req: Request, res: Response) => {
+router.get('/summary', async (req: Request, res: Response) => {
     try {
         const from = req.query.from as string | undefined;
         const to = req.query.to as string | undefined;
-        const summary = getAnalyticsSummary(from, to);
+        const summary = await getAnalyticsSummary(from, to);
         res.json(summary);
     } catch (error) {
         console.error('Error fetching analytics summary:', error);

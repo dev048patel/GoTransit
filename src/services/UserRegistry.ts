@@ -40,20 +40,26 @@ function formatDate(iso: string): string {
 export async function getAllUsers(): Promise<User[]> {
     const { data, error } = await supabase
         .from('profiles')
-        .select('id, full_name, email, role, account_status, created_at')
+        .select('id, full_name, email, role, account_status, created_at, last_active')
         .order('created_at', { ascending: false });
 
     if (error || !data) return [];
 
-    return data.map(row => ({
-        id: row.id,
-        name: row.full_name ?? '—',
-        email: row.email ?? '—',
-        role: row.role ?? 'user',
-        status: row.account_status === 'active' ? 'Active' : 'Suspended',
-        registered: formatDate(row.created_at),
-        last_login: '—',          // Requires admin API — not available client-side
-    }));
+    const twoMinutesAgo = Date.now() - 2 * 60 * 1000;
+
+    return data.map(row => {
+        const lastActiveMs = row.last_active ? new Date(row.last_active).getTime() : 0;
+        return {
+            id: row.id,
+            name: row.full_name ?? '—',
+            email: row.email ?? '—',
+            role: row.role ?? 'user',
+            status: row.account_status === 'active' ? 'Active' : 'Suspended',
+            registered: formatDate(row.created_at),
+            last_active: row.last_active ? formatDate(row.last_active) : '—',
+            isOnline: lastActiveMs > twoMinutesAgo,
+        };
+    });
 }
 
 /** Total user count from the profiles table. */

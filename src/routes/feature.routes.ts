@@ -18,14 +18,14 @@ const router = Router();
  * Body: { type: 'places' | 'directions' }
  * Called by the frontend whenever a user searches a place or requests directions.
  */
-router.post('/track', (req: Request, res: Response) => {
+router.post('/track', async (req: Request, res: Response) => {
     try {
         const { type } = req.body;
         if (type !== 'places' && type !== 'directions') {
             res.status(400).json({ error: 'type must be "places" or "directions"' });
             return;
         }
-        recordFeatureEvent(type);
+        await recordFeatureEvent(type);
         res.json({ ok: true });
     } catch (error) {
         console.error('Feature track error:', error);
@@ -37,9 +37,9 @@ router.post('/track', (req: Request, res: Response) => {
  * GET /api/features/weekly
  * Returns bar-chart data: [{ day, places, directions }, ...] for the current week.
  */
-router.get('/weekly', (_req: Request, res: Response) => {
+router.get('/weekly', async (_req: Request, res: Response) => {
     try {
-        res.json(getWeeklyFeatureData());
+        res.json(await getWeeklyFeatureData());
     } catch (error) {
         console.error('Weekly data error:', error);
         res.status(500).json({ error: 'Failed to fetch weekly data' });
@@ -50,9 +50,9 @@ router.get('/weekly', (_req: Request, res: Response) => {
  * GET /api/features/daily
  * Returns pie-chart data: [{ name, value }, ...] for traffic distribution by weekday.
  */
-router.get('/daily', (_req: Request, res: Response) => {
+router.get('/daily', async (_req: Request, res: Response) => {
     try {
-        res.json(getDailyTrafficData());
+        res.json(await getDailyTrafficData());
     } catch (error) {
         console.error('Daily data error:', error);
         res.status(500).json({ error: 'Failed to fetch daily data' });
@@ -63,9 +63,9 @@ router.get('/daily', (_req: Request, res: Response) => {
  * GET /api/features/total
  * Returns the total number of recorded interactions.
  */
-router.get('/total', (_req: Request, res: Response) => {
+router.get('/total', async (_req: Request, res: Response) => {
     try {
-        res.json({ total: getTotalInteractions() });
+        res.json({ total: await getTotalInteractions() });
     } catch (error) {
         console.error('Total count error:', error);
         res.status(500).json({ error: 'Failed to fetch total' });

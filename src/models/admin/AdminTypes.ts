@@ -16,7 +16,8 @@ export interface User {
     role: string;
     status: 'Active' | 'Suspended';
     registered: string;
-    last_login: string;
+    last_active: string;
+    isOnline: boolean;
 }
 
 export interface Notification {

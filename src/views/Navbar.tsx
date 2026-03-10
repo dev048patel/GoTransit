@@ -7,14 +7,13 @@ import logo from '../New-Image.jpeg';
 
 interface NavbarProps {
     onPlaceSelect?: (place: any) => void;
-    onTripPlannerClick?: () => void;
     routes?: Route[];
     selectedRoute?: string | null;
     onRouteSelect?: (routeNum: string | null) => void;
 }
 
 // Function is for giving autocomplete suggestions for places
-export default function Navbar({ onPlaceSelect, onTripPlannerClick, routes, selectedRoute, onRouteSelect }: NavbarProps) {
+export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSelect }: NavbarProps) {
     const [showResults, setShowResults] = useState(false);
     const { isAdmin } = useAuth();
 
@@ -303,33 +302,6 @@ export default function Navbar({ onPlaceSelect, onTripPlannerClick, routes, sele
                     </div>
                 )}
 
-                {/* Trip Planner Button */}
-                <button
-                    onClick={onTripPlannerClick}
-                    className="navbar-trip-btn"
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        padding: '7px 14px',
-                        backgroundColor: '#1a73e8',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '20px',
-                        fontSize: '13px',
-                        fontWeight: '500',
-                        cursor: 'pointer',
-                        transition: 'background-color 0.2s',
-                        whiteSpace: 'nowrap',
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1557b0'}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1a73e8'}
-                >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ flexShrink: 0 }}>
-                        <path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
-                    </svg>
-                    <span className="navbar-trip-label">Trip Planner</span>
-                </button>
                 {/* Admin link — only visible to users with role = 'admin' */}
                 {isAdmin && (
                     <Link to="/admin" style={{ textDecoration: 'none' }}>
@@ -396,12 +368,6 @@ export default function Navbar({ onPlaceSelect, onTripPlannerClick, routes, sele
                         min-width: 110px !important;
                         font-size: 12px !important;
                         padding: 6px 8px !important;
-                    }
-                    .navbar-trip-label {
-                        display: none;
-                    }
-                    .navbar-trip-btn {
-                        padding: 7px 10px !important;
                     }
                     .navbar-admin-label {
                         display: none;

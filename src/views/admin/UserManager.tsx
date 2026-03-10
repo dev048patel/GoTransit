@@ -51,7 +51,7 @@ export default function UserManager() {
     /* ── CSV Export ──────────────────────────────────────────────── */
     const handleExportCsv = () => {
         const headers = ['Name', 'Email', 'Role', 'Status', 'Registered', 'Last Active'];
-        const rows = users.map(u => [u.name, u.email, u.role, u.status, u.registered, u.last_login]);
+        const rows = users.map(u => [u.name, u.email, u.role, u.status, u.registered, u.last_active]);
         const csvContent = [headers, ...rows]
             .map(row => row.map(cell => `"${cell}"`).join(','))
             .join('\n');
@@ -145,7 +145,14 @@ export default function UserManager() {
                                         <td className="px-6 py-3"><RoleBadge role={user.role} /></td>
                                         <td className="px-6 py-3"><StatusDot status={user.status} /></td>
                                         <td className="px-6 py-3 text-sm text-gray-500">{user.registered}</td>
-                                        <td className="px-6 py-3 text-sm text-gray-500">{user.last_login}</td>
+                                        <td className="px-6 py-3">
+                                            <div className="flex items-center gap-1.5">
+                                                <span className={`w-2 h-2 rounded-full ${user.isOnline ? 'bg-green-500' : 'bg-gray-300'}`} />
+                                                <span className={`text-xs font-medium ${user.isOnline ? 'text-green-700' : 'text-gray-500'}`}>
+                                                    {user.isOnline ? 'Online' : user.last_active}
+                                                </span>
+                                            </div>
+                                        </td>
                                         <td className="px-6 py-3">
                                             <div className="flex items-center gap-2">
                                                 {/* Edit */}
