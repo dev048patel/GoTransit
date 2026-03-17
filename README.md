@@ -44,13 +44,61 @@ Real-time transit tracking and route planning application for Regina, Saskatchew
 ## 🧠 Architecture (MVC)
 
 The project follows a **strict Model–View–Controller (MVC)** structure for scalability and maintainability.
+```
+src/
+├── App.tsx, index.tsx, server.ts      (entry points)
+│
+├── models/                            (data layer)
+│   ├── transit/      → Route, Stop, BusPosition types
+│   ├── auth/         → AuthModel types
+│   ├── admin/        → AdminTypes
+│   ├── landing/      → LandingTypes
+│   ├── components/   → component prop types
+│   ├── controllers/  → MapControllerOutput type
+│   ├── views/        → MapViewProps, NavbarProps
+│   ├── services/     → TransitService, AuthService, AnalyticsService, TimeService
+│   ├── repositories/ → RouteRepository, StopRepository
+│   ├── data/         → transitRoutes, transitStops, JSON files, mock/
+│   ├── lib/          → Supabase clients
+│   └── context/      → AuthContext
+│
+├── views/                             (UI layer)
+│   ├── auth/         → LoginPage, SignupPage, ProfilePage
+│   ├── admin/        → Dashboard, RouteManager, UserManager, VisitorAnalytics
+│   ├── landing/      → LandingPage, sections/
+│   ├── components/   → ProtectedRoute, AdminRoute, transit/*, admin/*
+│   ├── layouts/      → AdminLayout
+│   └── MapPage, MapView, Navbar, ConnectPage
+│
+└── controllers/                       (logic layer)
+    ├── auth/         → useLogin, useSignup, useProfile
+    ├── admin/        → useDashboard, useRouteManager, useUserManager, useVisitorAnalytics
+    ├── landing/      → useLandingController
+    ├── routes/       → transit.routes, analytics.routes, feature.routes
+    ├── middleware/    → visitorTracker, featureTracker
+    ├── hooks/        → useAnalyticsBeacon
+    └── useMapController, useNavbarController, useBusSuggestionController, useTripPlannerController, TransitController
+
+```
 ---
 
 ## 🔄 Data Flow
 
-- **Views** → Pure UI (no business logic or API calls)  
-- **Controllers** → Handle state, user actions, orchestration  
-- **Models** → Own data, APIs, and business logic  
+```
+User Action
+    ↓
+View (React component — pure UI rendering)
+    ↓ calls hook
+Controller (useXxxController — state + orchestration)
+    ↓ calls
+Model / Services (business logic + API calls)
+    ↓ reads from
+Model / Repositories → Model / Data (static data)
+    ↓ returns data
+Controller (manages state)
+    ↓ passes via props / hook return
+View (renders UI)
+```
 
 ---
 
