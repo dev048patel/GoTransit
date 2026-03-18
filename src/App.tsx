@@ -23,11 +23,11 @@ import './App.css';
 
 import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { useAnalyticsBeacon } from './hooks/useAnalyticsBeacon';
-import { AuthProvider, useAuth } from './context/AuthContext';
-import ProtectedRoute from './components/ProtectedRoute';
-import PublicOnlyRoute from './components/PublicOnlyRoute';
-import AdminRoute from './components/AdminRoute';
+import { useAnalyticsBeacon } from './controllers/hooks/useAnalyticsBeacon';
+import { AuthProvider, useAuth } from './models/context/AuthContext';
+import ProtectedRoute from './views/components/ProtectedRoute';
+import PublicOnlyRoute from './views/components/PublicOnlyRoute';
+import AdminRoute from './views/components/AdminRoute';
 import ProfilePage from './views/auth/ProfilePage';
 import logo from './New-Image.jpeg';
 
@@ -37,7 +37,7 @@ const LandingPage = React.lazy(() => import('./views/landing/LandingPage'));
 const LoginPage = React.lazy(() => import('./views/auth/LoginPage'));
 const SignupPage = React.lazy(() => import('./views/auth/SignupPage'));
 const ConnectPage = React.lazy(() => import('./views/ConnectPage'));
-const AdminLayout = React.lazy(() => import('./layouts/AdminLayout'));
+const AdminLayout = React.lazy(() => import('./views/layouts/AdminLayout'));
 const Dashboard = React.lazy(() => import('./views/admin/Dashboard'));
 const RouteManager = React.lazy(() => import('./views/admin/RouteManager'));
 const UserManager = React.lazy(() => import('./views/admin/UserManager'));

@@ -4,14 +4,14 @@
  * @purpose Initializes the App, sets up middleware (CORS, JSON), and mounts routes.
  */
 import dotenv from 'dotenv';
-// Load environment variables from .env.local
+// Load environment variables from .env.local (only needed locally; Railway sets vars directly)
 dotenv.config({ path: '.env.local' });
 
 import express from 'express';
 import cors from 'cors'; // Cross Origin Resource Sharing : Allow cross-origin requests (Frontend -> Backend) like React -> Node.js ( Port 3000 -> Port 3001)
-import transitRoutes from './routes/transit.routes';
-import analyticsRoutes from './routes/analytics.routes';
-import featureRoutes from './routes/feature.routes';
+import transitRoutes from './controllers/routes/transit.routes';
+import analyticsRoutes from './controllers/routes/analytics.routes';
+import featureRoutes from './controllers/routes/feature.routes';
 
 const app = express();
 const port = Number(process.env.PORT) || 3001; // Railway assigns PORT dynamically

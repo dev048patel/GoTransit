@@ -52,7 +52,7 @@ export default function LandingFooter() {
                     className="mt-10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs"
                     style={{ borderTop: '1px solid rgba(0,0,0,0.06)', color: '#94a3b8' }}
                 >
-                    <p>© 2026 GoTransit Regina. Built with ❤️ for Regina commuters.</p>
+                    <p>© 2026 GoTransit Regina. Built for Regina Commuters 🤟.</p>
                     <p>Powered by Regina Transit · Google Maps · Twilio</p>
                 </div>
             </div>

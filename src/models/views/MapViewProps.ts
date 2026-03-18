@@ -1,3 +1,4 @@
+/* Props interface for MapView — all map state, markers, overlays, and handlers passed from the controller */
 import React from 'react';
 import { Coordinates, MapOptions } from '../MapModel';
 import { Stop } from '../transit/Stop';

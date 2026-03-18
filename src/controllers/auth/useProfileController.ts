@@ -7,8 +7,8 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '../../lib/supabase';
-import { useAuth } from '../../context/AuthContext';
+import { supabase } from '../../models/lib/supabase';
+import { useAuth } from '../../models/context/AuthContext';
 
 /* ── Types ──────────────────────────────────────────────────────── */
 export interface ProfileData {

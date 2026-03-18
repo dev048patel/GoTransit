@@ -16,7 +16,7 @@ import { Linkedin, ArrowLeft, Github } from 'lucide-react';
 interface Developer {
     name: string;
     role: string;
-    bio: string;
+    // bio: string;
     linkedin: string;
     github?: string;
     /* Use a URL or leave as empty string to show initials avatar */
@@ -26,20 +26,51 @@ interface Developer {
 /* ── UPDATE THIS ARRAY with real team details ── */
 const developers: Developer[] = [
     {
-        name: 'Dev Patel',
+        name: 'Dev Paresh Patel',
         role: 'Backend & Application Security Engineer',
-        bio: 'Computer Science student at University of Regina. Passionate about building tools that improve everyday life.',
+        // bio: 'Computer Science student at University of Regina. Passionate about building tools that improve everyday life.',
         linkedin: 'https://www.linkedin.com/in/dev-patel-itsme/',
         github: 'https://github.com/dev048patel',
         photo: '',
     },
-    // Add more developers here ↓
     {
       name: 'Nirjar Patel',
       role: 'QA Analyst & Application Architect',
-      bio: 'Computer Science student at University of Regina. Passionate about building tools that improve everyday life.',
+    //   bio: 'Computer Science student at University of Regina. Passionate about building tools that improve everyday life.',
       linkedin: 'https://www.linkedin.com/in/nirjarpatel/',
       github: 'https://github.com/nirjar1012',
+      photo: '',
+    },
+     {
+      name: 'Dev Pradipbhai Patel',
+      role: 'Technical Documentation & Frontend Support',
+    //   bio: 'Computer Science student at University of Regina. Passionate about building tools that improve everyday life.',
+      linkedin: 'www.linkedin.com/in/dev-patel-5034363b2',
+      github: 'https://github.com/DPP835',
+      photo: '',
+    },
+     {
+      name: 'Prakhar Patel',
+      role: 'Map UI & Visualization Developer',
+    //   bio: 'Computer Science student at University of Regina. Passionate about building tools that improve everyday life.',
+      linkedin: 'https://www.linkedin.com/in/prakhar-patel-51b579302/',
+      github: 'https://github.com/prakharpatel2605-png',
+      photo: '',
+    },
+     {
+      name: 'Shlok Patel',
+      role: 'Backend Integration & Feature Support Developer',
+    //   bio: 'Computer Science student at University of Regina. Passionate about building tools that improve everyday life.',
+      linkedin: 'https://www.linkedin.com/in/shlok-patel-32012922a/',
+      github: 'https://github.com/Shlok-Patel-1906',
+      photo: '',
+    },
+     {
+      name: 'Vraj Patel',
+      role: 'Frontend Infrastructure & Build Engineer',
+    //   bio: 'Computer Science student at University of Regina. Passionate about building tools that improve everyday life.',
+      linkedin: 'https://www.linkedin.com/in/vraj-patel-592488213/',
+      github: 'https://github.com/Vraj1554',
       photo: '',
     },
 ];
@@ -82,7 +113,7 @@ export default function ConnectPage() {
                 }}
             />
 
-            <div className="relative z-10 max-w-4xl mx-auto px-6 py-20">
+            <div className="relative z-10 max-w-6xl mx-auto px-6 py-20">
 
                 {/* Back link */}
                 <motion.div
@@ -118,7 +149,7 @@ export default function ConnectPage() {
                 </motion.div>
 
                 {/* Developer cards */}
-                <div className={`grid gap-8 ${developers.length === 1 ? 'max-w-sm mx-auto' : 'grid-cols-1 md:grid-cols-2'}`}>
+                <div className={`grid gap-8 ${developers.length === 1 ? 'max-w-sm mx-auto' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'}`}>
                     {developers.map((dev, i) => (
                         <motion.div
                             key={dev.name}
@@ -144,7 +175,7 @@ export default function ConnectPage() {
                             <p className="text-sm font-medium mb-4" style={{ color: '#003DA5' }}>{dev.role}</p>
 
                             {/* Bio */}
-                            <p className="text-sm leading-relaxed mb-6" style={{ color: '#64748b' }}>{dev.bio}</p>
+                            {/* <p className="text-sm leading-relaxed mb-6" style={{ color: '#64748b' }}>{dev.bio}</p> */}
 
                             {/* Links */}
                             <div className="flex justify-center gap-3">

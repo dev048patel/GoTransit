@@ -8,11 +8,11 @@ import { useLoadScript } from '@react-google-maps/api';
 import { MapModel, Coordinates, MapOptions } from '../models/MapModel';
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { Stop } from '../models/transit/Stop';
-import transitRoutes from '../data/transitRoutes';
-import transitColors from '../data/transitColors';
+import transitRoutes from '../models/data/transitRoutes';
+import transitColors from '../models/data/transitColors';
 import { Route } from '../models/transit/Route';
 import { BusPosition } from '../models/transit/BusPosition';
-import { getStopsForRoute } from '../services/StopToRouteIndex';
+import { getStopsForRoute } from '../models/services/StopToRouteIndex';
 import { MapControllerOutput } from '../models/controllers/MapControllerOutput';
 
 export const useMapController = (): MapControllerOutput => {
@@ -136,7 +136,7 @@ export const useMapController = (): MapControllerOutput => {
   */
   useEffect(() => {
     if (selectedRoute && !shapesData) {
-      import('../data/transitShapes.json').then((module) => {
+      import('../models/data/transitShapes.json').then((module) => {
         setShapesData(module.default);
       });
     }

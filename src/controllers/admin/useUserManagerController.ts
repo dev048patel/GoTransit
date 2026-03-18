@@ -10,7 +10,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { User } from '../../models/admin/AdminTypes';
-import { getAllUsers, updateUserProfile, softDeleteUser } from '../../services/UserRegistry';
+import { getAllUsers, updateUserProfile, softDeleteUser } from '../../models/services/UserRegistry';
 
 export interface EditFields {
     full_name: string;

@@ -1,3 +1,4 @@
+/* Final call-to-action section for the landing page — drives users to start using the app */
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';

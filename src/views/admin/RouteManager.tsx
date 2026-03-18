@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import StatusBadge from '../../components/admin/StatusBadge';
+import StatusBadge from '../components/admin/StatusBadge';
 import { Edit2, Eye, EyeOff, Search } from 'lucide-react';
 import { useRouteManagerController } from '../../controllers/admin/useRouteManagerController';
 import { Route } from '../../models/admin/AdminTypes';

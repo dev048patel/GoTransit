@@ -10,8 +10,8 @@
  */
 
 import { useState, useEffect } from 'react';
-import { getRealUserCount } from '../../services/UserRegistry';
-import transitRoutes from '../../data/transitRoutes';
+import { getRealUserCount } from '../../models/services/UserRegistry';
+import transitRoutes from '../../models/data/transitRoutes';
 
 const baseUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001';
 

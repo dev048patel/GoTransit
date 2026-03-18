@@ -10,8 +10,8 @@
 
 import { useState, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import { validateLogin, isMobileNumber } from '../../services/AuthService';
+import { useAuth } from '../../models/context/AuthContext';
+import { validateLogin, isMobileNumber } from '../../models/services/AuthService';
 
 interface LoginControllerOutput {
     identifier: string;

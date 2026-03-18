@@ -1,3 +1,4 @@
+/* Visual demo section for the landing page — animated screenshot slideshow of the app in action */
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 

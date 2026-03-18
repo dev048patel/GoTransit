@@ -14,7 +14,7 @@ import {
     getPasswordStrength,
     formatMobile,
     signUpUser,
-} from '../../services/AuthService';
+} from '../../models/services/AuthService';
 
 // Controller output type
 interface SignupControllerOutput {

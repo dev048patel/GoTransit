@@ -5,10 +5,10 @@ This file is Backend Part, where all the logic is implemented. ( Answer API call
 3. Return the response to the client ( JSON response)
  */
 import { Request, Response } from 'express';
-import { TransitService } from '../services/TransitService';
-import { RealTimeService } from '../services/RealTimeService';
-import { StopPredictionService } from '../services/StopPredictionService';
-import { setOverride } from '../services/routeOverrides';
+import { TransitService } from '../models/services/TransitService';
+import { RealTimeService } from '../models/services/RealTimeService';
+import { StopPredictionService } from '../models/services/StopPredictionService';
+import { setOverride } from '../models/services/routeOverrides';
 
 // Initialize the Service
 const transitService = new TransitService();

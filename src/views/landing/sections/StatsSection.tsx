@@ -1,3 +1,4 @@
+/* Stats section for the landing page — animated counters showing route, stop, and accuracy metrics */
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Route, MapPin, Target } from 'lucide-react';
@@ -48,6 +49,11 @@ function AnimatedCounter({ targetValue }: { targetValue: string }) {
 
     const formattedCount = count >= 1000 ? count.toLocaleString() : count.toString();
 
+    const isNonNumeric = !/\d/.test(targetValue);
+    if (isNonNumeric) {
+        return <div ref={ref}>{targetValue}</div>;
+    }
+
     return (
         <div ref={ref}>
             {formattedCount}{suffix}
@@ -59,7 +65,7 @@ export default function StatsSection({ stats }: StatsSectionProps) {
     return (
         <section className="relative py-24 overflow-hidden">
             <div className="relative z-10 max-w-7xl mx-auto px-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
                     {stats.map((stat, index) => {
                         const Icon = iconMap[stat.icon] || MapPin;
 

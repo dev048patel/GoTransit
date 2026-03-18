@@ -1,6 +1,5 @@
-// This file is 
-
-import { heroContent, stats, features, steps, problemSolutions, faqItems, technologies, testimonials } from '../../data/mock/landingMockData';
+/* Landing page controller — aggregates mock data for all landing page sections */
+import { heroContent, stats, features, steps, problemSolutions, faqItems, technologies, testimonials } from '../../models/data/mock/landingMockData';
 
 export function useLandingController() {
     return {

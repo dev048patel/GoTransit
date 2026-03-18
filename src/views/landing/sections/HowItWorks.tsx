@@ -1,3 +1,4 @@
+/* How-it-works section for the landing page — three-step walkthrough of the app flow */
 import React from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Bell, Bus } from 'lucide-react';

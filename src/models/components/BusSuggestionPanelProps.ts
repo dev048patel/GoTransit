@@ -1,3 +1,4 @@
+/* Props interface for the BusSuggestionPanel component — defines trip options, bus positions, and callbacks */
 import { TripOption } from '../transit/RoutePlanning';
 import { BusPosition } from '../transit/BusPosition';
 

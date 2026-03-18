@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+/* Navbar — top navigation bar with search autocomplete, route selector, admin link, and profile icon */
+import React from 'react';
 import { Link } from 'react-router-dom';
-import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
-import { Route } from '../models/Route';
-import { useAuth } from '../context/AuthContext';
+import { Route } from '../models/transit/Route';
+import { useAuth } from '../models/context/AuthContext';
+import { useNavbarController } from '../controllers/useNavbarController';
 import logo from '../New-Image.jpeg';
 
 interface NavbarProps {
@@ -12,63 +13,11 @@ interface NavbarProps {
     onRouteSelect?: (routeNum: string | null) => void;
 }
 
-// Function is for giving autocomplete suggestions for places
+// Renders the top navbar with search, route filter, admin link, and profile
 export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSelect }: NavbarProps) {
-    const [showResults, setShowResults] = useState(false);
     const { isAdmin } = useAuth();
-
-    // Use Google Places Autocomplete hook
-    const {
-        ready,
-        value,
-        suggestions: { status, data },
-        setValue,
-        clearSuggestions,
-    } = usePlacesAutocomplete({
-        requestOptions: {
-            location: new google.maps.LatLng(50.4452, -104.6189), // Regina, Saskatchewan
-            radius: 50 * 1000, // 50km radius
-        },
-        debounce: 300, // 300ms debounce built-in
-    });
-
-    // Function is for handling input changes
-    const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setValue(e.target.value);
-        setShowResults(true);
-    };
-
-    // function is for handling place selection
-    const handleSelect = async (description: string, placeId: string) => {
-        setValue(description, false);
-        clearSuggestions();
-        setShowResults(false);
-
-        try {
-            // Get place details
-            const results = await getGeocode({ address: description });
-            const { lat, lng } = await getLatLng(results[0]);
-
-            // Call the onPlaceSelect callback if provided
-            if (onPlaceSelect) {
-                onPlaceSelect({
-                    id: placeId,
-                    displayName: description,
-                    location: { lat, lng },
-                });
-            }
-
-            // Track "places" event for admin dashboard analytics
-            const baseUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001';
-            fetch(`${baseUrl}/api/features/track`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type: 'places' }),
-            }).catch(() => { }); // Silent fail — analytics should never break the app
-        } catch (error) {
-            console.error('Error selecting place:', error);
-        }
-    };
+    // All search logic lives in the controller
+    const { ready, value, status, data, showResults, handleInput, handleSelect, handleFocus } = useNavbarController(onPlaceSelect);
 
     return (
         <nav style={{
@@ -88,7 +37,7 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
             overflow: 'visible',
             gap: '8px',
         }}>
-            {/* Logo — app logo image, links to landing page */}
+            {/* Logo — links to landing page */}
             <Link to="/" style={{
                 textDecoration: 'none',
                 flexShrink: 0,
@@ -108,7 +57,7 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                 />
             </Link>
 
-            {/* Center - Search with Autocomplete */}
+            {/* Center — Search with Google Places Autocomplete */}
             <div className="navbar-search" style={{
                 flex: 1,
                 maxWidth: '500px',
@@ -131,7 +80,7 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                         placeholder="Search for places..."
                         value={value}
                         onChange={handleInput}
-                        onFocus={() => data.length > 0 && setShowResults(true)}
+                        onFocus={handleFocus}
                         disabled={!ready}
                         style={{
                             border: 'none',
@@ -204,7 +153,7 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                 )}
             </div>
 
-            {/* Right side - Actions */}
+            {/* Right side — Actions */}
             <div style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -302,7 +251,7 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                     </div>
                 )}
 
-                {/* Admin link — only visible to users with role = 'admin' */}
+                {/* Admin link — only visible to admin role users */}
                 {isAdmin && (
                     <Link to="/admin" style={{ textDecoration: 'none' }}>
                         <div style={{
@@ -329,7 +278,7 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                         </div>
                     </Link>
                 )}
-                {/* Profile Icon — links to /profile */}
+                {/* Profile Icon — links to user profile page */}
                 <Link to="/profile" style={{ textDecoration: 'none', flexShrink: 0 }}>
                     <div style={{
                         width: '34px',
@@ -359,7 +308,7 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                     100% { transform: rotate(360deg); }
                 }
 
-                /* ── Mobile breakpoint (≤768px) ─────────────────── */
+                /* Mobile breakpoint */
                 @media (max-width: 768px) {
                     .navbar-search {
                         margin: 0 4px !important;
@@ -374,7 +323,7 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                     }
                 }
 
-                /* ── Very small screens (≤480px) ────────────────── */
+                /* Very small screens */
                 @media (max-width: 480px) {
                     .navbar-route-select {
                         min-width: 90px !important;

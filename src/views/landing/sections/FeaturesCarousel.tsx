@@ -1,3 +1,4 @@
+/* Features carousel section for the landing page — animated cards showcasing app capabilities */
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Navigation, Bell, Heart, AlertTriangle, Calendar, Map } from 'lucide-react';

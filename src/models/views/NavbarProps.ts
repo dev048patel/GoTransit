@@ -1,3 +1,4 @@
+/* Props interface for the Navbar component — routes list, place selection, and trip planner callbacks */
 import { Route } from '../transit/Route';
 
 export interface NavbarProps {

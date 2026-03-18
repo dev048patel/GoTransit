@@ -9,10 +9,10 @@ import { TripOption } from '../models/transit/RoutePlanning';
 import { BusPosition } from '../models/transit/BusPosition';
 import { MapViewProps } from '../models/views/MapViewProps';
 import Navbar from './Navbar';
-import TripPlannerModal from '../components/transit/TripPlannerModal';
-import BusSuggestionPanel from '../components/transit/BusSuggestionPanel';
-import RouteTrackingOverlay from '../components/transit/RouteTrackingOverlay';
-import TrackingPanel from '../components/transit/TrackingPanel';
+import TripPlannerModal from './components/transit/TripPlannerModal';
+import BusSuggestionPanel from './components/transit/BusSuggestionPanel';
+import RouteTrackingOverlay from './components/transit/RouteTrackingOverlay';
+import TrackingPanel from './components/transit/TrackingPanel';
 
 /*
  -> <MapView isLoaded={...} center={...} />
@@ -105,7 +105,6 @@ export const MapView: React.FC<MapViewProps> = ({
       {!activeTracking && (
         <Navbar
           onPlaceSelect={handlePlaceSelectWithPopup}
-          onTripPlannerClick={() => setShowTripPlanner(true)}
           routes={routes}
           selectedRoute={selectedRoute}
           onRouteSelect={setSelectedRoute}

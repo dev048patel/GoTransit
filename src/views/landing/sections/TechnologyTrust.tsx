@@ -1,3 +1,4 @@
+/* Technology trust section for the landing page — displays the tech stack powering the app */
 import React from 'react';
 import { motion } from 'framer-motion';
 
@@ -38,7 +39,7 @@ export default function TechnologyTrust({ technologies }: TechnologyTrustProps) 
                 </motion.div>
 
                 {/* Technology Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
                     {technologies.map((tech, index) => (
                         <motion.div
                             key={tech.name}

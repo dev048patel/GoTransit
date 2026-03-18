@@ -1,3 +1,4 @@
+/* Return type for useMapController — bundles map state, refs, and handler functions consumed by MapView */
 import React from 'react';
 import { Coordinates, MapOptions } from '../MapModel';
 import { Stop } from '../transit/Stop';
