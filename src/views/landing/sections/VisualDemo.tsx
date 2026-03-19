@@ -3,10 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 /* ── App screenshots for demo steps ── */
-import ssMapOverview from '../../../SS01.png';
-import ssRouteSelect from '../../../SS02.png';
-import ssRouteTrack from '../../../SS03.png';
-import ssRoutePlanner from '../../../SS04.png';
+import ssMapOverview from '../../images/SS01.png';
+import ssRouteSelect from '../../images/SS02.png';
+import ssRouteTrack from '../../images/SS03.png';
+import ssRoutePlanner from '../../images/SS04.png';
 
 const demoSteps = [
     { id: 1, title: 'Open App', description: 'Launch GoTransit Regina', screenshot: ssRouteSelect },

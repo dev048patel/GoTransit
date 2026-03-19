@@ -12,7 +12,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
-    MapPin,
+
     LogOut, Trash2, CheckCircle2, Pencil,
     Eye,
     ArrowLeft, KeyRound,
@@ -173,7 +173,7 @@ function DeleteConfirm({ onConfirm, onCancel, loading }: { onConfirm: () => void
 /* ================================================================== */
 export default function ProfilePage() {
     const {
-        user, profile, prefs,
+        user, profile,
         profileLoading,
         showPasswordModal, setShowPasswordModal,
         newPassword, setNewPassword,
@@ -189,7 +189,6 @@ export default function ProfilePage() {
         deleteLoading,
         handleDeleteAccount,
         handleLogout,
-        updatePref,
     } = useProfileController();
 
     const fullName = profile?.full_name ?? user?.fullName ?? '—';
@@ -346,17 +345,6 @@ export default function ProfilePage() {
                     )}
                 </SectionCard>
 
-                {/* TRANSIT PREFERENCES */}
-                <SectionCard title="Transit Preferences" icon={MapPin}>
-                    <div className="mb-4">
-                        <label className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2 block">Favourite Stops</label>
-                        <p className="text-sm text-gray-400 italic">No favourite stops selected yet.</p>
-                    </div>
-                    <div>
-                        <label className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2 block">Favourite Routes</label>
-                        <p className="text-sm text-gray-400 italic">No favourite routes selected yet.</p>
-                    </div>
-                </SectionCard>
 
 
 

@@ -4,11 +4,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Navigation, Bell, Heart, AlertTriangle, Calendar, Map } from 'lucide-react';
 
 /* ── App screenshots for each feature ── */
-import ssRealTime from '../../../SS01.png';
-import ssRouteSelect from '../../../SS02.png';
-import ssRouteTrack from '../../../SS03.png';
-import ssRoutePlanner from '../../../SS04.png';
-import ssSavedStops from '../../../SS06.png';
+import ssRealTime from '../../images/SS01.png';
+import ssRouteSelect from '../../images/SS02.png';
+import ssRouteTrack from '../../images/SS03.png';
+import ssRoutePlanner from '../../images/SS04.png';
+import ssSavedStops from '../../images/SS06.png';
 
 interface FeaturesCarouselProps {
     features: Array<{
