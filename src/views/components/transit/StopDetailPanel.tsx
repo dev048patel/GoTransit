@@ -1,4 +1,4 @@
-/* StopDetailPanel — dark-themed departure board showing all routes & predictions for a selected stop */
+/* StopDetailPanel — departure board showing all routes & predictions for a selected stop */
 import React from 'react';
 import { StopDetailPanelProps } from '../../../models/components/StopDetailPanelProps';
 import { useStopDetailController, RouteGroup } from '../../../controllers/useStopDetailController';
@@ -18,19 +18,19 @@ export default function StopDetailPanel({ stop, onClose }: StopDetailPanelProps)
             {/* Header */}
             <div style={headerStyle}>
                 <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: '700', fontSize: '17px', color: '#e6edf3' }}>
+                    <div style={{ fontWeight: '700', fontSize: '16px', color: '#202124' }}>
                         {stop.STOP_NAME}
                     </div>
                     {crossStreet && (
-                        <div style={{ fontSize: '12px', color: '#8b949e', marginTop: '2px' }}>
+                        <div style={{ fontSize: '12px', color: '#5f6368', marginTop: '2px' }}>
                             {crossStreet}
                         </div>
                     )}
                     <div style={{
                         display: 'inline-block', marginTop: '6px',
-                        fontSize: '11px', color: '#8b949e',
-                        backgroundColor: '#21262d', padding: '2px 8px',
-                        borderRadius: '6px', border: '1px solid #30363d'
+                        fontSize: '11px', color: '#5f6368',
+                        backgroundColor: '#f1f3f4', padding: '2px 8px',
+                        borderRadius: '6px'
                     }}>
                         Stop #{stop.STOP_ID}
                     </div>
@@ -41,10 +41,10 @@ export default function StopDetailPanel({ stop, onClose }: StopDetailPanelProps)
                         disabled={loading}
                         title="Refresh predictions"
                         style={{
-                            background: 'none', border: '1px solid #30363d', borderRadius: '50%',
+                            background: 'none', border: '1px solid #dadce0', borderRadius: '50%',
                             width: '32px', height: '32px', cursor: loading ? 'not-allowed' : 'pointer',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            fontSize: '16px', color: '#8b949e', opacity: loading ? 0.5 : 1,
+                            fontSize: '16px', color: '#5f6368', opacity: loading ? 0.5 : 1,
                             transition: 'all 0.2s'
                         }}
                     >
@@ -60,7 +60,7 @@ export default function StopDetailPanel({ stop, onClose }: StopDetailPanelProps)
             <div style={badgeStripStyle}>
                 {allRoutes.map(routeNum => {
                     const group = routeGroups.find(g => g.routeId === routeNum);
-                    const color = group?.routeColor || '#6e7681';
+                    const color = group?.routeColor || '#9aa0a6';
                     return (
                         <span key={routeNum} style={{
                             backgroundColor: color,
@@ -94,9 +94,9 @@ export default function StopDetailPanel({ stop, onClose }: StopDetailPanelProps)
                         <button
                             onClick={handleRefresh}
                             style={{
-                                marginLeft: '8px', background: 'none', border: '1px solid #f85149',
+                                marginLeft: '8px', background: 'none', border: '1px solid #d93025',
                                 borderRadius: '6px', padding: '4px 12px', cursor: 'pointer',
-                                fontSize: '12px', color: '#f85149', fontWeight: '600'
+                                fontSize: '12px', color: '#d93025', fontWeight: '600'
                             }}
                         >
                             Retry
@@ -107,8 +107,8 @@ export default function StopDetailPanel({ stop, onClose }: StopDetailPanelProps)
                 {!loading && !error && routeGroups.length === 0 && (
                     <div style={emptyStyle}>
                         <div style={{ fontSize: '32px', marginBottom: '8px' }}>🕐</div>
-                        <div style={{ fontWeight: '500', color: '#c9d1d9' }}>No departures scheduled</div>
-                        <div style={{ fontSize: '12px', color: '#8b949e', marginTop: '4px' }}>
+                        <div style={{ fontWeight: '500', color: '#202124' }}>No departures scheduled</div>
+                        <div style={{ fontSize: '12px', color: '#5f6368', marginTop: '4px' }}>
                             There are no predicted arrivals for this stop right now
                         </div>
                     </div>
@@ -124,7 +124,7 @@ export default function StopDetailPanel({ stop, onClose }: StopDetailPanelProps)
                 <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <span style={{
                         width: '6px', height: '6px', borderRadius: '50%',
-                        backgroundColor: '#3fb950', display: 'inline-block',
+                        backgroundColor: '#34a853', display: 'inline-block',
                         animation: 'pulse 2s infinite',
                     }} />
                     Auto-refreshing every 30s
@@ -137,8 +137,8 @@ export default function StopDetailPanel({ stop, onClose }: StopDetailPanelProps)
             <style>{`
                 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
                 @keyframes chipPulse {
-                    0%, 100% { box-shadow: 0 0 0 0 rgba(63, 185, 80, 0.4); }
-                    50% { box-shadow: 0 0 0 6px rgba(63, 185, 80, 0); }
+                    0%, 100% { box-shadow: 0 0 0 0 rgba(26, 115, 232, 0.3); }
+                    50% { box-shadow: 0 0 0 6px rgba(26, 115, 232, 0); }
                 }
                 @keyframes pulse {
                     0%, 100% { opacity: 1; }
@@ -152,14 +152,12 @@ export default function StopDetailPanel({ stop, onClose }: StopDetailPanelProps)
 function RouteCard({ group, isNearest }: { group: RouteGroup; isNearest: boolean }) {
     return (
         <div style={{
-            backgroundColor: '#161b22',
+            backgroundColor: '#f8f9fa',
             borderRadius: '12px',
             padding: '14px',
             marginBottom: '10px',
+            border: '1px solid #e8eaed',
             borderLeft: `4px solid ${group.routeColor}`,
-            border: `1px solid #30363d`,
-            borderLeftWidth: '4px',
-            borderLeftColor: group.routeColor,
         }}>
             {/* Route header */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
@@ -173,13 +171,13 @@ function RouteCard({ group, isNearest }: { group: RouteGroup; isNearest: boolean
                 }}>
                     Route {group.routeId}
                 </span>
-                <span style={{ color: '#c9d1d9', fontSize: '14px', fontWeight: '500' }}>
+                <span style={{ color: '#202124', fontSize: '14px', fontWeight: '500' }}>
                     {group.lineName}
                 </span>
             </div>
 
             {group.endTime && (
-                <div style={{ fontSize: '11px', color: '#8b949e', marginBottom: '10px' }}>
+                <div style={{ fontSize: '11px', color: '#5f6368', marginBottom: '10px' }}>
                     Service until {group.endTime}
                 </div>
             )}
@@ -191,8 +189,8 @@ function RouteCard({ group, isNearest }: { group: RouteGroup; isNearest: boolean
                     const isArriving = pred.minutesAway <= 3;
                     return (
                         <div key={i} style={{
-                            backgroundColor: isNext ? '#1a3a2a' : '#21262d',
-                            border: isNext ? '1px solid #238636' : '1px solid #30363d',
+                            backgroundColor: isNext ? '#e8f5e9' : 'white',
+                            border: isNext ? '1px solid #34a853' : '1px solid #dadce0',
                             borderRadius: '10px',
                             padding: '8px 12px',
                             textAlign: 'center',
@@ -204,24 +202,24 @@ function RouteCard({ group, isNearest }: { group: RouteGroup; isNearest: boolean
                             <div style={{
                                 fontSize: '18px',
                                 fontWeight: '700',
-                                color: isArriving ? '#3fb950' : '#e6edf3',
+                                color: isArriving ? '#137333' : '#202124',
                                 fontVariantNumeric: 'tabular-nums',
                             }}>
                                 {pred.minutesAway <= 0 ? 'NOW' : `${pred.minutesAway}m`}
                             </div>
                             {/* Actual time */}
-                            <div style={{ fontSize: '11px', color: '#8b949e', marginTop: '2px' }}>
+                            <div style={{ fontSize: '11px', color: '#5f6368', marginTop: '2px' }}>
                                 {pred.predTime.trim()}
                             </div>
                             {/* Bus ID */}
-                            <div style={{ fontSize: '10px', color: '#6e7681', marginTop: '2px' }}>
+                            <div style={{ fontSize: '10px', color: '#80868b', marginTop: '2px' }}>
                                 Bus #{pred.busId}
                             </div>
                             {/* Last stop badge */}
                             {pred.isLastStop && (
                                 <div style={{
                                     position: 'absolute', top: '-6px', right: '-6px',
-                                    backgroundColor: '#da3633', color: 'white',
+                                    backgroundColor: '#d93025', color: 'white',
                                     fontSize: '9px', fontWeight: '700',
                                     padding: '1px 5px', borderRadius: '6px',
                                 }}>
@@ -251,9 +249,9 @@ const panelStyle: React.CSSProperties = {
     right: '10px',
     width: '400px',
     maxHeight: 'calc(100vh - 70px)',
-    backgroundColor: '#0d1117',
+    backgroundColor: 'white',
     borderRadius: '16px',
-    boxShadow: '0 8px 32px rgba(0,0,0,0.28)',
+    boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
     zIndex: 1500,
     display: 'flex',
     flexDirection: 'column',
@@ -265,9 +263,9 @@ const headerStyle: React.CSSProperties = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    padding: '16px 18px 12px',
-    backgroundColor: '#161b22',
-    borderBottom: '1px solid #30363d',
+    padding: '14px 18px',
+    backgroundColor: '#f8f9fa',
+    borderBottom: '1px solid #e8eaed',
 };
 
 const closeBtnStyle: React.CSSProperties = {
@@ -275,7 +273,7 @@ const closeBtnStyle: React.CSSProperties = {
     border: 'none',
     fontSize: '18px',
     cursor: 'pointer',
-    color: '#8b949e',
+    color: '#5f6368',
     padding: '4px 8px',
     borderRadius: '50%',
 };
@@ -285,8 +283,8 @@ const badgeStripStyle: React.CSSProperties = {
     gap: '6px',
     padding: '10px 18px',
     overflowX: 'auto',
-    borderBottom: '1px solid #30363d',
-    backgroundColor: '#161b22',
+    borderBottom: '1px solid #e8eaed',
+    backgroundColor: '#f8f9fa',
 };
 
 const contentStyle: React.CSSProperties = {
@@ -302,26 +300,25 @@ const statusStyle: React.CSSProperties = {
     padding: '24px',
     justifyContent: 'center',
     fontSize: '14px',
-    color: '#8b949e',
+    color: '#5f6368',
 };
 
 const spinnerStyle: React.CSSProperties = {
     width: '14px',
     height: '14px',
-    border: '2px solid #30363d',
-    borderTop: '2px solid #58a6ff',
+    border: '2px solid #dadce0',
+    borderTop: '2px solid #1a73e8',
     borderRadius: '50%',
     animation: 'spin 1s linear infinite',
     display: 'inline-block',
 };
 
 const errorStyle: React.CSSProperties = {
-    color: '#f85149',
+    color: '#d93025',
     fontSize: '13px',
     padding: '8px 12px',
-    backgroundColor: '#2d1215',
+    backgroundColor: '#fce8e6',
     borderRadius: '8px',
-    border: '1px solid #f8514933',
     display: 'flex',
     alignItems: 'center',
 };
@@ -333,10 +330,10 @@ const emptyStyle: React.CSSProperties = {
 
 const footerStyle: React.CSSProperties = {
     padding: '8px 18px',
-    borderTop: '1px solid #30363d',
+    borderTop: '1px solid #e8eaed',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
     fontSize: '11px',
-    color: '#6e7681',
+    color: '#80868b',
 };

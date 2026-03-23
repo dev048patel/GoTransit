@@ -153,12 +153,16 @@ export const useMapController = (): MapControllerOutput => {
     });
   }, [apiRoutes]);
 
-  // Show stops only for the selected route (solves 1,440 stop lag)
+  // Show stops for the selected route, or all stops when zoomed in enough
   const visibleStops = useMemo(() => {
-    if (!selectedRoute) return []; // No route selected -> no stops
-    const routeStopIds = getStopsForRoute(selectedRoute);
-    return allStops.filter(stop => routeStopIds.has(stop.STOP_ID));
-  }, [allStops, selectedRoute]);
+    if (selectedRoute) {
+      const routeStopIds = getStopsForRoute(selectedRoute);
+      return allStops.filter(stop => routeStopIds.has(stop.STOP_ID));
+    }
+    // Show all stops when zoomed in (avoids 1,440 marker lag at low zoom)
+    if (currentZoom >= 15) return allStops;
+    return [];
+  }, [allStops, selectedRoute, currentZoom]);
 
   const routePaths = useMemo(() => {
     if (!selectedRoute || !shapesData) return [];
