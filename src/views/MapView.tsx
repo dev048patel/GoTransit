@@ -8,10 +8,9 @@ import { Coordinates } from '../models/MapModel';
 import { TripOption } from '../models/transit/RoutePlanning';
 import { BusPosition } from '../models/transit/BusPosition';
 import { Stop } from '../models/transit/Stop';
-import { StopPrediction } from '../models/transit/StopPrediction';
 import { MapViewProps } from '../models/views/MapViewProps';
-import { getRoutesForStop } from '../models/services/StopToRouteIndex';
 import transitColors from '../models/data/transitColors';
+import StopDetailPanel from './components/transit/StopDetailPanel';
 import Navbar from './Navbar';
 import TripPlannerModal from './components/transit/TripPlannerModal';
 import BusSuggestionPanel from './components/transit/BusSuggestionPanel';
@@ -48,26 +47,14 @@ export const MapView: React.FC<MapViewProps> = ({
   const [activeTracking, setActiveTracking] = useState<TripOption | null>(null);
   const [selectedBus, setSelectedBus] = useState<BusPosition | null>(null);
   const [selectedStop, setSelectedStop] = useState<Stop | null>(null);
-  const [stopPredictions, setStopPredictions] = useState<StopPrediction[]>([]);
-  const [stopLoading, setStopLoading] = useState(false);
+  const [showStopDetail, setShowStopDetail] = useState(false);
 
-  // Handle stop marker click — fetch predictions and show InfoWindow
-  const handleStopClick = async (stop: Stop) => {
+  // Handle stop marker click — open the departure board panel
+  const handleStopClick = (stop: Stop) => {
     setSelectedStop(stop);
-    setStopPredictions([]);
-    setStopLoading(true);
-    try {
-      const baseUrl = (import.meta as any).env?.VITE_SERVER_URL || '';
-      const res = await fetch(`${baseUrl}/api/stop-predictions/${stop.STOP_ID}`);
-      if (res.ok) {
-        const preds: StopPrediction[] = await res.json();
-        setStopPredictions(preds);
-      }
-    } catch (err) {
-      console.error('Failed to fetch stop predictions:', err);
-    } finally {
-      setStopLoading(false);
-    }
+    setShowStopDetail(true);
+    setShowBusSuggestions(false);
+    setShowInfoWindow(false);
   };
 
   // Get route color from transitColors data
@@ -88,6 +75,7 @@ export const MapView: React.FC<MapViewProps> = ({
     handlePlaceSelect(place);
     setShowInfoWindow(true);
     setShowBusSuggestions(false);
+    setShowStopDetail(false);
   };
 
   // When a route card is clicked, start tracking and recenter to user GPS
@@ -164,6 +152,17 @@ export const MapView: React.FC<MapViewProps> = ({
         />
       )}
 
+      {/* Stop Detail Panel (departure board for a selected stop) */}
+      {showStopDetail && selectedStop && !activeTracking && (
+        <StopDetailPanel
+          stop={selectedStop}
+          onClose={() => {
+            setShowStopDetail(false);
+            setSelectedStop(null);
+          }}
+        />
+      )}
+
       {/* Tracking Panel (bottom sheet) */}
       {activeTracking && (
         <TrackingPanel tripOption={activeTracking} onStopTracking={handleStopTracking} onBack={handleBackToSuggestions} />
@@ -203,101 +202,7 @@ export const MapView: React.FC<MapViewProps> = ({
               strokeColor: '#ffffff',
             }}
             onClick={() => handleStopClick(stop)}
-          >
-            {/* Stop Info Window */}
-            {selectedStop && selectedStop.STOP_ID === stop.STOP_ID && (
-              <InfoWindow
-                position={{ lat: parseFloat(stop.LAT), lng: parseFloat(stop.LON) }}
-                onCloseClick={() => setSelectedStop(null)}
-              >
-                <div style={{
-                  padding: '8px 4px',
-                  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-                  minWidth: '240px',
-                  maxWidth: '320px'
-                }}>
-                  {/* Stop name and ID */}
-                  <div style={{ fontWeight: '700', fontSize: '15px', color: '#202124', marginBottom: '4px' }}>
-                    {stop.STOP_NAME}
-                  </div>
-                  <div style={{ fontSize: '12px', color: '#5f6368', marginBottom: '10px' }}>
-                    Stop #{stop.STOP_ID}
-                  </div>
-
-                  {/* Route badges */}
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '10px' }}>
-                    {Array.from(getRoutesForStop(stop.STOP_ID)).map(routeNum => (
-                      <span key={routeNum} style={{
-                        backgroundColor: getRouteColor(routeNum),
-                        color: 'white',
-                        padding: '2px 8px',
-                        borderRadius: '8px',
-                        fontSize: '11px',
-                        fontWeight: '600'
-                      }}>
-                        Route {routeNum}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Predictions */}
-                  <div style={{ borderTop: '1px solid #e8eaed', paddingTop: '8px' }}>
-                    <div style={{ fontSize: '12px', fontWeight: '600', color: '#202124', marginBottom: '6px' }}>
-                      Upcoming Arrivals
-                    </div>
-                    {stopLoading && (
-                      <div style={{ fontSize: '12px', color: '#5f6368', padding: '8px 0' }}>
-                        Loading...
-                      </div>
-                    )}
-                    {!stopLoading && stopPredictions.length === 0 && (
-                      <div style={{ fontSize: '12px', color: '#80868b', padding: '8px 0' }}>
-                        No predictions available
-                      </div>
-                    )}
-                    {!stopLoading && stopPredictions.length > 0 && (
-                      <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
-                        {/* Group predictions by route */}
-                        {Array.from(new Set(stopPredictions.map(p => String(p.route_id)))).map(routeId => {
-                          const routePreds = stopPredictions.filter(p => String(p.route_id) === routeId);
-                          const color = getRouteColor(routeId);
-                          return (
-                            <div key={routeId} style={{ marginBottom: '8px' }}>
-                              <div style={{
-                                fontSize: '12px', fontWeight: '600', color,
-                                marginBottom: '3px', display: 'flex', alignItems: 'center', gap: '4px'
-                              }}>
-                                <span style={{
-                                  width: '8px', height: '8px', borderRadius: '50%',
-                                  backgroundColor: color, display: 'inline-block'
-                                }} />
-                                Route {routeId}
-                                {routePreds[0]?.line_name && (
-                                  <span style={{ fontWeight: '400', color: '#5f6368' }}>
-                                    ({routePreds[0].line_name})
-                                  </span>
-                                )}
-                              </div>
-                              {routePreds.map((pred, idx) => (
-                                <div key={idx} style={{
-                                  display: 'flex', justifyContent: 'space-between',
-                                  fontSize: '12px', color: '#202124',
-                                  padding: '2px 0 2px 12px'
-                                }}>
-                                  <span style={{ fontWeight: '500' }}>{pred.pred_time.trim()}</span>
-                                  <span style={{ color: '#5f6368' }}>Bus #{pred.bus_id}</span>
-                                </div>
-                              ))}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </InfoWindow>
-            )}
-          </Marker>
+          />
         ))}
 
         {/* Render Route Polylines (hide during tracking) */}
