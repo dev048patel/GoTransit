@@ -80,6 +80,16 @@ export const getAdminRoutes = async (req: Request, res: Response) => {
     }
 };
 
+// getStopPredictions : fetch real-time predicted arrivals for a specific stop.
+export const getStopPredictions = async (req: Request, res: Response) => {
+    try {
+        const predictions = await StopPredictionService.getPredictions(req.params.stopId);
+        res.json(predictions);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch stop predictions' });
+    }
+};
+
 // updateRoute : handle PATCH to rename or hide/show a route.
 export const updateRoute = async (req: Request, res: Response) => {
     try {

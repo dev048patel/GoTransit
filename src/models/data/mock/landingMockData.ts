@@ -3,7 +3,7 @@ import { HeroContent, Stat, Feature, Step, ProblemSolution, FAQItem, Technology,
 
 export const heroContent: HeroContent = {
     headline: "Never Miss Your Bus Again",
-    subheadline: "Real-time bus tracking, saved stops, and smart route planning—all designed for Regina's unpredictable weather and transit schedules.",
+    subheadline: "Real-time bus tracking, live stop arrivals, and smart route planning—all designed for Regina's unpredictable weather and transit schedules.",
     primaryCTA: "Get Started Free",
     secondaryCTA: "Watch Demo",
     trustIndicators: [
@@ -47,11 +47,11 @@ export const features: Feature[] = [
         icon: "Clock"
     },
     {
-        id: "saved-stops",
-        title: "Personalized Stop Mapping",
-        description: "Name your frequent stops for instant access. Your daily commute, simplified with one tap.",
-        visual: "saved-stops-mockup.png",
-        icon: "Heart"
+        id: "stop-arrivals",
+        title: "Tap Any Stop for Arrivals",
+        description: "Click any stop on the map to see upcoming bus arrivals, route info, and bus numbers—all in real time.",
+        visual: "stop-arrivals-mockup.png",
+        icon: "MapPin"
     },
     {
         id: "route-planner",
@@ -65,14 +65,14 @@ export const features: Feature[] = [
 export const steps: Step[] = [
     {
         number: 1,
-        title: "Save Your Stops",
-        description: "Mark your home, work, school, or any frequent destination",
+        title: "Pick a Route or Stop",
+        description: "Select a route to see its stops, or tap any stop on the map for details",
         icon: "MapPin"
     },
     {
         number: 2,
         title: "Check Live Arrivals",
-        description: "See real-time bus positions and estimated arrival times at your saved stops",
+        description: "See real-time bus positions and estimated arrival times at any stop",
         icon: "Navigation"
     },
     {
@@ -107,7 +107,7 @@ export const problemSolutions: ProblemSolution[] = [
 export const faqItems: FAQItem[] = [
     {
         question: "Is GoTransit Regina free to use?",
-        answer: "Yes! Core features including real-time tracking and saved stops are completely free."
+        answer: "Yes! All features including real-time tracking, stop arrivals, and route planning are completely free."
     },
     {
         question: "How accurate is the real-time tracking?",
@@ -115,7 +115,7 @@ export const faqItems: FAQItem[] = [
     },
     {
         question: "Can I use this without creating an account?",
-        answer: "You need to sign in with Google OAuth to personalize your experience and save your favourite stops."
+        answer: "Yes! No account is needed. Just open the app and start tracking buses and checking stop arrivals right away."
     },
     {
         question: "What happens if my bus is delayed?",
@@ -123,7 +123,7 @@ export const faqItems: FAQItem[] = [
     },
     {
         question: "Does this work offline?",
-        answer: "You need an internet connection for real-time data, but saved stops and schedules are cached locally."
+        answer: "You need an internet connection for real-time bus data and live stop arrivals."
     }
 ];
 

@@ -45,7 +45,7 @@ const developers: Developer[] = [
       name: 'Dev Pradipbhai Patel',
       role: 'Technical Documentation & Frontend Support',
     //   bio: 'Computer Science student at University of Regina. Passionate about building tools that improve everyday life.',
-      linkedin: 'www.linkedin.com/in/dev-patel-5034363b2',
+      linkedin: 'https://www.linkedin.com/in/dev-patel-5034363b2/',
       github: 'https://github.com/DPP835',
       photo: '',
     },

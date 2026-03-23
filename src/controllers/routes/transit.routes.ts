@@ -44,8 +44,13 @@ router.get('/colors', TransitController.getColors);
 router.get('/live', TransitController.getLiveBuses);
 
 /*
+ route = GET /api/stop-predictions/:stopId
+ Fetch real-time predicted bus arrivals for a specific stop
+ */
+router.get('/stop-predictions/:stopId', TransitController.getStopPredictions);
 
- /* route = GET /api/admin/routes
+/*
+ route = GET /api/admin/routes
  Fetch all routes for the admin panel (includes hidden routes + status)
  */
 router.get('/admin/routes', TransitController.getAdminRoutes);

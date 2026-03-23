@@ -15,7 +15,6 @@ export default function TechnologyTrust({ technologies }: TechnologyTrustProps) 
     const techIcons: { [key: string]: string } = {
         'Google Maps': '🗺️',
         'Regina Transit': '🚌',
-        'Twilio': '💬',
         'PostgreSQL': '🗄️'
     };
 
@@ -34,7 +33,7 @@ export default function TechnologyTrust({ technologies }: TechnologyTrustProps) 
                         Powered by the Best
                     </h2>
                     <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                        We combine official Regina Transit data with Google Maps intelligence and reliable Twilio messaging to deliver accurate, real-time information you can trust.
+                        We combine official Regina Transit data with Google Maps intelligence and reliable PostgreSQL storage to deliver accurate, real-time information you can trust.
                     </p>
                 </motion.div>
 

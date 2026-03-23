@@ -10,7 +10,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { X, Check, Wifi, MapPin, Navigation, Snowflake, Bus } from 'lucide-react';
+import { X, Check, Wifi, MapPin, Navigation, Bus, BarChart3 } from 'lucide-react';
 
 interface Feature {
     label: string;
@@ -20,19 +20,19 @@ interface Feature {
 const goTransitFeatures: Feature[] = [
     { label: 'Live bus positions on your phone', icon: Navigation },
     { label: 'Real-time arrival estimates', icon: Wifi },
-    { label: 'Save your favourite stops', icon: MapPin },
+    { label: 'Click any stop for live arrivals', icon: MapPin },
     { label: 'Regina-specific routes & schedules', icon: Bus },
     { label: 'Smart route planning', icon: Navigation },
-    { label: 'Weather-aware commute tips', icon: Snowflake },
+    { label: 'Admin dashboard & analytics', icon: BarChart3 },
 ];
 
 const traditionalMissing: string[] = [
     'No real-time positions',
     'No live arrival estimates',
-    'No saved stops',
+    'No stop-level arrival info',
     'Generic, city-agnostic data',
     'No smart route planning',
-    'No weather awareness',
+    'No admin tools or analytics',
 ];
 
 export default function ComparisonTable() {

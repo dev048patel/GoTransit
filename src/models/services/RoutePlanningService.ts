@@ -646,7 +646,7 @@ export class RoutePlanningService {
 
         for (const option of options) {
             const now2 = new Date();
-            let allSegmentsLive = true;
+            let firstSegmentLive = false;
 
             for (let segIdx = 0; segIdx < option.segments.length; segIdx++) {
                 const seg = option.segments[segIdx];
@@ -659,7 +659,6 @@ export class RoutePlanningService {
                 const routePreds = predictions.filter(p => String(p.route_id) === routeNum);
 
                 if (routePreds.length === 0) {
-                    allSegmentsLive = false;
                     continue;
                 }
 
@@ -693,17 +692,19 @@ export class RoutePlanningService {
                     if (segIdx === 0) {
                         option.waitTime = waitRounded;
                         option.totalTimeWithWait = option.totalTime + waitRounded;
+                        firstSegmentLive = true;
                     }
 
                     console.log(`[RoutePlanningService] Route ${routeNum} at stop ${stopId}: ` +
                         `Bus #${bestPred.bus_id} predicted at ${bestPred.pred_time.trim()}, ` +
                         `wait ~${waitRounded} min`);
-                } else {
-                    allSegmentsLive = false;
                 }
             }
 
-            option.isLivePrediction = allSegmentsLive;
+            // Mark as live if at least the first segment has real-time data —
+            // for transfer routes, the second segment's stop often has no predictions
+            // yet (user hasn't arrived there), but the first bus info is still actionable
+            option.isLivePrediction = firstSegmentLive;
 
             // Compute estimated arrival at destination from first bus prediction + total trip time
             const firstSeg = option.segments[0];
