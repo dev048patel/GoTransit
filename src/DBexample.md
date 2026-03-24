@@ -81,7 +81,8 @@ CREATE TABLE public.visitor_sessions (
   last_seen     TIMESTAMPTZ DEFAULT now(),
   status        TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active','inactive')),
   pages_visited TEXT[] DEFAULT '{}',
-  page_views    INTEGER DEFAULT 0
+  page_views    INTEGER DEFAULT 0,
+  user_id       UUID REFERENCES public.profiles(id) ON DELETE SET NULL
 );
 
 ALTER TABLE public.visitor_sessions ENABLE ROW LEVEL SECURITY;
@@ -114,3 +115,6 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+ALTER TABLE public.visitor_sessions 
+ADD COLUMN user_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL;

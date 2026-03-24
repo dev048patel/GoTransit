@@ -27,8 +27,9 @@ router.post('/beacon', async (req: Request, res: Response) => {
         const ip = getClientIP(req);
         const userAgent = req.headers['user-agent'] || 'Unknown';
         const page = req.body?.page || '/';
+        const userId = req.body?.userId;
 
-        const sessionId = await registerSession(ip, userAgent, page);
+        const sessionId = await registerSession(ip, userAgent, page, userId);
         res.json({ ok: true, sessionId });
     } catch (error) {
         console.error('Beacon error:', error);
@@ -45,8 +46,9 @@ router.post('/heartbeat', async (req: Request, res: Response) => {
         const ip = getClientIP(req);
         const userAgent = req.headers['user-agent'] || 'Unknown';
         const page = req.body?.page;
+        const userId = req.body?.userId;
 
-        await heartbeat(ip, userAgent, page);
+        await heartbeat(ip, userAgent, page, userId);
         res.json({ ok: true });
     } catch (error) {
         console.error('Heartbeat error:', error);

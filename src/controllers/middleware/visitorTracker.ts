@@ -65,6 +65,9 @@ export interface VisitorSession {
     status: 'active' | 'inactive';
     pagesVisited: string[];
     pageViews: number;
+    userId: string | null;
+    email: string | null;
+    fullName: string | null;
 }
 
 // ─── Helpers ──────────────────────────────────────
@@ -87,6 +90,9 @@ function rowToSession(row: any): VisitorSession {
         status: row.status,
         pagesVisited: row.pages_visited ?? [],
         pageViews: row.page_views,
+        userId: row.user_id ?? null,
+        email: row.email ?? null,
+        fullName: row.full_name ?? null,
     };
 }
 
@@ -96,7 +102,7 @@ function rowToSession(row: any): VisitorSession {
   Called when the frontend sends a beacon (page load).
   Creates a new session or reactivates an existing one.
 */
-export async function registerSession(ip: string, userAgent: string, page?: string): Promise<string> {
+export async function registerSession(ip: string, userAgent: string, page?: string, userId?: string): Promise<string> {
     const sessionId = createFingerprint(ip, userAgent);
     const { browser, os, device } = parseUserAgent(userAgent);
     const now = new Date().toISOString();
@@ -113,14 +119,18 @@ export async function registerSession(ip: string, userAgent: string, page?: stri
         const pages: string[] = existing.pages_visited ?? [];
         if (page && !pages.includes(page)) pages.push(page);
 
+        const updateData: any = {
+            last_seen: now,
+            status: 'active',
+            page_views: existing.page_views + 1,
+            pages_visited: pages,
+        };
+        // Link user_id if authenticated and not yet linked
+        if (userId && !existing.user_id) updateData.user_id = userId;
+
         await supabaseServer
             .from('visitor_sessions')
-            .update({
-                last_seen: now,
-                status: 'active',
-                page_views: existing.page_views + 1,
-                pages_visited: pages,
-            })
+            .update(updateData)
             .eq('session_id', sessionId);
     } else {
         // Brand new visitor
@@ -137,6 +147,7 @@ export async function registerSession(ip: string, userAgent: string, page?: stri
                 status: 'active',
                 pages_visited: page ? [page] : ['/'],
                 page_views: 1,
+                ...(userId ? { user_id: userId } : {}),
             });
     }
 
@@ -147,7 +158,7 @@ export async function registerSession(ip: string, userAgent: string, page?: stri
   Called every 60s by the frontend heartbeat.
   Keeps the session alive and optionally updates the current page.
 */
-export async function heartbeat(ip: string, userAgent: string, page?: string): Promise<boolean> {
+export async function heartbeat(ip: string, userAgent: string, page?: string, userId?: string): Promise<boolean> {
     const sessionId = createFingerprint(ip, userAgent);
 
     const { data: session } = await supabaseServer
@@ -158,20 +169,24 @@ export async function heartbeat(ip: string, userAgent: string, page?: string): P
 
     if (!session) {
         // Session doesn't exist yet — create it via beacon
-        await registerSession(ip, userAgent, page);
+        await registerSession(ip, userAgent, page, userId);
         return true;
     }
 
     const pages: string[] = session.pages_visited ?? [];
     if (page && !pages.includes(page)) pages.push(page);
 
+    const updateData: any = {
+        last_seen: new Date().toISOString(),
+        status: 'active',
+        pages_visited: pages,
+    };
+    // Link user_id if authenticated and not yet linked
+    if (userId && !session.user_id) updateData.user_id = userId;
+
     await supabaseServer
         .from('visitor_sessions')
-        .update({
-            last_seen: new Date().toISOString(),
-            status: 'active',
-            pages_visited: pages,
-        })
+        .update(updateData)
         .eq('session_id', sessionId);
 
     return true;
@@ -196,9 +211,10 @@ async function expireStaleSessions(): Promise<void> {
 export async function getVisitorRecords(from?: string, to?: string): Promise<VisitorSession[]> {
     await expireStaleSessions();
 
+    // Join with profiles to get email and full_name for authenticated visitors
     let query = supabaseServer
         .from('visitor_sessions')
-        .select('*')
+        .select('*, profiles:user_id(email, full_name)')
         .order('last_seen', { ascending: false });
 
     if (from) {
@@ -216,7 +232,14 @@ export async function getVisitorRecords(from?: string, to?: string): Promise<Vis
         return [];
     }
 
-    return (data ?? []).map(rowToSession);
+    return (data ?? []).map((row: any) => {
+        const profile = row.profiles;
+        return {
+            ...rowToSession(row),
+            email: profile?.email ?? null,
+            fullName: profile?.full_name ?? null,
+        };
+    });
 }
 
 /*

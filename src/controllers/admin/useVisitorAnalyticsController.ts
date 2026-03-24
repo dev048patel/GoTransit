@@ -16,6 +16,8 @@ interface VisitorRecord {
     lastSeen: string;
     pageViews: number;
     pagesVisited: string[];
+    email: string | null;
+    fullName: string | null;
 }
 
 interface AnalyticsSummary {

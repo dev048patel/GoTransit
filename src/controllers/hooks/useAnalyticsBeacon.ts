@@ -11,12 +11,12 @@ export function useAnalyticsBeacon() {
 
     useEffect(() => {
         // Send initial beacon and update last_active for authenticated users
-        sendBeacon(window.location.pathname);
+        sendBeacon(window.location.pathname, user?.id);
         if (user?.id) updateLastActive(user.id);
 
         // Heartbeat keeps the session alive on the backend
         const interval = setInterval(() => {
-            sendHeartbeat(window.location.pathname);
+            sendHeartbeat(window.location.pathname, user?.id);
             if (user?.id) updateLastActive(user.id);
         }, HEARTBEAT_INTERVAL);
 
