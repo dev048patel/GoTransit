@@ -225,7 +225,7 @@ function RouteCard({ group, isNearest }: { group: RouteGroup; isNearest: boolean
                                     color: isArriving ? '#137333' : '#202124',
                                     fontVariantNumeric: 'tabular-nums',
                                 }}>
-                                    {pred.minutesAway <= 0 ? 'NOW' : `${pred.minutesAway}m`}
+                                    {pred.minutesAway <= 0 ? 'NOW' : `${pred.minutesAway} min`}
                                 </div>
                                 {/* Actual time */}
                                 <div style={{ fontSize: '11px', color: '#5f6368', marginTop: '2px' }}>
