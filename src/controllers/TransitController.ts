@@ -86,6 +86,7 @@ export const getAdminRoutes = async (req: Request, res: Response) => {
 export const getStopPredictions = async (req: Request, res: Response) => {
     try {
         const limitParam = parseInt(req.query.limit as string);
+        const routeIdParam = req.query.route_id as string;
         const routesParam = req.query.routes as string;
 
         // Determine limit: explicit param > time-based default
@@ -99,8 +100,13 @@ export const getStopPredictions = async (req: Request, res: Response) => {
         }
 
         let predictions: any[];
-        if (routesParam) {
-            // Fetch per-route in parallel for full departure board data
+        if (routeIdParam) {
+            // Single route_id — direct pass-through to TransitLive API
+            predictions = await StopPredictionService.getPredictions(
+                req.params.stopId, { limit, routeId: routeIdParam }
+            );
+        } else if (routesParam) {
+            // Comma-separated routes — fetch per-route in parallel
             const routeIds = routesParam.split(',').map(r => r.trim()).filter(Boolean);
             predictions = await StopPredictionService.getPredictionsAllRoutes(
                 req.params.stopId, routeIds, limit

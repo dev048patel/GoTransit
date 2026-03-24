@@ -81,11 +81,11 @@ export function useStopDetailController(stopId: string) {
     const fetchPredictions = useCallback(async () => {
         try {
             setError(null);
-            const API_BASE = 'https://transitlive.com/ajax/livemap.php';
+            const baseUrl = (import.meta as any).env?.VITE_SERVER_URL || '';
 
-            // Fetch per-route in parallel directly from TransitLive API
+            // Fetch per-route in parallel through backend (avoids CORS from TransitLive)
             const promises = allRoutes.map(routeId =>
-                fetch(`${API_BASE}?action=stop_times&stop=${encodeURIComponent(stopId)}&route_id=${encodeURIComponent(routeId)}&limit=10`)
+                fetch(`${baseUrl}/api/stop-predictions/${stopId}?route_id=${encodeURIComponent(routeId)}&limit=10`)
                     .then(res => res.ok ? res.json() as Promise<StopPrediction[]> : [])
                     .catch(() => [] as StopPrediction[])
             );
