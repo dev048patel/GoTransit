@@ -231,9 +231,9 @@ function RouteCard({ group, isNearest }: { group: RouteGroup; isNearest: boolean
                                 <div style={{ fontSize: '11px', color: '#5f6368', marginTop: '2px' }}>
                                     {pred.predTime.trim()}
                                 </div>
-                                {/* Bus ID */}
+                                {/* Bus ID or Scheduled label */}
                                 <div style={{ fontSize: '10px', color: '#80868b', marginTop: '2px' }}>
-                                    Bus #{pred.busId}
+                                    {pred.busId ? `Bus #${pred.busId}` : 'Scheduled'}
                                 </div>
                                 {/* Last stop badge */}
                                 {pred.isLastStop && (

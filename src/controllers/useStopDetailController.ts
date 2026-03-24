@@ -8,7 +8,8 @@ const REFRESH_INTERVAL_MS = 30_000;
 export interface PredictionWithCountdown {
     predTime: string;
     minutesAway: number;
-    busId: number;
+    busId: number | null;
+    isLive: boolean;
     isLastStop: boolean;
     intersection: string;
 }
@@ -24,7 +25,7 @@ export interface RouteGroup {
 
 /**
  * Compute minutes until predicted arrival.
- * Returns -1 for predictions that are more than 5 minutes in the past (stale data).
+ * Returns -1 for predictions more than 5 minutes in the past (stale).
  */
 function computeMinutesAway(predTimeStr: string): number {
     const now = new Date();
@@ -41,10 +42,7 @@ function computeMinutesAway(predTimeStr: string): number {
     const diffMs = predDate.getTime() - now.getTime();
     const diffMin = Math.round(diffMs / 60_000);
 
-    // If prediction is more than 5 minutes in the past, it's stale — mark for removal
     if (diffMin < -5) return -1;
-
-    // If prediction is slightly in the past (bus just arrived), show 0
     return Math.max(0, diffMin);
 }
 
@@ -53,17 +51,12 @@ function getRouteColor(routeNum: string): string {
     return match ? match.colour : '#1a73e8';
 }
 
-/** Deduplicate predictions by stop_time_id AND bus_id+route_id combo */
+/** Deduplicate by stop_time_id (unique per prediction from the API) */
 function deduplicatePredictions(preds: StopPrediction[]): StopPrediction[] {
-    const seenTimeId = new Set<number>();
-    const seenBusRoute = new Set<string>();
+    const seen = new Set<number>();
     return preds.filter(p => {
-        if (seenTimeId.has(p.stop_time_id)) return false;
-        seenTimeId.add(p.stop_time_id);
-        // Also deduplicate same bus on same route (can happen from parallel fetches)
-        const busRouteKey = `${p.bus_id}-${p.route_id}`;
-        if (seenBusRoute.has(busRouteKey)) return false;
-        seenBusRoute.add(busRouteKey);
+        if (seen.has(p.stop_time_id)) return false;
+        seen.add(p.stop_time_id);
         return true;
     });
 }
@@ -83,7 +76,7 @@ export function useStopDetailController(stopId: string) {
             setError(null);
             const baseUrl = (import.meta as any).env?.VITE_SERVER_URL || '';
 
-            // Fetch per-route in parallel through backend (avoids CORS from TransitLive)
+            // Fetch per-route in parallel: stop pinpoints the stop, route_id filters the bus route
             const promises = allRoutes.map(routeId =>
                 fetch(`${baseUrl}/api/stop-predictions/${stopId}?route_id=${encodeURIComponent(routeId)}&limit=10`)
                     .then(res => res.ok ? res.json() as Promise<StopPrediction[]> : [])
@@ -132,10 +125,11 @@ export function useStopDetailController(stopId: string) {
                     predTime: p.pred_time,
                     minutesAway: computeMinutesAway(p.pred_time),
                     busId: p.bus_id,
-                    isLastStop: p.last_stop === '1',
+                    isLive: p.bus_id !== null,
+                    isLastStop: p.last_stop !== '0' && p.last_stop !== '',
                     intersection: p.intersection,
                 }))
-                .filter(p => p.minutesAway >= 0) // Remove stale predictions
+                .filter(p => p.minutesAway >= 0)
                 .sort((a, b) => a.minutesAway - b.minutesAway);
 
             return {
@@ -144,7 +138,7 @@ export function useStopDetailController(stopId: string) {
                 routeColor: getRouteColor(routeId),
                 endTime: routePreds[0]?.end_time || '',
                 predictions: withCountdown,
-                hasLiveData: true,
+                hasLiveData: withCountdown.some(p => p.isLive),
             };
         });
 

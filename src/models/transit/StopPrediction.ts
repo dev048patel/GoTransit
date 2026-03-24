@@ -4,13 +4,13 @@
  */
 
 export interface StopPrediction {
-    pred_time: string;      // e.g. "01:18 PM"
-    intersection: string;   // e.g. "Kramer Blvd @ Darke St"
-    bus_id: number;         // e.g. 2402
-    stop_id: string;        // e.g. "0251"
+    pred_time: string;      // e.g. "08:18 PM"
+    intersection: string;   // e.g. "University Of Regina Riddell Centre"
+    bus_id: number | null;  // e.g. 2303, null for scheduled (non-live) buses
+    stop_id: string;        // e.g. "0270"
     route_id: number;       // e.g. 4
-    stop_time_id: number;
-    line_name: string;      // e.g. "Hillsdale"
-    last_stop: string;      // "0" or "1"
-    end_time: string;       // e.g. "06:20 PM"
+    stop_time_id: number;   // unique ID for deduplication
+    line_name: string;      // e.g. "Walsh Acres"
+    last_stop: string;      // stop ID of the last stop, or "0" if not last
+    end_time: string;       // e.g. "09:05 PM"
 }
