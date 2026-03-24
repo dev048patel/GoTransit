@@ -65,13 +65,17 @@ export default function StopDetailPanel({ stop, onClose }: StopDetailPanelProps)
                         <span key={routeNum} style={{
                             backgroundColor: color,
                             color: 'white',
-                            padding: '3px 10px',
-                            borderRadius: '12px',
-                            fontSize: '12px',
-                            fontWeight: '600',
+                            padding: '5px 12px',
+                            borderRadius: '14px',
+                            fontSize: '13px',
+                            fontWeight: '700',
                             whiteSpace: 'nowrap',
-                            flexShrink: 0,
                             opacity: group ? 1 : 0.4,
+                            lineHeight: '1',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            minWidth: '28px',
                         }}>
                             {routeNum}
                         </span>
@@ -306,8 +310,10 @@ const closeBtnStyle: React.CSSProperties = {
 const badgeStripStyle: React.CSSProperties = {
     display: 'flex',
     flexWrap: 'wrap',
-    gap: '6px',
-    padding: '10px 18px',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '8px',
+    padding: '12px 18px',
     borderBottom: '1px solid #e8eaed',
     backgroundColor: '#f8f9fa',
 };
