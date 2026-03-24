@@ -35,6 +35,24 @@ export const useMapController = (): MapControllerOutput => {
   const [currentZoom, setCurrentZoom] = useState(MapModel.defaultZoom);
   const [shapesData, setShapesData] = useState<any>(null);
   const [apiRoutes, setApiRoutes] = useState<Route[]>(transitRoutes); // start with static data, API overrides
+  const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
+
+  // Track user's live GPS location
+  useEffect(() => {
+    if (!navigator.geolocation) return;
+    // Get initial position
+    navigator.geolocation.getCurrentPosition(
+      (pos) => setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      (err) => console.warn('Geolocation error:', err.message)
+    );
+    // Watch for position changes
+    const watchId = navigator.geolocation.watchPosition(
+      (pos) => setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      (err) => console.warn('Geolocation watch error:', err.message),
+      { enableHighAccuracy: true, maximumAge: 10000 }
+    );
+    return () => navigator.geolocation.clearWatch(watchId);
+  }, []);
 
   // Callback for MapView to report zoom changes
   const onZoomChanged = useCallback((newZoom: number) => {
@@ -153,13 +171,13 @@ export const useMapController = (): MapControllerOutput => {
     });
   }, [apiRoutes]);
 
-  // Show stops for the selected route, or all stops when zoomed in enough
+  // Show stops only when zoomed in enough (avoids marker lag at low zoom)
+  // Route-selected stops also require zoom >= 14 to avoid clutter at city-wide view
   const visibleStops = useMemo(() => {
-    if (selectedRoute) {
+    if (selectedRoute && currentZoom >= 14) {
       const routeStopIds = getStopsForRoute(selectedRoute);
       return allStops.filter(stop => routeStopIds.has(stop.STOP_ID));
     }
-    // Show all stops when zoomed in (avoids 1,440 marker lag at low zoom)
     if (currentZoom >= 17) return allStops;
     return [];
   }, [allStops, selectedRoute, currentZoom]);
@@ -219,5 +237,6 @@ export const useMapController = (): MapControllerOutput => {
     setSelectedPlaceMarker,
     currentZoom,
     onZoomChanged,
+    userLocation,
   };
 };

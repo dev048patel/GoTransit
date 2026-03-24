@@ -29,6 +29,15 @@ const BUS_STOP_ICON_URL = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent
 </svg>
 `)}`;
 
+// User location "You are here" pulsing blue dot marker
+const USER_LOCATION_ICON_URL = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+  <circle cx="20" cy="20" r="18" fill="#4285F4" opacity="0.15"/>
+  <circle cx="20" cy="20" r="12" fill="#4285F4" opacity="0.25"/>
+  <circle cx="20" cy="20" r="7" fill="#4285F4" stroke="white" stroke-width="2.5"/>
+</svg>
+`)}`;
+
 /*
  -> <MapView isLoaded={...} center={...} />
  */
@@ -51,7 +60,8 @@ export const MapView: React.FC<MapViewProps> = ({
   selectedPlaceMarker,
   setSelectedPlaceMarker,
   currentZoom,
-  onZoomChanged
+  onZoomChanged,
+  userLocation
 }) => {
   const [showTripPlanner, setShowTripPlanner] = useState(false);
   const [showInfoWindow, setShowInfoWindow] = useState(false);
@@ -310,11 +320,44 @@ export const MapView: React.FC<MapViewProps> = ({
                     >
                       No thanks
                     </button>
+                    <button
+                      onClick={() => {
+                        setShowInfoWindow(false);
+                        setSelectedPlaceMarker(null);
+                      }}
+                      style={{
+                        padding: '6px 16px',
+                        backgroundColor: '#fce8e6',
+                        color: '#d93025',
+                        border: 'none',
+                        borderRadius: '16px',
+                        fontSize: '13px',
+                        fontWeight: '500',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Remove pin
+                    </button>
                   </div>
                 </div>
               </InfoWindow>
             )}
           </Marker>
+        )}
+
+        {/* User's live GPS location — pulsing blue dot */}
+        {userLocation && (
+          <Marker
+            position={userLocation}
+            icon={{
+              url: USER_LOCATION_ICON_URL,
+              scaledSize: new google.maps.Size(40, 40),
+              anchor: new google.maps.Point(20, 20),
+            }}
+            title="You are here"
+            zIndex={300}
+            clickable={false}
+          />
         )}
 
         {/* Render Live Buses — colored by route using transitColors data */}

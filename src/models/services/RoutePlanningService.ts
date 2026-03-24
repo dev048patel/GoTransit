@@ -724,24 +724,48 @@ export class RoutePlanningService {
     }
 
     /**
-     * Parse a prediction time string like "01:18 PM" into a Date object for today.
+     * Parse a prediction time string into a Date object for today.
+     * Handles both formats:
+     *   - "01:18 PM" (old 12-hour with AM/PM)
+     *   - "01:18:00" (new 12-hour without AM/PM, wraps 12→01 after noon)
      */
     private parsePredTime(predTime: string, now: Date): Date | null {
         try {
             const trimmed = predTime.trim();
-            const match = trimmed.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
-            if (!match) return null;
 
-            let hours = parseInt(match[1], 10);
-            const minutes = parseInt(match[2], 10);
-            const ampm = match[3].toUpperCase();
+            // Try old format first: "01:18 PM"
+            const ampmMatch = trimmed.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+            if (ampmMatch) {
+                let hours = parseInt(ampmMatch[1], 10);
+                const minutes = parseInt(ampmMatch[2], 10);
+                const ampm = ampmMatch[3].toUpperCase();
 
-            if (ampm === 'PM' && hours !== 12) hours += 12;
-            if (ampm === 'AM' && hours === 12) hours = 0;
+                if (ampm === 'PM' && hours !== 12) hours += 12;
+                if (ampm === 'AM' && hours === 12) hours = 0;
 
-            const result = new Date(now);
-            result.setHours(hours, minutes, 0, 0);
-            return result;
+                const result = new Date(now);
+                result.setHours(hours, minutes, 0, 0);
+                return result;
+            }
+
+            // New format: "09:08:36" or "01:18:00" (12-hour without AM/PM)
+            const parts = trimmed.split(':');
+            if (parts.length >= 2) {
+                let hours = parseInt(parts[0], 10);
+                const minutes = parseInt(parts[1], 10);
+
+                const result = new Date(now);
+                result.setHours(hours, minutes, 0, 0);
+
+                // If time is more than 6 hours in the past, it's PM (e.g. "01:07" = 1:07 PM)
+                if (result.getTime() < now.getTime() - 6 * 60 * 60_000 && hours < 12) {
+                    result.setHours(hours + 12, minutes, 0, 0);
+                }
+
+                return result;
+            }
+
+            return null;
         } catch {
             return null;
         }

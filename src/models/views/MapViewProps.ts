@@ -26,4 +26,5 @@ export interface MapViewProps {
     setSelectedPlaceMarker: (marker: { location: Coordinates; name: string } | null) => void;
     currentZoom: number;
     onZoomChanged: (newZoom: number) => void;
+    userLocation: { lat: number; lng: number } | null;
 }
