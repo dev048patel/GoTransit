@@ -53,11 +53,17 @@ export function useStopDetailController(stopId: string) {
     const [error, setError] = useState<string | null>(null);
     const [lastRefreshed, setLastRefreshed] = useState<Date | null>(null);
 
+    // All routes serving this stop (computed early so fetchPredictions can use it)
+    const allRoutes = useMemo(() => Array.from(getRoutesForStop(stopId)), [stopId]);
+    const routesParam = allRoutes.join(',');
+
     const fetchPredictions = useCallback(async () => {
         try {
             setError(null);
             const baseUrl = (import.meta as any).env?.VITE_SERVER_URL || '';
-            const res = await fetch(`${baseUrl}/api/stop-predictions/${stopId}`);
+            // Fetch per-route predictions for complete departure board data
+            const url = `${baseUrl}/api/stop-predictions/${stopId}?routes=${encodeURIComponent(routesParam)}&limit=10`;
+            const res = await fetch(url);
             if (!res.ok) throw new Error('Failed to fetch predictions');
             const preds: StopPrediction[] = await res.json();
             setPredictions(preds);
@@ -68,7 +74,7 @@ export function useStopDetailController(stopId: string) {
         } finally {
             setLoading(false);
         }
-    }, [stopId]);
+    }, [stopId, routesParam]);
 
     // Fetch on mount + when stopId changes
     useEffect(() => {
@@ -82,9 +88,6 @@ export function useStopDetailController(stopId: string) {
         const interval = setInterval(fetchPredictions, REFRESH_INTERVAL_MS);
         return () => clearInterval(interval);
     }, [fetchPredictions]);
-
-    // All routes serving this stop
-    const allRoutes = useMemo(() => Array.from(getRoutesForStop(stopId)), [stopId]);
 
     // Group predictions by route, compute countdowns, sort by nearest arrival
     // Also include routes with no live data as inactive cards

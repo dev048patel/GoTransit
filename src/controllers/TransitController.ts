@@ -81,20 +81,36 @@ export const getAdminRoutes = async (req: Request, res: Response) => {
 };
 
 // getStopPredictions : fetch real-time predicted arrivals for a specific stop.
-// Accepts optional ?limit=N query param (default: time-based — 20 during peak, 10 off-peak).
+// Accepts optional query params: ?limit=N, ?routes=4,18,22 (comma-separated route IDs)
+// When routes are provided, fetches per-route in parallel for more complete data.
 export const getStopPredictions = async (req: Request, res: Response) => {
     try {
         const limitParam = parseInt(req.query.limit as string);
+        const routesParam = req.query.routes as string;
+
+        // Determine limit: explicit param > time-based default
         let limit: number;
         if (!isNaN(limitParam) && limitParam > 0) {
-            limit = Math.min(limitParam, 30); // cap at 30
+            limit = Math.min(limitParam, 30);
         } else {
-            // Peak hours (7-9 AM, 3-6 PM) get more predictions
             const hour = new Date().getHours();
             const isPeak = (hour >= 7 && hour <= 9) || (hour >= 15 && hour <= 18);
             limit = isPeak ? 20 : 10;
         }
-        const predictions = await StopPredictionService.getPredictions(req.params.stopId, limit);
+
+        let predictions: any[];
+        if (routesParam) {
+            // Fetch per-route in parallel for full departure board data
+            const routeIds = routesParam.split(',').map(r => r.trim()).filter(Boolean);
+            predictions = await StopPredictionService.getPredictionsAllRoutes(
+                req.params.stopId, routeIds, limit
+            );
+        } else {
+            predictions = await StopPredictionService.getPredictions(
+                req.params.stopId, { limit }
+            );
+        }
+
         res.json(predictions);
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch stop predictions' });
