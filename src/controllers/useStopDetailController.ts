@@ -24,33 +24,47 @@ export interface RouteGroup {
 }
 
 /**
- * Compute minutes until predicted arrival.
- * Handles 24-hour format from the API (e.g. "09:08:36", "14:30:00").
- * Returns -1 for predictions more than 5 minutes in the past (stale).
+ * Parse the API time string (12-hour format without AM/PM, e.g. "09:08:36", "01:07:00")
+ * into a Date object for today. The API wraps from 12 → 01 after noon,
+ * so if the parsed time would be far in the past, add 12h to make it PM.
  */
-function computeMinutesAway(predTimeStr: string): number {
+function parsePredTime(predTimeStr: string): Date {
     const now = new Date();
     const parts = predTimeStr.trim().split(':');
-    const hours = parseInt(parts[0]);
+    let hours = parseInt(parts[0]);
     const minutes = parseInt(parts[1]);
 
     const predDate = new Date();
     predDate.setHours(hours, minutes, 0, 0);
 
-    const diffMs = predDate.getTime() - now.getTime();
-    const diffMin = Math.round(diffMs / 60_000);
+    // If this time is more than 6 hours in the past, it's likely PM (e.g. "01:07" = 1:07 PM not AM)
+    if (predDate.getTime() < now.getTime() - 6 * 60 * 60_000 && hours < 12) {
+        predDate.setHours(hours + 12, minutes, 0, 0);
+    }
 
+    return predDate;
+}
+
+/**
+ * Compute minutes until predicted arrival.
+ * Returns -1 for predictions more than 5 minutes in the past (stale).
+ */
+function computeMinutesAway(predTimeStr: string): number {
+    const now = new Date();
+    const predDate = parsePredTime(predTimeStr);
+
+    const diffMin = Math.round((predDate.getTime() - now.getTime()) / 60_000);
     if (diffMin < -5) return -1;
     return Math.max(0, diffMin);
 }
 
 /**
- * Format 24-hour time string to 12-hour display (e.g. "14:30:00" → "2:30 PM")
+ * Format API time string to 12-hour display with AM/PM (e.g. "01:07:00" → "1:07 PM")
  */
 function formatTime12h(predTimeStr: string): string {
-    const parts = predTimeStr.trim().split(':');
-    let hours = parseInt(parts[0]);
-    const minutes = parts[1];
+    const predDate = parsePredTime(predTimeStr);
+    let hours = predDate.getHours();
+    const minutes = predDate.getMinutes().toString().padStart(2, '0');
     const ampm = hours >= 12 ? 'PM' : 'AM';
     if (hours === 0) hours = 12;
     else if (hours > 12) hours -= 12;

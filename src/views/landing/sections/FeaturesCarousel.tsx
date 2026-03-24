@@ -8,6 +8,7 @@ import ssRealTime from '../../images/SS01.png';
 import ssRouteSelect from '../../images/SS02.png';
 import ssRouteTrack from '../../images/SS03.png';
 import ssRoutePlanner from '../../images/SS04.png';
+import ssStopDetail from '../../images/SS05.png';
 import ssSavedStops from '../../images/SS06.png';
 
 interface FeaturesCarouselProps {
@@ -32,7 +33,8 @@ const iconMap: { [key: string]: React.FC<{ size?: number, className?: string }> 
 /* Map feature IDs to their screenshot + mockup type */
 const screenshotMap: { [key: string]: { src: string; mockup: 'laptop' | 'phone' } } = {
     'real-time': { src: ssRealTime, mockup: 'laptop' },
-    'sms-alerts': { src: ssRealTime, mockup: 'laptop' },      // placeholder until notification is built
+    'live-arrival': { src: ssRealTime, mockup: 'laptop' },
+    'stop-arrivals': { src: ssStopDetail, mockup: 'phone' },
     'saved-stops': { src: ssSavedStops, mockup: 'phone' },
     'route-planner': { src: ssRoutePlanner, mockup: 'phone' },
 };
