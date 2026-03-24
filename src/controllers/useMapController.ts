@@ -160,7 +160,7 @@ export const useMapController = (): MapControllerOutput => {
       return allStops.filter(stop => routeStopIds.has(stop.STOP_ID));
     }
     // Show all stops when zoomed in (avoids 1,440 marker lag at low zoom)
-    if (currentZoom >= 15) return allStops;
+    if (currentZoom >= 17) return allStops;
     return [];
   }, [allStops, selectedRoute, currentZoom]);
 

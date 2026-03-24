@@ -2,7 +2,7 @@
  Only responsible for UX/UI rendering. 
  It receives all data as props and determines how the map looks on screen. It contains NO business logic.
  */
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useMemo } from 'react';
 import { GoogleMap, Marker, Polyline, InfoWindow } from '@react-google-maps/api';
 import { Coordinates } from '../models/MapModel';
 import { TripOption } from '../models/transit/RoutePlanning';
@@ -104,6 +104,20 @@ export const MapView: React.FC<MapViewProps> = ({
   // Use a ref to track the map instance for zoom change events
   const mapRef = useRef<google.maps.Map | null>(null);
 
+  // Track visible map bounds for viewport culling (only render on-screen stops)
+  const [mapBounds, setMapBounds] = useState<{ n: number; s: number; e: number; w: number } | null>(null);
+
+  const updateBounds = useCallback(() => {
+    if (mapRef.current) {
+      const b = mapRef.current.getBounds();
+      if (b) {
+        const ne = b.getNorthEast();
+        const sw = b.getSouthWest();
+        setMapBounds({ n: ne.lat(), s: sw.lat(), e: ne.lng(), w: sw.lng() });
+      }
+    }
+  }, []);
+
   const onMapLoad = useCallback((map: google.maps.Map) => {
     mapRef.current = map;
   }, []);
@@ -113,6 +127,16 @@ export const MapView: React.FC<MapViewProps> = ({
       onZoomChanged(mapRef.current.getZoom() || 11);
     }
   }, [onZoomChanged]);
+
+  // Filter stops to only those within the visible viewport
+  const viewportStops = useMemo(() => {
+    if (!mapBounds || stops.length === 0) return stops;
+    return stops.filter(stop => {
+      const lat = parseFloat(stop.LAT);
+      const lng = parseFloat(stop.LON);
+      return lat >= mapBounds.s && lat <= mapBounds.n && lng >= mapBounds.w && lng <= mapBounds.e;
+    });
+  }, [stops, mapBounds]);
   if (loadError) return <div>Error Loading maps</div>;
   if (!isLoaded) return <div>Loading Maps...</div>;
 
@@ -178,14 +202,15 @@ export const MapView: React.FC<MapViewProps> = ({
         options={options}
         onLoad={onMapLoad}
         onZoomChanged={handleZoomChanged}
+        onIdle={updateBounds}
       >
         {/* Route Tracking Overlay (when tracking is active) */}
         {activeTracking && (
           <RouteTrackingOverlay tripOption={activeTracking} />
         )}
 
-        {/* Render Stops (hide during tracking for clean view) */}
-        {!activeTracking && stops.map((stop) => (
+        {/* Render Stops — viewport-culled, hidden during tracking */}
+        {!activeTracking && viewportStops.map((stop) => (
           <Marker
             key={stop.STOP_ID}
             position={{
