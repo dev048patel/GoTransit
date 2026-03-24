@@ -78,8 +78,8 @@ export default function LoginPage() {
                                 className={inputCls(!!errors.identifier)}
                                 autoComplete="username"
                             />
-                            {isMobileDetected && identifier.length > 2 && (
-                                <p className="text-gray-400 text-xs mt-1">Detected: Mobile number</p>
+                            {isMobileDetected && identifier.length > 0 && (
+                                <p className="text-gray-400 text-xs mt-1">Expected format: +1 306-555-0199</p>
                             )}
                             {errors.identifier && (
                                 <p className="text-red-500 text-xs mt-1">{errors.identifier}</p>

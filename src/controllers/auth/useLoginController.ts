@@ -51,15 +51,15 @@ export function useLoginController(): LoginControllerOutput {
         if (Object.keys(errs).length) return;
 
         setIsLoading(true);
-        const ok = await login(identifier, password);
+        const loginError = await login(identifier, password);
         setIsLoading(false);
 
-        if (ok) {
+        if (!loginError) {
             // Redirect back to the page the user originally tried to visit (if any)
             const from = (location.state as any)?.from?.pathname ?? '/map';
             navigate(from, { replace: true });
         } else {
-            setErrors({ form: 'Invalid credentials. Please try again.' });
+            setErrors({ form: loginError });
         }
     }, [identifier, password, login, navigate, location]);
 

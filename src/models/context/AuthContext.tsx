@@ -17,6 +17,7 @@ import type { Session } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 import type { User } from '../auth/AuthModel';
 import { recordLogout } from '../services/UserRegistry';
+import { formatMobile } from '../services/AuthService';
 
 interface AuthContextValue {
     isAuthenticated: boolean;
@@ -26,7 +27,8 @@ interface AuthContextValue {
     user: User | null;
     /** True until the initial session + role fetch completes — prevents flash redirects. */
     isLoading: boolean;
-    login: (email: string, password: string) => Promise<boolean>;
+    /** Returns null on success, or an error message string on failure. */
+    login: (identifier: string, password: string) => Promise<string | null>;
     logout: () => Promise<void>;
 }
 
@@ -94,9 +96,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     }, [session?.user?.id]);
 
-    const login = useCallback(async (email: string, password: string): Promise<boolean> => {
-        const { error, data } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
-        if (error || !data.user) return false;
+    const login = useCallback(async (identifier: string, password: string): Promise<string | null> => {
+        let email = identifier.trim();
+
+        // If the identifier looks like a mobile number, format it and resolve email via RPC
+        // (RPC uses SECURITY DEFINER to bypass RLS for unauthenticated users)
+        if (/^\+?\d/.test(email)) {
+            const formatted = formatMobile(email);
+            const { data: resolvedEmail, error: rpcError } = await supabase.rpc('get_email_by_mobile', { mobile: formatted });
+            if (rpcError) {
+                console.error('[Auth] Mobile lookup RPC failed:', rpcError.message);
+                return 'Mobile login is not available. Please use your email.';
+            }
+            if (!resolvedEmail) return 'No account found with this mobile number.';
+            email = resolvedEmail;
+        }
+
+        const { error, data } = await supabase.auth.signInWithPassword({ email, password });
+        if (error || !data.user) return 'Invalid credentials. Please try again.';
 
         // Block suspended or soft-deleted accounts from logging in
         const { data: profile } = await supabase
@@ -107,10 +124,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (profile?.account_status === 'suspended' || profile?.account_status === 'deleted') {
             await supabase.auth.signOut();
-            return false;
+            return 'This account has been deactivated.';
         }
 
-        return true;
+        return null;
     }, []);
 
     const logout = useCallback(async () => {

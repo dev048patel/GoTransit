@@ -9,6 +9,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../../models/lib/supabase';
 import { useAuth } from '../../models/context/AuthContext';
+import { formatMobile } from '../../models/services/AuthService';
 
 /* ── Types ──────────────────────────────────────────────────────── */
 export interface ProfileData {
@@ -216,12 +217,15 @@ export function useProfileController() {
         try {
             if (!user) return;
 
+            // Format mobile to canonical +1 XXX-XXX-XXXX before saving
+            const formattedMobile = editMobile.trim() ? formatMobile(editMobile) : null;
+
             // Update name and mobile in profiles table
             const { error: profileError } = await supabase
                 .from('profiles')
                 .update({
                     full_name: editName.trim(),
-                    mobile_number: editMobile.trim() || null,
+                    mobile_number: formattedMobile,
                     updated_at: new Date().toISOString(),
                 })
                 .eq('id', user.id);
@@ -229,7 +233,7 @@ export function useProfileController() {
 
             // Reflect changes in local state immediately
             setProfile(prev => prev
-                ? { ...prev, full_name: editName.trim(), mobile_number: editMobile.trim() || null }
+                ? { ...prev, full_name: editName.trim(), mobile_number: formattedMobile }
                 : prev
             );
 

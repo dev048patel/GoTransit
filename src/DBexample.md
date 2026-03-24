@@ -104,8 +104,13 @@ ALTER TABLE public.feature_events ENABLE ROW LEVEL SECURITY;
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO public.profiles (id, full_name, email)
-  VALUES (new.id, coalesce(new.raw_user_meta_data->>'full_name','User'), new.email);
+  INSERT INTO public.profiles (id, full_name, email, mobile_number)
+  VALUES (
+    new.id,
+    coalesce(new.raw_user_meta_data->>'full_name', 'User'),
+    new.email,
+    new.raw_user_meta_data->>'mobile_number'
+  );
   INSERT INTO public.user_preferences (id) VALUES (new.id)
   ON CONFLICT DO NOTHING;
   RETURN new;
@@ -115,6 +120,18 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- ============================================
+-- RPC: Lookup email by mobile (for mobile login)
+-- SECURITY DEFINER bypasses RLS so unauthenticated users can resolve mobile → email.
+-- Only returns email for active accounts.
+-- ============================================
+CREATE OR REPLACE FUNCTION public.get_email_by_mobile(mobile TEXT)
+RETURNS TEXT AS $$
+  SELECT email FROM public.profiles
+  WHERE mobile_number = mobile AND account_status = 'active'
+  LIMIT 1;
+$$ LANGUAGE sql SECURITY DEFINER;
 
 ALTER TABLE public.visitor_sessions 
 ADD COLUMN user_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL;
