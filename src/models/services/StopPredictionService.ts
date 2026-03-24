@@ -15,9 +15,10 @@ export class StopPredictionService {
      * @param stopId - The stop ID (e.g. "0251")
      * @returns Array of StopPrediction objects with real predicted times
      */
-    static async getPredictions(stopId: string): Promise<StopPrediction[]> {
+    static async getPredictions(stopId: string, limit?: number): Promise<StopPrediction[]> {
         try {
-            const url = `${API_BASE}?action=stop_times&stop=${encodeURIComponent(stopId)}`;
+            let url = `${API_BASE}?action=stop_times&stop=${encodeURIComponent(stopId)}`;
+            if (limit) url += `&limit=${limit}`;
             const response = await fetch(url);
 
             if (!response.ok) {

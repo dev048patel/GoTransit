@@ -19,6 +19,7 @@ export interface RouteGroup {
     routeColor: string;
     endTime: string;
     predictions: PredictionWithCountdown[];
+    hasLiveData: boolean;
 }
 
 function computeMinutesAway(predTimeStr: string): number {
@@ -86,10 +87,12 @@ export function useStopDetailController(stopId: string) {
     const allRoutes = useMemo(() => Array.from(getRoutesForStop(stopId)), [stopId]);
 
     // Group predictions by route, compute countdowns, sort by nearest arrival
+    // Also include routes with no live data as inactive cards
     const routeGroups: RouteGroup[] = useMemo(() => {
         const routeIds = Array.from(new Set(predictions.map(p => String(p.route_id))));
 
-        const groups: RouteGroup[] = routeIds.map(routeId => {
+        // Routes with live predictions
+        const activeGroups: RouteGroup[] = routeIds.map(routeId => {
             const routePreds = predictions.filter(p => String(p.route_id) === routeId);
             const withCountdown: PredictionWithCountdown[] = routePreds
                 .map(p => ({
@@ -107,18 +110,32 @@ export function useStopDetailController(stopId: string) {
                 routeColor: getRouteColor(routeId),
                 endTime: routePreds[0]?.end_time || '',
                 predictions: withCountdown,
+                hasLiveData: true,
             };
         });
 
-        // Sort groups by nearest arrival
-        groups.sort((a, b) => {
+        // Sort active groups by nearest arrival
+        activeGroups.sort((a, b) => {
             const aMin = a.predictions[0]?.minutesAway ?? Infinity;
             const bMin = b.predictions[0]?.minutesAway ?? Infinity;
             return aMin - bMin;
         });
 
-        return groups;
-    }, [predictions]);
+        // Routes that serve this stop but have no current predictions
+        const activeRouteIds = new Set(routeIds);
+        const inactiveGroups: RouteGroup[] = allRoutes
+            .filter(r => !activeRouteIds.has(r))
+            .map(routeId => ({
+                routeId,
+                lineName: '',
+                routeColor: getRouteColor(routeId),
+                endTime: '',
+                predictions: [],
+                hasLiveData: false,
+            }));
+
+        return [...activeGroups, ...inactiveGroups];
+    }, [predictions, allRoutes]);
 
     return { routeGroups, allRoutes, loading, error, lastRefreshed, handleRefresh: fetchPredictions };
 }

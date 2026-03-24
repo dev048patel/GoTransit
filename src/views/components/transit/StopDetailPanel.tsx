@@ -115,7 +115,7 @@ export default function StopDetailPanel({ stop, onClose }: StopDetailPanelProps)
                 )}
 
                 {routeGroups.map((group, i) => (
-                    <RouteCard key={group.routeId} group={group} isNearest={i === 0} />
+                    <RouteCard key={group.routeId} group={group} isNearest={i === 0 && group.hasLiveData} />
                 ))}
             </div>
 
@@ -152,15 +152,16 @@ export default function StopDetailPanel({ stop, onClose }: StopDetailPanelProps)
 function RouteCard({ group, isNearest }: { group: RouteGroup; isNearest: boolean }) {
     return (
         <div style={{
-            backgroundColor: '#f8f9fa',
+            backgroundColor: group.hasLiveData ? '#f8f9fa' : '#fafafa',
             borderRadius: '12px',
             padding: '14px',
             marginBottom: '10px',
             border: '1px solid #e8eaed',
             borderLeft: `4px solid ${group.routeColor}`,
+            opacity: group.hasLiveData ? 1 : 0.7,
         }}>
             {/* Route header */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: group.hasLiveData ? '10px' : '0' }}>
                 <span style={{
                     backgroundColor: group.routeColor,
                     color: 'white',
@@ -171,65 +172,85 @@ function RouteCard({ group, isNearest }: { group: RouteGroup; isNearest: boolean
                 }}>
                     Route {group.routeId}
                 </span>
-                <span style={{ color: '#202124', fontSize: '14px', fontWeight: '500' }}>
-                    {group.lineName}
-                </span>
+                {group.lineName ? (
+                    <span style={{ color: '#202124', fontSize: '14px', fontWeight: '500' }}>
+                        {group.lineName}
+                    </span>
+                ) : null}
+                {group.hasLiveData && (
+                    <span style={{
+                        marginLeft: 'auto',
+                        fontSize: '10px', fontWeight: '600', color: '#137333',
+                        backgroundColor: '#e6f4ea', padding: '2px 8px', borderRadius: '8px',
+                    }}>
+                        LIVE
+                    </span>
+                )}
             </div>
 
-            {group.endTime && (
+            {/* No live data message */}
+            {!group.hasLiveData && (
+                <div style={{ fontSize: '12px', color: '#80868b', marginTop: '8px' }}>
+                    No active buses on this route right now
+                </div>
+            )}
+
+            {group.endTime && group.hasLiveData && (
                 <div style={{ fontSize: '11px', color: '#5f6368', marginBottom: '10px' }}>
                     Service until {group.endTime}
                 </div>
             )}
 
             {/* Prediction countdown chips */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                {group.predictions.map((pred, i) => {
-                    const isNext = i === 0 && isNearest;
-                    const isArriving = pred.minutesAway <= 3;
-                    return (
-                        <div key={i} style={{
-                            backgroundColor: isNext ? '#e8f5e9' : 'white',
-                            border: isNext ? '1px solid #34a853' : '1px solid #dadce0',
-                            borderRadius: '10px',
-                            padding: '8px 12px',
-                            textAlign: 'center',
-                            minWidth: '72px',
-                            position: 'relative',
-                            animation: isNext ? 'chipPulse 2s ease-in-out infinite' : 'none',
-                        }}>
-                            {/* Countdown */}
-                            <div style={{
-                                fontSize: '18px',
-                                fontWeight: '700',
-                                color: isArriving ? '#137333' : '#202124',
-                                fontVariantNumeric: 'tabular-nums',
+            {group.predictions.length > 0 && (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                    {group.predictions.map((pred, i) => {
+                        const isNext = i === 0 && isNearest;
+                        const isArriving = pred.minutesAway <= 3;
+                        return (
+                            <div key={i} style={{
+                                backgroundColor: isNext ? '#e8f5e9' : 'white',
+                                border: isNext ? '1px solid #34a853' : '1px solid #dadce0',
+                                borderRadius: '10px',
+                                padding: '8px 12px',
+                                textAlign: 'center',
+                                minWidth: '72px',
+                                position: 'relative',
+                                animation: isNext ? 'chipPulse 2s ease-in-out infinite' : 'none',
                             }}>
-                                {pred.minutesAway <= 0 ? 'NOW' : `${pred.minutesAway}m`}
-                            </div>
-                            {/* Actual time */}
-                            <div style={{ fontSize: '11px', color: '#5f6368', marginTop: '2px' }}>
-                                {pred.predTime.trim()}
-                            </div>
-                            {/* Bus ID */}
-                            <div style={{ fontSize: '10px', color: '#80868b', marginTop: '2px' }}>
-                                Bus #{pred.busId}
-                            </div>
-                            {/* Last stop badge */}
-                            {pred.isLastStop && (
+                                {/* Countdown */}
                                 <div style={{
-                                    position: 'absolute', top: '-6px', right: '-6px',
-                                    backgroundColor: '#d93025', color: 'white',
-                                    fontSize: '9px', fontWeight: '700',
-                                    padding: '1px 5px', borderRadius: '6px',
+                                    fontSize: '18px',
+                                    fontWeight: '700',
+                                    color: isArriving ? '#137333' : '#202124',
+                                    fontVariantNumeric: 'tabular-nums',
                                 }}>
-                                    LAST
+                                    {pred.minutesAway <= 0 ? 'NOW' : `${pred.minutesAway}m`}
                                 </div>
-                            )}
-                        </div>
-                    );
-                })}
-            </div>
+                                {/* Actual time */}
+                                <div style={{ fontSize: '11px', color: '#5f6368', marginTop: '2px' }}>
+                                    {pred.predTime.trim()}
+                                </div>
+                                {/* Bus ID */}
+                                <div style={{ fontSize: '10px', color: '#80868b', marginTop: '2px' }}>
+                                    Bus #{pred.busId}
+                                </div>
+                                {/* Last stop badge */}
+                                {pred.isLastStop && (
+                                    <div style={{
+                                        position: 'absolute', top: '-6px', right: '-6px',
+                                        backgroundColor: '#d93025', color: 'white',
+                                        fontSize: '9px', fontWeight: '700',
+                                        padding: '1px 5px', borderRadius: '6px',
+                                    }}>
+                                        LAST
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
         </div>
     );
 }

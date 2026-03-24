@@ -81,9 +81,20 @@ export const getAdminRoutes = async (req: Request, res: Response) => {
 };
 
 // getStopPredictions : fetch real-time predicted arrivals for a specific stop.
+// Accepts optional ?limit=N query param (default: time-based — 20 during peak, 10 off-peak).
 export const getStopPredictions = async (req: Request, res: Response) => {
     try {
-        const predictions = await StopPredictionService.getPredictions(req.params.stopId);
+        const limitParam = parseInt(req.query.limit as string);
+        let limit: number;
+        if (!isNaN(limitParam) && limitParam > 0) {
+            limit = Math.min(limitParam, 30); // cap at 30
+        } else {
+            // Peak hours (7-9 AM, 3-6 PM) get more predictions
+            const hour = new Date().getHours();
+            const isPeak = (hour >= 7 && hour <= 9) || (hour >= 15 && hour <= 18);
+            limit = isPeak ? 20 : 10;
+        }
+        const predictions = await StopPredictionService.getPredictions(req.params.stopId, limit);
         res.json(predictions);
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch stop predictions' });

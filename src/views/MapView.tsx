@@ -17,6 +17,18 @@ import BusSuggestionPanel from './components/transit/BusSuggestionPanel';
 import RouteTrackingOverlay from './components/transit/RouteTrackingOverlay';
 import TrackingPanel from './components/transit/TrackingPanel';
 
+// Bus stop marker SVG — generated once, reused for all stop markers
+const BUS_STOP_ICON_URL = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
+  <circle cx="14" cy="14" r="13" fill="#1a73e8" stroke="white" stroke-width="2"/>
+  <rect x="9" y="7" width="10" height="14" rx="2" fill="white"/>
+  <rect x="10.5" y="9" width="7" height="3.5" rx="1" fill="#1a73e8"/>
+  <circle cx="11.5" cy="17.5" r="1.2" fill="#1a73e8"/>
+  <circle cx="16.5" cy="17.5" r="1.2" fill="#1a73e8"/>
+  <rect x="10.5" y="14" width="7" height="0.8" rx="0.4" fill="#1a73e8" opacity="0.4"/>
+</svg>
+`)}`;
+
 /*
  -> <MapView isLoaded={...} center={...} />
  */
@@ -219,13 +231,11 @@ export const MapView: React.FC<MapViewProps> = ({
             }}
             title={`${stop.STOP_NAME} (#${stop.STOP_ID})`}
             icon={{
-              path: (window as any).google?.maps?.SymbolPath?.CIRCLE,
-              scale: 3,
-              fillColor: '#2196F3',
-              fillOpacity: 1,
-              strokeWeight: 1,
-              strokeColor: '#ffffff',
+              url: BUS_STOP_ICON_URL,
+              scaledSize: isLoaded ? new google.maps.Size(24, 24) : undefined,
+              anchor: isLoaded ? new google.maps.Point(12, 12) : undefined,
             }}
+            optimized={true}
             onClick={() => handleStopClick(stop)}
           />
         ))}
