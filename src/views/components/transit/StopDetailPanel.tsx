@@ -305,9 +305,9 @@ const closeBtnStyle: React.CSSProperties = {
 
 const badgeStripStyle: React.CSSProperties = {
     display: 'flex',
+    flexWrap: 'wrap',
     gap: '6px',
     padding: '10px 18px',
-    overflowX: 'auto',
     borderBottom: '1px solid #e8eaed',
     backgroundColor: '#f8f9fa',
 };
