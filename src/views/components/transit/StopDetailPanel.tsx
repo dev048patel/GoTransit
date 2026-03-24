@@ -195,9 +195,9 @@ function RouteCard({ group, isNearest }: { group: RouteGroup; isNearest: boolean
                 </div>
             )}
 
-            {/* All predictions as rows */}
+            {/* All predictions as rows — scrollable within each route */}
             {group.predictions.length > 0 && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0px', maxHeight: '200px', overflowY: 'auto' }}>
                     {group.predictions.map((pred, i) => {
                         const isNext = i === 0 && isNearest;
                         const isArriving = pred.minutesAway <= 3;
