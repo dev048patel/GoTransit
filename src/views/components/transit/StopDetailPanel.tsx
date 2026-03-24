@@ -161,7 +161,7 @@ function RouteCard({ group, isNearest }: { group: RouteGroup; isNearest: boolean
             opacity: group.hasLiveData ? 1 : 0.7,
         }}>
             {/* Route header */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: group.hasLiveData ? '10px' : '0' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: group.predictions.length > 0 ? '10px' : '0' }}>
                 <span style={{
                     backgroundColor: group.routeColor,
                     color: 'white',
@@ -188,63 +188,67 @@ function RouteCard({ group, isNearest }: { group: RouteGroup; isNearest: boolean
                 )}
             </div>
 
-            {/* No live data message */}
-            {!group.hasLiveData && (
+            {/* No predictions message */}
+            {group.predictions.length === 0 && (
                 <div style={{ fontSize: '12px', color: '#80868b', marginTop: '8px' }}>
-                    No active buses on this route right now
+                    No upcoming buses on this route
                 </div>
             )}
 
-            {group.endTime && group.hasLiveData && (
-                <div style={{ fontSize: '11px', color: '#5f6368', marginBottom: '10px' }}>
-                    Service until {group.endTime}
-                </div>
-            )}
-
-            {/* Prediction countdown chips */}
+            {/* All predictions as rows */}
             {group.predictions.length > 0 && (
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0px' }}>
                     {group.predictions.map((pred, i) => {
                         const isNext = i === 0 && isNearest;
                         const isArriving = pred.minutesAway <= 3;
                         return (
                             <div key={i} style={{
-                                backgroundColor: isNext ? '#e8f5e9' : 'white',
-                                border: isNext ? '1px solid #34a853' : '1px solid #dadce0',
-                                borderRadius: '10px',
-                                padding: '8px 12px',
-                                textAlign: 'center',
-                                minWidth: '72px',
-                                position: 'relative',
+                                display: 'flex',
+                                alignItems: 'center',
+                                padding: '6px 8px',
+                                borderRadius: '8px',
+                                backgroundColor: isNext ? '#e8f5e9' : (i % 2 === 0 ? 'transparent' : '#f1f3f4'),
                                 animation: isNext ? 'chipPulse 2s ease-in-out infinite' : 'none',
                             }}>
                                 {/* Countdown */}
-                                <div style={{
-                                    fontSize: '18px',
+                                <span style={{
+                                    width: '60px',
+                                    fontSize: isNext ? '15px' : '13px',
                                     fontWeight: '700',
                                     color: isArriving ? '#137333' : '#202124',
                                     fontVariantNumeric: 'tabular-nums',
+                                    flexShrink: 0,
                                 }}>
                                     {pred.minutesAway <= 0 ? 'NOW' : `${pred.minutesAway} min`}
-                                </div>
-                                {/* Actual time */}
-                                <div style={{ fontSize: '11px', color: '#5f6368', marginTop: '2px' }}>
+                                </span>
+                                {/* Time */}
+                                <span style={{
+                                    width: '72px',
+                                    fontSize: '12px',
+                                    color: '#5f6368',
+                                    flexShrink: 0,
+                                }}>
                                     {pred.predTime.trim()}
-                                </div>
-                                {/* Bus ID or Scheduled label */}
-                                <div style={{ fontSize: '10px', color: '#80868b', marginTop: '2px' }}>
+                                </span>
+                                {/* Bus ID or Scheduled */}
+                                <span style={{
+                                    fontSize: '11px',
+                                    color: pred.isLive ? '#1a73e8' : '#9aa0a6',
+                                    fontWeight: pred.isLive ? '500' : '400',
+                                    flex: 1,
+                                }}>
                                     {pred.busId ? `Bus #${pred.busId}` : 'Scheduled'}
-                                </div>
+                                </span>
                                 {/* Last stop badge */}
                                 {pred.isLastStop && (
-                                    <div style={{
-                                        position: 'absolute', top: '-6px', right: '-6px',
+                                    <span style={{
                                         backgroundColor: '#d93025', color: 'white',
                                         fontSize: '9px', fontWeight: '700',
                                         padding: '1px 5px', borderRadius: '6px',
+                                        flexShrink: 0,
                                     }}>
                                         LAST
-                                    </div>
+                                    </span>
                                 )}
                             </div>
                         );

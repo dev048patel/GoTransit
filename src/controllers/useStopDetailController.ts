@@ -25,16 +25,14 @@ export interface RouteGroup {
 
 /**
  * Compute minutes until predicted arrival.
+ * Handles 24-hour format from the API (e.g. "09:08:36", "14:30:00").
  * Returns -1 for predictions more than 5 minutes in the past (stale).
  */
 function computeMinutesAway(predTimeStr: string): number {
     const now = new Date();
-    const [time, ampm] = predTimeStr.trim().split(' ');
-    const [hourStr, minStr] = time.split(':');
-    let hours = parseInt(hourStr);
-    const minutes = parseInt(minStr);
-    if (ampm?.toUpperCase() === 'PM' && hours !== 12) hours += 12;
-    if (ampm?.toUpperCase() === 'AM' && hours === 12) hours = 0;
+    const parts = predTimeStr.trim().split(':');
+    const hours = parseInt(parts[0]);
+    const minutes = parseInt(parts[1]);
 
     const predDate = new Date();
     predDate.setHours(hours, minutes, 0, 0);
@@ -44,6 +42,19 @@ function computeMinutesAway(predTimeStr: string): number {
 
     if (diffMin < -5) return -1;
     return Math.max(0, diffMin);
+}
+
+/**
+ * Format 24-hour time string to 12-hour display (e.g. "14:30:00" → "2:30 PM")
+ */
+function formatTime12h(predTimeStr: string): string {
+    const parts = predTimeStr.trim().split(':');
+    let hours = parseInt(parts[0]);
+    const minutes = parts[1];
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    if (hours === 0) hours = 12;
+    else if (hours > 12) hours -= 12;
+    return `${hours}:${minutes} ${ampm}`;
 }
 
 function getRouteColor(routeNum: string): string {
@@ -76,16 +87,11 @@ export function useStopDetailController(stopId: string) {
             setError(null);
             const baseUrl = (import.meta as any).env?.VITE_SERVER_URL || '';
 
-            // Fetch per-route in parallel: stop pinpoints the stop, route_id filters the bus route
-            const promises = allRoutes.map(routeId =>
-                fetch(`${baseUrl}/api/stop-predictions/${stopId}?route_id=${encodeURIComponent(routeId)}&limit=10`)
-                    .then(res => res.ok ? res.json() as Promise<StopPrediction[]> : [])
-                    .catch(() => [] as StopPrediction[])
-            );
-
-            const results = await Promise.all(promises);
-            const allPreds = deduplicatePredictions(results.flat());
-            setPredictions(allPreds);
+            // Single call — backend uses routes=all&lim=100 to get full day schedule
+            const res = await fetch(`${baseUrl}/api/stop-predictions/${stopId}`);
+            if (!res.ok) throw new Error('Failed to fetch predictions');
+            const preds: StopPrediction[] = await res.json();
+            setPredictions(deduplicatePredictions(preds));
             setLastRefreshed(new Date());
         } catch (err) {
             setError('Could not load predictions. Tap refresh to try again.');
@@ -93,7 +99,7 @@ export function useStopDetailController(stopId: string) {
         } finally {
             setLoading(false);
         }
-    }, [stopId, allRoutes]);
+    }, [stopId]);
 
     // Fetch once on mount / when stopId changes — prevent double call
     useEffect(() => {
@@ -122,7 +128,7 @@ export function useStopDetailController(stopId: string) {
             const routePreds = predictions.filter(p => String(p.route_id) === routeId);
             const withCountdown: PredictionWithCountdown[] = routePreds
                 .map(p => ({
-                    predTime: p.pred_time,
+                    predTime: formatTime12h(p.pred_time),
                     minutesAway: computeMinutesAway(p.pred_time),
                     busId: p.bus_id,
                     isLive: p.bus_id !== null,

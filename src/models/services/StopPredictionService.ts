@@ -1,7 +1,7 @@
 /*
  StopPredictionService
  Fetches predicted bus arrival times for a specific stop from TransitLive API.
- Uses the stop_times endpoint which returns real-time predictions.
+ Uses the stop_times endpoint with routes=all to get full day predictions.
  */
 
 import { StopPrediction } from '../transit/StopPrediction';
@@ -11,16 +11,14 @@ const API_BASE = 'https://transitlive.com/ajax/livemap.php';
 export class StopPredictionService {
 
     /**
-     * Fetch predicted arrival times for a specific stop, optionally filtered by route.
+     * Fetch all predicted arrival times for a specific stop for the full day.
+     * Uses routes=all&lim=100&skip=0&ws=1 to get comprehensive schedule data.
      * @param stopId - The stop ID (e.g. "0251")
-     * @param options - Optional limit and routeId params
-     * @returns Array of StopPrediction objects with real predicted times
+     * @returns Array of StopPrediction objects
      */
-    static async getPredictions(stopId: string, options?: { limit?: number; routeId?: string }): Promise<StopPrediction[]> {
+    static async getPredictions(stopId: string): Promise<StopPrediction[]> {
         try {
-            let url = `${API_BASE}?action=stop_times&stop=${encodeURIComponent(stopId)}`;
-            if (options?.limit) url += `&limit=${options.limit}`;
-            if (options?.routeId) url += `&route_id=${encodeURIComponent(options.routeId)}`;
+            const url = `${API_BASE}?action=stop_times&stop=${encodeURIComponent(stopId)}&routes=all&lim=100&skip=0&ws=1`;
             const response = await fetch(url);
 
             if (!response.ok) {
@@ -33,39 +31,5 @@ export class StopPredictionService {
             console.error(`Failed to fetch predictions for stop ${stopId}:`, error);
             return [];
         }
-    }
-
-    /**
-     * Fetch predictions for a stop across all its routes in parallel.
-     * Makes one API call per route with limit, then merges results.
-     * @param stopId - The stop ID
-     * @param routeIds - Array of route numbers serving this stop
-     * @param limit - Max predictions per route
-     * @returns Combined array of all predictions
-     */
-    static async getPredictionsAllRoutes(stopId: string, routeIds: string[], limit: number): Promise<StopPrediction[]> {
-        const promises = routeIds.map(routeId =>
-            this.getPredictions(stopId, { limit, routeId })
-        );
-        const results = await Promise.all(promises);
-        return results.flat();
-    }
-
-    /**
-     * Fetch predictions for multiple stops at once.
-     * @param stopIds - Array of stop IDs
-     * @returns Map of stopId -> predictions
-     */
-    static async getPredictionsForStops(stopIds: string[]): Promise<Map<string, StopPrediction[]>> {
-        const results = new Map<string, StopPrediction[]>();
-
-        // Fetch in parallel for speed
-        const promises = stopIds.map(async (stopId) => {
-            const predictions = await this.getPredictions(stopId);
-            results.set(stopId, predictions);
-        });
-
-        await Promise.all(promises);
-        return results;
     }
 }

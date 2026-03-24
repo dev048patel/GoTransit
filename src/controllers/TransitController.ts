@@ -80,43 +80,11 @@ export const getAdminRoutes = async (req: Request, res: Response) => {
     }
 };
 
-// getStopPredictions : fetch real-time predicted arrivals for a specific stop.
-// Accepts optional query params: ?limit=N, ?routes=4,18,22 (comma-separated route IDs)
-// When routes are provided, fetches per-route in parallel for more complete data.
+// getStopPredictions : fetch all predicted arrivals for a specific stop.
+// Single call to TransitLive with routes=all&lim=100 to get full day schedule.
 export const getStopPredictions = async (req: Request, res: Response) => {
     try {
-        const limitParam = parseInt(req.query.limit as string);
-        const routeIdParam = req.query.route_id as string;
-        const routesParam = req.query.routes as string;
-
-        // Determine limit: explicit param > time-based default
-        let limit: number;
-        if (!isNaN(limitParam) && limitParam > 0) {
-            limit = Math.min(limitParam, 30);
-        } else {
-            const hour = new Date().getHours();
-            const isPeak = (hour >= 7 && hour <= 9) || (hour >= 15 && hour <= 18);
-            limit = isPeak ? 20 : 10;
-        }
-
-        let predictions: any[];
-        if (routeIdParam) {
-            // Single route_id — direct pass-through to TransitLive API
-            predictions = await StopPredictionService.getPredictions(
-                req.params.stopId, { limit, routeId: routeIdParam }
-            );
-        } else if (routesParam) {
-            // Comma-separated routes — fetch per-route in parallel
-            const routeIds = routesParam.split(',').map(r => r.trim()).filter(Boolean);
-            predictions = await StopPredictionService.getPredictionsAllRoutes(
-                req.params.stopId, routeIds, limit
-            );
-        } else {
-            predictions = await StopPredictionService.getPredictions(
-                req.params.stopId, { limit }
-            );
-        }
-
+        const predictions = await StopPredictionService.getPredictions(req.params.stopId);
         res.json(predictions);
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch stop predictions' });
