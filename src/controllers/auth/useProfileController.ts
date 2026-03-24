@@ -81,6 +81,7 @@ export function useProfileController() {
     // Delete account confirmation
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(false);
+    const [deleteError, setDeleteError] = useState('');
 
     /* ── Load all profile data when user is available ───────────── */
     useEffect(() => {
@@ -252,16 +253,25 @@ export function useProfileController() {
     /* ── Delete Account ─────────────────────────────────────────── */
     const handleDeleteAccount = useCallback(async () => {
         setDeleteLoading(true);
+        setDeleteError('');
         try {
-            if (user) {
-                // Soft-delete: mark as deleted, then sign out
-                await supabase.from('profiles')
-                    .update({ account_status: 'deleted', updated_at: new Date().toISOString() })
-                    .eq('id', user.id);
+            if (!user) return;
+
+            // Soft-delete: mark as deleted, then sign out
+            const { error } = await supabase.from('profiles')
+                .update({ account_status: 'deleted', updated_at: new Date().toISOString() })
+                .eq('id', user.id);
+
+            if (error) {
+                setDeleteError(error.message);
+                setDeleteLoading(false);
+                return;
             }
+
             await logout();
-        } catch (err) {
+        } catch (err: any) {
             console.error('[Profile] Failed to delete account:', err);
+            setDeleteError(err?.message ?? 'Failed to delete account. Please try again.');
             setDeleteLoading(false);
         }
     }, [user, logout]);
@@ -293,7 +303,7 @@ export function useProfileController() {
         startEditProfile, cancelEditProfile, saveProfile,
         // Delete confirm
         showDeleteConfirm, setShowDeleteConfirm,
-        deleteLoading,
+        deleteLoading, deleteError,
         handleDeleteAccount,
         // Actions
         handleLogout,

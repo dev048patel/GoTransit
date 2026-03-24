@@ -130,7 +130,7 @@ function PasswordModal({
 }
 
 /* ── Delete Confirmation ────────────────────────────────────────── */
-function DeleteConfirm({ onConfirm, onCancel, loading }: { onConfirm: () => void; onCancel: () => void; loading: boolean }) {
+function DeleteConfirm({ onConfirm, onCancel, loading, error }: { onConfirm: () => void; onCancel: () => void; loading: boolean; error?: string }) {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
             <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={loading ? undefined : onCancel} />
@@ -147,6 +147,9 @@ function DeleteConfirm({ onConfirm, onCancel, loading }: { onConfirm: () => void
                 <p className="text-sm text-gray-500 text-center mb-6">
                     This will permanently remove your account and all saved data. This cannot be undone.
                 </p>
+                {error && (
+                    <p className="text-sm text-red-500 text-center mb-4 bg-red-50 rounded-lg px-3 py-2">{error}</p>
+                )}
                 <div className="flex gap-3">
                     <button
                         onClick={onCancel}
@@ -186,7 +189,7 @@ export default function ProfilePage() {
         editLoading, editError, editEmailSent,
         startEditProfile, cancelEditProfile, saveProfile,
         showDeleteConfirm, setShowDeleteConfirm,
-        deleteLoading,
+        deleteLoading, deleteError,
         handleDeleteAccount,
         handleLogout,
     } = useProfileController();
@@ -211,6 +214,7 @@ export default function ProfilePage() {
                     <DeleteConfirm
                         onConfirm={handleDeleteAccount}
                         onCancel={() => setShowDeleteConfirm(false)}
+                        error={deleteError}
                         loading={deleteLoading}
                     />
                 )}

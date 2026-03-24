@@ -113,7 +113,7 @@ export function formatMobile(raw: string): string {
  * The database trigger `on_auth_user_created` auto-creates the profiles row.
  */
 export async function signUpUser(data: SignupFormData): Promise<SignupResult> {
-    const { error } = await supabase.auth.signUp({
+    const { data: signUpData, error } = await supabase.auth.signUp({
         email: data.email.trim(),
         password: data.password,
         options: {
@@ -125,5 +125,12 @@ export async function signUpUser(data: SignupFormData): Promise<SignupResult> {
     });
 
     if (error) return { success: false, error: error.message };
+
+    // Supabase returns a fake success with empty identities when the email
+    // already exists (to prevent email enumeration). Detect and block it.
+    if (signUpData?.user?.identities?.length === 0) {
+        return { success: false, error: 'An account with this email already exists. Please log in instead.' };
+    }
+
     return { success: true };
 }
