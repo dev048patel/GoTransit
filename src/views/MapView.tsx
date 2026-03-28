@@ -284,7 +284,7 @@ export const MapView: React.FC<MapViewProps> = ({
                     📍 {selectedPlaceMarker.name}
                   </div>
                   <div style={{ fontSize: '13px', color: '#5f6368', marginBottom: '12px' }}>
-                    Do you want bus suggestions?
+                    Do you want bus suggestions to this location?
                   </div>
                   <div style={{ display: 'flex', gap: '8px' }}>
                     <button
@@ -306,7 +306,10 @@ export const MapView: React.FC<MapViewProps> = ({
                       Yes 🚌
                     </button>
                     <button
-                      onClick={() => setShowInfoWindow(false)}
+                      onClick={() => {
+                        setShowInfoWindow(false);
+                        setSelectedPlaceMarker(null);
+                      }}
                       style={{
                         padding: '6px 16px',
                         backgroundColor: '#f1f3f4',
@@ -319,24 +322,6 @@ export const MapView: React.FC<MapViewProps> = ({
                       }}
                     >
                       No thanks
-                    </button>
-                    <button
-                      onClick={() => {
-                        setShowInfoWindow(false);
-                        setSelectedPlaceMarker(null);
-                      }}
-                      style={{
-                        padding: '6px 16px',
-                        backgroundColor: '#fce8e6',
-                        color: '#d93025',
-                        border: 'none',
-                        borderRadius: '16px',
-                        fontSize: '13px',
-                        fontWeight: '500',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      Remove pin
                     </button>
                   </div>
                 </div>
