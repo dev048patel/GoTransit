@@ -48,7 +48,7 @@ export default function ComparisonTable() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
                 >
-                    <h2 className="text-5xl font-bold mb-5" style={{ color: '#0f172a' }}>
+                    <h2 className="text-3xl sm:text-5xl font-bold mb-5" style={{ color: '#0f172a' }}>
                         Why <span style={{ color: '#003DA5' }}>GoTransit</span> Regina?
                     </h2>
                     <p className="text-xl max-w-xl mx-auto" style={{ color: '#64748b' }}>

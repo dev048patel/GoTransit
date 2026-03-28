@@ -18,8 +18,12 @@ export default function TripPlannerModal({ isOpen, onClose, onSelectRoute, liveB
     };
 
     return (
-        <div style={overlayStyle} onClick={handleClose}>
-            <div style={modalStyle} onClick={(e) => e.stopPropagation()}>
+        <div className="trip-planner-overlay" style={overlayStyle} onClick={handleClose}>
+            <div className="trip-planner-modal" style={modalStyle} onClick={(e) => e.stopPropagation()}>
+                {/* Drag handle for mobile */}
+                <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '8px' }}>
+                    <div style={{ width: '36px', height: '4px', backgroundColor: '#dadce0', borderRadius: '2px' }} />
+                </div>
                 {/* Header */}
                 <div style={headerStyle}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -149,6 +153,18 @@ export default function TripPlannerModal({ isOpen, onClose, onSelectRoute, liveB
                 @keyframes spin {
                     0% { transform: rotate(0deg); }
                     100% { transform: rotate(360deg); }
+                }
+                @media (min-width: 641px) {
+                    .trip-planner-overlay {
+                        align-items: center !important;
+                        padding: 20px !important;
+                    }
+                    .trip-planner-modal {
+                        border-radius: 16px !important;
+                        max-height: 85vh !important;
+                        box-shadow: 0 20px 60px rgba(0,0,0,0.3) !important;
+                        padding: 24px !important;
+                    }
                 }
             `}</style>
         </div>
@@ -380,21 +396,22 @@ const overlayStyle: React.CSSProperties = {
     top: 0, left: 0, right: 0, bottom: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     justifyContent: 'center',
     zIndex: 2000,
-    padding: '20px'
+    padding: 0,
 };
 
 const modalStyle: React.CSSProperties = {
     backgroundColor: 'white',
-    borderRadius: '16px',
+    borderRadius: '20px 20px 0 0',
     width: '100%',
     maxWidth: '480px',
-    maxHeight: '85vh',
+    maxHeight: '90vh',
     overflowY: 'auto',
-    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-    padding: '24px'
+    boxShadow: '0 -4px 24px rgba(0, 0, 0, 0.15)',
+    padding: '16px 20px 24px',
+    WebkitOverflowScrolling: 'touch' as any,
 };
 
 const headerStyle: React.CSSProperties = {
@@ -466,7 +483,7 @@ const inputStyle: React.CSSProperties = {
     padding: '12px 14px',
     border: '2px solid #dadce0',
     borderRadius: '10px',
-    fontSize: '14px',
+    fontSize: '16px',
     outline: 'none',
     color: '#202124',
     boxSizing: 'border-box',

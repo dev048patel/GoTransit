@@ -28,6 +28,7 @@ export interface MapOptions {
   disableDefaultUI: boolean;
   zoomControl: boolean;
   restriction?: MapRestriction;
+  gestureHandling?: string;
 }
 
 // The Model Object
@@ -43,6 +44,7 @@ export const MapModel = {
     // styles: mapStyles,
     disableDefaultUI: true,
     zoomControl: false,
+    gestureHandling: 'greedy',
     restriction: {
       latLngBounds: {
         north: 50.53,

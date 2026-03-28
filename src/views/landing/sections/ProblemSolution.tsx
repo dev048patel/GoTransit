@@ -45,7 +45,7 @@ export default function ProblemSolution({ problemSolutions }: ProblemSolutionPro
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
                 >
-                    <h2 className="text-5xl font-bold mb-5" style={{ color: '#0f172a' }}>
+                    <h2 className="text-3xl sm:text-5xl font-bold mb-5" style={{ color: '#0f172a' }}>
                         Built for Regina's{' '}
                         <span style={{ color: '#003DA5' }}>Real Challenges</span>
                     </h2>

@@ -7,8 +7,36 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    /* Prevent pull-to-refresh and overscroll bounce on mobile */
+    overscroll-behavior: none;
+    -webkit-text-size-adjust: 100%;
 }
 
+/* Prevent iOS from zooming on input focus (font-size >= 16px) */
+input, select, textarea {
+    font-size: 16px !important;
+}
+
+/* Smooth scrolling for all scrollable panels */
+* {
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent tap highlight on mobile */
+a, button {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Google Maps InfoWindow - prevent it from being too wide on mobile */
+@media (max-width: 640px) {
+    .gm-style-iw {
+        max-width: 260px !important;
+    }
+    .gm-style-iw-d {
+        max-width: 250px !important;
+        overflow: auto !important;
+    }
+}
 
 .Logo {
     position: absolute;

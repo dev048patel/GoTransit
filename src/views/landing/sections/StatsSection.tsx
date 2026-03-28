@@ -94,7 +94,7 @@ export default function StatsSection({ stats }: StatsSectionProps) {
                                 </div>
 
                                 {/* Animated Number */}
-                                <div className="text-6xl font-bold mb-3" style={{ color: '#003DA5' }}>
+                                <div className="text-4xl sm:text-6xl font-bold mb-3" style={{ color: '#003DA5' }}>
                                     <AnimatedCounter targetValue={stat.value} />
                                 </div>
 

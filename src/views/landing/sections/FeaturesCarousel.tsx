@@ -118,7 +118,7 @@ export default function FeaturesCarousel({ features }: FeaturesCarouselProps) {
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
                 >
-                    <h2 className="text-5xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-[#003DA5] to-[#003DA5] bg-clip-text text-transparent">
+                    <h2 className="text-3xl sm:text-5xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-[#003DA5] to-[#003DA5] bg-clip-text text-transparent">
                         Powerful Features
                     </h2>
                     <p className="text-xl text-gray-600 max-w-2xl mx-auto">

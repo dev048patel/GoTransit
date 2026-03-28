@@ -75,7 +75,7 @@ export default function HeroSection({ headline, subheadline, primaryCTA, seconda
                     >
                         {/* Headline */}
                         <motion.h1
-                            className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
+                            className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
                             style={{ color: '#0f172a' }}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}

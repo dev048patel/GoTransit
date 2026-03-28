@@ -64,7 +64,7 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                                 border: 'none',
                                 backgroundColor: 'transparent',
                                 outline: 'none',
-                                fontSize: '14px',
+                                fontSize: '16px',
                                 width: '100%',
                                 color: '#202124',
                             }}
@@ -334,7 +334,7 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                 }
 
                 .navbar-root {
-                    position: absolute;
+                    position: fixed;
                     top: 0; left: 0; right: 0;
                     background-color: white;
                     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -399,6 +399,7 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                     .navbar-mobile-actions { display: flex; }
                     .navbar-mobile-menu { display: flex; }
                     .navbar-search { margin: 0 6px !important; }
+                    .navbar-top-row { height: 48px; padding: 0 10px; }
                 }
             `}</style>
         </nav>

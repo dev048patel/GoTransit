@@ -275,25 +275,26 @@ export const MapView: React.FC<MapViewProps> = ({
               <InfoWindow
                 position={selectedPlaceMarker.location}
                 onCloseClick={() => setShowInfoWindow(false)}
+                options={{ maxWidth: 260 }}
               >
                 <div style={{
-                  padding: '8px 4px',
+                  padding: '4px 2px',
                   fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
                 }}>
-                  <div style={{ fontWeight: '600', fontSize: '14px', color: '#202124', marginBottom: '8px' }}>
+                  <div style={{ fontWeight: '600', fontSize: '13px', color: '#202124', marginBottom: '6px', lineHeight: '1.3' }}>
                     📍 {selectedPlaceMarker.name}
                   </div>
-                  <div style={{ fontSize: '13px', color: '#5f6368', marginBottom: '12px' }}>
-                    Do you want bus suggestions to this location?
+                  <div style={{ fontSize: '12px', color: '#5f6368', marginBottom: '8px' }}>
+                    Bus suggestions to here?
                   </div>
-                  <div style={{ display: 'flex', gap: '8px' }}>
+                  <div style={{ display: 'flex', gap: '6px' }}>
                     <button
                       onClick={() => {
                         setShowInfoWindow(false);
                         setShowBusSuggestions(true);
                       }}
                       style={{
-                        padding: '6px 16px',
+                        padding: '6px 14px',
                         backgroundColor: '#1a73e8',
                         color: 'white',
                         border: 'none',
@@ -311,7 +312,7 @@ export const MapView: React.FC<MapViewProps> = ({
                         setSelectedPlaceMarker(null);
                       }}
                       style={{
-                        padding: '6px 16px',
+                        padding: '6px 14px',
                         backgroundColor: '#f1f3f4',
                         color: '#5f6368',
                         border: 'none',
@@ -321,7 +322,7 @@ export const MapView: React.FC<MapViewProps> = ({
                         cursor: 'pointer'
                       }}
                     >
-                      No thanks
+                      No
                     </button>
                   </div>
                 </div>

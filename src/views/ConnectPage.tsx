@@ -81,14 +81,14 @@ function Avatar({ name, photo }: { name: string; photo: string }) {
             <img
                 src={photo}
                 alt={name}
-                className="w-28 h-28 rounded-full object-cover ring-4 ring-white shadow-lg"
+                className="w-20 h-20 sm:w-28 sm:h-28 rounded-full object-cover ring-4 ring-white shadow-lg"
             />
         );
     }
     const initials = name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
     return (
         <div
-            className="w-28 h-28 rounded-full flex items-center justify-center text-2xl font-bold text-white ring-4 ring-white shadow-lg"
+            className="w-20 h-20 sm:w-28 sm:h-28 rounded-full flex items-center justify-center text-xl sm:text-2xl font-bold text-white ring-4 ring-white shadow-lg"
             style={{ background: 'linear-gradient(135deg, #003DA5, #0066FF)' }}
         >
             {initials}
@@ -113,7 +113,7 @@ export default function ConnectPage() {
                 }}
             />
 
-            <div className="relative z-10 max-w-6xl mx-auto px-6 py-20">
+            <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
 
                 {/* Back link */}
                 <motion.div
@@ -139,10 +139,10 @@ export default function ConnectPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
                 >
-                    <h1 className="text-5xl font-bold mb-4" style={{ color: '#0f172a' }}>
+                    <h1 className="text-3xl sm:text-5xl font-bold mb-4" style={{ color: '#0f172a' }}>
                         Meet the <span style={{ color: '#003DA5' }}>Team</span>
                     </h1>
-                    <p className="text-xl max-w-xl mx-auto" style={{ color: '#64748b' }}>
+                    <p className="text-base sm:text-xl max-w-xl mx-auto" style={{ color: '#64748b' }}>
                         We're students at the University of Regina who built GoTransit to make commuting less painful.
                         Reach out — we'd love to connect.
                     </p>
@@ -153,7 +153,7 @@ export default function ConnectPage() {
                     {developers.map((dev, i) => (
                         <motion.div
                             key={dev.name}
-                            className="rounded-3xl p-8 text-center"
+                            className="rounded-3xl p-5 sm:p-8 text-center"
                             style={{
                                 background: 'rgba(255,255,255,0.85)',
                                 backdropFilter: 'blur(20px)',
@@ -171,7 +171,7 @@ export default function ConnectPage() {
                             </div>
 
                             {/* Name & role */}
-                            <h2 className="text-2xl font-bold mb-1" style={{ color: '#0f172a' }}>{dev.name}</h2>
+                            <h2 className="text-xl sm:text-2xl font-bold mb-1" style={{ color: '#0f172a' }}>{dev.name}</h2>
                             <p className="text-sm font-medium mb-4" style={{ color: '#003DA5' }}>{dev.role}</p>
 
                             {/* Bio */}

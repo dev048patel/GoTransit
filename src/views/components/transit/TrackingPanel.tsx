@@ -339,7 +339,7 @@ function TimelineStep({ color, icon, title, subtitle, time, lineColor, dashed, s
 // -------- Styles --------
 
 const panelStyle: React.CSSProperties = {
-    position: 'absolute',
+    position: 'fixed',
     bottom: 0, left: 0, right: 0,
     maxHeight: '55vh',
     backgroundColor: 'white',
@@ -375,11 +375,12 @@ const headerStyle: React.CSSProperties = {
 const timelineContainerStyle: React.CSSProperties = {
     padding: '12px 18px',
     overflowY: 'auto',
-    flex: 1
+    flex: 1,
+    WebkitOverflowScrolling: 'touch' as any,
 };
 
 const buttonsStyle: React.CSSProperties = {
-    padding: '10px 18px 16px',
+    padding: '10px 18px calc(16px + env(safe-area-inset-bottom, 0px))',
     borderTop: '1px solid #e8eaed',
     display: 'flex',
     gap: '10px'

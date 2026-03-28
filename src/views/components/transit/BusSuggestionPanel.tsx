@@ -10,11 +10,15 @@ export default function BusSuggestionPanel({ destination, onClose, onSelectRoute
     const { gpsLoading, gpsError, results, searching, handleRefresh } = useBusSuggestionController({ destination, liveBuses });
 
     return (
-        <div style={panelStyle}>
+        <div className="bus-suggestion-panel" style={panelStyle}>
+            {/* Drag handle for mobile */}
+            <div style={{ display: 'flex', justifyContent: 'center', padding: '8px 0 0' }}>
+                <div style={{ width: '36px', height: '4px', backgroundColor: '#dadce0', borderRadius: '2px' }} />
+            </div>
             {/* Header */}
             <div style={headerStyle}>
                 <div>
-                    <div style={{ fontWeight: '700', fontSize: '16px', color: '#202124' }}>
+                    <div style={{ fontWeight: '700', fontSize: '15px', color: '#202124' }}>
                         🚌 Bus Suggestions
                     </div>
                     <div style={{ fontSize: '12px', color: '#5f6368', marginTop: '2px' }}>
@@ -91,7 +95,22 @@ export default function BusSuggestionPanel({ destination, onClose, onSelectRoute
                 ))}
             </div>
 
-            <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+            <style>{`
+                @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+                @media (min-width: 641px) {
+                    .bus-suggestion-panel {
+                        position: fixed !important;
+                        top: 55px !important;
+                        bottom: auto !important;
+                        right: 10px !important;
+                        left: auto !important;
+                        width: 380px !important;
+                        max-height: calc(100vh - 70px) !important;
+                        border-radius: 16px !important;
+                        box-shadow: 0 8px 32px rgba(0,0,0,0.18) !important;
+                    }
+                }
+            `}</style>
         </div>
     );
 }
@@ -354,14 +373,16 @@ function RouteCard({ option, index }: { option: TripOption; index: number }) {
 // -------- Styles --------
 
 const panelStyle: React.CSSProperties = {
-    position: 'absolute',
-    top: '55px',
-    right: '10px',
-    width: '380px',
-    maxHeight: 'calc(100vh - 70px)',
+    position: 'fixed',
+    top: 'auto',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    width: '100%',
+    maxHeight: '70vh',
     backgroundColor: 'white',
-    borderRadius: '16px',
-    boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
+    borderRadius: '20px 20px 0 0',
+    boxShadow: '0 -4px 24px rgba(0,0,0,0.15)',
     zIndex: 1500,
     display: 'flex',
     flexDirection: 'column',
@@ -372,7 +393,7 @@ const headerStyle: React.CSSProperties = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: '14px 18px',
+    padding: '8px 16px 10px',
     borderBottom: '1px solid #e8eaed',
     backgroundColor: '#f8f9fa'
 };
@@ -388,9 +409,10 @@ const closeBtnStyle: React.CSSProperties = {
 };
 
 const contentStyle: React.CSSProperties = {
-    padding: '14px',
+    padding: '10px 14px',
     overflowY: 'auto',
-    flex: 1
+    flex: 1,
+    WebkitOverflowScrolling: 'touch' as any,
 };
 
 const statusStyle: React.CSSProperties = {

@@ -37,7 +37,7 @@ export default function FinalCTA() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.8 }}
                 >
-                    <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 drop-shadow-[0_4px_20px_rgba(0,0,0,0.3)]">
+                    <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 drop-shadow-[0_4px_20px_rgba(0,0,0,0.3)]">
                         Ready to Transform Your Commute?
                     </h2>
 

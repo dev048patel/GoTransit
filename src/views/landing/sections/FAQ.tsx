@@ -28,7 +28,7 @@ export default function FAQ({ faqItems }: FAQProps) {
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
                 >
-                    <h2 className="text-5xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-[#003DA5] to-[#003DA5] bg-clip-text text-transparent">
+                    <h2 className="text-3xl sm:text-5xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-[#003DA5] to-[#003DA5] bg-clip-text text-transparent">
                         Frequently Asked Questions
                     </h2>
                     <p className="text-xl text-gray-600">
