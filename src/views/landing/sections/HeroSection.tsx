@@ -124,8 +124,10 @@ export default function HeroSection({ headline, subheadline, primaryCTA, seconda
                             </Link>
 
                             {/* Secondary — outlined */}
-                            <Link
-                                to="/map"
+                            <a
+                                href="https://youtu.be/fIEgUrMZmg4"
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="px-8 py-4 rounded-xl font-bold text-lg border-2 transition-all duration-300 flex items-center justify-center gap-2 no-underline"
                                 style={{
                                     color: '#003DA5',
@@ -143,7 +145,7 @@ export default function HeroSection({ headline, subheadline, primaryCTA, seconda
                             >
                                 <MapPin size={20} />
                                 {secondaryCTA}
-                            </Link>
+                            </a>
                         </motion.div>
 
                         {/* Trust Indicators */}

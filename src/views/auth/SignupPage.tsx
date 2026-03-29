@@ -93,6 +93,13 @@ export default function SignupPage() {
                 <div className="bg-white rounded-3xl shadow-[0_20px_80px_rgba(0,0,0,0.08)] border border-gray-100 px-8 py-8">
                     <form onSubmit={handleSubmit} className="space-y-5" noValidate>
 
+                        {/* Form-level error (e.g. duplicate email) */}
+                        {errors.form && (
+                            <p className="text-red-500 text-sm text-center bg-red-50 border border-red-200 rounded-xl py-2 px-4">
+                                {errors.form}
+                            </p>
+                        )}
+
                         {/* Full Name */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1.5">Full Name</label>

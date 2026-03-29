@@ -16,7 +16,6 @@ export class RealTimeService {
             // Append timestamp to prevent caching.
             const urlWithTime = `${this.API_URL}?_=${Date.now()}`;
 
-
             const response = await fetch(urlWithTime); // making HTTP GET req to API(External) and await for response.
 
             if (!response.ok) {
