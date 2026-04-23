@@ -4,10 +4,15 @@ import { TripOption } from '../../../models/transit/RoutePlanning';
 import transitColors from '../../../models/data/transitColors';
 import { BusSuggestionPanelProps } from '../../../models/components/BusSuggestionPanelProps';
 import { useBusSuggestionController } from '../../../controllers/useBusSuggestionController';
+import { computeDepartBy } from '../../../models/transit/TripSchedule';
 
 // Pure view component — all GPS/route logic lives in useBusSuggestionController
 export default function BusSuggestionPanel({ destination, onClose, onSelectRoute, liveBuses }: BusSuggestionPanelProps) {
     const { gpsLoading, gpsError, results, searching, handleRefresh } = useBusSuggestionController({ destination, liveBuses });
+
+    // Arrive-by time planning (purely display — no recalculation needed)
+    const [arriveByMode, setArriveByMode] = React.useState(false);
+    const [arriveByTime, setArriveByTime] = React.useState('');
 
     return (
         <div className="bus-suggestion-panel" style={panelStyle}>
@@ -44,6 +49,39 @@ export default function BusSuggestionPanel({ destination, onClose, onSelectRoute
                     </button>
                     <button onClick={onClose} style={closeBtnStyle}>✕</button>
                 </div>
+            </div>
+
+            {/* Arrive-by time row */}
+            <div style={{ padding: '8px 14px', borderBottom: '1px solid #f0f0f0', display: 'flex', alignItems: 'center', gap: '8px', backgroundColor: arriveByMode ? '#F1F8F2' : 'white' }}>
+                <button
+                    onClick={() => { setArriveByMode(m => !m); if (arriveByMode) setArriveByTime(''); }}
+                    style={{
+                        padding: '4px 10px', borderRadius: '8px', border: 'none', fontSize: '12px', fontWeight: '600',
+                        backgroundColor: arriveByMode ? '#2E7D32' : '#f1f3f4',
+                        color: arriveByMode ? 'white' : '#5f6368',
+                        cursor: 'pointer', transition: 'all 0.15s', whiteSpace: 'nowrap',
+                    }}
+                >
+                    {arriveByMode ? '✓ Arrive by' : 'Plan for later'}
+                </button>
+                {arriveByMode && (
+                    <input
+                        type="time"
+                        value={arriveByTime}
+                        onChange={e => setArriveByTime(e.target.value)}
+                        style={{
+                            padding: '4px 8px', borderRadius: '8px', border: '1.5px solid #2E7D32',
+                            fontSize: '13px', fontWeight: '600', color: '#202124', outline: 'none',
+                            backgroundColor: 'white',
+                        }}
+                        autoFocus
+                    />
+                )}
+                {arriveByMode && arriveByTime && (
+                    <span style={{ fontSize: '11px', color: '#2E7D32', fontWeight: '600' }}>
+                        Shows depart-by times
+                    </span>
+                )}
             </div>
 
             {/* Content — loading, error, empty, or route cards */}
@@ -90,7 +128,11 @@ export default function BusSuggestionPanel({ destination, onClose, onSelectRoute
 
                 {results.map((option, i) => (
                     <div key={i} onClick={() => onSelectRoute?.(option)} style={{ cursor: 'pointer' }}>
-                        <RouteCard option={option} index={i} />
+                        <RouteCard
+                            option={option}
+                            index={i}
+                            arriveBy={arriveByMode && arriveByTime ? arriveByTime : undefined}
+                        />
                     </div>
                 ))}
             </div>
@@ -116,7 +158,7 @@ export default function BusSuggestionPanel({ destination, onClose, onSelectRoute
 }
 
 // RouteCard — displays a single route option with timeline steps
-function RouteCard({ option, index }: { option: TripOption; index: number }) {
+function RouteCard({ option, index, arriveBy }: { option: TripOption; index: number; arriveBy?: string }) {
     const [expandedStops, setExpandedStops] = React.useState<Set<number>>(new Set());
 
     const toggleStops = (segIndex: number, e: React.MouseEvent) => {
@@ -175,6 +217,21 @@ function RouteCard({ option, index }: { option: TripOption; index: number }) {
                     )}
                 </div>
             </div>
+
+            {/* Depart-by banner — shown when arrive-by mode is active */}
+            {arriveBy && (
+                <div style={{
+                    display: 'flex', alignItems: 'center', gap: '6px',
+                    padding: '6px 10px', backgroundColor: '#E8F5E9', borderRadius: '8px',
+                    marginBottom: '10px', fontSize: '12px', fontWeight: '600',
+                }}>
+                    <span style={{ fontSize: '14px' }}>🕐</span>
+                    <span style={{ color: '#1B5E20' }}>
+                        Leave by <strong>{computeDepartBy(arriveBy, option.totalTime)}</strong>
+                        <span style={{ fontWeight: '400', color: '#2E7D32' }}> to arrive by {arriveBy}</span>
+                    </span>
+                </div>
+            )}
 
             {/* Live ETA banner */}
             {option.isLivePrediction && option.waitTime !== undefined && (

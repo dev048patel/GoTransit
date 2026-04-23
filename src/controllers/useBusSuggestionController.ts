@@ -31,10 +31,25 @@ export function useBusSuggestionController({ destination, liveBuses }: BusSugges
                 setGpsLoading(false);
             },
             (err) => {
-                setGpsError(`GPS error: ${err.message}`);
-                setGpsLoading(false);
+                if (err.code === err.TIMEOUT || err.code === err.POSITION_UNAVAILABLE) {
+                    // High-accuracy timed out — fall back to network/IP location
+                    navigator.geolocation.getCurrentPosition(
+                        (pos) => {
+                            setOrigin({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+                            setGpsLoading(false);
+                        },
+                        (fallbackErr) => {
+                            setGpsError(`GPS error: ${fallbackErr.message}`);
+                            setGpsLoading(false);
+                        },
+                        { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 }
+                    );
+                } else {
+                    setGpsError(`GPS error: ${err.message}`);
+                    setGpsLoading(false);
+                }
             },
-            { enableHighAccuracy: true, timeout: 10000 }
+            { enableHighAccuracy: true, timeout: 8000, maximumAge: 30000 }
         );
     }, []);
 
@@ -75,10 +90,24 @@ export function useBusSuggestionController({ destination, liveBuses }: BusSugges
                 setGpsLoading(false);
             },
             (err) => {
-                setGpsError(`GPS error: ${err.message}`);
-                setGpsLoading(false);
+                if (err.code === err.TIMEOUT || err.code === err.POSITION_UNAVAILABLE) {
+                    navigator.geolocation.getCurrentPosition(
+                        (pos) => {
+                            setOrigin({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+                            setGpsLoading(false);
+                        },
+                        (fallbackErr) => {
+                            setGpsError(`GPS error: ${fallbackErr.message}`);
+                            setGpsLoading(false);
+                        },
+                        { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 }
+                    );
+                } else {
+                    setGpsError(`GPS error: ${err.message}`);
+                    setGpsLoading(false);
+                }
             },
-            { enableHighAccuracy: true, timeout: 10000 }
+            { enableHighAccuracy: true, timeout: 8000, maximumAge: 30000 }
         );
     }, []);
 

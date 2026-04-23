@@ -1,9 +1,13 @@
-/* Navbar — top navigation bar with search autocomplete, route selector, admin link, and profile icon */
+/* Navbar — top navigation bar with search autocomplete, route selector, admin link, profile, and saved locations */
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Route } from '../models/transit/Route';
 import { useAuth } from '../models/context/AuthContext';
 import { useNavbarController } from '../controllers/useNavbarController';
+import { useSavedDestinationsController } from '../controllers/useSavedDestinationsController';
+import { useTripScheduleController } from '../controllers/useTripScheduleController';
+import SavedLocationsPanel from './SavedLocationsPanel';
+import TripSchedulePanel from './TripSchedulePanel';
 import logo from '../New-Image.jpeg';
 
 interface NavbarProps {
@@ -13,11 +17,12 @@ interface NavbarProps {
     onRouteSelect?: (routeNum: string | null) => void;
 }
 
-// Renders the top navbar with search, route filter, admin link, and profile
+// Renders the top navbar with search, route filter, admin link, profile, and saved locations
 export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSelect }: NavbarProps) {
     const { isAdmin } = useAuth();
-    // All search logic lives in the controller
     const { ready, value, status, data, showResults, handleInput, handleSelect, handleFocus } = useNavbarController(onPlaceSelect);
+    const saved = useSavedDestinationsController();
+    const tplan = useTripScheduleController();
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
     return (
@@ -210,6 +215,48 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                         </Link>
                     )}
 
+                    {/* Trip Planner Button */}
+                    <div
+                        onClick={tplan.isOpen ? tplan.handleClose : tplan.handleOpen}
+                        title="Trip Planner"
+                        style={{
+                            width: '34px', height: '34px', borderRadius: '50%',
+                            backgroundColor: tplan.isOpen ? '#E8F5E9' : '#f1f3f4',
+                            border: tplan.isOpen ? '2px solid #2E7D32' : '2px solid transparent',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            cursor: 'pointer', color: tplan.isOpen ? '#2E7D32' : '#5f6368',
+                            transition: 'all 0.2s', flexShrink: 0,
+                        }}
+                        onMouseEnter={e => { if (!tplan.isOpen) { e.currentTarget.style.backgroundColor = '#E8F5E9'; e.currentTarget.style.color = '#2E7D32'; } }}
+                        onMouseLeave={e => { if (!tplan.isOpen) { e.currentTarget.style.backgroundColor = '#f1f3f4'; e.currentTarget.style.color = '#5f6368'; } }}
+                    >
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                            <line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" />
+                            <line x1="3" y1="10" x2="21" y2="10" />
+                        </svg>
+                    </div>
+
+                    {/* Saved Locations Button */}
+                    <div
+                        onClick={saved.isOpen ? saved.handleClose : saved.handleOpen}
+                        title="Saved Locations"
+                        style={{
+                            width: '34px', height: '34px', borderRadius: '50%',
+                            backgroundColor: saved.isOpen ? '#E8F5E9' : '#f1f3f4',
+                            border: saved.isOpen ? '2px solid #2E7D32' : '2px solid transparent',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            cursor: 'pointer', color: saved.isOpen ? '#2E7D32' : '#5f6368',
+                            transition: 'all 0.2s', flexShrink: 0,
+                        }}
+                        onMouseEnter={e => { if (!saved.isOpen) { e.currentTarget.style.backgroundColor = '#E8F5E9'; e.currentTarget.style.color = '#2E7D32'; } }}
+                        onMouseLeave={e => { if (!saved.isOpen) { e.currentTarget.style.backgroundColor = '#f1f3f4'; e.currentTarget.style.color = '#5f6368'; } }}
+                    >
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill={saved.isOpen ? '#2E7D32' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z" />
+                        </svg>
+                    </div>
+
                     {/* Profile Icon */}
                     <Link to="/profile" style={{ textDecoration: 'none', flexShrink: 0 }}>
                         <div style={{
@@ -228,6 +275,41 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
 
                 {/* Mobile hamburger + profile — visible only on mobile */}
                 <div className="navbar-mobile-actions">
+                    {/* Trip Planner Button (mobile) */}
+                    <div
+                        onClick={tplan.isOpen ? tplan.handleClose : tplan.handleOpen}
+                        style={{
+                            width: '32px', height: '32px', borderRadius: '50%',
+                            backgroundColor: tplan.isOpen ? '#E8F5E9' : '#f1f3f4',
+                            border: tplan.isOpen ? '2px solid #2E7D32' : '2px solid transparent',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            cursor: 'pointer', color: tplan.isOpen ? '#2E7D32' : '#5f6368', flexShrink: 0,
+                        }}
+                    >
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                            <line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" />
+                            <line x1="3" y1="10" x2="21" y2="10" />
+                        </svg>
+                    </div>
+
+                    {/* Saved Locations Button (mobile) */}
+                    <div
+                        onClick={saved.isOpen ? saved.handleClose : saved.handleOpen}
+                        style={{
+                            width: '32px', height: '32px', borderRadius: '50%',
+                            backgroundColor: saved.isOpen ? '#E8F5E9' : '#f1f3f4',
+                            border: saved.isOpen ? '2px solid #2E7D32' : '2px solid transparent',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            cursor: 'pointer', color: saved.isOpen ? '#2E7D32' : '#5f6368',
+                            flexShrink: 0,
+                        }}
+                    >
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill={saved.isOpen ? '#2E7D32' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z" />
+                        </svg>
+                    </div>
+
                     <Link to="/profile" style={{ textDecoration: 'none', flexShrink: 0 }}>
                         <div style={{
                             width: '32px', height: '32px', borderRadius: '50%',
@@ -324,6 +406,16 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                         </Link>
                     )}
                 </div>
+            )}
+
+            {/* Trip Planner Panel */}
+            {tplan.isOpen && (
+                <TripSchedulePanel ctrl={tplan} onPreviewLocation={onPlaceSelect} />
+            )}
+
+            {/* Saved Locations Panel */}
+            {saved.isOpen && (
+                <SavedLocationsPanel ctrl={saved} onGoNow={onPlaceSelect} />
             )}
 
             {/* Responsive CSS */}
