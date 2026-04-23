@@ -54,10 +54,30 @@ export function useTripPlannerController(liveBuses?: BusPosition[]) {
                 setRouteResults(null);
             },
             (error) => {
-                setGpsError(`Unable to get location: ${error.message}`);
-                setGpsLoading(false);
+                if (error.code === error.TIMEOUT || error.code === error.POSITION_UNAVAILABLE) {
+                    // High-accuracy timed out — fall back to network/IP location
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            setOrigin({
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude,
+                                label: `📍 My Location (${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)})`
+                            });
+                            setGpsLoading(false);
+                            setRouteResults(null);
+                        },
+                        (fallbackError) => {
+                            setGpsError(`Unable to get location: ${fallbackError.message}`);
+                            setGpsLoading(false);
+                        },
+                        { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 }
+                    );
+                } else {
+                    setGpsError(`Unable to get location: ${error.message}`);
+                    setGpsLoading(false);
+                }
             },
-            { enableHighAccuracy: true, timeout: 10000 }
+            { enableHighAccuracy: true, timeout: 8000, maximumAge: 30000 }
         );
     }, []);
 

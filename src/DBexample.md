@@ -135,3 +135,69 @@ $$ LANGUAGE sql SECURITY DEFINER;
 
 ALTER TABLE public.visitor_sessions 
 ADD COLUMN user_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL;
+
+-- ============================================
+-- 7. SAVED DESTINATIONS
+-- Arbitrary Google Places locations saved by users (Home, Work, etc.)
+-- ============================================
+CREATE TABLE public.saved_destinations (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id     UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  name        TEXT NOT NULL,
+  address     TEXT NOT NULL,
+  lat         DOUBLE PRECISION NOT NULL,
+  lng         DOUBLE PRECISION NOT NULL,
+  place_id    TEXT,
+  created_at  TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE public.saved_destinations ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can manage own saved destinations"
+ON public.saved_destinations
+FOR ALL USING (auth.uid() = user_id)
+WITH CHECK (auth.uid() = user_id);
+
+-- ============================================
+-- 8. TRIP SCHEDULES (multi-day trip planner)
+-- ============================================
+CREATE TABLE public.trip_schedules (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id     UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  name        TEXT NOT NULL DEFAULT 'Trip Plan',
+  start_date  DATE NOT NULL,
+  end_date    DATE NOT NULL,
+  created_at  TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE TABLE public.trip_schedule_legs (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  schedule_id     UUID NOT NULL REFERENCES public.trip_schedules(id) ON DELETE CASCADE,
+  day_index       INTEGER NOT NULL,
+  from_name       TEXT NOT NULL,
+  from_lat        DOUBLE PRECISION NOT NULL,
+  from_lng        DOUBLE PRECISION NOT NULL,
+  to_name         TEXT NOT NULL,
+  to_lat          DOUBLE PRECISION NOT NULL,
+  to_lng          DOUBLE PRECISION NOT NULL,
+  arrive_by       TEXT NOT NULL,
+  route_summary   JSONB,
+  created_at      TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE public.trip_schedules ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.trip_schedule_legs ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users manage own schedules"
+ON public.trip_schedules FOR ALL
+USING (auth.uid() = user_id)
+WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users manage own schedule legs"
+ON public.trip_schedule_legs FOR ALL
+USING (
+  EXISTS (
+    SELECT 1 FROM public.trip_schedules ts
+    WHERE ts.id = schedule_id AND ts.user_id = auth.uid()
+  )
+);
