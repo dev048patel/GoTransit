@@ -16,6 +16,7 @@ import { getStopsForRoute } from '../models/services/StopToRouteIndex';
 import { MapControllerOutput } from '../models/controllers/MapControllerOutput';
 import { DetourService } from '../models/services/DetourService';
 import { ActiveDetour } from '../models/transit/Detour';
+import { RoutePolylineService } from '../models/services/RoutePolylineService';
 
 export const useMapController = (): MapControllerOutput => {
   // 1. Fetch Configuration from Model and initialize state variables
@@ -40,15 +41,19 @@ export const useMapController = (): MapControllerOutput => {
   const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
   const [activeDetours, setActiveDetours] = useState<ActiveDetour[]>([]);
 
-  // Load ALL active detours from local snapshots once on mount.
-  // Shown for every route on the map regardless of selection.
+  // Show detours only for the currently selected route — keeps the map clean.
+  // Cleared when the user deselects (no route → no detours displayed).
   useEffect(() => {
+    if (!selectedRoute) {
+      setActiveDetours([]);
+      return;
+    }
     let cancelled = false;
-    DetourService.getAllActiveDetours().then(detours => {
+    DetourService.getActiveDetours(selectedRoute).then(detours => {
       if (!cancelled) setActiveDetours(detours);
     });
     return () => { cancelled = true; };
-  }, []);
+  }, [selectedRoute]);
 
   // Track user's live GPS location
   useEffect(() => {
@@ -195,25 +200,12 @@ export const useMapController = (): MapControllerOutput => {
     return [];
   }, [allStops, selectedRoute, currentZoom]);
 
+  // Source: src/newData/polyline_data/route_{N}_polyline.json (LineString [lat, lng])
+  // Replaces the older transitShapes.json GeoJSON for displayed route polylines.
   const routePaths = useMemo(() => {
-    if (!selectedRoute || !shapesData) return [];
-
-    const feature = shapesData.features?.find((f: any) =>
-      f.properties?.ROUTE_NUM === selectedRoute ||
-      f.properties?.RouteId === selectedRoute ||
-      f.properties?.ROUTE_ID === selectedRoute
-    );
-
-    if (!feature || !feature.geometry?.coordinates) return [];
-
-    // Return coordinates of Selected Route as Lat and Lng
-    return feature.geometry.coordinates.map((line: number[][]) =>
-      line.map((coord: number[]) => ({
-        lat: coord[1],
-        lng: coord[0]
-      }))
-    );
-  }, [selectedRoute, shapesData]);
+    if (!selectedRoute) return [];
+    return RoutePolylineService.getRoutePaths(selectedRoute);
+  }, [selectedRoute]);
 
   // Handle place selection from autocomplete
   const handlePlaceSelect = (place: any) => {  // for updating the map center
