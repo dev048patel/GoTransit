@@ -17,7 +17,8 @@ import { TransferCandidate } from '../transit/TransferCandidate';
 
 export class RoutePlanningService {
     private readonly WALKING_DISTANCE = 500; // meters — max walking to a stop
-    private readonly WALKING_DISTANCE_EXPANDED = 800; // meters — fallback if no stops found
+    private readonly WALKING_DISTANCE_EXPANDED = 800; // meters — first fallback if no stops found
+    private readonly WALKING_DISTANCE_EXPANDED_2 = 1500; // meters — second fallback for sparse areas
     private readonly AVG_BUS_SPEED = 25; // km/h (city bus average including stops)
     private readonly WALKING_SPEED = 5; // km/h
 
@@ -39,7 +40,7 @@ export class RoutePlanningService {
         let originStops = this.findNearbyStops(origin, this.WALKING_DISTANCE);
         let destStops = this.findNearbyStops(destination, this.WALKING_DISTANCE);
 
-        // Expand walking radius if no stops found
+        // Expand walking radius if no stops found (first fallback: 800m)
         let expandedSearch = false;
         if (originStops.length === 0) {
             originStops = this.findNearbyStops(origin, this.WALKING_DISTANCE_EXPANDED);
@@ -50,12 +51,24 @@ export class RoutePlanningService {
             expandedSearch = true;
         }
 
+        // Second fallback: 1500m for sparse areas (outskirts, industrial zones)
+        if (originStops.length === 0) {
+            originStops = this.findNearbyStops(origin, this.WALKING_DISTANCE_EXPANDED_2);
+        }
+        if (destStops.length === 0) {
+            destStops = this.findNearbyStops(destination, this.WALKING_DISTANCE_EXPANDED_2);
+        }
+
         console.log(`[RoutePlanningService] Found ${originStops.length} origin stops, ${destStops.length} dest stops${expandedSearch ? ' (expanded search)' : ''}`);
 
         if (originStops.length === 0 || destStops.length === 0) {
             console.log('[RoutePlanningService] No nearby stops found');
             return [];
         }
+
+        // Log nearest dest stop distance (diagnostic — helps identify if destination is far from transit)
+        const nearestDestDistance = Math.min(...destStops.map(s => s.distance));
+        console.log(`[RoutePlanningService] Nearest dest stop is ${Math.round(nearestDestDistance)}m away`);
 
         // Try direct routes first
         const directOptions = this.findDirectRoutes(origin, destination, originStops, destStops);
@@ -182,11 +195,11 @@ export class RoutePlanningService {
 
                 for (const oStop of effectiveCandidates) {
                     // Direction check: oStop must come BEFORE dStop on the route.
-                    // With the new GTFS sequence lookup, this is now a reliable O(1) check.
                     // Only hard-reject if the check explicitly says INVALID.
+                    // Null (inconclusive) is allowed — pre-filter already matched direction_id,
+                    // and rejecting null would hide valid routes for stops in GTFS coverage gaps.
                     const dirCheck = checkStopDirection(routeNum, oStop.STOP_ID, dStop.STOP_ID);
-                    console.log(`[DEBUG]   o:${oStop.STOP_ID}(${Math.round(oStop.distance)}m) → d:${dStop.STOP_ID}(${Math.round(dStop.distance)}m): dirCheck=${dirCheck ? (dirCheck.valid ? 'VALID' : 'INVALID') : 'NULL'}`);
-                    if (dirCheck && !dirCheck.valid) continue; // wrong direction — skip
+                    if (dirCheck && !dirCheck.valid) continue; // explicitly invalid — skip
 
                     // null → inconclusive (not in GTFS seq or geo); use haversine estimate
                     const shapeDistance = dirCheck?.shapeDistance ?? this.calculateDistance(
@@ -290,21 +303,25 @@ export class RoutePlanningService {
         }
         // originStops is already sorted by distance, so each array is closest-first
 
-        // Collect all routes from dest stops
-        const destRouteMap = new Map<string, NearbyStop>(); // routeNum -> best dest stop
+        // Collect all routes from dest stops — keep ALL dest stops per route (sorted closest-first).
+        // Critical: a route may serve multiple nearby dest stops on different directions.
+        // Picking only the closest can pick a dir-1-only stop that no transfer can reach via dir-0.
+        const destRouteMap = new Map<string, NearbyStop[]>(); // routeNum -> all dest stops (closest first)
         for (const dStop of destStops) {
             for (const routeNum of getRoutesForStop(dStop.STOP_ID)) {
-                if (!destRouteMap.has(routeNum) || dStop.distance < destRouteMap.get(routeNum)!.distance) {
-                    destRouteMap.set(routeNum, dStop);
-                }
+                if (!destRouteMap.has(routeNum)) destRouteMap.set(routeNum, []);
+                destRouteMap.get(routeNum)!.push(dStop);
             }
+        }
+        for (const stops of destRouteMap.values()) {
+            stops.sort((a, b) => a.distance - b.distance);
         }
 
         // For each pair of origin-route and dest-route, find shared transfer stops
         for (const [oRouteNum, oOriginStops] of originRouteMap) {
             const oRouteStops = getStopsForRoute(oRouteNum);
 
-            for (const [dRouteNum, dStop] of destRouteMap) {
+            for (const [dRouteNum, dStopCandidates] of destRouteMap) {
                 if (oRouteNum === dRouteNum) continue; // Skip same route (that's a direct route)
                 // Skip if either leg uses a route already found as direct
                 if (excludeRoutes.has(oRouteNum) || excludeRoutes.has(dRouteNum)) continue;
@@ -313,6 +330,13 @@ export class RoutePlanningService {
                 if (seen.has(key)) continue;
 
                 const dRouteStops = getStopsForRoute(dRouteNum);
+
+                // Try each dStop candidate (closest first) until one produces a valid transfer.
+                // This handles the case where the closest dest stop is dir-1-only while
+                // transfer-reachable stops need dir-0 (e.g. Costco Gas Station).
+                let foundTransferForPair = false;
+                for (const dStop of dStopCandidates) {
+                if (foundTransferForPair) break;
 
                 // Find the best transfer: same-stop OR walk-between nearby stops
                 const TRANSFER_WALK_MAX = 400; // max meters to walk between transfer stops
@@ -342,11 +366,11 @@ export class RoutePlanningService {
                     for (const originCandidate of oOriginStops) {
                         const leg1Check = checkStopDirection(oRouteNum, originCandidate.STOP_ID, oStopId);
                         if (leg1Check && !leg1Check.valid) continue; // explicitly invalid — skip
-                        // null (inconclusive) or valid — accept; oOriginStops is closest-first so first match wins
+                        // null (inconclusive) or valid — accept
                         selectedOriginStop = originCandidate;
                         break;
                     }
-                    if (!selectedOriginStop) continue; // no valid origin stop for this transfer candidate
+                    if (!selectedOriginStop) continue;
 
                     // Check this stop against all dRoute stops (same or nearby)
                     for (const [dStopId, dStopInfo] of dRouteStopData) {
@@ -377,7 +401,7 @@ export class RoutePlanningService {
                         }
 
                         // Verify direction: board stop → dest stop on route B
-                        // Allow null (inconclusive) — same policy as findDirectRoutes.
+                        // Allow null (inconclusive) — pre-filter already matched direction_id.
                         const leg2Dir = checkStopDirection(dRouteNum, dStopId, dStop.STOP_ID);
                         if (leg2Dir && !leg2Dir.valid) continue;
 
@@ -414,7 +438,7 @@ export class RoutePlanningService {
                     }
                 }
 
-                if (!bestTransfer) continue;
+                if (!bestTransfer) continue; // try next dStop candidate
                 seen.add(key);
 
                 const oRouteInfo = transitRoutes.find(r => r.ROUTE_NUM === oRouteNum);
@@ -493,6 +517,8 @@ export class RoutePlanningService {
                     isLivePrediction: false,
                     transferWalkDistance: bestTransfer.walkDist > 0 ? bestTransfer.walkDist : undefined
                 });
+                foundTransferForPair = true; // Stop trying further dStop candidates for this pair
+                } // end dStop loop
             }
         }
 

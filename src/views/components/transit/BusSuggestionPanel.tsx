@@ -5,6 +5,7 @@ import transitColors from '../../../models/data/transitColors';
 import { BusSuggestionPanelProps } from '../../../models/components/BusSuggestionPanelProps';
 import { useBusSuggestionController } from '../../../controllers/useBusSuggestionController';
 import { computeDepartBy } from '../../../models/transit/TripSchedule';
+import { DetourService } from '../../../models/services/DetourService';
 
 // Pure view component — all GPS/route logic lives in useBusSuggestionController
 export default function BusSuggestionPanel({ destination, onClose, onSelectRoute, liveBuses }: BusSuggestionPanelProps) {
@@ -160,6 +161,22 @@ export default function BusSuggestionPanel({ destination, onClose, onSelectRoute
 // RouteCard — displays a single route option with timeline steps
 function RouteCard({ option, index, arriveBy }: { option: TripOption; index: number; arriveBy?: string }) {
     const [expandedStops, setExpandedStops] = React.useState<Set<number>>(new Set());
+    const [detouredRoutes, setDetouredRoutes] = React.useState<Set<string>>(new Set());
+
+    // Check each segment's route for active detours
+    React.useEffect(() => {
+        let cancelled = false;
+        const routeNums = [...new Set(option.segments.map(s => s.routeNum))];
+        Promise.all(routeNums.map(async r => ({
+            routeNum: r,
+            hasDetour: await DetourService.hasActiveDetour(r),
+        }))).then(results => {
+            if (cancelled) return;
+            const active = new Set(results.filter(r => r.hasDetour).map(r => r.routeNum));
+            setDetouredRoutes(active);
+        });
+        return () => { cancelled = true; };
+    }, [option]);
 
     const toggleStops = (segIndex: number, e: React.MouseEvent) => {
         e.stopPropagation();
@@ -201,6 +218,17 @@ function RouteCard({ option, index, arriveBy }: { option: TripOption; index: num
                         <span style={directBadgeStyle}>✅ Direct</span>
                     ) : (
                         <span style={transferBadgeStyle}>🔄 {option.transfers} transfer</span>
+                    )}
+                    {detouredRoutes.size > 0 && (
+                        <span
+                            title={`Active detour on route ${[...detouredRoutes].join(', ')} — actual path may differ`}
+                            style={{
+                                fontSize: '11px', fontWeight: '600', color: '#b00020',
+                                backgroundColor: '#fce4e6', padding: '3px 8px', borderRadius: '8px',
+                            }}
+                        >
+                            ⚠️ Detour active
+                        </span>
                     )}
                 </div>
                 <div style={{ textAlign: 'right' }}>

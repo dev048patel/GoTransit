@@ -16,6 +16,7 @@ export default function MapPage() {
         zoom, setZoom, stops, routes, selectedRoute, setSelectedRoute,
         routePaths, liveBuses, handlePlaceSelect, selectedPlaceMarker,
         setSelectedPlaceMarker, currentZoom, onZoomChanged, userLocation,
+        activeDetours,
     } = useMapController();
 
     return (
@@ -40,6 +41,7 @@ export default function MapPage() {
             currentZoom={currentZoom}
             onZoomChanged={onZoomChanged}
             userLocation={userLocation}
+            activeDetours={activeDetours}
         />
     );
 }

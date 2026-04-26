@@ -5,6 +5,7 @@ import { Stop } from '../transit/Stop';
 import { Route } from '../transit/Route';
 import { BusPosition } from '../transit/BusPosition';
 import { TripOption } from '../transit/RoutePlanning';
+import { ActiveDetour } from '../transit/Detour';
 
 export interface MapViewProps {
     isLoaded: boolean;
@@ -27,4 +28,5 @@ export interface MapViewProps {
     currentZoom: number;
     onZoomChanged: (newZoom: number) => void;
     userLocation: { lat: number; lng: number } | null;
+    activeDetours: ActiveDetour[];
 }

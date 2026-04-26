@@ -61,7 +61,8 @@ export const MapView: React.FC<MapViewProps> = ({
   setSelectedPlaceMarker,
   currentZoom,
   onZoomChanged,
-  userLocation
+  userLocation,
+  activeDetours
 }) => {
   const [showTripPlanner, setShowTripPlanner] = useState(false);
   const [showInfoWindow, setShowInfoWindow] = useState(false);
@@ -259,6 +260,20 @@ export const MapView: React.FC<MapViewProps> = ({
               strokeColor: routeColor,
               strokeOpacity: 0.8,
               strokeWeight: 5,
+            }}
+          />
+        ))}
+
+        {/* Render Active Detour Polylines (red, drawn on top of regular route) */}
+        {!activeTracking && activeDetours.map((detour) => (
+          <Polyline
+            key={`detour-${detour.detourId}`}
+            path={detour.path}
+            options={{
+              strokeColor: detour.color,
+              strokeOpacity: detour.opacity,
+              strokeWeight: 5,
+              zIndex: 100,
             }}
           />
         ))}

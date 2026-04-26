@@ -4,6 +4,7 @@ import { Coordinates, MapOptions } from '../MapModel';
 import { Stop } from '../transit/Stop';
 import { Route } from '../transit/Route';
 import { BusPosition } from '../transit/BusPosition';
+import { ActiveDetour } from '../transit/Detour';
 
 export interface MapControllerOutput {
     isLoaded: boolean;
@@ -26,4 +27,5 @@ export interface MapControllerOutput {
     currentZoom: number;
     onZoomChanged: (newZoom: number) => void;
     userLocation: Coordinates | null;
+    activeDetours: ActiveDetour[];
 }
