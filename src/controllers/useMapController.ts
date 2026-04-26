@@ -40,18 +40,15 @@ export const useMapController = (): MapControllerOutput => {
   const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
   const [activeDetours, setActiveDetours] = useState<ActiveDetour[]>([]);
 
-  // Fetch detours when a route is selected
+  // Load ALL active detours from local snapshots once on mount.
+  // Shown for every route on the map regardless of selection.
   useEffect(() => {
-    if (!selectedRoute) {
-      setActiveDetours([]);
-      return;
-    }
     let cancelled = false;
-    DetourService.getActiveDetours(selectedRoute).then(detours => {
+    DetourService.getAllActiveDetours().then(detours => {
       if (!cancelled) setActiveDetours(detours);
     });
     return () => { cancelled = true; };
-  }, [selectedRoute]);
+  }, []);
 
   // Track user's live GPS location
   useEffect(() => {

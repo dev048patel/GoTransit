@@ -1,72 +1,75 @@
 /*
  DetourService
- Fetches active detour polylines for a transit route from the TransitLive API.
+ Loads detour polylines from local JSON snapshots in src/detourData/detour_data/.
  Filters by current date so only detours active right now are returned.
 */
 
 import { DetourApiResponse, ActiveDetour } from '../transit/Detour';
 
-const API_BASE = 'https://transitlive.com/ajax/detour.php';
+// Vite glob import — eagerly bundles every route_*_detour.json file at build time.
+// Key example: "/src/detourData/detour_data/route_4_detour.json"
+const detourFiles = import.meta.glob<DetourApiResponse>(
+    '../../detourData/detour_data/route_*_detour.json',
+    { eager: true, import: 'default' }
+);
 
-// Per-route in-memory cache so we don't refetch on every selection
-const cache = new Map<string, { fetchedAt: number; detours: ActiveDetour[] }>();
-const CACHE_TTL_MS = 5 * 60_000; // 5 minutes
+// Build routeNum → DetourApiResponse map once at module load
+const routeDetourData: Map<string, DetourApiResponse> = (() => {
+    const map = new Map<string, DetourApiResponse>();
+    for (const [path, data] of Object.entries(detourFiles)) {
+        const match = path.match(/route_(\d+)_detour\.json$/);
+        if (match) map.set(match[1], data);
+    }
+    return map;
+})();
+
+function parseActiveDetours(routeNum: string, data: DetourApiResponse): ActiveDetour[] {
+    const now = Date.now();
+    const active: ActiveDetour[] = [];
+    const count = data.coordinates?.length ?? 0;
+    for (let i = 0; i < count; i++) {
+        const start = new Date(data.startDates[i]).getTime();
+        const end = new Date(data.endDates[i]).getTime();
+        if (isNaN(start) || isNaN(end)) continue;
+        if (now < start || now > end) continue;
+
+        const path = data.coordinates[i].map(([lat, lng]) => ({
+            lat: parseFloat(lat),
+            lng: parseFloat(lng),
+        })).filter(p => !isNaN(p.lat) && !isNaN(p.lng));
+        if (path.length < 2) continue;
+
+        active.push({
+            routeNum,
+            detourId: data.detourIDs[i],
+            path,
+            startDate: new Date(data.startDates[i]),
+            endDate: new Date(data.endDates[i]),
+            color: data.style?.color || '#FF0000',
+            opacity: data.style?.opacity ?? 1,
+        });
+    }
+    return active;
+}
 
 export class DetourService {
-    /**
-     * Fetch detours for a specific route, filter to those active right now.
-     * Returns [] on network/parse error.
-     */
+    /** Active detours for a single route. */
     static async getActiveDetours(routeNum: string): Promise<ActiveDetour[]> {
-        const cached = cache.get(routeNum);
-        if (cached && Date.now() - cached.fetchedAt < CACHE_TTL_MS) {
-            return cached.detours;
-        }
-
-        try {
-            const url = `${API_BASE}?action=loadDetour&route=${encodeURIComponent(routeNum)}`;
-            const response = await fetch(url);
-            if (!response.ok) throw new Error(`Detour API error: ${response.status}`);
-
-            const data: DetourApiResponse = await response.json();
-            const now = Date.now();
-            const active: ActiveDetour[] = [];
-
-            const count = data.coordinates?.length ?? 0;
-            for (let i = 0; i < count; i++) {
-                const start = new Date(data.startDates[i]).getTime();
-                const end = new Date(data.endDates[i]).getTime();
-                if (isNaN(start) || isNaN(end)) continue;
-                if (now < start || now > end) continue; // not active right now
-
-                const path = data.coordinates[i].map(([lat, lng]) => ({
-                    lat: parseFloat(lat),
-                    lng: parseFloat(lng),
-                })).filter(p => !isNaN(p.lat) && !isNaN(p.lng));
-                if (path.length < 2) continue;
-
-                active.push({
-                    routeNum,
-                    detourId: data.detourIDs[i],
-                    path,
-                    startDate: new Date(data.startDates[i]),
-                    endDate: new Date(data.endDates[i]),
-                    color: data.style?.color || '#FF0000',
-                    opacity: data.style?.opacity ?? 1,
-                });
-            }
-
-            cache.set(routeNum, { fetchedAt: Date.now(), detours: active });
-            return active;
-        } catch (err) {
-            console.error(`[DetourService] Failed to fetch detours for route ${routeNum}:`, err);
-            return [];
-        }
+        const data = routeDetourData.get(routeNum);
+        if (!data) return [];
+        return parseActiveDetours(routeNum, data);
     }
 
-    /**
-     * Convenience: returns true if the given route has any detour active right now.
-     */
+    /** Active detours across every route in the bundled detour_data folder. */
+    static async getAllActiveDetours(): Promise<ActiveDetour[]> {
+        const all: ActiveDetour[] = [];
+        for (const [routeNum, data] of routeDetourData) {
+            all.push(...parseActiveDetours(routeNum, data));
+        }
+        return all;
+    }
+
+    /** True if the given route has at least one currently-active detour. */
     static async hasActiveDetour(routeNum: string): Promise<boolean> {
         const detours = await this.getActiveDetours(routeNum);
         return detours.length > 0;
