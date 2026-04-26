@@ -199,7 +199,6 @@ export class RoutePlanningService {
                     // Null (inconclusive) is allowed — pre-filter already matched direction_id,
                     // and rejecting null would hide valid routes for stops in GTFS coverage gaps.
                     const dirCheck = checkStopDirection(routeNum, oStop.STOP_ID, dStop.STOP_ID);
-                    console.log(`[DEBUG]   o:${oStop.STOP_ID}(${Math.round(oStop.distance)}m) → d:${dStop.STOP_ID}(${Math.round(dStop.distance)}m): dirCheck=${dirCheck ? (dirCheck.valid ? 'VALID' : 'INVALID') : 'NULL'}`);
                     if (dirCheck && !dirCheck.valid) continue; // explicitly invalid — skip
 
                     // null → inconclusive (not in GTFS seq or geo); use haversine estimate
@@ -318,8 +317,6 @@ export class RoutePlanningService {
             stops.sort((a, b) => a.distance - b.distance);
         }
 
-        console.log(`[TransferDebug] originRoutes: [${[...originRouteMap.keys()].join(',')}], destRoutes: [${[...destRouteMap.keys()].join(',')}], excluded: [${[...excludeRoutes].join(',')}]`);
-
         // For each pair of origin-route and dest-route, find shared transfer stops
         for (const [oRouteNum, oOriginStops] of originRouteMap) {
             const oRouteStops = getStopsForRoute(oRouteNum);
@@ -361,23 +358,17 @@ export class RoutePlanningService {
                     const oLat = parseFloat(oStopData.LAT);
                     const oLng = parseFloat(oStopData.LON);
 
-                    // Only log for shared stops to avoid spam
-                    const isSharedStop = dRouteStopData.has(oStopId);
-
                     // Find the best valid origin stop for this transfer candidate.
+                    // Try ALL nearby origin stops for this route (sorted closest-first) so we don't
+                    // miss valid transfers just because the single closest stop happens to be on
+                    // the wrong side of the road (wrong direction).
                     let selectedOriginStop: NearbyStop | null = null;
-                    const leg1Log: string[] = [];
                     for (const originCandidate of oOriginStops) {
                         const leg1Check = checkStopDirection(oRouteNum, originCandidate.STOP_ID, oStopId);
-                        if (isSharedStop) {
-                            leg1Log.push(`${originCandidate.STOP_ID}→${oStopId}=${leg1Check ? (leg1Check.valid ? 'VALID' : 'INVALID') : 'NULL'}`);
-                        }
-                        if (leg1Check && !leg1Check.valid) continue;
+                        if (leg1Check && !leg1Check.valid) continue; // explicitly invalid — skip
+                        // null (inconclusive) or valid — accept
                         selectedOriginStop = originCandidate;
                         break;
-                    }
-                    if (isSharedStop) {
-                        console.log(`[TransferDebug] ${oRouteNum}→${dRouteNum} oStop=${oStopId}: leg1 candidates [${leg1Log.join(', ')}], selected=${selectedOriginStop?.STOP_ID ?? 'NONE'}`);
                     }
                     if (!selectedOriginStop) continue;
 
@@ -412,9 +403,6 @@ export class RoutePlanningService {
                         // Verify direction: board stop → dest stop on route B
                         // Allow null (inconclusive) — pre-filter already matched direction_id.
                         const leg2Dir = checkStopDirection(dRouteNum, dStopId, dStop.STOP_ID);
-                        if (isSharedStop && oStopId === dStopId) {
-                            console.log(`[TransferDebug]   leg2: ${dStopId}→${dStop.STOP_ID} on route ${dRouteNum} = ${leg2Dir ? (leg2Dir.valid ? 'VALID' : 'INVALID') : 'NULL'} (walkDist=${Math.round(walkDist)}m, dStopId===dStop: ${dStopId === dStop.STOP_ID})`);
-                        }
                         if (leg2Dir && !leg2Dir.valid) continue;
 
                         // Score = penalty-weighted detour (origin→getOff + walk×penalty + board→dest).
@@ -450,12 +438,7 @@ export class RoutePlanningService {
                     }
                 }
 
-                if (!bestTransfer) {
-                    // Debug: figure out why this dStop had no transfer; try next dStop
-                    const oStopsOnBothRoutes = [...oRouteStops].filter(s => dRouteStopData.has(s));
-                    console.log(`[TransferDebug] ${oRouteNum}→${dRouteNum} dStop=${dStop.STOP_ID}: NO transfer. Shared stops: [${oStopsOnBothRoutes.slice(0,5).join(',')}${oStopsOnBothRoutes.length>5?'...':''}] (${oStopsOnBothRoutes.length} total)`);
-                    continue;
-                }
+                if (!bestTransfer) continue; // try next dStop candidate
                 seen.add(key);
 
                 const oRouteInfo = transitRoutes.find(r => r.ROUTE_NUM === oRouteNum);

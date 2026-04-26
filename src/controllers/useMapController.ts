@@ -14,6 +14,8 @@ import { Route } from '../models/transit/Route';
 import { BusPosition } from '../models/transit/BusPosition';
 import { getStopsForRoute } from '../models/services/StopToRouteIndex';
 import { MapControllerOutput } from '../models/controllers/MapControllerOutput';
+import { DetourService } from '../models/services/DetourService';
+import { ActiveDetour } from '../models/transit/Detour';
 
 export const useMapController = (): MapControllerOutput => {
   // 1. Fetch Configuration from Model and initialize state variables
@@ -36,6 +38,20 @@ export const useMapController = (): MapControllerOutput => {
   const [shapesData, setShapesData] = useState<any>(null);
   const [apiRoutes, setApiRoutes] = useState<Route[]>(transitRoutes); // start with static data, API overrides
   const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
+  const [activeDetours, setActiveDetours] = useState<ActiveDetour[]>([]);
+
+  // Fetch detours when a route is selected
+  useEffect(() => {
+    if (!selectedRoute) {
+      setActiveDetours([]);
+      return;
+    }
+    let cancelled = false;
+    DetourService.getActiveDetours(selectedRoute).then(detours => {
+      if (!cancelled) setActiveDetours(detours);
+    });
+    return () => { cancelled = true; };
+  }, [selectedRoute]);
 
   // Track user's live GPS location
   useEffect(() => {
@@ -238,5 +254,6 @@ export const useMapController = (): MapControllerOutput => {
     currentZoom,
     onZoomChanged,
     userLocation,
+    activeDetours,
   };
 };
