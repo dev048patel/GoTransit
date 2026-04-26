@@ -3,11 +3,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Route } from '../models/transit/Route';
 import { useAuth } from '../models/context/AuthContext';
+import { useFeatureAccess } from '../models/context/FeatureAccessContext';
 import { useNavbarController } from '../controllers/useNavbarController';
 import { useSavedDestinationsController } from '../controllers/useSavedDestinationsController';
 import { useTripScheduleController } from '../controllers/useTripScheduleController';
+import { useWeeklyPlannerController } from '../controllers/useWeeklyPlannerController';
 import SavedLocationsPanel from './SavedLocationsPanel';
 import TripSchedulePanel from './TripSchedulePanel';
+import WeeklyPlannerPanel from './WeeklyPlannerPanel';
 import logo from '../New-Image.jpeg';
 
 interface NavbarProps {
@@ -20,10 +23,17 @@ interface NavbarProps {
 // Renders the top navbar with search, route filter, admin link, profile, and saved locations
 export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSelect }: NavbarProps) {
     const { isAdmin } = useAuth();
+    const { hasFeature } = useFeatureAccess();
     const { ready, value, status, data, showResults, handleInput, handleSelect, handleFocus } = useNavbarController(onPlaceSelect);
     const saved = useSavedDestinationsController();
     const tplan = useTripScheduleController();
+    const weplan = useWeeklyPlannerController();
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+
+    // Mutual panel exclusion helpers
+    const openSaved = () => { tplan.handleClose(); weplan.handleClose(); saved.handleOpen(); };
+    const openTplan = () => { saved.handleClose(); weplan.handleClose(); tplan.handleOpen(); };
+    const openWeplan = () => { saved.handleClose(); tplan.handleClose(); weplan.handleOpen(); };
 
     return (
         <nav className="navbar-root">
@@ -215,9 +225,30 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                         </Link>
                     )}
 
+                    {/* Weekly Commute Button */}
+                    {hasFeature('weekly_planner') && <div
+                        onClick={weplan.isOpen ? weplan.handleClose : openWeplan}
+                        title="My Weekly Commute"
+                        style={{
+                            width: '34px', height: '34px', borderRadius: '50%',
+                            backgroundColor: weplan.isOpen ? '#E8F5E9' : '#f1f3f4',
+                            border: weplan.isOpen ? '2px solid #2E7D32' : '2px solid transparent',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            cursor: 'pointer', color: weplan.isOpen ? '#2E7D32' : '#5f6368',
+                            transition: 'all 0.2s', flexShrink: 0,
+                        }}
+                        onMouseEnter={e => { if (!weplan.isOpen) { e.currentTarget.style.backgroundColor = '#E8F5E9'; e.currentTarget.style.color = '#2E7D32'; } }}
+                        onMouseLeave={e => { if (!weplan.isOpen) { e.currentTarget.style.backgroundColor = '#f1f3f4'; e.currentTarget.style.color = '#5f6368'; } }}
+                    >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M17 1l4 4-4 4" /><path d="M3 11V9a4 4 0 014-4h14" />
+                            <path d="M7 23l-4-4 4-4" /><path d="M21 13v2a4 4 0 01-4 4H3" />
+                        </svg>
+                    </div>}
+
                     {/* Trip Planner Button */}
-                    <div
-                        onClick={tplan.isOpen ? tplan.handleClose : tplan.handleOpen}
+                    {hasFeature('trip_planner') && <div
+                        onClick={tplan.isOpen ? tplan.handleClose : openTplan}
                         title="Trip Planner"
                         style={{
                             width: '34px', height: '34px', borderRadius: '50%',
@@ -235,11 +266,11 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                             <line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" />
                             <line x1="3" y1="10" x2="21" y2="10" />
                         </svg>
-                    </div>
+                    </div>}
 
                     {/* Saved Locations Button */}
-                    <div
-                        onClick={saved.isOpen ? saved.handleClose : saved.handleOpen}
+                    {hasFeature('saved_locations') && <div
+                        onClick={saved.isOpen ? saved.handleClose : openSaved}
                         title="Saved Locations"
                         style={{
                             width: '34px', height: '34px', borderRadius: '50%',
@@ -255,7 +286,7 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                         <svg width="17" height="17" viewBox="0 0 24 24" fill={saved.isOpen ? '#2E7D32' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z" />
                         </svg>
-                    </div>
+                    </div>}
 
                     {/* Profile Icon */}
                     <Link to="/profile" style={{ textDecoration: 'none', flexShrink: 0 }}>
@@ -275,9 +306,26 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
 
                 {/* Mobile hamburger + profile — visible only on mobile */}
                 <div className="navbar-mobile-actions">
+                    {/* Weekly Commute Button (mobile) */}
+                    {hasFeature('weekly_planner') && <div
+                        onClick={weplan.isOpen ? weplan.handleClose : openWeplan}
+                        style={{
+                            width: '32px', height: '32px', borderRadius: '50%',
+                            backgroundColor: weplan.isOpen ? '#E8F5E9' : '#f1f3f4',
+                            border: weplan.isOpen ? '2px solid #2E7D32' : '2px solid transparent',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            cursor: 'pointer', color: weplan.isOpen ? '#2E7D32' : '#5f6368', flexShrink: 0,
+                        }}
+                    >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M17 1l4 4-4 4" /><path d="M3 11V9a4 4 0 014-4h14" />
+                            <path d="M7 23l-4-4 4-4" /><path d="M21 13v2a4 4 0 01-4 4H3" />
+                        </svg>
+                    </div>}
+
                     {/* Trip Planner Button (mobile) */}
-                    <div
-                        onClick={tplan.isOpen ? tplan.handleClose : tplan.handleOpen}
+                    {hasFeature('trip_planner') && <div
+                        onClick={tplan.isOpen ? tplan.handleClose : openTplan}
                         style={{
                             width: '32px', height: '32px', borderRadius: '50%',
                             backgroundColor: tplan.isOpen ? '#E8F5E9' : '#f1f3f4',
@@ -291,11 +339,11 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                             <line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" />
                             <line x1="3" y1="10" x2="21" y2="10" />
                         </svg>
-                    </div>
+                    </div>}
 
                     {/* Saved Locations Button (mobile) */}
-                    <div
-                        onClick={saved.isOpen ? saved.handleClose : saved.handleOpen}
+                    {hasFeature('saved_locations') && <div
+                        onClick={saved.isOpen ? saved.handleClose : openSaved}
                         style={{
                             width: '32px', height: '32px', borderRadius: '50%',
                             backgroundColor: saved.isOpen ? '#E8F5E9' : '#f1f3f4',
@@ -308,7 +356,7 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                         <svg width="15" height="15" viewBox="0 0 24 24" fill={saved.isOpen ? '#2E7D32' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z" />
                         </svg>
-                    </div>
+                    </div>}
 
                     <Link to="/profile" style={{ textDecoration: 'none', flexShrink: 0 }}>
                         <div style={{
@@ -408,15 +456,14 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                 </div>
             )}
 
+            {/* Weekly Commute Panel */}
+            {weplan.isOpen && <WeeklyPlannerPanel ctrl={weplan} />}
+
             {/* Trip Planner Panel */}
-            {tplan.isOpen && (
-                <TripSchedulePanel ctrl={tplan} onPreviewLocation={onPlaceSelect} />
-            )}
+            {tplan.isOpen && <TripSchedulePanel ctrl={tplan} onPreviewLocation={onPlaceSelect} />}
 
             {/* Saved Locations Panel */}
-            {saved.isOpen && (
-                <SavedLocationsPanel ctrl={saved} onGoNow={onPlaceSelect} />
-            )}
+            {saved.isOpen && <SavedLocationsPanel ctrl={saved} onGoNow={onPlaceSelect} />}
 
             {/* Responsive CSS */}
             <style>{`
