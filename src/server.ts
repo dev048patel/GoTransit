@@ -13,6 +13,7 @@ import transitRoutes from './controllers/routes/transit.routes';
 import analyticsRoutes from './controllers/routes/analytics.routes';
 import featureRoutes from './controllers/routes/feature.routes';
 import pushRoutes from './controllers/routes/push.routes';
+import adminRoutes from './controllers/routes/admin.routes';
 import webpush from 'web-push';
 import cron from 'node-cron';
 import { supabaseServer } from './models/lib/supabaseServer';
@@ -54,6 +55,7 @@ app.use('/api', transitRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/features', featureRoutes);
 app.use('/api/push', pushRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Health Check Endpoint
 app.get('/api/status', (_req, res) => {

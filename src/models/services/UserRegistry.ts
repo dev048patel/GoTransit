@@ -29,6 +29,8 @@
 import { supabase } from '../lib/supabase';
 import type { User } from '../admin/AdminTypes';
 
+const BASE_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001';
+
 function formatDate(iso: string): string {
     return new Date(iso).toLocaleString('en-CA', {
         month: 'short', day: 'numeric', year: 'numeric',
@@ -83,13 +85,18 @@ export async function updateUserProfile(
     return error ? error.message : null;
 }
 
-/** Soft-delete: marks the profile as deleted (does not remove auth record). */
+/** Delete user via backend (uses service-role to hard-delete from auth + profiles). */
 export async function softDeleteUser(id: string): Promise<string | null> {
-    const { error } = await supabase
-        .from('profiles')
-        .update({ account_status: 'deleted', updated_at: new Date().toISOString() })
-        .eq('id', id);
-    return error ? error.message : null;
+    try {
+        const resp = await fetch(`${BASE_URL}/api/admin/users/${id}`, { method: 'DELETE' });
+        if (!resp.ok) {
+            const data = await resp.json().catch(() => ({}));
+            return data.error ?? `HTTP ${resp.status}`;
+        }
+        return null;
+    } catch (e) {
+        return (e as Error).message;
+    }
 }
 
 /** Called on logout — logs event to the browser console. */
