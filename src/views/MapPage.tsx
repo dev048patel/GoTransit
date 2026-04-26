@@ -9,6 +9,7 @@
 import React from 'react';
 import { MapView } from './MapView';
 import { useMapController } from '../controllers/useMapController';
+import DepartureReminderBanner from './DepartureReminderBanner';
 
 export default function MapPage() {
     const {
@@ -20,6 +21,8 @@ export default function MapPage() {
     } = useMapController();
 
     return (
+        <>
+        <DepartureReminderBanner />
         <MapView
             isLoaded={isLoaded}
             loadError={loadError}
@@ -43,5 +46,6 @@ export default function MapPage() {
             userLocation={userLocation}
             activeDetours={activeDetours}
         />
+        </>
     );
 }
