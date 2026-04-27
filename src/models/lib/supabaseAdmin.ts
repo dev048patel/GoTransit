@@ -1,13 +1,23 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.VITE_SUPABASE_URL as string;
-const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY as string;
+let _client: SupabaseClient | null = null;
 
-if (!serviceRoleKey) {
-    console.warn('[Admin] SUPABASE_SERVICE_ROLE_KEY not set — admin write operations will fail');
+// Lazily create the service-role client so a missing env var doesn't crash startup.
+export function getSupabaseAdmin(): SupabaseClient {
+    if (_client) return _client;
+
+    const supabaseUrl = process.env.VITE_SUPABASE_URL;
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (!supabaseUrl || !serviceRoleKey) {
+        throw new Error(
+            'SUPABASE_SERVICE_ROLE_KEY (or VITE_SUPABASE_URL) is not set. ' +
+            'Add it to Railway environment variables.'
+        );
+    }
+
+    _client = createClient(supabaseUrl, serviceRoleKey, {
+        auth: { autoRefreshToken: false, persistSession: false },
+    });
+    return _client;
 }
-
-// Service-role client: bypasses RLS. Backend only — never expose this key to the browser.
-export const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey || '', {
-    auth: { autoRefreshToken: false, persistSession: false },
-});
