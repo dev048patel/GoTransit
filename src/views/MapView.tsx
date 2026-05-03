@@ -62,7 +62,8 @@ export const MapView: React.FC<MapViewProps> = ({
   currentZoom,
   onZoomChanged,
   userLocation,
-  activeDetours
+  activeDetours,
+  weather,
 }) => {
   const [showTripPlanner, setShowTripPlanner] = useState(false);
   const [showInfoWindow, setShowInfoWindow] = useState(false);
@@ -183,6 +184,7 @@ export const MapView: React.FC<MapViewProps> = ({
         onClose={() => setShowTripPlanner(false)}
         onSelectRoute={handleSelectRoute}
         liveBuses={liveBuses}
+        weather={weather}
       />
 
       {/* Bus Suggestion Panel (shown after user clicks Yes on InfoWindow) */}
@@ -196,6 +198,7 @@ export const MapView: React.FC<MapViewProps> = ({
           onClose={() => setShowBusSuggestions(false)}
           onSelectRoute={handleSelectRoute}
           liveBuses={liveBuses}
+          weather={weather}
         />
       )}
 
@@ -246,7 +249,6 @@ export const MapView: React.FC<MapViewProps> = ({
               scaledSize: isLoaded ? new google.maps.Size(24, 24) : undefined,
               anchor: isLoaded ? new google.maps.Point(12, 12) : undefined,
             }}
-            optimized={true}
             onClick={() => handleStopClick(stop)}
           />
         ))}
@@ -304,38 +306,14 @@ export const MapView: React.FC<MapViewProps> = ({
                   </div>
                   <div style={{ display: 'flex', gap: '6px' }}>
                     <button
-                      onClick={() => {
-                        setShowInfoWindow(false);
-                        setShowBusSuggestions(true);
-                      }}
-                      style={{
-                        padding: '6px 14px',
-                        backgroundColor: '#1a73e8',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '16px',
-                        fontSize: '13px',
-                        fontWeight: '500',
-                        cursor: 'pointer'
-                      }}
+                      onClick={() => { setShowInfoWindow(false); setShowBusSuggestions(true); }}
+                      style={{ padding: '6px 14px', backgroundColor: '#1a73e8', color: 'white', border: 'none', borderRadius: '16px', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}
                     >
                       Yes 🚌
                     </button>
                     <button
-                      onClick={() => {
-                        setShowInfoWindow(false);
-                        setSelectedPlaceMarker(null);
-                      }}
-                      style={{
-                        padding: '6px 14px',
-                        backgroundColor: '#f1f3f4',
-                        color: '#5f6368',
-                        border: 'none',
-                        borderRadius: '16px',
-                        fontSize: '13px',
-                        fontWeight: '500',
-                        cursor: 'pointer'
-                      }}
+                      onClick={() => { setShowInfoWindow(false); setSelectedPlaceMarker(null); }}
+                      style={{ padding: '6px 14px', backgroundColor: '#f1f3f4', color: '#5f6368', border: 'none', borderRadius: '16px', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}
                     >
                       No
                     </button>

@@ -21,6 +21,12 @@ export class RoutePlanningService {
     private readonly WALKING_DISTANCE_EXPANDED_2 = 1500; // meters — second fallback for sparse areas
     private readonly AVG_BUS_SPEED = 25; // km/h (city bus average including stops)
     private readonly WALKING_SPEED = 5; // km/h
+    private walkMultiplier = 1.0; // adjusted by WeatherService for cold/icy conditions
+
+    /** Call with WeatherSnapshot.walkMultiplier before planning trips in winter */
+    setWalkMultiplier(m: number): void {
+        this.walkMultiplier = Math.max(1.0, m);
+    }
 
     /**
      * Calculate trip options from origin to destination.
@@ -238,7 +244,7 @@ export class RoutePlanningService {
                 );
 
             const busTime = (busDistanceMeters / 1000) / this.AVG_BUS_SPEED * 60;
-            const walkTime = ((walkToStop + walkFromStop) / 1000) / this.WALKING_SPEED * 60;
+            const walkTime = ((walkToStop + walkFromStop) / 1000) / this.WALKING_SPEED * 60 * this.walkMultiplier;
 
             const intermediateStops = getOrderedStopsForRoute(routeNum, bestOStop.STOP_ID, bestDStop.STOP_ID);
 
@@ -461,12 +467,12 @@ export class RoutePlanningService {
                 const seg1Time = (seg1Distance / 1000) / this.AVG_BUS_SPEED * 60;
                 const seg2Time = (seg2Distance / 1000) / this.AVG_BUS_SPEED * 60;
                 const transferWalkTime = bestTransfer.walkDist > 0
-                    ? (bestTransfer.walkDist / 1000) / this.WALKING_SPEED * 60
+                    ? (bestTransfer.walkDist / 1000) / this.WALKING_SPEED * 60 * this.walkMultiplier
                     : 0;
                 const transferWaitTime = 5; // minutes average wait at transfer
                 const walkToStop = originStop.distance;
                 const walkFromStop = dStop.distance;
-                const walkTime = ((walkToStop + walkFromStop) / 1000) / this.WALKING_SPEED * 60;
+                const walkTime = ((walkToStop + walkFromStop) / 1000) / this.WALKING_SPEED * 60 * this.walkMultiplier;
 
                 const seg1IntermediateStops = getOrderedStopsForRoute(oRouteNum, originStop.STOP_ID, bestTransfer.getOffId);
 
@@ -565,7 +571,7 @@ export class RoutePlanningService {
                 destination
             );
 
-            const walkTime = ((walkToBoard + walkFromAlight) / 1000) / this.WALKING_SPEED * 60;
+            const walkTime = ((walkToBoard + walkFromAlight) / 1000) / this.WALKING_SPEED * 60 * this.walkMultiplier;
 
             seenRoutes.add(seg2.routeNum);
             shortcuts.push({
@@ -712,7 +718,7 @@ export class RoutePlanningService {
                     const waitRounded = Math.max(0, Math.round(bestWaitMinutes));
                     seg.nextBusETA = waitRounded;
                     seg.predTime = bestPred.pred_time.trim();
-                    seg.busId = bestPred.bus_id;
+                    seg.busId = bestPred.bus_id ?? undefined;
 
                     // Only set top-level wait time from the FIRST segment
                     if (segIdx === 0) {

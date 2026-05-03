@@ -8,7 +8,7 @@ import { BusPosition } from '../models/transit/BusPosition';
 
 const routePlanningService = new RoutePlanningService();
 
-export function useTripPlannerController(liveBuses?: BusPosition[]) {
+export function useTripPlannerController(liveBuses?: BusPosition[], walkMultiplier = 1.0) {
     const [origin, setOrigin] = useState<LocationState | null>(null);
     const [destination, setDestination] = useState<LocationState | null>(null);
     const [gpsLoading, setGpsLoading] = useState(false);
@@ -103,6 +103,7 @@ export function useTripPlannerController(liveBuses?: BusPosition[]) {
 
         setSearching(true);
         setRouteResults(null);
+        routePlanningService.setWalkMultiplier(walkMultiplier);
 
         try {
             const results = await routePlanningService.calculateTripOptions(
@@ -125,7 +126,7 @@ export function useTripPlannerController(liveBuses?: BusPosition[]) {
         } finally {
             setSearching(false);
         }
-    }, [origin, destination, liveBuses]);
+    }, [origin, destination, liveBuses, walkMultiplier]);
 
     // Reset all form state and close the modal
     const handleReset = useCallback(() => {

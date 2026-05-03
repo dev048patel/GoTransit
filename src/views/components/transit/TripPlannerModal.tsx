@@ -6,8 +6,8 @@ import { TripPlannerModalProps } from '../../../models/components/TripPlannerMod
 import { useTripPlannerController } from '../../../controllers/useTripPlannerController';
 
 // Pure view component — all GPS, Places, and route logic lives in useTripPlannerController
-export default function TripPlannerModal({ isOpen, onClose, onSelectRoute, liveBuses }: TripPlannerModalProps) {
-    const ctrl = useTripPlannerController(liveBuses);
+export default function TripPlannerModal({ isOpen, onClose, onSelectRoute, liveBuses, weather }: TripPlannerModalProps) {
+    const ctrl = useTripPlannerController(liveBuses, weather?.walkMultiplier ?? 1.0);
 
     if (!isOpen) return null;
 

@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom';
 import {
 
     LogOut, Trash2, CheckCircle2, Pencil,
-    Eye,
+    Eye, MessageSquare,
     ArrowLeft, KeyRound,
 } from 'lucide-react';
 import logo from '../../New-Image.jpeg';
@@ -191,6 +191,7 @@ export default function ProfilePage() {
         showDeleteConfirm, setShowDeleteConfirm,
         deleteLoading, deleteError,
         handleDeleteAccount,
+        smsLoading, smsError, handleSmsToggle,
         handleLogout,
     } = useProfileController();
 
@@ -351,6 +352,62 @@ export default function ProfilePage() {
 
 
 
+
+                {/* SMS NOTIFICATIONS */}
+                <SectionCard title="SMS Departure Reminders" icon={MessageSquare}>
+                    {!phone ? (
+                        <p className="text-sm text-gray-500">
+                            Add a phone number to your profile above to enable SMS reminders.
+                        </p>
+                    ) : (
+                        <div className="space-y-3">
+                            {/* Toggle row */}
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm font-medium text-gray-900">
+                                        {profile?.sms_opted_in ? 'Reminders enabled' : 'Reminders disabled'}
+                                    </p>
+                                    <p className="text-xs text-gray-400 mt-0.5">
+                                        {profile?.sms_opted_in
+                                            ? `Active · reply STOP to unsubscribe`
+                                            : `You'll get a text 15 min before your scheduled bus`}
+                                    </p>
+                                </div>
+                                <button
+                                    onClick={() => handleSmsToggle(!profile?.sms_opted_in)}
+                                    disabled={smsLoading}
+                                    aria-label={profile?.sms_opted_in ? 'Disable SMS reminders' : 'Enable SMS reminders'}
+                                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#003DA5]/30 disabled:opacity-50 ${profile?.sms_opted_in ? 'bg-[#003DA5]' : 'bg-gray-200'}`}
+                                >
+                                    <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-200 ${profile?.sms_opted_in ? 'translate-x-6' : 'translate-x-1'}`} />
+                                </button>
+                            </div>
+
+                            {/* Consent copy — shown when not yet opted in */}
+                            {!profile?.sms_opted_in && (
+                                <p className="text-xs text-gray-400 leading-relaxed border-t border-gray-50 pt-3">
+                                    By enabling, you agree to receive departure reminder texts from GoTransit Regina to{' '}
+                                    <span className="font-medium text-gray-600">{phone}</span>.
+                                    Standard message rates may apply. Reply STOP anytime to unsubscribe.
+                                </p>
+                            )}
+
+                            {/* Consent timestamp — shown when opted in */}
+                            {profile?.sms_opted_in && profile.sms_consent_at && (
+                                <p className="text-xs text-gray-400 border-t border-gray-50 pt-3">
+                                    Consented {new Date(profile.sms_consent_at).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                </p>
+                            )}
+
+                            {/* Inline error */}
+                            {smsError && (
+                                <p className="text-xs text-red-500 bg-red-50 border border-red-100 rounded-lg px-3 py-2">
+                                    {smsError}
+                                </p>
+                            )}
+                        </div>
+                    )}
+                </SectionCard>
 
                 {/* ACCOUNT */}
                 <div className="space-y-3 pb-4">

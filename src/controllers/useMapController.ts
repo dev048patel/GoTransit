@@ -17,6 +17,7 @@ import { MapControllerOutput } from '../models/controllers/MapControllerOutput';
 import { DetourService } from '../models/services/DetourService';
 import { ActiveDetour } from '../models/transit/Detour';
 import { RoutePolylineService } from '../models/services/RoutePolylineService';
+import type { WeatherSnapshot } from '../models/services/WeatherService';
 
 export const useMapController = (): MapControllerOutput => {
   // 1. Fetch Configuration from Model and initialize state variables
@@ -40,6 +41,21 @@ export const useMapController = (): MapControllerOutput => {
   const [apiRoutes, setApiRoutes] = useState<Route[]>(transitRoutes); // start with static data, API overrides
   const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
   const [activeDetours, setActiveDetours] = useState<ActiveDetour[]>([]);
+  const [weather, setWeather] = useState<WeatherSnapshot | null>(null);
+
+  // Fetch weather from backend every 5 minutes — backend caches EC DataMart for us
+  useEffect(() => {
+    const baseUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001';
+    const fetch5min = async () => {
+      try {
+        const res = await fetch(`${baseUrl}/api/weather/current`);
+        if (res.ok) setWeather(await res.json());
+      } catch { /* non-critical — UI degrades gracefully if weather unavailable */ }
+    };
+    fetch5min();
+    const interval = setInterval(fetch5min, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Show detours only for the currently selected route — keeps the map clean.
   // Cleared when the user deselects (no route → no detours displayed).
@@ -244,5 +260,6 @@ export const useMapController = (): MapControllerOutput => {
     onZoomChanged,
     userLocation,
     activeDetours,
+    weather,
   };
 };

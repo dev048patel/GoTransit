@@ -6,6 +6,7 @@ import { Route } from '../transit/Route';
 import { BusPosition } from '../transit/BusPosition';
 import { TripOption } from '../transit/RoutePlanning';
 import { ActiveDetour } from '../transit/Detour';
+import type { WeatherSnapshot } from '../services/WeatherService';
 
 export interface MapViewProps {
     isLoaded: boolean;
@@ -29,4 +30,5 @@ export interface MapViewProps {
     onZoomChanged: (newZoom: number) => void;
     userLocation: { lat: number; lng: number } | null;
     activeDetours: ActiveDetour[];
+    weather: WeatherSnapshot | null;
 }

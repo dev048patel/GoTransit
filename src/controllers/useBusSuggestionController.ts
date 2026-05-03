@@ -9,9 +9,10 @@ const routePlanningService = new RoutePlanningService();
 interface BusSuggestionInput {
     destination: { lat: number; lng: number; name: string };
     liveBuses?: BusPosition[];
+    walkMultiplier?: number;
 }
 
-export function useBusSuggestionController({ destination, liveBuses }: BusSuggestionInput) {
+export function useBusSuggestionController({ destination, liveBuses, walkMultiplier = 1.0 }: BusSuggestionInput) {
     const [gpsLoading, setGpsLoading] = useState(true);
     const [gpsError, setGpsError] = useState<string | null>(null);
     const [origin, setOrigin] = useState<{ lat: number; lng: number } | null>(null);
@@ -57,6 +58,7 @@ export function useBusSuggestionController({ destination, liveBuses }: BusSugges
     const findRoutes = useCallback(async () => {
         if (!origin) return;
         setSearching(true);
+        routePlanningService.setWalkMultiplier(walkMultiplier);
         try {
             const options = await routePlanningService.calculateTripOptions(
                 origin,
@@ -68,7 +70,7 @@ export function useBusSuggestionController({ destination, liveBuses }: BusSugges
             console.error('[BusSuggestionController] Error:', err);
         }
         setSearching(false);
-    }, [origin, destination, liveBuses]);
+    }, [origin, destination, liveBuses, walkMultiplier]);
 
     useEffect(() => {
         if (origin) findRoutes();

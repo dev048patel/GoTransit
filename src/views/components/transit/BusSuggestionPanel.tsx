@@ -6,10 +6,15 @@ import { BusSuggestionPanelProps } from '../../../models/components/BusSuggestio
 import { useBusSuggestionController } from '../../../controllers/useBusSuggestionController';
 import { computeDepartBy } from '../../../models/transit/TripSchedule';
 import { DetourService } from '../../../models/services/DetourService';
+import type { WeatherSnapshot } from '../../../models/services/WeatherService';
 
 // Pure view component — all GPS/route logic lives in useBusSuggestionController
-export default function BusSuggestionPanel({ destination, onClose, onSelectRoute, liveBuses }: BusSuggestionPanelProps) {
-    const { gpsLoading, gpsError, results, searching, handleRefresh } = useBusSuggestionController({ destination, liveBuses });
+export default function BusSuggestionPanel({ destination, onClose, onSelectRoute, liveBuses, weather }: BusSuggestionPanelProps) {
+    const { gpsLoading, gpsError, results, searching, handleRefresh } = useBusSuggestionController({
+        destination,
+        liveBuses,
+        walkMultiplier: weather?.walkMultiplier ?? 1.0,
+    });
 
     // Arrive-by time planning (purely display — no recalculation needed)
     const [arriveByMode, setArriveByMode] = React.useState(false);
@@ -133,6 +138,7 @@ export default function BusSuggestionPanel({ destination, onClose, onSelectRoute
                             option={option}
                             index={i}
                             arriveBy={arriveByMode && arriveByTime ? arriveByTime : undefined}
+                            weather={weather}
                         />
                     </div>
                 ))}
@@ -159,7 +165,7 @@ export default function BusSuggestionPanel({ destination, onClose, onSelectRoute
 }
 
 // RouteCard — displays a single route option with timeline steps
-function RouteCard({ option, index, arriveBy }: { option: TripOption; index: number; arriveBy?: string }) {
+function RouteCard({ option, index, arriveBy, weather }: { option: TripOption; index: number; arriveBy?: string; weather?: WeatherSnapshot | null }) {
     const [expandedStops, setExpandedStops] = React.useState<Set<number>>(new Set());
     const [detouredRoutes, setDetouredRoutes] = React.useState<Set<string>>(new Set());
 
@@ -228,6 +234,17 @@ function RouteCard({ option, index, arriveBy }: { option: TripOption; index: num
                             }}
                         >
                             ⚠️ Detour active
+                        </span>
+                    )}
+                    {weather && weather.walkMultiplier > 1.0 && (
+                        <span
+                            title={`Walking times ~${Math.round((weather.walkMultiplier - 1) * 100)}% longer due to cold/icy conditions`}
+                            style={{
+                                fontSize: '11px', fontWeight: '600', color: '#0D47A1',
+                                backgroundColor: '#E3F2FD', padding: '3px 8px', borderRadius: '8px',
+                            }}
+                        >
+                            ❄️ +{Math.round((weather.walkMultiplier - 1) * 100)}% walk
                         </span>
                     )}
                 </div>
