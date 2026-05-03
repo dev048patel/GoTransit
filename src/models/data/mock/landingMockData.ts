@@ -5,7 +5,6 @@ export const heroContent: HeroContent = {
     headline: "Never Miss Your Bus Again",
     subheadline: "Real-time bus tracking, live stop arrivals, and smart route planning—all designed for Regina's unpredictable weather and transit schedules.",
     primaryCTA: "Get Started Free",
-    secondaryCTA: "Watch Demo",
     trustIndicators: [
         "Built for Regina Transit riders",
         "Free to use",

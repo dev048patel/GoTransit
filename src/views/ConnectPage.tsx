@@ -8,10 +8,9 @@
  * Update the `developers` array below with your real details.
  */
 
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Linkedin, ArrowLeft, Github } from 'lucide-react';
+import { LinkedinIcon, ArrowLeft, GithubIcon } from 'lucide-react';
 
 interface Developer {
     name: string;
@@ -27,51 +26,17 @@ interface Developer {
 const developers: Developer[] = [
     {
         name: 'Dev Paresh Patel',
-        role: 'Backend & Application Security Engineer',
-        // bio: 'Computer Science student at University of Regina. Passionate about building tools that improve everyday life.',
+        role: 'Founder · Backend, Security & Infrastructure',
         linkedin: 'https://www.linkedin.com/in/dev-patel-itsme/',
         github: 'https://github.com/dev048patel',
         photo: '',
     },
     {
-      name: 'Nirjar Patel',
-      role: 'QA Analyst & Application Architect',
-    //   bio: 'Computer Science student at University of Regina. Passionate about building tools that improve everyday life.',
-      linkedin: 'https://www.linkedin.com/in/nirjarpatel/',
-      github: 'https://github.com/nirjar1012',
-      photo: '',
-    },
-     {
-      name: 'Dev Pradipbhai Patel',
-      role: 'Technical Documentation & Frontend Support',
-    //   bio: 'Computer Science student at University of Regina. Passionate about building tools that improve everyday life.',
-      linkedin: 'https://www.linkedin.com/in/dev-patel-5034363b2/',
-      github: 'https://github.com/DPP835',
-      photo: '',
-    },
-     {
-      name: 'Prakhar Patel',
-      role: 'Map UI & Visualization Developer',
-    //   bio: 'Computer Science student at University of Regina. Passionate about building tools that improve everyday life.',
-      linkedin: 'https://www.linkedin.com/in/prakhar-patel-51b579302/',
-      github: 'https://github.com/prakharpatel2605-png',
-      photo: '',
-    },
-     {
-      name: 'Shlok Patel',
-      role: 'Backend Integration & Feature Support Developer',
-    //   bio: 'Computer Science student at University of Regina. Passionate about building tools that improve everyday life.',
-      linkedin: 'https://www.linkedin.com/in/shlok-patel-32012922a/',
-      github: 'https://github.com/Shlok-Patel-1906',
-      photo: '',
-    },
-     {
-      name: 'Vraj Patel',
-      role: 'Frontend Infrastructure & Build Engineer',
-    //   bio: 'Computer Science student at University of Regina. Passionate about building tools that improve everyday life.',
-      linkedin: 'https://www.linkedin.com/in/vraj-patel-592488213/',
-      github: 'https://github.com/Vraj1554',
-      photo: '',
+        name: 'Nirjar Patel',
+        role: 'Co-Founder · Frontend, Architecture & QA',
+        linkedin: 'https://www.linkedin.com/in/nirjarpatel/',
+        github: 'https://github.com/nirjar1012',
+        photo: '',
     },
 ];
 
@@ -149,7 +114,7 @@ export default function ConnectPage() {
                 </motion.div>
 
                 {/* Developer cards */}
-                <div className={`grid gap-8 ${developers.length === 1 ? 'max-w-sm mx-auto' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'}`}>
+                <div className={`grid gap-8 max-w-3xl mx-auto ${developers.length === 1 ? 'max-w-sm' : 'grid-cols-1 md:grid-cols-2'}`}>
                     {developers.map((dev, i) => (
                         <motion.div
                             key={dev.name}
@@ -186,7 +151,7 @@ export default function ConnectPage() {
                                     className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm no-underline transition-all duration-200 hover:scale-105"
                                     style={{ background: '#003DA5', color: 'white' }}
                                 >
-                                    <Linkedin size={16} />
+                                    <LinkedinIcon size={16} />
                                     LinkedIn
                                 </a>
                                 {dev.github && (
@@ -197,7 +162,7 @@ export default function ConnectPage() {
                                         className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm no-underline transition-all duration-200 hover:scale-105"
                                         style={{ background: 'rgba(0,61,165,0.08)', color: '#003DA5', border: '1px solid rgba(0,61,165,0.2)' }}
                                     >
-                                        <Github size={16} />
+                                        <GithubIcon size={16} />
                                         GitHub
                                     </a>
                                 )}

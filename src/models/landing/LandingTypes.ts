@@ -4,7 +4,6 @@ export interface HeroContent {
     headline: string;
     subheadline: string;
     primaryCTA: string;
-    secondaryCTA: string;
     trustIndicators: string[];
 }
 

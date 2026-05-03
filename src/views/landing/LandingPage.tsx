@@ -12,7 +12,6 @@
  *  4. Sections — fully transparent backgrounds, content floats above the map
  */
 
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLandingController } from '../../controllers/landing/useLandingController';
 import logo from '../../New-Image.jpeg';
@@ -21,7 +20,6 @@ import StatsSection from './sections/StatsSection';
 import FeaturesCarousel from './sections/FeaturesCarousel';
 import HowItWorks from './sections/HowItWorks';
 import ProblemSolution from './sections/ProblemSolution';
-import VisualDemo from './sections/VisualDemo';
 import ComparisonTable from './sections/ComparisonTable';
 import TechnologyTrust from './sections/TechnologyTrust';
 import FAQ from './sections/FAQ';
@@ -176,13 +174,11 @@ export default function LandingPage() {
                     headline={hero.headline}
                     subheadline={hero.subheadline}
                     primaryCTA={hero.primaryCTA}
-                    secondaryCTA={hero.secondaryCTA}
                     trustIndicators={hero.trustIndicators}
                 />
                 <StatsSection stats={stats} />
                 <FeaturesCarousel features={features} />
                 <HowItWorks steps={steps} />
-                <VisualDemo />
                 <ProblemSolution problemSolutions={problemSolutions} />
                 <ComparisonTable />
                 <TechnologyTrust technologies={technologies} />

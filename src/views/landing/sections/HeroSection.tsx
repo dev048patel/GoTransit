@@ -16,18 +16,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, MapPin } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 interface HeroSectionProps {
     headline: string;
     subheadline: string;
     primaryCTA: string;
-    secondaryCTA: string;
     trustIndicators: string[];
 }
 
 
-export default function HeroSection({ headline, subheadline, primaryCTA, secondaryCTA, trustIndicators }: HeroSectionProps) {
+export default function HeroSection({ headline, subheadline, primaryCTA, trustIndicators }: HeroSectionProps) {
     return (
         <section className="relative min-h-screen flex items-center overflow-hidden">
             {/* Soft vignette to bring focus to the card */}
@@ -123,29 +122,6 @@ export default function HeroSection({ headline, subheadline, primaryCTA, seconda
                                 <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                             </Link>
 
-                            {/* Secondary — outlined */}
-                            <a
-                                href="https://youtu.be/fIEgUrMZmg4"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="px-8 py-4 rounded-xl font-bold text-lg border-2 transition-all duration-300 flex items-center justify-center gap-2 no-underline"
-                                style={{
-                                    color: '#003DA5',
-                                    borderColor: '#003DA5',
-                                    background: 'transparent',
-                                }}
-                                onMouseEnter={e => {
-                                    (e.currentTarget as HTMLElement).style.background = '#003DA5';
-                                    (e.currentTarget as HTMLElement).style.color = 'white';
-                                }}
-                                onMouseLeave={e => {
-                                    (e.currentTarget as HTMLElement).style.background = 'transparent';
-                                    (e.currentTarget as HTMLElement).style.color = '#003DA5';
-                                }}
-                            >
-                                <MapPin size={20} />
-                                {secondaryCTA}
-                            </a>
                         </motion.div>
 
                         {/* Trust Indicators */}
