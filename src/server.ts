@@ -27,17 +27,20 @@ const port = Number(process.env.PORT) || 3001; // Railway assigns PORT dynamical
 // Allow only specific origins to access the backend
 // Access-Control-Allow-Origin : Allow this domain to access our API
 const allowedOrigins = [
-    'https://www.gotransitregina.ca',
-    'https://gotransitregina.ca',
+    'https://www.transitregina.ca',
+    'https://transitregina.ca',
     'https://gotransit-production.up.railway.app', // Railway deployment
     'http://localhost:3000', // Vite dev (npm run start)
     'http://localhost:5173', // Vite dev (npm run dev)
 ];
 
+// Vercel preview/branch deployments of this project (URL changes per deploy)
+const vercelPreviewOrigin = /^https:\/\/go-transit-[a-z0-9-]+-dev048patels-projects\.vercel\.app$/;
+
 app.use(cors({
     origin: (origin, callback) => {
         // Allow requests with no origin (curl, Postman, server-to-server)
-        if (!origin || allowedOrigins.includes(origin)) {
+        if (!origin || allowedOrigins.includes(origin) || vercelPreviewOrigin.test(origin)) {
             callback(null, true);
         } else {
             callback(new Error(`CORS: origin ${origin} not allowed`));
