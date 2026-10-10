@@ -14,6 +14,8 @@ Route Map:
   /          → LandingPage          (public)
   /login     → LoginPage            (public only — bounces logged-in users to /map)
   /signup    → SignupPage           (public only — bounces logged-in users to /map)
+  /forgot-password → ForgotPasswordPage (public only)
+  /reset-password  → ResetPasswordPage  (public — the emailed link signs the user in, so NOT public-only)
   /map       → MapPage              (protected — requires login)
   /profile   → ProfilePage         (protected — requires login)
   /admin/*   → Admin panel         (admin only — requires role = 'admin' in profiles)
@@ -37,6 +39,8 @@ const MapPage = React.lazy(() => import('./views/MapPage'));
 const LandingPage = React.lazy(() => import('./views/landing/LandingPage'));
 const LoginPage = React.lazy(() => import('./views/auth/LoginPage'));
 const SignupPage = React.lazy(() => import('./views/auth/SignupPage'));
+const ForgotPasswordPage = React.lazy(() => import('./views/auth/ForgotPasswordPage'));
+const ResetPasswordPage = React.lazy(() => import('./views/auth/ResetPasswordPage'));
 const ConnectPage = React.lazy(() => import('./views/ConnectPage'));
 const AdminLayout = React.lazy(() => import('./views/layouts/AdminLayout'));
 const Dashboard = React.lazy(() => import('./views/admin/Dashboard'));
@@ -108,6 +112,16 @@ function AppRoutes() {
                         </PublicOnlyRoute>
                     }
                 />
+                <Route
+                    path="/forgot-password"
+                    element={
+                        <PublicOnlyRoute>
+                            <ForgotPasswordPage />
+                        </PublicOnlyRoute>
+                    }
+                />
+                {/* Not PublicOnly: the recovery link arrives with a live session */}
+                <Route path="/reset-password" element={<ResetPasswordPage />} />
 
                 {/* ── Protected Pages ────────────────────────────────────── */}
                 <Route

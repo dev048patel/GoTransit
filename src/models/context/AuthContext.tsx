@@ -37,9 +37,14 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 async function fetchRole(userId: string): Promise<'user' | 'admin'> {
     const { data } = await supabase
         .from('profiles')
-        .select('role')
+        .select('role, account_status')
         .eq('id', userId)
         .single();
+    // Sessions created outside login() (e.g. password-reset links) must not
+    // let suspended or soft-deleted accounts in.
+    if (data?.account_status === 'suspended' || data?.account_status === 'deleted') {
+        await supabase.auth.signOut();
+    }
     return (data?.role === 'admin') ? 'admin' : 'user';
 }
 
