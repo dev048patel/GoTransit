@@ -552,6 +552,15 @@ function computeStopDirection(
     const dirsA = gtfs[stopAId]?.[routeNum] ?? [];
     const dirsB = gtfs[stopBId]?.[routeNum] ?? [];
     const sharedDirs = dirsA.filter(d => dirsB.includes(d));
+
+    // Both stops are known to GTFS but no single trip direction serves both (e.g. a SB-only stop
+    // and a NB-only stop): the rider would have to ride to the terminus and back. Without this,
+    // the geometric tiers below project the stop onto the opposite direction's shape (the two
+    // carriageways are well within tolerance) and report a short, "valid" ride the wrong way.
+    if (dirsA.length > 0 && dirsB.length > 0 && sharedDirs.length === 0) {
+        return { valid: false, shapeDistance: straightLine };
+    }
+
     // Prioritize directions shared by both stops; fall back to all dirs either stop serves
     const orderedDirs = sharedDirs.length > 0
         ? sharedDirs
