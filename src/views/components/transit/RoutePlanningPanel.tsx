@@ -23,7 +23,7 @@ export const RoutePlanningPanel: React.FC<RoutePlanningPanelProps> = ({
             position: 'absolute',
             bottom: '20px',
             left: '20px',
-            backgroundColor: 'white',
+            backgroundColor: 'var(--t-surface)',
             borderRadius: '12px',
             boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
             padding: '20px',
@@ -71,7 +71,7 @@ export const RoutePlanningPanel: React.FC<RoutePlanningPanelProps> = ({
                         style={{
                             width: '100%',
                             padding: '10px',
-                            backgroundColor: '#1a73e8',
+                            backgroundColor: 'var(--t-primary)',
                             color: 'white',
                             border: 'none',
                             borderRadius: '6px',
@@ -81,7 +81,7 @@ export const RoutePlanningPanel: React.FC<RoutePlanningPanelProps> = ({
                             transition: 'background-color 0.2s'
                         }}
                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1557b0'}
-                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1a73e8'}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--t-primary)'}
                     >
                         📍 Use My Location
                     </button>
@@ -149,7 +149,7 @@ export const RoutePlanningPanel: React.FC<RoutePlanningPanelProps> = ({
             <div style={{
                 marginTop: '16px',
                 padding: '12px',
-                backgroundColor: '#f8f9fa',
+                backgroundColor: 'var(--t-surface-2)',
                 borderRadius: '6px',
                 fontSize: '12px',
                 color: '#5f6368',

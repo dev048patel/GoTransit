@@ -2,7 +2,7 @@
  Only responsible for UX/UI rendering. 
  It receives all data as props and determines how the map looks on screen. It contains NO business logic.
  */
-import React, { useState, useCallback, useRef, useMemo } from 'react';
+import React, { useState, useCallback, useRef, useMemo, useEffect } from 'react';
 import { GoogleMap, Marker, Polyline, InfoWindow } from '@react-google-maps/api';
 import { Coordinates } from '../models/MapModel';
 import { TripOption } from '../models/transit/RoutePlanning';
@@ -17,40 +17,11 @@ import TripPlannerModal from './components/transit/TripPlannerModal';
 import BusSuggestionPanel from './components/transit/BusSuggestionPanel';
 import RouteTrackingOverlay from './components/transit/RouteTrackingOverlay';
 import TrackingPanel from './components/transit/TrackingPanel';
-
-// Bus stop marker SVG — generated once, reused for all stop markers
-// Bus stop marker: bus glyph in a circle, plus an arrow on the edge pointing the way buses travel
-// at that stop (NB ↑, SB ↓, EB →, WB ←) so riders can tell which side of the street to wait on
-const busStopIconUrl = (heading: number | null) => `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
-<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
-  ${heading === null ? '' : `<g transform="rotate(${heading} 18 18)"><path d="M18 0.5 L23.5 7.5 L12.5 7.5 Z" fill="#1a73e8" stroke="white" stroke-width="1.5" stroke-linejoin="round"/></g>`}
-  <g transform="translate(4 4)">
-    <circle cx="14" cy="14" r="12" fill="#1a73e8" stroke="white" stroke-width="2"/>
-    <rect x="9" y="7" width="10" height="14" rx="2" fill="white"/>
-    <rect x="10.5" y="9" width="7" height="3.5" rx="1" fill="#1a73e8"/>
-    <circle cx="11.5" cy="17.5" r="1.2" fill="#1a73e8"/>
-    <circle cx="16.5" cy="17.5" r="1.2" fill="#1a73e8"/>
-    <rect x="10.5" y="14" width="7" height="0.8" rx="0.4" fill="#1a73e8" opacity="0.4"/>
-  </g>
-</svg>
-`)}`;
-
-const BUS_STOP_ICON_URLS: Record<StopDirection | 'none', string> = {
-  NB: busStopIconUrl(STOP_DIRECTION_HEADING.NB),
-  EB: busStopIconUrl(STOP_DIRECTION_HEADING.EB),
-  SB: busStopIconUrl(STOP_DIRECTION_HEADING.SB),
-  WB: busStopIconUrl(STOP_DIRECTION_HEADING.WB),
-  none: busStopIconUrl(null),
-};
-
-// User location "You are here" pulsing blue dot marker
-const USER_LOCATION_ICON_URL = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
-<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
-  <circle cx="20" cy="20" r="18" fill="#4285F4" opacity="0.15"/>
-  <circle cx="20" cy="20" r="12" fill="#4285F4" opacity="0.25"/>
-  <circle cx="20" cy="20" r="7" fill="#4285F4" stroke="white" stroke-width="2.5"/>
-</svg>
-`)}`;
+import UserLocationMarker from './components/transit/UserLocationMarker';
+import { useMarkerCharacter } from '../controllers/useMarkerCharacter';
+import { stopIconFor } from '../models/data/stopIcons';
+import { applyCharacterTheme } from '../models/data/characterThemes';
+import PlaceBubble, { destinationPinFor } from './components/transit/PlaceBubble';
 
 /*
  -> <MapView isLoaded={...} center={...} />
@@ -75,7 +46,6 @@ export const MapView: React.FC<MapViewProps> = ({
   setSelectedPlaceMarker,
   currentZoom,
   onZoomChanged,
-  userLocation,
   activeDetours,
   weather,
 }) => {
@@ -86,6 +56,17 @@ export const MapView: React.FC<MapViewProps> = ({
   const [selectedBus, setSelectedBus] = useState<BusPosition | null>(null);
   const [selectedStop, setSelectedStop] = useState<Stop | null>(null);
   const [showStopDetail, setShowStopDetail] = useState(false);
+
+  // Bus stops are drawn to match the user's chosen map character
+  const { character } = useMarkerCharacter();
+  const stopIcon = stopIconFor(character);
+  const placePin = destinationPinFor(character);
+
+  // Theme the map screens to the chosen character; other pages keep the original colours
+  useEffect(() => {
+    applyCharacterTheme(character);
+    return () => applyCharacterTheme('default');
+  }, [character]);
 
   // Handle stop marker click — open the departure board panel
   const handleStopClick = (stop: Stop) => {
@@ -108,13 +89,20 @@ export const MapView: React.FC<MapViewProps> = ({
     return dirs[index];
   };
 
-  // When a place is selected, also show the InfoWindow
+  // When a place is selected, also show the place bubble
   const handlePlaceSelectWithPopup = (place: any) => {
     handlePlaceSelect(place);
     setShowInfoWindow(true);
     setShowBusSuggestions(false);
     setShowStopDetail(false);
   };
+
+  // Search box cleared: drop the flag, bubble and suggestions for that place
+  const handleClearPlace = useCallback(() => {
+    setSelectedPlaceMarker(null);
+    setShowInfoWindow(false);
+    setShowBusSuggestions(false);
+  }, [setSelectedPlaceMarker]);
 
   // When a route card is clicked, start tracking and recenter to user GPS
   const handleSelectRoute = (option: TripOption) => {
@@ -187,6 +175,7 @@ export const MapView: React.FC<MapViewProps> = ({
       {!activeTracking && (
         <Navbar
           onPlaceSelect={handlePlaceSelectWithPopup}
+          onClearPlace={handleClearPlace}
           routes={routes}
           selectedRoute={selectedRoute}
           onRouteSelect={setSelectedRoute}
@@ -201,7 +190,7 @@ export const MapView: React.FC<MapViewProps> = ({
         weather={weather}
       />
 
-      {/* Bus Suggestion Panel (shown after user clicks Yes on InfoWindow) */}
+      {/* Bus Suggestion Panel (shown after the user confirms in the place bubble) */}
       {showBusSuggestions && selectedPlaceMarker && !activeTracking && (
         <BusSuggestionPanel
           destination={{
@@ -213,6 +202,7 @@ export const MapView: React.FC<MapViewProps> = ({
           onSelectRoute={handleSelectRoute}
           liveBuses={liveBuses}
           weather={weather}
+          character={character}
         />
       )}
 
@@ -250,25 +240,22 @@ export const MapView: React.FC<MapViewProps> = ({
         )}
 
         {/* Render Stops — viewport-culled, hidden during tracking */}
-        {!activeTracking && viewportStops.map((stop) => {
-          const direction = directionOfStop(stop);
-          return (
-            <Marker
-              key={stop.STOP_ID}
-              position={{
-                lat: parseFloat(stop.LAT),
-                lng: parseFloat(stop.LON),
-              }}
-              title={`${direction ? `${STOP_DIRECTION_ARROW[direction]} ${STOP_DIRECTION_LABEL[direction]} · ` : ''}${stop.STOP_NAME} (#${stop.STOP_ID})`}
-              icon={{
-                url: BUS_STOP_ICON_URLS[direction ?? 'none'],
-                scaledSize: isLoaded ? new google.maps.Size(30, 30) : undefined,
-                anchor: isLoaded ? new google.maps.Point(15, 15) : undefined,
-              }}
-              onClick={() => handleStopClick(stop)}
-            />
-          );
-        })}
+        {!activeTracking && viewportStops.map((stop) => (
+          <Marker
+            key={stop.STOP_ID}
+            position={{
+              lat: parseFloat(stop.LAT),
+              lng: parseFloat(stop.LON),
+            }}
+            title={`${stop.STOP_NAME} (#${stop.STOP_ID})`}
+            icon={{
+              url: stopIcon.url,
+              scaledSize: isLoaded ? new google.maps.Size(stopIcon.width, stopIcon.height) : undefined,
+              anchor: isLoaded ? new google.maps.Point(stopIcon.anchorX, stopIcon.anchorY) : undefined,
+            }}
+            onClick={() => handleStopClick(stop)}
+          />
+        ))}
 
         {/* Render Route Polylines (hide during tracking) */}
         {!activeTracking && routePaths.map((path, index) => (
@@ -297,64 +284,32 @@ export const MapView: React.FC<MapViewProps> = ({
           />
         ))}
 
-        {/* Render Selected Place Marker with InfoWindow */}
+        {/* Selected place: themed flag pin + the character's speech bubble */}
         {selectedPlaceMarker && !activeTracking && (
           <Marker
             position={selectedPlaceMarker.location}
             title={selectedPlaceMarker.name}
             zIndex={200}
-            onClick={() => setShowInfoWindow(true)}
-          >
-            {showInfoWindow && (
-              <InfoWindow
-                position={selectedPlaceMarker.location}
-                onCloseClick={() => setShowInfoWindow(false)}
-                options={{ maxWidth: 260 }}
-              >
-                <div style={{
-                  padding: '4px 2px',
-                  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
-                }}>
-                  <div style={{ fontWeight: '600', fontSize: '13px', color: '#202124', marginBottom: '6px', lineHeight: '1.3' }}>
-                    📍 {selectedPlaceMarker.name}
-                  </div>
-                  <div style={{ fontSize: '12px', color: '#5f6368', marginBottom: '8px' }}>
-                    Bus suggestions to here?
-                  </div>
-                  <div style={{ display: 'flex', gap: '6px' }}>
-                    <button
-                      onClick={() => { setShowInfoWindow(false); setShowBusSuggestions(true); }}
-                      style={{ padding: '6px 14px', backgroundColor: '#1a73e8', color: 'white', border: 'none', borderRadius: '16px', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}
-                    >
-                      Yes 🚌
-                    </button>
-                    <button
-                      onClick={() => { setShowInfoWindow(false); setSelectedPlaceMarker(null); }}
-                      style={{ padding: '6px 14px', backgroundColor: '#f1f3f4', color: '#5f6368', border: 'none', borderRadius: '16px', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}
-                    >
-                      No
-                    </button>
-                  </div>
-                </div>
-              </InfoWindow>
-            )}
-          </Marker>
-        )}
-
-        {/* User's live GPS location — pulsing blue dot */}
-        {userLocation && (
-          <Marker
-            position={userLocation}
             icon={{
-              url: USER_LOCATION_ICON_URL,
-              scaledSize: new google.maps.Size(40, 40),
-              anchor: new google.maps.Point(20, 20),
+              url: placePin.url,
+              scaledSize: isLoaded ? new google.maps.Size(placePin.width, placePin.height) : undefined,
+              anchor: isLoaded ? new google.maps.Point(placePin.anchorX, placePin.anchorY) : undefined,
             }}
-            title="You are here"
-            zIndex={300}
-            clickable={false}
+            onClick={() => setShowInfoWindow(true)}
           />
         )}
+        {selectedPlaceMarker && !activeTracking && showInfoWindow && (
+          <PlaceBubble
+            character={character}
+            position={selectedPlaceMarker.location}
+            name={selectedPlaceMarker.name}
+            onConfirm={() => { setShowInfoWindow(false); setShowBusSuggestions(true); }}
+            onClose={() => { setShowInfoWindow(false); setSelectedPlaceMarker(null); }}
+          />
+        )}
+
+        {/* User's live GPS location — chosen character marker */}
+        <UserLocationMarker />
 
         {/* Render Live Buses — colored by route using transitColors data */}
         {(activeTracking

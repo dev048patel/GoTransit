@@ -16,13 +16,13 @@ export default function StopDetailPanel({ stop, onClose }: StopDetailPanelProps)
     const direction = directionOfStop(stop);
 
     return (
-        <div className="stop-detail-panel" style={panelStyle}>
+        <div className="stop-detail-panel t-panel" style={panelStyle}>
             {/* Drag handle for mobile */}
             <div style={{ display: 'flex', justifyContent: 'center', padding: '8px 0 0' }}>
                 <div style={{ width: '36px', height: '4px', backgroundColor: '#dadce0', borderRadius: '2px' }} />
             </div>
             {/* Header */}
-            <div style={headerStyle}>
+            <div className="t-panel-header" style={headerStyle}>
                 <div style={{ flex: 1 }}>
                     <div style={{ fontWeight: '700', fontSize: '16px', color: '#202124' }}>
                         {stop.STOP_NAME}
@@ -35,7 +35,7 @@ export default function StopDetailPanel({ stop, onClose }: StopDetailPanelProps)
                     <div style={{
                         display: 'inline-block', marginTop: '6px',
                         fontSize: '11px', color: '#5f6368',
-                        backgroundColor: '#f1f3f4', padding: '2px 8px',
+                        backgroundColor: 'var(--t-chip)', padding: '2px 8px',
                         borderRadius: '6px'
                     }}>
                         Stop #{stop.STOP_ID}
@@ -60,7 +60,7 @@ export default function StopDetailPanel({ stop, onClose }: StopDetailPanelProps)
                         disabled={loading}
                         title="Refresh predictions"
                         style={{
-                            background: 'none', border: '1px solid #dadce0', borderRadius: '50%',
+                            background: 'none', border: '1px solid var(--t-border)', borderRadius: '50%',
                             width: '32px', height: '32px', cursor: loading ? 'not-allowed' : 'pointer',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                             fontSize: '16px', color: '#5f6368', opacity: loading ? 0.5 : 1,
@@ -188,11 +188,11 @@ export default function StopDetailPanel({ stop, onClose }: StopDetailPanelProps)
 function RouteCard({ group, isNearest }: { group: RouteGroup; isNearest: boolean }) {
     return (
         <div style={{
-            backgroundColor: group.hasLiveData ? '#f8f9fa' : '#fafafa',
+            backgroundColor: group.hasLiveData ? 'var(--t-surface-2)' : 'var(--t-surface-2)',
             borderRadius: '12px',
             padding: '14px',
             marginBottom: '10px',
-            border: '1px solid #e8eaed',
+            border: '1px solid var(--t-border-soft)',
             borderLeft: `4px solid ${group.routeColor}`,
             opacity: group.hasLiveData ? 1 : 0.7,
         }}>
@@ -243,7 +243,7 @@ function RouteCard({ group, isNearest }: { group: RouteGroup; isNearest: boolean
                                 alignItems: 'center',
                                 padding: '6px 8px',
                                 borderRadius: '8px',
-                                backgroundColor: isNext ? '#e8f5e9' : (i % 2 === 0 ? 'transparent' : '#f1f3f4'),
+                                backgroundColor: isNext ? 'var(--t-accent-soft)' : (i % 2 === 0 ? 'transparent' : 'var(--t-chip)'),
                                 animation: isNext ? 'chipPulse 2s ease-in-out infinite' : 'none',
                             }}>
                                 {/* Countdown */}
@@ -269,7 +269,7 @@ function RouteCard({ group, isNearest }: { group: RouteGroup; isNearest: boolean
                                 {/* Bus ID or Scheduled */}
                                 <span style={{
                                     fontSize: '11px',
-                                    color: pred.isLive ? '#1a73e8' : '#9aa0a6',
+                                    color: pred.isLive ? 'var(--t-primary)' : '#9aa0a6',
                                     fontWeight: pred.isLive ? '500' : '400',
                                     flex: 1,
                                 }}>
@@ -312,7 +312,7 @@ const panelStyle: React.CSSProperties = {
     right: 0,
     width: '100%',
     maxHeight: '70vh',
-    backgroundColor: 'white',
+    backgroundColor: 'var(--t-surface)',
     borderRadius: '20px 20px 0 0',
     boxShadow: '0 -4px 24px rgba(0,0,0,0.15)',
     zIndex: 1500,
@@ -327,8 +327,8 @@ const headerStyle: React.CSSProperties = {
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     padding: '14px 18px',
-    backgroundColor: '#f8f9fa',
-    borderBottom: '1px solid #e8eaed',
+    backgroundColor: 'var(--t-surface-2)',
+    borderBottom: '1px solid var(--t-border-soft)',
 };
 
 const closeBtnStyle: React.CSSProperties = {
@@ -348,8 +348,8 @@ const badgeStripStyle: React.CSSProperties = {
     justifyContent: 'center',
     gap: '8px',
     padding: '12px 18px',
-    borderBottom: '1px solid #e8eaed',
-    backgroundColor: '#f8f9fa',
+    borderBottom: '1px solid var(--t-border-soft)',
+    backgroundColor: 'var(--t-surface-2)',
 };
 
 const contentStyle: React.CSSProperties = {
@@ -372,8 +372,8 @@ const statusStyle: React.CSSProperties = {
 const spinnerStyle: React.CSSProperties = {
     width: '14px',
     height: '14px',
-    border: '2px solid #dadce0',
-    borderTop: '2px solid #1a73e8',
+    border: '2px solid var(--t-border)',
+    borderTop: '2px solid var(--t-primary)',
     borderRadius: '50%',
     animation: 'spin 1s linear infinite',
     display: 'inline-block',
@@ -396,7 +396,7 @@ const emptyStyle: React.CSSProperties = {
 
 const footerStyle: React.CSSProperties = {
     padding: '8px 18px',
-    borderTop: '1px solid #e8eaed',
+    borderTop: '1px solid var(--t-border-soft)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',

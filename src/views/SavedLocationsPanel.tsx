@@ -12,7 +12,7 @@ interface SavedLocationsPanelProps {
 
 /* ── Bookmark icon (outline / filled) ────────────────────────── */
 const BookmarkIcon = ({ filled }: { filled?: boolean }) => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill={filled ? '#2E7D32' : 'none'} stroke={filled ? '#2E7D32' : 'currentColor'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill={filled ? 'var(--t-accent)' : 'none'} stroke={filled ? 'var(--t-accent)' : 'currentColor'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z" />
     </svg>
 );
@@ -40,8 +40,8 @@ function DestinationItem({
         <div
             style={{
                 borderRadius: '10px',
-                border: expanded ? '1.5px solid #2E7D32' : '1.5px solid #e8e8e8',
-                backgroundColor: expanded ? '#F1F8F2' : 'white',
+                border: expanded ? '1.5px solid var(--t-accent)' : '1.5px solid #e8e8e8',
+                backgroundColor: expanded ? 'var(--t-accent-soft)' : 'var(--t-surface)',
                 marginBottom: '8px',
                 overflow: 'hidden',
                 transition: 'border-color 0.15s, background-color 0.15s',
@@ -53,10 +53,10 @@ function DestinationItem({
             <div style={{ display: 'flex', alignItems: 'center', padding: '11px 13px', gap: '10px' }}>
                 <div style={{
                     width: '30px', height: '30px', borderRadius: '8px',
-                    backgroundColor: expanded ? '#E8F5E9' : '#f5f5f5',
+                    backgroundColor: expanded ? 'var(--t-accent-soft)' : 'var(--t-surface-2)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     flexShrink: 0, transition: 'background-color 0.15s',
-                    color: expanded ? '#2E7D32' : '#888',
+                    color: expanded ? 'var(--t-accent)' : '#888',
                 }}>
                     <BookmarkIcon filled={expanded} />
                 </div>
@@ -79,7 +79,7 @@ function DestinationItem({
             {/* Action buttons — shown when expanded */}
             {expanded && (
                 <div
-                    style={{ display: 'flex', gap: '8px', padding: '0 13px 12px', borderTop: '1px solid #e8f5e9' }}
+                    style={{ display: 'flex', gap: '8px', padding: '0 13px 12px', borderTop: '1px solid var(--t-accent-soft)' }}
                     onClick={e => e.stopPropagation()}
                 >
                     <button
@@ -87,11 +87,11 @@ function DestinationItem({
                         style={{
                             flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px',
                             padding: '8px', borderRadius: '8px', border: 'none', cursor: 'pointer',
-                            backgroundColor: '#2E7D32', color: 'white',
+                            backgroundColor: 'var(--t-accent)', color: 'white',
                             fontSize: '13px', fontWeight: '600', transition: 'background-color 0.15s',
                         }}
-                        onMouseEnter={e => e.currentTarget.style.backgroundColor = '#1B5E20'}
-                        onMouseLeave={e => e.currentTarget.style.backgroundColor = '#2E7D32'}
+                        onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--t-accent-dark)'}
+                        onMouseLeave={e => e.currentTarget.style.backgroundColor = 'var(--t-accent)'}
                     >
                         <LocationPinIcon />
                         Go Now!
@@ -137,7 +137,7 @@ function DeleteConfirmModal({
             alignItems: 'center', justifyContent: 'center', zIndex: 10, padding: '20px',
         }}>
             <div style={{
-                backgroundColor: 'white', borderRadius: '14px',
+                backgroundColor: 'var(--t-surface)', borderRadius: '14px',
                 padding: '24px 20px', width: '100%', maxWidth: '280px',
                 boxShadow: '0 8px 24px rgba(0,0,0,0.2)', textAlign: 'center',
             }}>
@@ -162,7 +162,7 @@ function DeleteConfirmModal({
                         disabled={loading}
                         style={{
                             flex: 1, padding: '9px', borderRadius: '8px',
-                            border: '1.5px solid #e0e0e0', backgroundColor: 'white',
+                            border: '1.5px solid var(--t-border-soft)', backgroundColor: 'var(--t-surface)',
                             fontSize: '13px', fontWeight: '600', color: '#5f6368', cursor: 'pointer',
                         }}
                     >
@@ -207,11 +207,11 @@ export default function SavedLocationsPanel({ ctrl, onGoNow }: SavedLocationsPan
             />
 
             {/* Panel */}
-            <div style={{
+            <div className="t-panel t-drawer" style={{
                 position: 'fixed', top: '52px', right: 0,
                 width: 'min(340px, 100vw)',
                 height: 'calc(100vh - 52px)',
-                backgroundColor: 'white',
+                backgroundColor: 'var(--t-surface)',
                 boxShadow: '-4px 0 20px rgba(0,0,0,0.12)',
                 zIndex: 1100,
                 display: 'flex', flexDirection: 'column',
@@ -230,10 +230,10 @@ export default function SavedLocationsPanel({ ctrl, onGoNow }: SavedLocationsPan
                 )}
 
                 {/* ── Header ── */}
-                <div style={{
+                <div className="t-panel-header" style={{
                     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                     padding: '16px 16px 12px',
-                    borderBottom: '1px solid #f0f0f0',
+                    borderBottom: '1px solid var(--t-border-soft)',
                     flexShrink: 0,
                 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -242,7 +242,7 @@ export default function SavedLocationsPanel({ ctrl, onGoNow }: SavedLocationsPan
                                 onClick={ctrl.switchToList}
                                 style={{
                                     width: '28px', height: '28px', borderRadius: '8px', border: 'none',
-                                    backgroundColor: '#f1f3f4', cursor: 'pointer', display: 'flex',
+                                    backgroundColor: 'var(--t-chip)', cursor: 'pointer', display: 'flex',
                                     alignItems: 'center', justifyContent: 'center', color: '#5f6368',
                                     flexShrink: 0,
                                 }}
@@ -256,7 +256,7 @@ export default function SavedLocationsPanel({ ctrl, onGoNow }: SavedLocationsPan
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                             <div style={{
                                 width: '28px', height: '28px', borderRadius: '8px',
-                                backgroundColor: '#E8F5E9', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                backgroundColor: 'var(--t-accent-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center',
                             }}>
                                 <BookmarkIcon filled />
                             </div>
@@ -272,12 +272,12 @@ export default function SavedLocationsPanel({ ctrl, onGoNow }: SavedLocationsPan
                                 style={{
                                     display: 'flex', alignItems: 'center', gap: '4px',
                                     padding: '5px 10px', borderRadius: '8px', border: 'none',
-                                    backgroundColor: '#E8F5E9', color: '#2E7D32',
+                                    backgroundColor: 'var(--t-accent-soft)', color: 'var(--t-accent)',
                                     fontSize: '12px', fontWeight: '700', cursor: 'pointer',
                                     transition: 'background-color 0.15s',
                                 }}
-                                onMouseEnter={e => e.currentTarget.style.backgroundColor = '#C8E6C9'}
-                                onMouseLeave={e => e.currentTarget.style.backgroundColor = '#E8F5E9'}
+                                onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--t-accent-border)'}
+                                onMouseLeave={e => e.currentTarget.style.backgroundColor = 'var(--t-accent-soft)'}
                             >
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
                                     <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
@@ -289,12 +289,12 @@ export default function SavedLocationsPanel({ ctrl, onGoNow }: SavedLocationsPan
                             onClick={ctrl.handleClose}
                             style={{
                                 width: '28px', height: '28px', borderRadius: '8px', border: 'none',
-                                backgroundColor: '#f1f3f4', cursor: 'pointer', display: 'flex',
+                                backgroundColor: 'var(--t-chip)', cursor: 'pointer', display: 'flex',
                                 alignItems: 'center', justifyContent: 'center', color: '#5f6368',
                                 transition: 'background-color 0.15s',
                             }}
                             onMouseEnter={e => e.currentTarget.style.backgroundColor = '#e0e0e0'}
-                            onMouseLeave={e => e.currentTarget.style.backgroundColor = '#f1f3f4'}
+                            onMouseLeave={e => e.currentTarget.style.backgroundColor = 'var(--t-chip)'}
                             title="Close"
                         >
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
@@ -312,7 +312,7 @@ export default function SavedLocationsPanel({ ctrl, onGoNow }: SavedLocationsPan
                         <div style={{ textAlign: 'center', padding: '40px 20px' }}>
                             <div style={{
                                 width: '52px', height: '52px', borderRadius: '50%',
-                                backgroundColor: '#E8F5E9', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                backgroundColor: 'var(--t-accent-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center',
                                 margin: '0 auto 14px',
                             }}>
                                 <BookmarkIcon filled />
@@ -326,7 +326,7 @@ export default function SavedLocationsPanel({ ctrl, onGoNow }: SavedLocationsPan
                             <Link to="/login" onClick={ctrl.handleClose}>
                                 <button style={{
                                     padding: '9px 24px', borderRadius: '10px', border: 'none',
-                                    backgroundColor: '#2E7D32', color: 'white',
+                                    backgroundColor: 'var(--t-accent)', color: 'white',
                                     fontSize: '13px', fontWeight: '700', cursor: 'pointer',
                                 }}>
                                     Sign In
@@ -342,7 +342,7 @@ export default function SavedLocationsPanel({ ctrl, onGoNow }: SavedLocationsPan
                                 <div style={{ textAlign: 'center', padding: '30px', color: '#5f6368' }}>
                                     <div style={{
                                         width: '22px', height: '22px', borderRadius: '50%',
-                                        border: '2.5px solid #e0e0e0', borderTop: '2.5px solid #2E7D32',
+                                        border: '2.5px solid var(--t-border-soft)', borderTop: '2.5px solid var(--t-accent)',
                                         animation: 'spin 0.8s linear infinite', margin: '0 auto 10px',
                                     }} />
                                     <span style={{ fontSize: '13px' }}>Loading…</span>
@@ -359,7 +359,7 @@ export default function SavedLocationsPanel({ ctrl, onGoNow }: SavedLocationsPan
                                 <div style={{ textAlign: 'center', padding: '40px 16px' }}>
                                     <div style={{
                                         width: '52px', height: '52px', borderRadius: '50%',
-                                        backgroundColor: '#f5f5f5', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        backgroundColor: 'var(--t-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center',
                                         margin: '0 auto 14px', color: '#bdbdbd',
                                     }}>
                                         <BookmarkIcon />
@@ -374,7 +374,7 @@ export default function SavedLocationsPanel({ ctrl, onGoNow }: SavedLocationsPan
                                         onClick={ctrl.switchToAdd}
                                         style={{
                                             padding: '8px 20px', borderRadius: '10px', border: 'none',
-                                            backgroundColor: '#2E7D32', color: 'white',
+                                            backgroundColor: 'var(--t-accent)', color: 'white',
                                             fontSize: '13px', fontWeight: '700', cursor: 'pointer',
                                         }}
                                     >
@@ -405,8 +405,8 @@ export default function SavedLocationsPanel({ ctrl, onGoNow }: SavedLocationsPan
                                 <div style={{ position: 'relative' }}>
                                     <div style={{
                                         display: 'flex', alignItems: 'center', gap: '8px',
-                                        backgroundColor: '#f1f3f4', borderRadius: '10px', padding: '9px 12px',
-                                        border: ctrl.showSearchResults ? '1.5px solid #2E7D32' : '1.5px solid transparent',
+                                        backgroundColor: 'var(--t-chip)', borderRadius: '10px', padding: '9px 12px',
+                                        border: ctrl.showSearchResults ? '1.5px solid var(--t-accent)' : '1.5px solid transparent',
                                         transition: 'border-color 0.15s',
                                     }}>
                                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5f6368" strokeWidth="2">
@@ -441,7 +441,7 @@ export default function SavedLocationsPanel({ ctrl, onGoNow }: SavedLocationsPan
                                     {ctrl.showSearchResults && ctrl.searchStatus === 'OK' && ctrl.searchData.length > 0 && (
                                         <div style={{
                                             position: 'absolute', top: '100%', left: 0, right: 0,
-                                            marginTop: '4px', backgroundColor: 'white', borderRadius: '10px',
+                                            marginTop: '4px', backgroundColor: 'var(--t-surface)', borderRadius: '10px',
                                             boxShadow: '0 4px 16px rgba(0,0,0,0.14)', zIndex: 10,
                                             maxHeight: '200px', overflowY: 'auto',
                                         }}>
@@ -456,8 +456,8 @@ export default function SavedLocationsPanel({ ctrl, onGoNow }: SavedLocationsPan
                                                             borderBottom: '1px solid #f5f5f5',
                                                             transition: 'background-color 0.1s',
                                                         }}
-                                                        onMouseEnter={e => e.currentTarget.style.backgroundColor = '#f8f9fa'}
-                                                        onMouseLeave={e => e.currentTarget.style.backgroundColor = 'white'}
+                                                        onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--t-surface-2)'}
+                                                        onMouseLeave={e => e.currentTarget.style.backgroundColor = 'var(--t-surface)'}
                                                     >
                                                         <div style={{ fontWeight: '500', fontSize: '13px', color: '#202124' }}>{main_text}</div>
                                                         {secondary_text && (
@@ -475,13 +475,13 @@ export default function SavedLocationsPanel({ ctrl, onGoNow }: SavedLocationsPan
                             {ctrl.selectedPlace && (
                                 <div style={{
                                     display: 'flex', alignItems: 'flex-start', gap: '8px',
-                                    padding: '10px 12px', backgroundColor: '#E8F5E9', borderRadius: '10px',
-                                    border: '1.5px solid #C8E6C9', marginBottom: '14px',
+                                    padding: '10px 12px', backgroundColor: 'var(--t-accent-soft)', borderRadius: '10px',
+                                    border: '1.5px solid var(--t-accent-border)', marginBottom: '14px',
                                 }}>
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2E7D32" strokeWidth="2.5" strokeLinecap="round" style={{ flexShrink: 0, marginTop: '1px' }}>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--t-accent)" strokeWidth="2.5" strokeLinecap="round" style={{ flexShrink: 0, marginTop: '1px' }}>
                                         <polyline points="20 6 9 17 4 12" />
                                     </svg>
-                                    <span style={{ fontSize: '12px', color: '#2E7D32', fontWeight: '500', lineHeight: '1.4' }}>
+                                    <span style={{ fontSize: '12px', color: 'var(--t-accent)', fontWeight: '500', lineHeight: '1.4' }}>
                                         {ctrl.selectedPlace.address}
                                     </span>
                                 </div>
@@ -500,11 +500,11 @@ export default function SavedLocationsPanel({ ctrl, onGoNow }: SavedLocationsPan
                                     maxLength={40}
                                     style={{
                                         width: '100%', padding: '9px 12px', borderRadius: '10px',
-                                        border: '1.5px solid #e0e0e0', outline: 'none',
-                                        fontSize: '14px', color: '#202124', backgroundColor: 'white',
+                                        border: '1.5px solid var(--t-border-soft)', outline: 'none',
+                                        fontSize: '14px', color: '#202124', backgroundColor: 'var(--t-surface)',
                                         boxSizing: 'border-box', transition: 'border-color 0.15s',
                                     }}
-                                    onFocus={e => e.target.style.borderColor = '#2E7D32'}
+                                    onFocus={e => e.target.style.borderColor = 'var(--t-accent)'}
                                     onBlur={e => e.target.style.borderColor = '#e0e0e0'}
                                     onKeyDown={e => { if (e.key === 'Enter') ctrl.handleSave(); }}
                                 />
@@ -527,12 +527,12 @@ export default function SavedLocationsPanel({ ctrl, onGoNow }: SavedLocationsPan
                                     disabled={ctrl.addLoading}
                                     style={{
                                         flex: 1, padding: '10px', borderRadius: '10px', border: 'none',
-                                        backgroundColor: ctrl.addLoading ? '#A5D6A7' : '#2E7D32', color: 'white',
+                                        backgroundColor: ctrl.addLoading ? 'var(--t-accent-border)' : 'var(--t-accent)', color: 'white',
                                         fontSize: '14px', fontWeight: '700', cursor: ctrl.addLoading ? 'not-allowed' : 'pointer',
                                         transition: 'background-color 0.15s',
                                     }}
-                                    onMouseEnter={e => { if (!ctrl.addLoading) e.currentTarget.style.backgroundColor = '#1B5E20'; }}
-                                    onMouseLeave={e => { if (!ctrl.addLoading) e.currentTarget.style.backgroundColor = '#2E7D32'; }}
+                                    onMouseEnter={e => { if (!ctrl.addLoading) e.currentTarget.style.backgroundColor = 'var(--t-accent-dark)'; }}
+                                    onMouseLeave={e => { if (!ctrl.addLoading) e.currentTarget.style.backgroundColor = 'var(--t-accent)'; }}
                                 >
                                     {ctrl.addLoading ? 'Saving…' : 'Save'}
                                 </button>
@@ -541,12 +541,12 @@ export default function SavedLocationsPanel({ ctrl, onGoNow }: SavedLocationsPan
                                     disabled={ctrl.addLoading}
                                     style={{
                                         padding: '10px 16px', borderRadius: '10px',
-                                        border: '1.5px solid #e0e0e0', backgroundColor: 'white',
+                                        border: '1.5px solid var(--t-border-soft)', backgroundColor: 'var(--t-surface)',
                                         fontSize: '14px', fontWeight: '600', color: '#5f6368', cursor: 'pointer',
                                         transition: 'all 0.15s',
                                     }}
-                                    onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#f5f5f5'; }}
-                                    onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'white'; }}
+                                    onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--t-surface-2)'; }}
+                                    onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'var(--t-surface)'; }}
                                 >
                                     Reset
                                 </button>

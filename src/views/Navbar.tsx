@@ -15,16 +15,18 @@ import logo from '../New-Image.jpeg';
 
 interface NavbarProps {
     onPlaceSelect?: (place: any) => void;
+    /** Called when the search box is cleared, so the map can drop the selected place. */
+    onClearPlace?: () => void;
     routes?: Route[];
     selectedRoute?: string | null;
     onRouteSelect?: (routeNum: string | null) => void;
 }
 
 // Renders the top navbar with search, route filter, admin link, profile, and saved locations
-export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSelect }: NavbarProps) {
+export default function Navbar({ onPlaceSelect, onClearPlace, routes, selectedRoute, onRouteSelect }: NavbarProps) {
     const { isAdmin } = useAuth();
     const { hasFeature } = useFeatureAccess();
-    const { ready, value, status, data, showResults, handleInput, handleSelect, handleFocus } = useNavbarController(onPlaceSelect);
+    const { ready, value, status, data, showResults, handleInput, handleClear, handleSelect, handleFocus } = useNavbarController(onPlaceSelect, onClearPlace);
     const saved = useSavedDestinationsController();
     const tplan = useTripScheduleController();
     const weplan = useWeeklyPlannerController();
@@ -59,7 +61,7 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                     <div style={{
                         display: 'flex',
                         alignItems: 'center',
-                        backgroundColor: '#f1f3f4',
+                        backgroundColor: 'var(--t-chip)',
                         borderRadius: '24px',
                         padding: '7px 14px',
                         gap: '8px',
@@ -84,12 +86,29 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                                 color: '#202124',
                             }}
                         />
+                        {value && (
+                            <button
+                                type="button"
+                                onClick={handleClear}
+                                aria-label="Clear search"
+                                title="Clear search"
+                                style={{
+                                    flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    width: '24px', height: '24px', border: 'none', borderRadius: '50%',
+                                    backgroundColor: '#dadce0', color: '#3c4043', cursor: 'pointer', padding: 0,
+                                }}
+                            >
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" aria-hidden="true">
+                                    <path d="M6 6l12 12M18 6L6 18" />
+                                </svg>
+                            </button>
+                        )}
                         {!ready && (
                             <div style={{
                                 width: '16px',
                                 height: '16px',
                                 border: '2px solid #f1f3f4',
-                                borderTop: '2px solid #1a73e8',
+                                borderTop: '2px solid var(--t-primary)',
                                 borderRadius: '50%',
                                 animation: 'spin 1s linear infinite',
                                 flexShrink: 0,
@@ -105,7 +124,7 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                             left: 0,
                             right: 0,
                             marginTop: '8px',
-                            backgroundColor: 'white',
+                            backgroundColor: 'var(--t-surface)',
                             borderRadius: '12px',
                             boxShadow: '0 4px 16px rgba(0,0,0,0.14)',
                             maxHeight: '300px',
@@ -128,8 +147,8 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                                             borderBottom: '1px solid #f1f3f4',
                                             transition: 'background-color 0.2s',
                                         }}
-                                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f8f9fa'}
-                                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
+                                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--t-surface-2)'}
+                                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--t-surface)'}
                                     >
                                         <div style={{ fontWeight: '500', color: '#202124', fontSize: '14px' }}>
                                             {main_text}
@@ -159,12 +178,12 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                                     appearance: 'none',
                                     WebkitAppearance: 'none',
                                     padding: '7px 34px 7px 12px',
-                                    backgroundColor: selectedRoute ? '#e8f0fe' : '#f1f3f4',
-                                    border: selectedRoute ? '2px solid #1a73e8' : '1px solid #dadce0',
+                                    backgroundColor: selectedRoute ? 'var(--t-primary-soft)' : 'var(--t-chip)',
+                                    border: selectedRoute ? '2px solid var(--t-primary)' : '1px solid #dadce0',
                                     borderRadius: '20px',
                                     fontSize: '13px',
                                     fontWeight: '500',
-                                    color: selectedRoute ? '#1a73e8' : '#5f6368',
+                                    color: selectedRoute ? 'var(--t-primary)' : '#5f6368',
                                     cursor: 'pointer',
                                     outline: 'none',
                                     minWidth: '160px',
@@ -187,13 +206,13 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                                     style={{
                                         position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)',
                                         width: '20px', height: '20px', borderRadius: '50%', border: 'none',
-                                        backgroundColor: '#1a73e8', color: 'white', cursor: 'pointer',
+                                        backgroundColor: 'var(--t-primary)', color: 'white', cursor: 'pointer',
                                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                                         fontSize: '12px', fontWeight: '700', lineHeight: 1, padding: 0,
                                         transition: 'background-color 0.2s',
                                     }}
                                     onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d32f2f'}
-                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1a73e8'}
+                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--t-primary)'}
                                     title="Clear route selection"
                                 >
                                     ✕
@@ -231,14 +250,14 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                         title="My Weekly Commute"
                         style={{
                             width: '34px', height: '34px', borderRadius: '50%',
-                            backgroundColor: weplan.isOpen ? '#E8F5E9' : '#f1f3f4',
-                            border: weplan.isOpen ? '2px solid #2E7D32' : '2px solid transparent',
+                            backgroundColor: weplan.isOpen ? 'var(--t-accent-soft)' : 'var(--t-chip)',
+                            border: weplan.isOpen ? '2px solid var(--t-accent)' : '2px solid transparent',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            cursor: 'pointer', color: weplan.isOpen ? '#2E7D32' : '#5f6368',
+                            cursor: 'pointer', color: weplan.isOpen ? 'var(--t-accent)' : '#5f6368',
                             transition: 'all 0.2s', flexShrink: 0,
                         }}
-                        onMouseEnter={e => { if (!weplan.isOpen) { e.currentTarget.style.backgroundColor = '#E8F5E9'; e.currentTarget.style.color = '#2E7D32'; } }}
-                        onMouseLeave={e => { if (!weplan.isOpen) { e.currentTarget.style.backgroundColor = '#f1f3f4'; e.currentTarget.style.color = '#5f6368'; } }}
+                        onMouseEnter={e => { if (!weplan.isOpen) { e.currentTarget.style.backgroundColor = 'var(--t-accent-soft)'; e.currentTarget.style.color = 'var(--t-accent)'; } }}
+                        onMouseLeave={e => { if (!weplan.isOpen) { e.currentTarget.style.backgroundColor = 'var(--t-chip)'; e.currentTarget.style.color = '#5f6368'; } }}
                     >
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M17 1l4 4-4 4" /><path d="M3 11V9a4 4 0 014-4h14" />
@@ -252,14 +271,14 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                         title="Trip Planner"
                         style={{
                             width: '34px', height: '34px', borderRadius: '50%',
-                            backgroundColor: tplan.isOpen ? '#E8F5E9' : '#f1f3f4',
-                            border: tplan.isOpen ? '2px solid #2E7D32' : '2px solid transparent',
+                            backgroundColor: tplan.isOpen ? 'var(--t-accent-soft)' : 'var(--t-chip)',
+                            border: tplan.isOpen ? '2px solid var(--t-accent)' : '2px solid transparent',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            cursor: 'pointer', color: tplan.isOpen ? '#2E7D32' : '#5f6368',
+                            cursor: 'pointer', color: tplan.isOpen ? 'var(--t-accent)' : '#5f6368',
                             transition: 'all 0.2s', flexShrink: 0,
                         }}
-                        onMouseEnter={e => { if (!tplan.isOpen) { e.currentTarget.style.backgroundColor = '#E8F5E9'; e.currentTarget.style.color = '#2E7D32'; } }}
-                        onMouseLeave={e => { if (!tplan.isOpen) { e.currentTarget.style.backgroundColor = '#f1f3f4'; e.currentTarget.style.color = '#5f6368'; } }}
+                        onMouseEnter={e => { if (!tplan.isOpen) { e.currentTarget.style.backgroundColor = 'var(--t-accent-soft)'; e.currentTarget.style.color = 'var(--t-accent)'; } }}
+                        onMouseLeave={e => { if (!tplan.isOpen) { e.currentTarget.style.backgroundColor = 'var(--t-chip)'; e.currentTarget.style.color = '#5f6368'; } }}
                     >
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
@@ -274,16 +293,16 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                         title="Saved Locations"
                         style={{
                             width: '34px', height: '34px', borderRadius: '50%',
-                            backgroundColor: saved.isOpen ? '#E8F5E9' : '#f1f3f4',
-                            border: saved.isOpen ? '2px solid #2E7D32' : '2px solid transparent',
+                            backgroundColor: saved.isOpen ? 'var(--t-accent-soft)' : 'var(--t-chip)',
+                            border: saved.isOpen ? '2px solid var(--t-accent)' : '2px solid transparent',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            cursor: 'pointer', color: saved.isOpen ? '#2E7D32' : '#5f6368',
+                            cursor: 'pointer', color: saved.isOpen ? 'var(--t-accent)' : '#5f6368',
                             transition: 'all 0.2s', flexShrink: 0,
                         }}
-                        onMouseEnter={e => { if (!saved.isOpen) { e.currentTarget.style.backgroundColor = '#E8F5E9'; e.currentTarget.style.color = '#2E7D32'; } }}
-                        onMouseLeave={e => { if (!saved.isOpen) { e.currentTarget.style.backgroundColor = '#f1f3f4'; e.currentTarget.style.color = '#5f6368'; } }}
+                        onMouseEnter={e => { if (!saved.isOpen) { e.currentTarget.style.backgroundColor = 'var(--t-accent-soft)'; e.currentTarget.style.color = 'var(--t-accent)'; } }}
+                        onMouseLeave={e => { if (!saved.isOpen) { e.currentTarget.style.backgroundColor = 'var(--t-chip)'; e.currentTarget.style.color = '#5f6368'; } }}
                     >
-                        <svg width="17" height="17" viewBox="0 0 24 24" fill={saved.isOpen ? '#2E7D32' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill={saved.isOpen ? 'var(--t-accent)' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z" />
                         </svg>
                     </div>}
@@ -292,7 +311,7 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                     <Link to="/profile" style={{ textDecoration: 'none', flexShrink: 0 }}>
                         <div style={{
                             width: '34px', height: '34px', borderRadius: '50%',
-                            backgroundColor: '#1a73e8', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            backgroundColor: 'var(--t-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center',
                             cursor: 'pointer', color: 'white', transition: 'box-shadow 0.2s',
                             boxShadow: '0 2px 6px rgba(26,115,232,0.3)',
                         }}>
@@ -311,10 +330,10 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                         onClick={weplan.isOpen ? weplan.handleClose : openWeplan}
                         style={{
                             width: '32px', height: '32px', borderRadius: '50%',
-                            backgroundColor: weplan.isOpen ? '#E8F5E9' : '#f1f3f4',
-                            border: weplan.isOpen ? '2px solid #2E7D32' : '2px solid transparent',
+                            backgroundColor: weplan.isOpen ? 'var(--t-accent-soft)' : 'var(--t-chip)',
+                            border: weplan.isOpen ? '2px solid var(--t-accent)' : '2px solid transparent',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            cursor: 'pointer', color: weplan.isOpen ? '#2E7D32' : '#5f6368', flexShrink: 0,
+                            cursor: 'pointer', color: weplan.isOpen ? 'var(--t-accent)' : '#5f6368', flexShrink: 0,
                         }}
                     >
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -328,10 +347,10 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                         onClick={tplan.isOpen ? tplan.handleClose : openTplan}
                         style={{
                             width: '32px', height: '32px', borderRadius: '50%',
-                            backgroundColor: tplan.isOpen ? '#E8F5E9' : '#f1f3f4',
-                            border: tplan.isOpen ? '2px solid #2E7D32' : '2px solid transparent',
+                            backgroundColor: tplan.isOpen ? 'var(--t-accent-soft)' : 'var(--t-chip)',
+                            border: tplan.isOpen ? '2px solid var(--t-accent)' : '2px solid transparent',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            cursor: 'pointer', color: tplan.isOpen ? '#2E7D32' : '#5f6368', flexShrink: 0,
+                            cursor: 'pointer', color: tplan.isOpen ? 'var(--t-accent)' : '#5f6368', flexShrink: 0,
                         }}
                     >
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -346,14 +365,14 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                         onClick={saved.isOpen ? saved.handleClose : openSaved}
                         style={{
                             width: '32px', height: '32px', borderRadius: '50%',
-                            backgroundColor: saved.isOpen ? '#E8F5E9' : '#f1f3f4',
-                            border: saved.isOpen ? '2px solid #2E7D32' : '2px solid transparent',
+                            backgroundColor: saved.isOpen ? 'var(--t-accent-soft)' : 'var(--t-chip)',
+                            border: saved.isOpen ? '2px solid var(--t-accent)' : '2px solid transparent',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            cursor: 'pointer', color: saved.isOpen ? '#2E7D32' : '#5f6368',
+                            cursor: 'pointer', color: saved.isOpen ? 'var(--t-accent)' : '#5f6368',
                             flexShrink: 0,
                         }}
                     >
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill={saved.isOpen ? '#2E7D32' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill={saved.isOpen ? 'var(--t-accent)' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z" />
                         </svg>
                     </div>}
@@ -361,7 +380,7 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                     <Link to="/profile" style={{ textDecoration: 'none', flexShrink: 0 }}>
                         <div style={{
                             width: '32px', height: '32px', borderRadius: '50%',
-                            backgroundColor: '#1a73e8', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            backgroundColor: 'var(--t-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center',
                             color: 'white',
                         }}>
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -400,10 +419,10 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                                 style={{
                                     appearance: 'none', WebkitAppearance: 'none', width: '100%',
                                     padding: '10px 34px 10px 14px',
-                                    backgroundColor: selectedRoute ? '#e8f0fe' : '#f1f3f4',
-                                    border: selectedRoute ? '2px solid #1a73e8' : '1px solid #dadce0',
+                                    backgroundColor: selectedRoute ? 'var(--t-primary-soft)' : 'var(--t-chip)',
+                                    border: selectedRoute ? '2px solid var(--t-primary)' : '1px solid #dadce0',
                                     borderRadius: '12px', fontSize: '14px', fontWeight: '500',
-                                    color: selectedRoute ? '#1a73e8' : '#5f6368', cursor: 'pointer', outline: 'none',
+                                    color: selectedRoute ? 'var(--t-primary)' : '#5f6368', cursor: 'pointer', outline: 'none',
                                 }}
                             >
                                 <option value="">🚌 Select Route</option>
@@ -422,7 +441,7 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                                     style={{
                                         position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)',
                                         width: '22px', height: '22px', borderRadius: '50%', border: 'none',
-                                        backgroundColor: '#1a73e8', color: 'white', cursor: 'pointer',
+                                        backgroundColor: 'var(--t-primary)', color: 'white', cursor: 'pointer',
                                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                                         fontSize: '12px', fontWeight: '700', padding: 0,
                                     }}
@@ -475,7 +494,7 @@ export default function Navbar({ onPlaceSelect, routes, selectedRoute, onRouteSe
                 .navbar-root {
                     position: fixed;
                     top: 0; left: 0; right: 0;
-                    background-color: white;
+                    background-color: var(--t-surface);
                     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
                     z-index: 1001;
                     max-width: 100vw;

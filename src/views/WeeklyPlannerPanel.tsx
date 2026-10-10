@@ -33,8 +33,8 @@ function DayPill({
                 flex: 1,
                 padding: '8px 4px 10px',
                 borderRadius: '10px',
-                border: selected ? '2px solid #2E7D32' : '2px solid transparent',
-                backgroundColor: selected ? '#E8F5E9' : '#F5F5F5',
+                border: selected ? '2px solid var(--t-accent)' : '2px solid transparent',
+                backgroundColor: selected ? 'var(--t-accent-soft)' : 'var(--t-surface-2)',
                 cursor: 'pointer',
                 display: 'flex',
                 flexDirection: 'column',
@@ -46,7 +46,7 @@ function DayPill({
         >
             <span style={{
                 fontSize: '11px', fontWeight: '700',
-                color: selected ? '#2E7D32' : isSet ? '#424242' : '#9E9E9E',
+                color: selected ? 'var(--t-accent)' : isSet ? '#424242' : '#9E9E9E',
                 letterSpacing: '0.04em',
             }}>
                 {label}
@@ -54,7 +54,7 @@ function DayPill({
             {/* Indicator dot */}
             <div style={{
                 width: '6px', height: '6px', borderRadius: '50%',
-                backgroundColor: day.enabled && hasRoute ? '#2E7D32'
+                backgroundColor: day.enabled && hasRoute ? 'var(--t-accent)'
                     : isSet ? '#BDBDBD'
                         : 'transparent',
                 border: isSet && !(day.enabled && hasRoute) ? '1.5px solid #BDBDBD' : 'none',
@@ -83,16 +83,16 @@ function LocationSelect({
                     onChange={e => onChange(e.target.value || null)}
                     style={{
                         width: '100%', padding: '9px 30px 9px 11px', borderRadius: '10px',
-                        border: '1.5px solid #E0E0E0', outline: 'none', fontSize: '13px',
+                        border: '1.5px solid var(--t-border-soft)', outline: 'none', fontSize: '13px',
                         color: value ? '#202124' : '#9E9E9E',
-                        backgroundColor: loading ? '#FAFAFA' : 'white',
+                        backgroundColor: loading ? 'var(--t-surface-2)' : 'var(--t-surface)',
                         appearance: 'none', WebkitAppearance: 'none', cursor: 'pointer',
                         backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%239E9E9E' stroke-width='2.5' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E")`,
                         backgroundRepeat: 'no-repeat', backgroundPosition: 'right 10px center',
                         transition: 'border-color 0.15s',
                         boxSizing: 'border-box',
                     }}
-                    onFocus={e => { e.target.style.borderColor = '#2E7D32'; }}
+                    onFocus={e => { e.target.style.borderColor = 'var(--t-accent)'; }}
                     onBlur={e => { e.target.style.borderColor = '#E0E0E0'; }}
                 >
                     <option value="">Select a saved location…</option>
@@ -119,7 +119,7 @@ function RouteCard({
                 display: 'flex', alignItems: 'center', gap: '10px',
                 padding: '10px 12px', borderRadius: '10px', marginBottom: '6px',
                 border: `1.5px solid ${pinned ? color : '#EEEEEE'}`,
-                backgroundColor: pinned ? '#F9FBF9' : 'white',
+                backgroundColor: pinned ? '#F9FBF9' : 'var(--t-surface)',
                 cursor: 'pointer', transition: 'all 0.15s',
                 borderLeft: `4px solid ${color}`,
             }}
@@ -128,10 +128,10 @@ function RouteCard({
             <div style={{
                 width: '16px', height: '16px', borderRadius: '50%', flexShrink: 0,
                 border: `2px solid ${pinned ? color : '#BDBDBD'}`,
-                backgroundColor: pinned ? color : 'white',
+                backgroundColor: pinned ? color : 'var(--t-surface)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
-                {pinned && <div style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: 'white' }} />}
+                {pinned && <div style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: 'var(--t-surface)' }} />}
             </div>
 
             <div style={{ flex: 1, minWidth: 0 }}>
@@ -148,8 +148,8 @@ function RouteCard({
                     ))}
                     <span style={{
                         fontSize: '10px', fontWeight: '600',
-                        color: option.transfers === 0 ? '#2E7D32' : '#795548',
-                        backgroundColor: option.transfers === 0 ? '#E8F5E9' : '#EFEBE9',
+                        color: option.transfers === 0 ? 'var(--t-accent)' : '#795548',
+                        backgroundColor: option.transfers === 0 ? 'var(--t-accent-soft)' : '#EFEBE9',
                         padding: '2px 7px', borderRadius: '6px',
                     }}>
                         {option.transfers === 0 ? 'Direct' : `${option.transfers} transfer`}
@@ -159,7 +159,7 @@ function RouteCard({
                 {/* Leave by + duration */}
                 <div style={{ fontSize: '13px', color: '#202124' }}>
                     <span style={{ fontWeight: '700' }}>Leave </span>
-                    <span style={{ fontWeight: '800', color: '#1B5E20', fontSize: '14px' }}>{departBy}</span>
+                    <span style={{ fontWeight: '800', color: 'var(--t-accent-dark)', fontSize: '14px' }}>{departBy}</span>
                     <span style={{ color: '#757575', fontSize: '12px' }}> · ~{option.totalTime} min</span>
                 </div>
             </div>
@@ -183,11 +183,11 @@ export default function WeeklyPlannerPanel({ ctrl }: { ctrl: Ctrl }) {
             />
 
             {/* Panel */}
-            <div style={{
+            <div className="t-panel t-drawer" style={{
                 position: 'fixed', top: '52px', right: 0,
                 width: 'min(360px, 100vw)',
                 height: 'calc(100vh - 52px)',
-                backgroundColor: 'white',
+                backgroundColor: 'var(--t-surface)',
                 boxShadow: '-4px 0 24px rgba(0,0,0,0.10)',
                 zIndex: 1100,
                 display: 'flex', flexDirection: 'column',
@@ -196,15 +196,15 @@ export default function WeeklyPlannerPanel({ ctrl }: { ctrl: Ctrl }) {
             }}>
 
                 {/* Header */}
-                <div style={{
+                <div className="t-panel-header" style={{
                     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    padding: '14px 16px 12px', borderBottom: '1px solid #F0F0F0', flexShrink: 0,
+                    padding: '14px 16px 12px', borderBottom: '1px solid var(--t-border-soft)', flexShrink: 0,
                 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <div style={{
                             width: '28px', height: '28px', borderRadius: '8px',
-                            backgroundColor: '#E8F5E9', display: 'flex', alignItems: 'center',
-                            justifyContent: 'center', color: '#2E7D32',
+                            backgroundColor: 'var(--t-accent-soft)', display: 'flex', alignItems: 'center',
+                            justifyContent: 'center', color: 'var(--t-accent)',
                         }}>
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M17 1l4 4-4 4" /><path d="M3 11V9a4 4 0 014-4h14" />
@@ -224,12 +224,12 @@ export default function WeeklyPlannerPanel({ ctrl }: { ctrl: Ctrl }) {
                         onClick={ctrl.handleClose}
                         style={{
                             width: '28px', height: '28px', borderRadius: '8px',
-                            border: 'none', backgroundColor: '#F5F5F5', cursor: 'pointer',
+                            border: 'none', backgroundColor: 'var(--t-surface-2)', cursor: 'pointer',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                             color: '#757575', transition: 'background-color 0.15s',
                         }}
                         onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#E0E0E0'; }}
-                        onMouseLeave={e => { e.currentTarget.style.backgroundColor = '#F5F5F5'; }}
+                        onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'var(--t-surface-2)'; }}
                     >
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                             <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
@@ -248,7 +248,7 @@ export default function WeeklyPlannerPanel({ ctrl }: { ctrl: Ctrl }) {
                         <Link to="/login" onClick={ctrl.handleClose}>
                             <button style={{
                                 padding: '9px 24px', borderRadius: '10px', border: 'none',
-                                backgroundColor: '#2E7D32', color: 'white',
+                                backgroundColor: 'var(--t-accent)', color: 'white',
                                 fontSize: '13px', fontWeight: '700', cursor: 'pointer',
                             }}>
                                 Sign In
@@ -262,7 +262,7 @@ export default function WeeklyPlannerPanel({ ctrl }: { ctrl: Ctrl }) {
                         {/* Day pill selector */}
                         <div style={{
                             padding: '12px 14px 0',
-                            borderBottom: '1px solid #F0F0F0', flexShrink: 0,
+                            borderBottom: '1px solid var(--t-border-soft)', flexShrink: 0,
                         }}>
                             <div style={{ display: 'flex', gap: '6px', marginBottom: '12px' }}>
                                 {WEEKDAY_INDICES.map(d => (
@@ -285,7 +285,7 @@ export default function WeeklyPlannerPanel({ ctrl }: { ctrl: Ctrl }) {
                                 <div style={{ textAlign: 'center', padding: '24px', color: '#9E9E9E', fontSize: '13px' }}>
                                     <div style={{
                                         width: '18px', height: '18px',
-                                        border: '2px solid #E0E0E0', borderTop: '2px solid #2E7D32',
+                                        border: '2px solid var(--t-border-soft)', borderTop: '2px solid var(--t-accent)',
                                         borderRadius: '50%', animation: 'spin 0.8s linear infinite',
                                         margin: '0 auto 8px',
                                     }} />
@@ -300,7 +300,7 @@ export default function WeeklyPlannerPanel({ ctrl }: { ctrl: Ctrl }) {
                                     fontSize: '13px', color: '#795548', lineHeight: '1.5', marginBottom: '16px',
                                 }}>
                                     You need at least <strong>2 saved locations</strong> to set up a commute.{' '}
-                                    <Link to="/map" onClick={ctrl.handleClose} style={{ color: '#2E7D32', fontWeight: '600' }}>
+                                    <Link to="/map" onClick={ctrl.handleClose} style={{ color: 'var(--t-accent)', fontWeight: '600' }}>
                                         Add them →
                                     </Link>
                                 </div>
@@ -313,16 +313,16 @@ export default function WeeklyPlannerPanel({ ctrl }: { ctrl: Ctrl }) {
                                     <div style={{
                                         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                                         padding: '10px 12px', borderRadius: '10px',
-                                        backgroundColor: day.enabled ? '#E8F5E9' : '#FAFAFA',
+                                        backgroundColor: day.enabled ? 'var(--t-accent-soft)' : 'var(--t-surface-2)',
                                         border: `1.5px solid ${day.enabled ? '#A5D6A7' : '#EEEEEE'}`,
                                         transition: 'all 0.15s',
                                     }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={day.enabled ? '#2E7D32' : '#9E9E9E'} strokeWidth="2" strokeLinecap="round">
+                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={day.enabled ? 'var(--t-accent)' : '#9E9E9E'} strokeWidth="2" strokeLinecap="round">
                                                 <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
                                                 <path d="M13.73 21a2 2 0 01-3.46 0" />
                                             </svg>
-                                            <span style={{ fontSize: '13px', fontWeight: '600', color: day.enabled ? '#2E7D32' : '#9E9E9E' }}>
+                                            <span style={{ fontSize: '13px', fontWeight: '600', color: day.enabled ? 'var(--t-accent)' : '#9E9E9E' }}>
                                                 {day.enabled ? `Reminders on for ${DAY_LABELS[ctrl.selectedDay]}` : `Reminders off for ${DAY_LABELS[ctrl.selectedDay]}`}
                                             </span>
                                         </div>
@@ -331,7 +331,7 @@ export default function WeeklyPlannerPanel({ ctrl }: { ctrl: Ctrl }) {
                                             onClick={() => ctrl.updateDay(ctrl.selectedDay, { enabled: !day.enabled })}
                                             style={{
                                                 width: '36px', height: '20px', borderRadius: '10px',
-                                                backgroundColor: day.enabled ? '#2E7D32' : '#BDBDBD',
+                                                backgroundColor: day.enabled ? 'var(--t-accent)' : '#BDBDBD',
                                                 cursor: 'pointer', position: 'relative',
                                                 transition: 'background-color 0.2s', flexShrink: 0,
                                             }}
@@ -340,7 +340,7 @@ export default function WeeklyPlannerPanel({ ctrl }: { ctrl: Ctrl }) {
                                                 position: 'absolute', top: '3px',
                                                 left: day.enabled ? '19px' : '3px',
                                                 width: '14px', height: '14px', borderRadius: '50%',
-                                                backgroundColor: 'white',
+                                                backgroundColor: 'var(--t-surface)',
                                                 boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
                                                 transition: 'left 0.2s',
                                             }} />
@@ -367,11 +367,11 @@ export default function WeeklyPlannerPanel({ ctrl }: { ctrl: Ctrl }) {
                                             })}
                                             style={{
                                                 width: '26px', height: '26px', borderRadius: '50%',
-                                                border: '1.5px solid #E0E0E0', backgroundColor: 'white',
+                                                border: '1.5px solid var(--t-border-soft)', backgroundColor: 'var(--t-surface)',
                                                 cursor: 'pointer', display: 'flex', alignItems: 'center',
                                                 justifyContent: 'center', color: '#9E9E9E', flexShrink: 0, transition: 'all 0.15s',
                                             }}
-                                            onMouseEnter={e => { e.currentTarget.style.borderColor = '#2E7D32'; e.currentTarget.style.color = '#2E7D32'; }}
+                                            onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--t-accent)'; e.currentTarget.style.color = 'var(--t-accent)'; }}
                                             onMouseLeave={e => { e.currentTarget.style.borderColor = '#E0E0E0'; e.currentTarget.style.color = '#9E9E9E'; }}
                                         >
                                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
@@ -406,11 +406,11 @@ export default function WeeklyPlannerPanel({ ctrl }: { ctrl: Ctrl }) {
                                             })}
                                             style={{
                                                 width: '100%', padding: '9px 11px', borderRadius: '10px',
-                                                border: '1.5px solid #E0E0E0', fontSize: '14px', fontWeight: '600',
+                                                border: '1.5px solid var(--t-border-soft)', fontSize: '14px', fontWeight: '600',
                                                 color: '#202124', outline: 'none', boxSizing: 'border-box',
                                                 transition: 'border-color 0.15s',
                                             }}
-                                            onFocus={e => { e.target.style.borderColor = '#2E7D32'; }}
+                                            onFocus={e => { e.target.style.borderColor = 'var(--t-accent)'; }}
                                             onBlur={e => { e.target.style.borderColor = '#E0E0E0'; }}
                                         />
                                     </div>
@@ -421,14 +421,14 @@ export default function WeeklyPlannerPanel({ ctrl }: { ctrl: Ctrl }) {
                                         disabled={day.calculating || !day.fromId || !day.toId}
                                         style={{
                                             width: '100%', padding: '10px', borderRadius: '10px', border: 'none',
-                                            backgroundColor: day.calculating || !day.fromId || !day.toId ? '#C8E6C9' : '#2E7D32',
+                                            backgroundColor: day.calculating || !day.fromId || !day.toId ? 'var(--t-accent-border)' : 'var(--t-accent)',
                                             color: 'white', fontSize: '13px', fontWeight: '700',
                                             cursor: day.calculating || !day.fromId || !day.toId ? 'not-allowed' : 'pointer',
                                             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
                                             transition: 'background-color 0.15s',
                                         }}
-                                        onMouseEnter={e => { if (!day.calculating && day.fromId && day.toId) e.currentTarget.style.backgroundColor = '#1B5E20'; }}
-                                        onMouseLeave={e => { if (!day.calculating && day.fromId && day.toId) e.currentTarget.style.backgroundColor = '#2E7D32'; }}
+                                        onMouseEnter={e => { if (!day.calculating && day.fromId && day.toId) e.currentTarget.style.backgroundColor = 'var(--t-accent-dark)'; }}
+                                        onMouseLeave={e => { if (!day.calculating && day.fromId && day.toId) e.currentTarget.style.backgroundColor = 'var(--t-accent)'; }}
                                     >
                                         {day.calculating ? (
                                             <>
@@ -473,16 +473,16 @@ export default function WeeklyPlannerPanel({ ctrl }: { ctrl: Ctrl }) {
                                     {day.routeNum && day.departBy && day.options.length === 0 && (
                                         <div style={{
                                             display: 'flex', alignItems: 'center', gap: '8px',
-                                            padding: '10px 12px', backgroundColor: '#E8F5E9',
-                                            borderRadius: '10px', border: '1.5px solid #A5D6A7',
+                                            padding: '10px 12px', backgroundColor: 'var(--t-accent-soft)',
+                                            borderRadius: '10px', border: '1.5px solid var(--t-accent-border)',
                                         }}>
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2E7D32" strokeWidth="2.5" strokeLinecap="round">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--t-accent)" strokeWidth="2.5" strokeLinecap="round">
                                                 <polyline points="20 6 9 17 4 12" />
                                             </svg>
                                             <div style={{ fontSize: '12px' }}>
-                                                <span style={{ fontWeight: '700', color: '#1B5E20' }}>Route {day.routeNum}</span>
-                                                <span style={{ color: '#2E7D32' }}> · Leave by </span>
-                                                <span style={{ fontWeight: '800', color: '#1B5E20' }}>{day.departBy}</span>
+                                                <span style={{ fontWeight: '700', color: 'var(--t-accent-dark)' }}>Route {day.routeNum}</span>
+                                                <span style={{ color: 'var(--t-accent)' }}> · Leave by </span>
+                                                <span style={{ fontWeight: '800', color: 'var(--t-accent-dark)' }}>{day.departBy}</span>
                                                 {day.routeTotalMinutes && (
                                                     <span style={{ color: '#4CAF50' }}> · ~{day.routeTotalMinutes} min</span>
                                                 )}
@@ -494,7 +494,7 @@ export default function WeeklyPlannerPanel({ ctrl }: { ctrl: Ctrl }) {
                                     {ctrl.notifPermission !== 'unsupported' && (
                                         <div style={{
                                             padding: '12px', borderRadius: '10px',
-                                            backgroundColor: '#FAFAFA',
+                                            backgroundColor: 'var(--t-surface-2)',
                                             border: '1.5px dashed #E0E0E0',
                                         }}>
                                             <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '8px' }}>
@@ -521,22 +521,22 @@ export default function WeeklyPlannerPanel({ ctrl }: { ctrl: Ctrl }) {
                                                     disabled={ctrl.subscribing}
                                                     style={{
                                                         width: '100%', padding: '8px', borderRadius: '8px',
-                                                        border: '1.5px solid #2E7D32', backgroundColor: 'white',
-                                                        color: '#2E7D32', fontSize: '12px', fontWeight: '700',
+                                                        border: '1.5px solid var(--t-accent)', backgroundColor: 'var(--t-surface)',
+                                                        color: 'var(--t-accent)', fontSize: '12px', fontWeight: '700',
                                                         cursor: ctrl.subscribing ? 'not-allowed' : 'pointer',
                                                         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
                                                         transition: 'all 0.15s',
                                                     }}
-                                                    onMouseEnter={e => { if (!ctrl.subscribing) { e.currentTarget.style.backgroundColor = '#E8F5E9'; } }}
-                                                    onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'white'; }}
+                                                    onMouseEnter={e => { if (!ctrl.subscribing) { e.currentTarget.style.backgroundColor = 'var(--t-accent-soft)'; } }}
+                                                    onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'var(--t-surface)'; }}
                                                 >
                                                     {ctrl.subscribing ? 'Enabling…' : 'Enable Push Notifications'}
                                                 </button>
                                             )}
                                             {ctrl.notifPermission === 'granted' && (
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                                                    <div style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#2E7D32' }} />
-                                                    <span style={{ fontSize: '11px', color: '#2E7D32', fontWeight: '600' }}>Active</span>
+                                                    <div style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: 'var(--t-accent)' }} />
+                                                    <span style={{ fontSize: '11px', color: 'var(--t-accent)', fontWeight: '600' }}>Active</span>
                                                 </div>
                                             )}
                                         </div>
@@ -547,7 +547,7 @@ export default function WeeklyPlannerPanel({ ctrl }: { ctrl: Ctrl }) {
 
                         {/* Footer */}
                         {!ctrl.loading && ctrl.savedDests.length >= 2 && (
-                            <div style={{ padding: '12px 14px', borderTop: '1px solid #F0F0F0', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            <div style={{ padding: '12px 14px', borderTop: '1px solid var(--t-border-soft)', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
 
                                 {/* Apply to all weekdays */}
                                 {(day.fromId || day.toId) && (
@@ -555,13 +555,13 @@ export default function WeeklyPlannerPanel({ ctrl }: { ctrl: Ctrl }) {
                                         onClick={ctrl.handleApplyToAll}
                                         style={{
                                             width: '100%', padding: '8px', borderRadius: '9px',
-                                            border: '1.5px solid #E0E0E0', backgroundColor: 'white',
+                                            border: '1.5px solid var(--t-border-soft)', backgroundColor: 'var(--t-surface)',
                                             fontSize: '12px', fontWeight: '600', color: '#424242',
                                             cursor: 'pointer', display: 'flex', alignItems: 'center',
                                             justifyContent: 'center', gap: '5px', transition: 'all 0.15s',
                                         }}
-                                        onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#F5F5F5'; }}
-                                        onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'white'; }}
+                                        onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--t-surface-2)'; }}
+                                        onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'var(--t-surface)'; }}
                                     >
                                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                                             <path d="M17 1l4 4-4 4" /><path d="M3 11V9a4 4 0 014-4h14" />
@@ -584,7 +584,7 @@ export default function WeeklyPlannerPanel({ ctrl }: { ctrl: Ctrl }) {
                                     disabled={ctrl.saving}
                                     style={{
                                         width: '100%', padding: '11px', borderRadius: '10px', border: 'none',
-                                        backgroundColor: ctrl.saveSuccess ? '#388E3C' : ctrl.saving ? '#C8E6C9' : '#2E7D32',
+                                        backgroundColor: ctrl.saveSuccess ? '#388E3C' : ctrl.saving ? 'var(--t-accent-border)' : 'var(--t-accent)',
                                         color: 'white', fontSize: '13px', fontWeight: '700',
                                         cursor: ctrl.saving ? 'not-allowed' : 'pointer',
                                         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '7px',

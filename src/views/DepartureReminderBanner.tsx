@@ -55,10 +55,10 @@ export default function DepartureReminderBanner() {
     if (minsLeft > 30 || minsLeft < -5) return null;
 
     const urgent = minsLeft <= 8;
-    const bg = urgent ? '#2E7D32' : '#F1F8F2';
-    const textColor = urgent ? 'white' : '#1B5E20';
+    const bg = urgent ? 'var(--t-accent)' : 'var(--t-accent-soft)';
+    const textColor = urgent ? 'white' : 'var(--t-accent-dark)';
     const subColor = urgent ? 'rgba(255,255,255,0.8)' : '#4CAF50';
-    const borderColor = urgent ? 'transparent' : '#A5D6A7';
+    const borderColor = urgent ? 'transparent' : 'var(--t-accent-border)';
 
     return (
         <div style={{
@@ -74,10 +74,10 @@ export default function DepartureReminderBanner() {
             {/* Icon */}
             <div style={{
                 width: '32px', height: '32px', borderRadius: '50%', flexShrink: 0,
-                backgroundColor: urgent ? 'rgba(255,255,255,0.15)' : '#E8F5E9',
+                backgroundColor: urgent ? 'rgba(255,255,255,0.15)' : 'var(--t-accent-soft)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={urgent ? 'white' : '#2E7D32'} strokeWidth="2" strokeLinecap="round">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={urgent ? 'white' : 'var(--t-accent)'} strokeWidth="2" strokeLinecap="round">
                     <circle cx="12" cy="12" r="10" />
                     <polyline points="12 6 12 12 16 14" />
                 </svg>
@@ -108,9 +108,9 @@ export default function DepartureReminderBanner() {
                 onClick={handleDismiss}
                 style={{
                     width: '26px', height: '26px', borderRadius: '50%', border: 'none', flexShrink: 0,
-                    backgroundColor: urgent ? 'rgba(255,255,255,0.2)' : '#E8F5E9',
+                    backgroundColor: urgent ? 'rgba(255,255,255,0.2)' : 'var(--t-accent-soft)',
                     cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    color: urgent ? 'white' : '#2E7D32', transition: 'background-color 0.15s',
+                    color: urgent ? 'white' : 'var(--t-accent)', transition: 'background-color 0.15s',
                 }}
                 aria-label="Dismiss reminder"
             >

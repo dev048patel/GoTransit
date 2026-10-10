@@ -8,9 +8,19 @@ import { computeDepartBy } from '../../../models/transit/TripSchedule';
 import { STOP_DIRECTION_LABEL } from '../../../models/transit/StopDirection';
 import { DetourService } from '../../../models/services/DetourService';
 import type { WeatherSnapshot } from '../../../models/services/WeatherService';
+import { Bus, ChevronDown } from 'lucide-react';
+import { MARKER_CHARACTERS, type MarkerCharacterId } from '../../../models/data/markerCharacters';
+import { CHARACTER_VOICE } from '../../../models/data/characterVoice';
+
+/** "02:44:00" → "2:44", "01:18 PM" → "1:18 PM" — no seconds, no leading zero. */
+function shortTime(t: string): string {
+    const m = t.match(/^\s*(\d{1,2}):(\d{2})(?::\d{2})?\s*(AM|PM)?\s*$/i);
+    return m ? `${parseInt(m[1], 10)}:${m[2]}${m[3] ? ' ' + m[3].toUpperCase() : ''}` : t;
+}
 
 // Pure view component — all GPS/route logic lives in useBusSuggestionController
-export default function BusSuggestionPanel({ destination, onClose, onSelectRoute, weather }: BusSuggestionPanelProps) {
+export default function BusSuggestionPanel({ destination, onClose, onSelectRoute, liveBuses, weather, character = 'default' }: BusSuggestionPanelProps) {
+    const voice = CHARACTER_VOICE[character];
     const { gpsLoading, gpsError, results, searching, updating, lastUpdated, handleRefresh } = useBusSuggestionController({
         destination,
         walkMultiplier: weather?.walkMultiplier ?? 1.0,
@@ -21,13 +31,13 @@ export default function BusSuggestionPanel({ destination, onClose, onSelectRoute
     const [arriveByTime, setArriveByTime] = React.useState('');
 
     return (
-        <div className="bus-suggestion-panel" style={panelStyle}>
+        <div className="bus-suggestion-panel t-panel" style={panelStyle}>
             {/* Drag handle for mobile */}
             <div style={{ display: 'flex', justifyContent: 'center', padding: '8px 0 0' }}>
                 <div style={{ width: '36px', height: '4px', backgroundColor: '#dadce0', borderRadius: '2px' }} />
             </div>
             {/* Header */}
-            <div style={headerStyle}>
+            <div className="t-panel-header" style={headerStyle}>
                 <div>
                     <div style={{ fontWeight: '700', fontSize: '15px', color: '#202124' }}>
                         🚌 Bus Suggestions
@@ -42,7 +52,7 @@ export default function BusSuggestionPanel({ destination, onClose, onSelectRoute
                         disabled={gpsLoading || searching}
                         title="Refresh suggestions"
                         style={{
-                            background: 'none', border: '1px solid #dadce0', borderRadius: '50%',
+                            background: 'none', border: '1px solid var(--t-border)', borderRadius: '50%',
                             width: '32px', height: '32px', cursor: gpsLoading || searching ? 'not-allowed' : 'pointer',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                             fontSize: '16px', color: '#5f6368', opacity: gpsLoading || searching ? 0.5 : 1,
@@ -58,12 +68,12 @@ export default function BusSuggestionPanel({ destination, onClose, onSelectRoute
             </div>
 
             {/* Arrive-by time row */}
-            <div style={{ padding: '8px 14px', borderBottom: '1px solid #f0f0f0', display: 'flex', alignItems: 'center', gap: '8px', backgroundColor: arriveByMode ? '#F1F8F2' : 'white' }}>
+            <div style={{ padding: '8px 14px', borderBottom: '1px solid var(--t-border-soft)', display: 'flex', alignItems: 'center', gap: '8px', backgroundColor: arriveByMode ? 'var(--t-accent-soft)' : 'var(--t-surface)' }}>
                 <button
                     onClick={() => { setArriveByMode(m => !m); if (arriveByMode) setArriveByTime(''); }}
                     style={{
                         padding: '4px 10px', borderRadius: '8px', border: 'none', fontSize: '12px', fontWeight: '600',
-                        backgroundColor: arriveByMode ? '#2E7D32' : '#f1f3f4',
+                        backgroundColor: arriveByMode ? 'var(--t-accent)' : 'var(--t-chip)',
                         color: arriveByMode ? 'white' : '#5f6368',
                         cursor: 'pointer', transition: 'all 0.15s', whiteSpace: 'nowrap',
                     }}
@@ -76,15 +86,15 @@ export default function BusSuggestionPanel({ destination, onClose, onSelectRoute
                         value={arriveByTime}
                         onChange={e => setArriveByTime(e.target.value)}
                         style={{
-                            padding: '4px 8px', borderRadius: '8px', border: '1.5px solid #2E7D32',
+                            padding: '4px 8px', borderRadius: '8px', border: '1.5px solid var(--t-accent)',
                             fontSize: '13px', fontWeight: '600', color: '#202124', outline: 'none',
-                            backgroundColor: 'white',
+                            backgroundColor: 'var(--t-surface)',
                         }}
                         autoFocus
                     />
                 )}
                 {arriveByMode && arriveByTime && (
-                    <span style={{ fontSize: '11px', color: '#2E7D32', fontWeight: '600' }}>
+                    <span style={{ fontSize: '11px', color: 'var(--t-accent)', fontWeight: '600' }}>
                         Shows depart-by times
                     </span>
                 )}
@@ -115,7 +125,7 @@ export default function BusSuggestionPanel({ destination, onClose, onSelectRoute
                 {gpsLoading && (
                     <div style={statusStyle}>
                         <div style={spinnerStyle} />
-                        <span>Detecting your location...</span>
+                        <span>{voice.locating}</span>
                     </div>
                 )}
 
@@ -138,7 +148,7 @@ export default function BusSuggestionPanel({ destination, onClose, onSelectRoute
                 {searching && !gpsLoading && (
                     <div style={statusStyle}>
                         <div style={spinnerStyle} />
-                        <span>Finding routes...</span>
+                        <span>{voice.searching}</span>
                     </div>
                 )}
 
@@ -153,14 +163,15 @@ export default function BusSuggestionPanel({ destination, onClose, onSelectRoute
                 )}
 
                 {results.map((option, i) => (
-                    <div key={i} onClick={() => onSelectRoute?.(option)} style={{ cursor: 'pointer' }}>
-                        <RouteCard
-                            option={option}
-                            index={i}
-                            arriveBy={arriveByMode && arriveByTime ? arriveByTime : undefined}
-                            weather={weather}
-                        />
-                    </div>
+                    <RouteCard
+                        key={i}
+                        option={option}
+                        index={i}
+                        arriveBy={arriveByMode && arriveByTime ? arriveByTime : undefined}
+                        weather={weather}
+                        character={character}
+                        onStart={() => onSelectRoute?.(option)}
+                    />
                 ))}
             </div>
 
@@ -185,7 +196,14 @@ export default function BusSuggestionPanel({ destination, onClose, onSelectRoute
 }
 
 // RouteCard — displays a single route option with timeline steps
-function RouteCard({ option, index, arriveBy, weather }: { option: TripOption; index: number; arriveBy?: string; weather?: WeatherSnapshot | null }) {
+/* The best route opens with its steps showing; the others show a one-glance summary until
+   opened. "Start trip" begins tracking — a tap elsewhere on a card never does. */
+function RouteCard({ option, index, arriveBy, weather, character, onStart }: {
+    option: TripOption; index: number; arriveBy?: string; weather?: WeatherSnapshot | null;
+    character: MarkerCharacterId; onStart: () => void;
+}) {
+    const [expanded, setExpanded] = React.useState(index === 0);
+    const face = character === 'default' ? null : MARKER_CHARACTERS.find(c => c.id === character);
     const [expandedStops, setExpandedStops] = React.useState<Set<number>>(new Set());
     const [detouredRoutes, setDetouredRoutes] = React.useState<Set<string>>(new Set());
 
@@ -221,14 +239,14 @@ function RouteCard({ option, index, arriveBy, weather }: { option: TripOption; i
     };
 
     return (
-        <div style={{ ...cardStyle, borderLeft: `4px solid ${getRouteColor(option.segments[0]?.routeNum)}` }}>
+        <div className="t-card" style={{ ...cardStyle, borderLeft: `4px solid ${getRouteColor(option.segments[0]?.routeNum)}` }}>
             {index === 0 && (
-                <div style={{
-                    fontSize: '11px', fontWeight: '600', color: '#34a853',
+                <div className="t-ribbon" style={{
+                    fontSize: '11px', fontWeight: '600', color: '#137333',
                     backgroundColor: '#e6f4ea', padding: '3px 10px', borderRadius: '8px',
                     display: 'inline-block', marginBottom: '8px'
                 }}>
-                    ⭐ Recommended
+                    ★ {CHARACTER_VOICE[character].recommended}
                 </div>
             )}
 
@@ -260,7 +278,7 @@ function RouteCard({ option, index, arriveBy, weather }: { option: TripOption; i
                         <span
                             title={`Walking times ~${Math.round((weather.walkMultiplier - 1) * 100)}% longer due to cold/icy conditions`}
                             style={{
-                                fontSize: '11px', fontWeight: '600', color: '#0D47A1',
+                                fontSize: '11px', fontWeight: '600', color: 'var(--t-primary-dark)',
                                 backgroundColor: '#E3F2FD', padding: '3px 8px', borderRadius: '8px',
                             }}
                         >
@@ -268,16 +286,16 @@ function RouteCard({ option, index, arriveBy, weather }: { option: TripOption; i
                         </span>
                     )}
                 </div>
-                <div style={{ textAlign: 'right' }}>
-                    <span style={{ fontWeight: '700', fontSize: '16px', color: '#202124' }}>
+                <div style={{ textAlign: 'right', flexShrink: 0, marginLeft: '8px' }}>
+                    <span style={{ fontWeight: '700', fontSize: '16px', color: '#202124', whiteSpace: 'nowrap' }}>
                         {option.isLivePrediction && option.totalTimeWithWait
                             ? `~${option.totalTimeWithWait} min`
                             : `~${option.totalTime} min`
                         }
                     </span>
                     {option.estimatedArrival && (
-                        <div style={{ fontSize: '11px', color: '#5f6368', marginTop: '2px' }}>
-                            Arrive {option.estimatedArrival} · <span style={{ color: '#34a853', fontWeight: '600' }}>Live</span>
+                        <div style={{ fontSize: '11px', color: '#5f6368', marginTop: '2px', whiteSpace: 'nowrap' }}>
+                            Arrive {option.estimatedArrival} · <span style={{ color: '#137333', fontWeight: '600' }}>Live</span>
                         </div>
                     )}
                 </div>
@@ -287,13 +305,13 @@ function RouteCard({ option, index, arriveBy, weather }: { option: TripOption; i
             {arriveBy && (
                 <div style={{
                     display: 'flex', alignItems: 'center', gap: '6px',
-                    padding: '6px 10px', backgroundColor: '#E8F5E9', borderRadius: '8px',
+                    padding: '6px 10px', backgroundColor: 'var(--t-accent-soft)', borderRadius: '8px',
                     marginBottom: '10px', fontSize: '12px', fontWeight: '600',
                 }}>
                     <span style={{ fontSize: '14px' }}>🕐</span>
-                    <span style={{ color: '#1B5E20' }}>
+                    <span style={{ color: 'var(--t-accent-dark)' }}>
                         Leave by <strong>{computeDepartBy(arriveBy, option.totalTime)}</strong>
-                        <span style={{ fontWeight: '400', color: '#2E7D32' }}> to arrive by {arriveBy}</span>
+                        <span style={{ fontWeight: '400', color: 'var(--t-accent)' }}> to arrive by {arriveBy}</span>
                     </span>
                 </div>
             )}
@@ -302,18 +320,21 @@ function RouteCard({ option, index, arriveBy, weather }: { option: TripOption; i
             {option.isLivePrediction && option.waitTime !== undefined && (
                 <div style={{
                     display: 'flex', alignItems: 'center', gap: '6px',
-                    padding: '6px 10px', backgroundColor: '#e8f5e9', borderRadius: '8px',
+                    padding: '6px 10px', backgroundColor: 'var(--t-accent-soft)', borderRadius: '8px',
                     marginBottom: '10px', fontSize: '12px', fontWeight: '500'
                 }}>
-                    <span style={{ fontSize: '14px' }}>🟢</span>
-                    <span style={{ color: '#2e7d32' }}>
+                    {/* The character "says" the live update; Default keeps the plain green light */}
+                    {face
+                        ? <img src={face.src} alt="" width={22} height={22} draggable={false} style={{ flexShrink: 0 }} />
+                        : <span style={{ fontSize: '14px' }}>🟢</span>}
+                    <span style={{ color: 'var(--t-accent-dark)' }}>
                         {option.waitTime <= 1
                             ? 'Bus arriving now!'
                             : `Next bus in ~${option.waitTime} min`
                         }
                         {option.segments[0]?.predTime && (
-                            <span style={{ color: '#1a73e8', fontWeight: '600' }}>
-                                {' '}· arrives {option.segments[0].predTime}
+                            <span style={{ color: 'var(--t-primary)', fontWeight: '600' }}>
+                                {' '}· at {shortTime(option.segments[0].predTime)}
                             </span>
                         )}
                         {option.segments[0]?.busId && (
@@ -336,6 +357,7 @@ function RouteCard({ option, index, arriveBy, weather }: { option: TripOption; i
             )}
 
             {/* Timeline — step-by-step route instructions */}
+            {expanded && (
             <div style={{ fontSize: '13px', color: '#202124', position: 'relative', paddingLeft: '28px' }}>
                 <div style={{
                     position: 'absolute', left: '9px', top: '10px', bottom: '10px',
@@ -360,7 +382,7 @@ function RouteCard({ option, index, arriveBy, weather }: { option: TripOption; i
                                 {seg.busId && (
                                     <span style={{
                                         marginLeft: '6px', fontSize: '11px', fontWeight: '600',
-                                        color: '#1a73e8', backgroundColor: '#e8f0fe',
+                                        color: 'var(--t-primary)', backgroundColor: 'var(--t-primary-soft)',
                                         padding: '1px 6px', borderRadius: '6px'
                                     }}>
                                         Bus #{seg.busId}
@@ -377,7 +399,7 @@ function RouteCard({ option, index, arriveBy, weather }: { option: TripOption; i
                                     style={{
                                         ...timelineStepStyle,
                                         cursor: 'pointer',
-                                        color: '#1a73e8',
+                                        color: 'var(--t-primary)',
                                         fontSize: '12px',
                                         userSelect: 'none'
                                     }}
@@ -451,15 +473,15 @@ function RouteCard({ option, index, arriveBy, weather }: { option: TripOption; i
                                             <span> ({option.segments[i + 1].routeName})</span>
                                             {option.segments[i + 1]?.nextBusETA !== undefined ? (
                                                 <span>
-                                                    <span style={{ color: '#2e7d32', fontWeight: '600' }}>
+                                                    <span style={{ color: 'var(--t-accent)', fontWeight: '600' }}>
                                                         {' '}· {option.segments[i + 1]!.nextBusETA! <= 1
                                                             ? 'Bus arriving now!'
                                                             : `Next bus in ~${option.segments[i + 1].nextBusETA} min`
                                                         }
                                                     </span>
                                                     {option.segments[i + 1].predTime && (
-                                                        <span style={{ color: '#1a73e8', fontWeight: '600' }}>
-                                                            {' '}· {option.segments[i + 1].predTime}
+                                                        <span style={{ color: 'var(--t-primary)', fontWeight: '600' }}>
+                                                            {' '}· {shortTime(option.segments[i + 1].predTime!)}
                                                         </span>
                                                     )}
                                                     {option.segments[i + 1].busId && (
@@ -484,12 +506,42 @@ function RouteCard({ option, index, arriveBy, weather }: { option: TripOption; i
                     <span>
                         Walk to your destination
                         {option.estimatedArrival && (
-                            <span style={{ color: '#1a73e8', fontWeight: '600', marginLeft: '6px', fontSize: '12px' }}>
+                            <span style={{ color: 'var(--t-primary)', fontWeight: '600', marginLeft: '6px', fontSize: '12px' }}>
                                 · ETA {option.estimatedArrival}
                             </span>
                         )}
                     </span>
                 </div>
+            </div>
+            )}
+
+            {/* Actions: open or close the steps, and start tracking this trip */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginTop: expanded ? '10px' : '2px' }}>
+                <button
+                    type="button"
+                    onClick={() => setExpanded(e => !e)}
+                    aria-expanded={expanded}
+                    style={{
+                        display: 'inline-flex', alignItems: 'center', gap: '4px', height: '32px', padding: '0 6px',
+                        border: 'none', background: 'transparent', color: 'var(--t-primary)',
+                        fontSize: '12.5px', fontWeight: 600, cursor: 'pointer',
+                    }}
+                >
+                    <ChevronDown size={15} aria-hidden style={{ transform: expanded ? 'rotate(180deg)' : undefined, transition: 'transform 0.2s' }} />
+                    {expanded ? 'Hide steps' : 'Show steps'}
+                </button>
+                <button
+                    type="button"
+                    className="t-start"
+                    onClick={onStart}
+                    style={{
+                        display: 'inline-flex', alignItems: 'center', gap: '6px', height: '34px', padding: '0 14px',
+                        border: 'none', borderRadius: '17px', backgroundColor: 'var(--t-primary)', color: 'white',
+                        fontSize: '13px', fontWeight: 700, cursor: 'pointer',
+                    }}
+                >
+                    <Bus size={15} aria-hidden /> Start trip
+                </button>
             </div>
         </div>
     );
@@ -505,7 +557,7 @@ const panelStyle: React.CSSProperties = {
     right: 0,
     width: '100%',
     maxHeight: '70vh',
-    backgroundColor: 'white',
+    backgroundColor: 'var(--t-surface)',
     borderRadius: '20px 20px 0 0',
     boxShadow: '0 -4px 24px rgba(0,0,0,0.15)',
     zIndex: 1500,
@@ -519,8 +571,8 @@ const headerStyle: React.CSSProperties = {
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '8px 16px 10px',
-    borderBottom: '1px solid #e8eaed',
-    backgroundColor: '#f8f9fa'
+    borderBottom: '1px solid var(--t-border-soft)',
+    backgroundColor: 'var(--t-surface-2)'
 };
 
 const closeBtnStyle: React.CSSProperties = {
@@ -550,7 +602,7 @@ const statusStyle: React.CSSProperties = {
 };
 
 const cardStyle: React.CSSProperties = {
-    backgroundColor: '#f8f9fa',
+    backgroundColor: 'var(--t-surface-2)',
     borderRadius: '12px',
     padding: '14px',
     marginBottom: '10px',
@@ -636,7 +688,7 @@ const liveStatusStyle: React.CSSProperties = {
     gap: '6px',
     height: '28px',
     padding: '0 14px',
-    borderBottom: '1px solid #f0f0f0',
+    borderBottom: '1px solid var(--t-border-soft)',
     fontSize: '11px',
     color: '#5f6368',
     flexShrink: 0,
@@ -646,15 +698,15 @@ const liveDotStyle: React.CSSProperties = {
     width: '6px',
     height: '6px',
     borderRadius: '50%',
-    backgroundColor: '#2E7D32',
+    backgroundColor: 'var(--t-accent)',
     display: 'inline-block',
 };
 
 const smallSpinnerStyle: React.CSSProperties = {
     width: '10px',
     height: '10px',
-    border: '1.5px solid #dadce0',
-    borderTop: '1.5px solid #2E7D32',
+    border: '1.5px solid var(--t-border)',
+    borderTop: '1.5px solid var(--t-accent)',
     borderRadius: '50%',
     animation: 'spin 1s linear infinite',
     display: 'inline-block',
@@ -663,8 +715,8 @@ const smallSpinnerStyle: React.CSSProperties = {
 const spinnerStyle: React.CSSProperties = {
     width: '14px',
     height: '14px',
-    border: '2px solid #dadce0',
-    borderTop: '2px solid #1a73e8',
+    border: '2px solid var(--t-border)',
+    borderTop: '2px solid var(--t-primary)',
     borderRadius: '50%',
     animation: 'spin 1s linear infinite',
     display: 'inline-block'
