@@ -14,6 +14,7 @@ import { StopPrediction } from '../transit/StopPrediction';
 import { Coordinates } from '../MapModel';
 import { NearbyStop } from '../transit/NearbyStop';
 import { TransferCandidate } from '../transit/TransferCandidate';
+import { getStopDirection } from './StopDirectionIndex';
 
 export class RoutePlanningService {
     private readonly WALKING_DISTANCE = 500; // meters — max walking to a stop
@@ -181,7 +182,7 @@ export class RoutePlanningService {
             let bestOStop: NearbyStop | null = null;
             let bestDStop: NearbyStop | null = null;
             let bestShapeDistance = 0;
-            let bestWalkTotal = Infinity;
+            let bestTripMinutes = Infinity;
 
             console.log(`[DEBUG] Route ${routeNum}: ${oCandidates.length} origin, ${dCandidates.length} dest candidates`);
 
@@ -213,15 +214,16 @@ export class RoutePlanningService {
                         { lat: parseFloat(dStop.LAT), lng: parseFloat(dStop.LON) }
                     );
 
-                    const walkTotal = oStop.distance + dStop.distance;
-                    if (walkTotal < bestWalkTotal) {
+                    // Keep the pair with the shortest estimated trip (walk + ride), not just the shortest walk:
+                    // the nearest stop can be the one where the bus goes the long way round a loop.
+                    const tripMinutes = this.walkMinutes(oStop.distance + dStop.distance) + this.rideMinutes(shapeDistance);
+                    if (tripMinutes < bestTripMinutes) {
                         bestOStop = oStop;
                         bestDStop = dStop;
                         bestShapeDistance = shapeDistance;
-                        bestWalkTotal = walkTotal;
+                        bestTripMinutes = tripMinutes;
                     }
                     // Do NOT break — continue checking all origin candidates.
-                    // The candidate list is sorted by distance, so we keep the best (min walkTotal) pair.
                 }
 
             }
@@ -243,8 +245,8 @@ export class RoutePlanningService {
                     { lat: parseFloat(bestDStop.LAT), lng: parseFloat(bestDStop.LON) }
                 );
 
-            const busTime = (busDistanceMeters / 1000) / this.AVG_BUS_SPEED * 60;
-            const walkTime = ((walkToStop + walkFromStop) / 1000) / this.WALKING_SPEED * 60 * this.walkMultiplier;
+            const busTime = this.rideMinutes(busDistanceMeters);
+            const walkTime = this.walkMinutes(walkToStop + walkFromStop);
 
             const intermediateStops = getOrderedStopsForRoute(routeNum, bestOStop.STOP_ID, bestDStop.STOP_ID);
 
@@ -260,6 +262,7 @@ export class RoutePlanningService {
                 toStopLat: parseFloat(bestDStop.LAT),
                 toStopLng: parseFloat(bestDStop.LON),
                 estimatedTime: Math.round(busTime),
+                direction: getStopDirection(bestOStop.STOP_ID) ?? undefined,
                 intermediateStops: intermediateStops.length > 0 ? intermediateStops : undefined
             };
 
@@ -368,13 +371,24 @@ export class RoutePlanningService {
                     // Try ALL nearby origin stops for this route (sorted closest-first) so we don't
                     // miss valid transfers just because the single closest stop happens to be on
                     // the wrong side of the road (wrong direction).
+                    // Pick the origin stop with the shortest walk + ride to this get-off stop.
                     let selectedOriginStop: NearbyStop | null = null;
+                    let leg1Distance = 0;
+                    let bestLeg1Minutes = Infinity;
                     for (const originCandidate of oOriginStops) {
                         const leg1Check = checkStopDirection(oRouteNum, originCandidate.STOP_ID, oStopId);
                         if (leg1Check && !leg1Check.valid) continue; // explicitly invalid — skip
                         // null (inconclusive) or valid — accept
-                        selectedOriginStop = originCandidate;
-                        break;
+                        const rideDistance = leg1Check?.shapeDistance ?? this.calculateDistance(
+                            { lat: parseFloat(originCandidate.LAT), lng: parseFloat(originCandidate.LON) },
+                            { lat: oLat, lng: oLng }
+                        );
+                        const minutes = this.walkMinutes(originCandidate.distance) + this.rideMinutes(rideDistance);
+                        if (minutes < bestLeg1Minutes) {
+                            selectedOriginStop = originCandidate;
+                            leg1Distance = rideDistance;
+                            bestLeg1Minutes = minutes;
+                        }
                     }
                     if (!selectedOriginStop) continue;
 
@@ -420,13 +434,11 @@ export class RoutePlanningService {
                         // Math: for a 50m-walk option to beat a 242m-walk option, we need P > 1.26.
                         // P = 3 gives comfortable headroom for any real-world near-stop scenario.
                         const TRANSFER_WALK_PENALTY = 3;
-                        const detour = this.calculateDistance(
-                            { lat: parseFloat(selectedOriginStop.LAT), lng: parseFloat(selectedOriginStop.LON) },
-                            { lat: oLat, lng: oLng }
-                        ) + walkDist * TRANSFER_WALK_PENALTY + this.calculateDistance(
+                        const leg2Distance = leg2Dir?.shapeDistance ?? this.calculateDistance(
                             { lat: dStopInfo.lat, lng: dStopInfo.lng },
                             { lat: parseFloat(dStop.LAT), lng: parseFloat(dStop.LON) }
                         );
+                        const detour = leg1Distance + walkDist * TRANSFER_WALK_PENALTY + leg2Distance;
 
                         const actualWalkDist = oStopId === dStopId ? 0 : Math.round(walkDist);
                         const isBetter = !bestTransfer || detour < bestTransfer.detour;
@@ -439,6 +451,8 @@ export class RoutePlanningService {
                                 walkDist: actualWalkDist,
                                 detour,
                                 selectedOriginStop,
+                                leg1Distance,
+                                leg2Distance,
                             };
                         }
                     }
@@ -453,26 +467,14 @@ export class RoutePlanningService {
 
                 const originStop = bestTransfer.selectedOriginStop;
 
-                // Distances for segment 1: origin stop → getOff stop
-                const seg1Distance = this.calculateDistance(
-                    { lat: parseFloat(originStop.LAT), lng: parseFloat(originStop.LON) },
-                    { lat: bestTransfer.getOffLat, lng: bestTransfer.getOffLng }
-                );
-                // Distances for segment 2: board stop → dest stop
-                const seg2Distance = this.calculateDistance(
-                    { lat: bestTransfer.boardLat, lng: bestTransfer.boardLng },
-                    { lat: parseFloat(dStop.LAT), lng: parseFloat(dStop.LON) }
-                );
-
-                const seg1Time = (seg1Distance / 1000) / this.AVG_BUS_SPEED * 60;
-                const seg2Time = (seg2Distance / 1000) / this.AVG_BUS_SPEED * 60;
-                const transferWalkTime = bestTransfer.walkDist > 0
-                    ? (bestTransfer.walkDist / 1000) / this.WALKING_SPEED * 60 * this.walkMultiplier
-                    : 0;
+                // Ride distances follow each bus's stop sequence (not a straight line)
+                const seg1Time = this.rideMinutes(bestTransfer.leg1Distance);
+                const seg2Time = this.rideMinutes(bestTransfer.leg2Distance);
+                const transferWalkTime = this.walkMinutes(bestTransfer.walkDist);
                 const transferWaitTime = 5; // minutes average wait at transfer
                 const walkToStop = originStop.distance;
                 const walkFromStop = dStop.distance;
-                const walkTime = ((walkToStop + walkFromStop) / 1000) / this.WALKING_SPEED * 60 * this.walkMultiplier;
+                const walkTime = this.walkMinutes(walkToStop + walkFromStop);
 
                 const seg1IntermediateStops = getOrderedStopsForRoute(oRouteNum, originStop.STOP_ID, bestTransfer.getOffId);
 
@@ -488,6 +490,7 @@ export class RoutePlanningService {
                     toStopLat: bestTransfer.getOffLat,
                     toStopLng: bestTransfer.getOffLng,
                     estimatedTime: Math.round(seg1Time),
+                    direction: getStopDirection(originStop.STOP_ID) ?? undefined,
                     intermediateStops: seg1IntermediateStops.length > 0 ? seg1IntermediateStops : undefined
                 };
 
@@ -505,6 +508,7 @@ export class RoutePlanningService {
                     toStopLat: parseFloat(dStop.LAT),
                     toStopLng: parseFloat(dStop.LON),
                     estimatedTime: Math.round(seg2Time),
+                    direction: getStopDirection(bestTransfer.boardId) ?? undefined,
                     intermediateStops: seg2IntermediateStops.length > 0 ? seg2IntermediateStops : undefined
                 };
 
@@ -593,6 +597,16 @@ export class RoutePlanningService {
         return shortcuts;
     }
 
+    /** Minutes to walk a distance, slowed by winter weather. */
+    private walkMinutes(meters: number): number {
+        return (meters / 1000) / this.WALKING_SPEED * 60 * this.walkMultiplier;
+    }
+
+    /** Minutes for a bus to travel a distance along its route. */
+    private rideMinutes(meters: number): number {
+        return (meters / 1000) / this.AVG_BUS_SPEED * 60;
+    }
+
     /**
      * Find stops within walking distance of a location.
      */
@@ -617,7 +631,7 @@ export class RoutePlanningService {
      * Returns distance in meters.
      */
     private calculateDistance(loc1: Coordinates, loc2: Coordinates): number {
-        const earthRadius = 6173e3;
+        const earthRadius = 6371e3;
 
         // converting coordinates to radians 
         const radLat1 = loc1.lat * Math.PI / 180;
