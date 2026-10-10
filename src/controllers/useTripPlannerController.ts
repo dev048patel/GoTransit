@@ -1,6 +1,6 @@
 /* TripPlanner controller — manages origin GPS, destination autocomplete, route finding, and analytics tracking */
 import { useState, useCallback } from 'react';
-import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
+import { usePlacesAutocomplete } from './usePlacesAutocomplete';
 import { RoutePlanningService } from '../models/services/RoutePlanningService';
 import { TripOption } from '../models/transit/RoutePlanning';
 import { LocationState } from '../models/transit/LocationState';
@@ -24,13 +24,8 @@ export function useTripPlannerController(liveBuses?: BusPosition[], walkMultipli
         suggestions: { status, data },
         setValue: setDestValue,
         clearSuggestions,
-    } = usePlacesAutocomplete({
-        requestOptions: {
-            location: new google.maps.LatLng(50.4452, -104.6189),
-            radius: 50 * 1000,
-        },
-        debounce: 300,
-    });
+        getLocation,
+    } = usePlacesAutocomplete(300);
 
     // Get user's current GPS position as origin
     const handleUseMyLocation = useCallback(() => {
@@ -81,21 +76,20 @@ export function useTripPlannerController(liveBuses?: BusPosition[], walkMultipli
         );
     }, []);
 
-    // Geocode selected destination from Places autocomplete
-    const handleDestSelect = useCallback(async (description: string) => {
+    // Resolve coordinates for the selected destination from Places autocomplete
+    const handleDestSelect = useCallback(async (description: string, placeId: string) => {
         setDestValue(description, false);
         clearSuggestions();
         setShowDestSuggestions(false);
 
         try {
-            const results = await getGeocode({ address: description });
-            const { lat, lng } = await getLatLng(results[0]);
+            const { lat, lng } = await getLocation(placeId);
             setDestination({ lat, lng, label: description });
             setRouteResults(null);
         } catch (error) {
             console.error('Error selecting destination:', error);
         }
-    }, [setDestValue, clearSuggestions]);
+    }, [setDestValue, clearSuggestions, getLocation]);
 
     // Calculate route options between origin and destination
     const handleFindRoutes = useCallback(async () => {

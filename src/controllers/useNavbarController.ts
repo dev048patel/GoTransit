@@ -1,6 +1,6 @@
 /* Navbar controller — handles place selection geocoding and analytics tracking for the search bar */
 import { useState, useCallback } from 'react';
-import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
+import { usePlacesAutocomplete } from './usePlacesAutocomplete';
 
 interface PlaceResult {
     id: string;
@@ -18,13 +18,8 @@ export function useNavbarController(onPlaceSelect?: (place: PlaceResult) => void
         suggestions: { status, data },
         setValue,
         clearSuggestions,
-    } = usePlacesAutocomplete({
-        requestOptions: {
-            location: new google.maps.LatLng(50.4452, -104.6189),
-            radius: 50 * 1000,
-        },
-        debounce: 300,
-    });
+        getLocation,
+    } = usePlacesAutocomplete(300);
 
     // Update search input text and show dropdown
     const handleInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,8 +34,7 @@ export function useNavbarController(onPlaceSelect?: (place: PlaceResult) => void
         setShowResults(false);
 
         try {
-            const results = await getGeocode({ address: description });
-            const { lat, lng } = await getLatLng(results[0]);
+            const { lat, lng } = await getLocation(placeId);
 
             if (onPlaceSelect) {
                 onPlaceSelect({ id: placeId, displayName: description, location: { lat, lng } });
@@ -56,7 +50,7 @@ export function useNavbarController(onPlaceSelect?: (place: PlaceResult) => void
         } catch (error) {
             console.error('Error selecting place:', error);
         }
-    }, [onPlaceSelect, setValue, clearSuggestions]);
+    }, [onPlaceSelect, setValue, clearSuggestions, getLocation]);
 
     // Show dropdown when input is focused and there are results
     const handleFocus = useCallback(() => {
