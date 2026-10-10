@@ -8,6 +8,7 @@ import { Coordinates } from '../models/MapModel';
 import { TripOption } from '../models/transit/RoutePlanning';
 import { BusPosition } from '../models/transit/BusPosition';
 import { Stop } from '../models/transit/Stop';
+import { StopDirection, STOP_DIRECTION_ARROW, STOP_DIRECTION_HEADING, STOP_DIRECTION_LABEL, directionOfStop } from '../models/transit/StopDirection';
 import { MapViewProps } from '../models/views/MapViewProps';
 import transitColors from '../models/data/transitColors';
 import StopDetailPanel from './components/transit/StopDetailPanel';
@@ -18,16 +19,29 @@ import RouteTrackingOverlay from './components/transit/RouteTrackingOverlay';
 import TrackingPanel from './components/transit/TrackingPanel';
 
 // Bus stop marker SVG — generated once, reused for all stop markers
-const BUS_STOP_ICON_URL = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
-<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
-  <circle cx="14" cy="14" r="13" fill="#1a73e8" stroke="white" stroke-width="2"/>
-  <rect x="9" y="7" width="10" height="14" rx="2" fill="white"/>
-  <rect x="10.5" y="9" width="7" height="3.5" rx="1" fill="#1a73e8"/>
-  <circle cx="11.5" cy="17.5" r="1.2" fill="#1a73e8"/>
-  <circle cx="16.5" cy="17.5" r="1.2" fill="#1a73e8"/>
-  <rect x="10.5" y="14" width="7" height="0.8" rx="0.4" fill="#1a73e8" opacity="0.4"/>
+// Bus stop marker: bus glyph in a circle, plus an arrow on the edge pointing the way buses travel
+// at that stop (NB ↑, SB ↓, EB →, WB ←) so riders can tell which side of the street to wait on
+const busStopIconUrl = (heading: number | null) => `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+  ${heading === null ? '' : `<g transform="rotate(${heading} 18 18)"><path d="M18 0.5 L23.5 7.5 L12.5 7.5 Z" fill="#1a73e8" stroke="white" stroke-width="1.5" stroke-linejoin="round"/></g>`}
+  <g transform="translate(4 4)">
+    <circle cx="14" cy="14" r="12" fill="#1a73e8" stroke="white" stroke-width="2"/>
+    <rect x="9" y="7" width="10" height="14" rx="2" fill="white"/>
+    <rect x="10.5" y="9" width="7" height="3.5" rx="1" fill="#1a73e8"/>
+    <circle cx="11.5" cy="17.5" r="1.2" fill="#1a73e8"/>
+    <circle cx="16.5" cy="17.5" r="1.2" fill="#1a73e8"/>
+    <rect x="10.5" y="14" width="7" height="0.8" rx="0.4" fill="#1a73e8" opacity="0.4"/>
+  </g>
 </svg>
 `)}`;
+
+const BUS_STOP_ICON_URLS: Record<StopDirection | 'none', string> = {
+  NB: busStopIconUrl(STOP_DIRECTION_HEADING.NB),
+  EB: busStopIconUrl(STOP_DIRECTION_HEADING.EB),
+  SB: busStopIconUrl(STOP_DIRECTION_HEADING.SB),
+  WB: busStopIconUrl(STOP_DIRECTION_HEADING.WB),
+  none: busStopIconUrl(null),
+};
 
 // User location "You are here" pulsing blue dot marker
 const USER_LOCATION_ICON_URL = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
@@ -232,26 +246,29 @@ export const MapView: React.FC<MapViewProps> = ({
       >
         {/* Route Tracking Overlay (when tracking is active) */}
         {activeTracking && (
-          <RouteTrackingOverlay tripOption={activeTracking} />
+          <RouteTrackingOverlay tripOption={activeTracking} userLocation={userLocation} />
         )}
 
         {/* Render Stops — viewport-culled, hidden during tracking */}
-        {!activeTracking && viewportStops.map((stop) => (
-          <Marker
-            key={stop.STOP_ID}
-            position={{
-              lat: parseFloat(stop.LAT),
-              lng: parseFloat(stop.LON),
-            }}
-            title={`${stop.STOP_NAME} (#${stop.STOP_ID})`}
-            icon={{
-              url: BUS_STOP_ICON_URL,
-              scaledSize: isLoaded ? new google.maps.Size(24, 24) : undefined,
-              anchor: isLoaded ? new google.maps.Point(12, 12) : undefined,
-            }}
-            onClick={() => handleStopClick(stop)}
-          />
-        ))}
+        {!activeTracking && viewportStops.map((stop) => {
+          const direction = directionOfStop(stop);
+          return (
+            <Marker
+              key={stop.STOP_ID}
+              position={{
+                lat: parseFloat(stop.LAT),
+                lng: parseFloat(stop.LON),
+              }}
+              title={`${direction ? `${STOP_DIRECTION_ARROW[direction]} ${STOP_DIRECTION_LABEL[direction]} · ` : ''}${stop.STOP_NAME} (#${stop.STOP_ID})`}
+              icon={{
+                url: BUS_STOP_ICON_URLS[direction ?? 'none'],
+                scaledSize: isLoaded ? new google.maps.Size(30, 30) : undefined,
+                anchor: isLoaded ? new google.maps.Point(15, 15) : undefined,
+              }}
+              onClick={() => handleStopClick(stop)}
+            />
+          );
+        })}
 
         {/* Render Route Polylines (hide during tracking) */}
         {!activeTracking && routePaths.map((path, index) => (

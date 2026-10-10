@@ -10,10 +10,9 @@ import { DetourService } from '../../../models/services/DetourService';
 import type { WeatherSnapshot } from '../../../models/services/WeatherService';
 
 // Pure view component — all GPS/route logic lives in useBusSuggestionController
-export default function BusSuggestionPanel({ destination, onClose, onSelectRoute, liveBuses, weather }: BusSuggestionPanelProps) {
+export default function BusSuggestionPanel({ destination, onClose, onSelectRoute, weather }: BusSuggestionPanelProps) {
     const { gpsLoading, gpsError, results, searching, updating, lastUpdated, handleRefresh } = useBusSuggestionController({
         destination,
-        liveBuses,
         walkMultiplier: weather?.walkMultiplier ?? 1.0,
     });
 
@@ -97,7 +96,7 @@ export default function BusSuggestionPanel({ destination, onClose, onSelectRoute
                     {updating ? (
                         <>
                             <div style={smallSpinnerStyle} />
-                            <span>Refreshing with live bus positions…</span>
+                            <span>{lastUpdated ? 'Refreshing live arrival times…' : 'Getting live arrival times…'}</span>
                         </>
                     ) : (
                         <>

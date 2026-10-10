@@ -22,6 +22,8 @@ export class RoutePlanningService {
     private readonly WALKING_DISTANCE_EXPANDED_2 = 1500; // meters — second fallback for sparse areas
     private readonly AVG_BUS_SPEED = 25; // km/h (city bus average including stops)
     private readonly WALKING_SPEED = 5; // km/h
+    private readonly PREDICTION_TIMEOUT_MS = 4000; // max wait for each stop's live predictions
+    private readonly LIVE_ETA_CANDIDATES = 8; // only the best-ranked options get live predictions fetched
     private walkMultiplier = 1.0; // adjusted by WeatherService for cold/icy conditions
 
     /** Call with WeatherSnapshot.walkMultiplier before planning trips in winter */
@@ -30,46 +32,105 @@ export class RoutePlanningService {
     }
 
     /**
-     * Calculate trip options from origin to destination.
-     * Accepts optional live bus positions for real-time ETA calculation.
+     * Calculate trip options from origin to destination, including live ETAs.
+     * Equivalent to addLiveETAs(planTrips(...)). Callers that want to show routes before live
+     * ETAs arrive can call the two steps separately.
      */
     async calculateTripOptions(
         origin: Coordinates,
         destination: Coordinates,
         liveBuses?: BusPosition[]
     ): Promise<TripOption[]> {
-        console.log('[RoutePlanningService] Calculating routes from', origin, 'to', destination);
         if (liveBuses) {
             console.log(`[RoutePlanningService] Using ${liveBuses.length} live buses for ETA`);
         }
+        return this.addLiveETAs(this.planTrips(origin, destination));
+    }
 
-        // Find stops near origin and destination
-        let originStops = this.findNearbyStops(origin, this.WALKING_DISTANCE);
-        let destStops = this.findNearbyStops(destination, this.WALKING_DISTANCE);
+    /**
+     * Plan trips from static data only (no network) — fast enough to show results immediately.
+     * Returns ranked candidates; pass them to topOptions() for display or addLiveETAs() for live ETAs.
+     *
+     * Walking radius widens (500m → 800m → 1500m) until some route is found, so a destination whose
+     * nearest stops aren't served by a useful bus still gets suggestions from slightly further away.
+     */
+    planTrips(origin: Coordinates, destination: Coordinates): TripOption[] {
+        console.log('[RoutePlanningService] Calculating routes from', origin, 'to', destination);
+        for (const radius of [this.WALKING_DISTANCE, this.WALKING_DISTANCE_EXPANDED, this.WALKING_DISTANCE_EXPANDED_2]) {
+            const options = this.findOptionsWithinWalk(origin, destination, radius);
 
-        // Expand walking radius if no stops found (first fallback: 800m)
-        let expandedSearch = false;
-        if (originStops.length === 0) {
-            originStops = this.findNearbyStops(origin, this.WALKING_DISTANCE_EXPANDED);
-            expandedSearch = true;
-        }
-        if (destStops.length === 0) {
-            destStops = this.findNearbyStops(destination, this.WALKING_DISTANCE_EXPANDED);
-            expandedSearch = true;
-        }
+            // Riders will usually walk a little further to avoid a transfer: if nothing within this
+            // radius is a single bus, also offer direct buses from stops within the next radius out.
+            if (options.length > 0 && radius < this.WALKING_DISTANCE_EXPANDED && !options.some(o => o.transfers === 0)) {
+                const originStops = this.findNearbyStops(origin, this.WALKING_DISTANCE_EXPANDED, 40);
+                const destStops = this.findNearbyStops(destination, this.WALKING_DISTANCE_EXPANDED, 40);
+                options.push(...this.findDirectRoutes(origin, destination, originStops, destStops));
+            }
 
-        // Second fallback: 1500m for sparse areas (outskirts, industrial zones)
-        if (originStops.length === 0) {
-            originStops = this.findNearbyStops(origin, this.WALKING_DISTANCE_EXPANDED_2);
+            if (options.length > 0) {
+                return this.topOptions(this.rankOptions(options), this.LIVE_ETA_CANDIDATES);
+            }
+            console.log(`[RoutePlanningService] No routes within ${radius}m walk — widening search`);
         }
-        if (destStops.length === 0) {
-            destStops = this.findNearbyStops(destination, this.WALKING_DISTANCE_EXPANDED_2);
-        }
+        return [];
+    }
 
-        console.log(`[RoutePlanningService] Found ${originStops.length} origin stops, ${destStops.length} dest stops${expandedSearch ? ' (expanded search)' : ''}`);
+    /**
+     * Fetch live predictions for planned candidates, re-rank with them, and return the top options.
+     * Works on copies, so options already shown to the user are never mutated.
+     */
+    async addLiveETAs(candidates: TripOption[]): Promise<TripOption[]> {
+        const options = candidates.map(o => ({ ...o, segments: o.segments.map(s => ({ ...s })) }));
+        await this.enrichWithLiveETAs(options);
+        const result = this.topOptions(this.rankOptions(options));
+        console.log(`[RoutePlanningService] Returning ${result.length} trip options`);
+        return result;
+    }
+
+    /**
+     * Pick the options to display from a ranked list. Always keeps the best no-transfer option:
+     * many riders prefer one bus even when a transfer is a little faster.
+     */
+    topOptions(ranked: TripOption[], limit = 5): TripOption[] {
+        const top = ranked.slice(0, limit);
+        const bestDirect = ranked.find(o => o.transfers === 0);
+        if (bestDirect && !top.includes(bestDirect)) {
+            if (top.length === limit) top[limit - 1] = bestDirect;
+            else top.push(bestDirect);
+        }
+        return top;
+    }
+
+    /**
+     * Sort by:
+     * 1. Routes with live predictions first
+     * 2. Effective time (totalTimeWithWait + 10-min transfer penalty for transfers)
+     *    — direct routes win unless the transfer genuinely saves >10 minutes
+     * 3. Fewer transfers (tiebreaker)
+     * 4. Shorter walking distance
+     */
+    private rankOptions(options: TripOption[]): TripOption[] {
+        const TRANSFER_PENALTY_MINUTES = 10;
+        return [...options].sort((a, b) => {
+            if (a.isLivePrediction !== b.isLivePrediction) return a.isLivePrediction ? -1 : 1;
+            const aTime = (a.totalTimeWithWait ?? a.totalTime) + (a.transfers > 0 ? TRANSFER_PENALTY_MINUTES : 0);
+            const bTime = (b.totalTimeWithWait ?? b.totalTime) + (b.transfers > 0 ? TRANSFER_PENALTY_MINUTES : 0);
+            if (aTime !== bTime) return aTime - bTime;
+            if (a.transfers !== b.transfers) return a.transfers - b.transfers;
+            return a.walkingDistance - b.walkingDistance;
+        });
+    }
+
+    /**
+     * Find direct, shortcut and 1-transfer options using stops within maxWalk of origin and destination.
+     */
+    private findOptionsWithinWalk(origin: Coordinates, destination: Coordinates, maxWalk: number): TripOption[] {
+        const originStops = this.findNearbyStops(origin, maxWalk);
+        const destStops = this.findNearbyStops(destination, maxWalk);
+
+        console.log(`[RoutePlanningService] Found ${originStops.length} origin stops, ${destStops.length} dest stops within ${maxWalk}m`);
 
         if (originStops.length === 0 || destStops.length === 0) {
-            console.log('[RoutePlanningService] No nearby stops found');
             return [];
         }
 
@@ -102,35 +163,7 @@ export class RoutePlanningService {
         const shortcuts = this.generateWalkableShortcuts(origin, destination, transferOptions, directRouteNums);
         console.log(`[RoutePlanningService] Generated ${shortcuts.length} walkable shortcut options`);
 
-        // Combine all options
-        const allOptions = [...directOptions, ...shortcuts, ...transferOptions];
-
-        // Enrich with real-time predicted arrival times from transit API
-        await this.enrichWithLiveETAs(allOptions);
-
-        // Sort by real-time ranking:
-        // 1. Prefer routes with live predictions
-        // 2. Then by effective time (totalTimeWithWait + 10-min transfer penalty for transfers)
-        //    — direct routes win unless the transfer genuinely saves >10 minutes
-        // 3. Then fewer transfers (tiebreaker)
-        // 4. Then shorter walking distance
-        const TRANSFER_PENALTY_MINUTES = 10;
-        allOptions.sort((a, b) => {
-            // Prefer live predictions first
-            if (a.isLivePrediction !== b.isLivePrediction) return a.isLivePrediction ? -1 : 1;
-            // Apply transfer penalty so direct routes are preferred unless transfer is much faster
-            const aTime = (a.totalTimeWithWait ?? a.totalTime) + (a.transfers > 0 ? TRANSFER_PENALTY_MINUTES : 0);
-            const bTime = (b.totalTimeWithWait ?? b.totalTime) + (b.transfers > 0 ? TRANSFER_PENALTY_MINUTES : 0);
-            if (aTime !== bTime) return aTime - bTime;
-            // Then fewer transfers
-            if (a.transfers !== b.transfers) return a.transfers - b.transfers;
-            // Then shorter walking distance
-            return a.walkingDistance - b.walkingDistance;
-        });
-
-        const result = allOptions.slice(0, 5);
-        console.log(`[RoutePlanningService] Returning ${result.length} trip options`);
-        return result;
+        return [...directOptions, ...shortcuts, ...transferOptions];
     }
 
     /**
@@ -610,7 +643,7 @@ export class RoutePlanningService {
     /**
      * Find stops within walking distance of a location.
      */
-    private findNearbyStops(location: Coordinates, maxDistance: number): NearbyStop[] {
+    private findNearbyStops(location: Coordinates, maxDistance: number, limit = 15): NearbyStop[] {
         const nearbyStops = transitStops
             .map(stop => ({
                 ...stop,
@@ -621,7 +654,7 @@ export class RoutePlanningService {
             }))
             .filter(stop => stop.distance <= maxDistance)
             .sort((a, b) => a.distance - b.distance)
-            .slice(0, 15); // Top 15 closest — ensures both directional stops (NB+SB, EB+WB) are always included
+            .slice(0, limit); // Closest first (default 15) — ensures both directional stops (NB+SB, EB+WB) are always included
 
         return nearbyStops;
     }
@@ -672,16 +705,24 @@ export class RoutePlanningService {
             ? (import.meta as any).env?.VITE_SERVER_URL || ''
             : '';
 
+        // Time-box each request: a slow or unreachable backend must not hold back the route list.
+        // Stops whose predictions don't arrive in time simply show no live ETA.
         const fetchPromises = Array.from(stopIds).map(async (stopId) => {
             try {
-                const response = await fetch(`${baseUrl}/api/stop-predictions/${stopId}`);
+                const response = await fetch(`${baseUrl}/api/stop-predictions/${stopId}`, {
+                    signal: AbortSignal.timeout(this.PREDICTION_TIMEOUT_MS),
+                });
                 if (response.ok) {
                     const preds: StopPrediction[] = await response.json();
                     predictionsMap.set(stopId, preds);
                     console.log(`[RoutePlanningService] Got ${preds.length} predictions for stop ${stopId}`);
                 }
             } catch (err) {
-                console.error(`[RoutePlanningService] Failed to fetch predictions for stop ${stopId}:`, err);
+                if (err instanceof DOMException && err.name === 'TimeoutError') {
+                    console.warn(`[RoutePlanningService] Predictions for stop ${stopId} timed out after ${this.PREDICTION_TIMEOUT_MS}ms — showing route without live ETA`);
+                } else {
+                    console.error(`[RoutePlanningService] Failed to fetch predictions for stop ${stopId}:`, err);
+                }
             }
         });
 

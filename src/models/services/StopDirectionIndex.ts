@@ -8,12 +8,9 @@
  */
 import transitStops from '../data/transitStops';
 import { Coordinates } from '../MapModel';
-import { StopDirection } from '../transit/StopDirection';
+import { StopDirection, STOP_DIRECTION_HEADING } from '../transit/StopDirection';
 
 export type { StopDirection };
-
-// Compass heading (degrees clockwise from north) a bus is travelling at a stop of each direction
-const DIRECTION_HEADING: Record<StopDirection, number> = { NB: 0, EB: 90, SB: 180, WB: 270 };
 
 // Legs shorter than this are too short for a compass check (stop offsets dominate the bearing)
 const MIN_LEG_FOR_COMPASS_CHECK_M = 250;
@@ -55,7 +52,8 @@ function angleDifference(a: number, b: number): number {
     return diff > 180 ? 360 - diff : diff;
 }
 
-function distanceMeters(a: Coordinates, b: Coordinates): number {
+/** Great-circle distance between two points, in metres. */
+export function distanceMeters(a: Coordinates, b: Coordinates): number {
     const toRad = (d: number) => d * Math.PI / 180;
     const h = Math.sin(toRad(b.lat - a.lat) / 2) ** 2 +
         Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(toRad(b.lng - a.lng) / 2) ** 2;
@@ -82,7 +80,7 @@ export function checkCompassDirection(fromStopId: string, toStopId: string): { v
     const rideBearing = bearingBetween(from.location, to.location);
     const deviations = [from.direction, to.direction]
         .filter((dir): dir is StopDirection => dir !== null)
-        .map(dir => angleDifference(DIRECTION_HEADING[dir], rideBearing));
+        .map(dir => angleDifference(STOP_DIRECTION_HEADING[dir], rideBearing));
     if (deviations.length === 0) return null;
 
     const meanDeviation = deviations.reduce((sum, d) => sum + d, 0) / deviations.length;
