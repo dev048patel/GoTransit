@@ -55,14 +55,14 @@ function LocationSelect({
                     }}
                     style={{
                         width: '100%', padding: '9px 32px 9px 12px', borderRadius: '10px',
-                        border: '1.5px solid #e0e0e0', outline: 'none', fontSize: '14px',
-                        color: value ? '#202124' : '#9e9e9e', backgroundColor: loading ? '#f5f5f5' : 'white',
+                        border: '1.5px solid var(--t-border-soft)', outline: 'none', fontSize: '14px',
+                        color: value ? '#202124' : '#9e9e9e', backgroundColor: loading ? 'var(--t-surface-2)' : 'var(--t-surface)',
                         appearance: 'none', WebkitAppearance: 'none', cursor: 'pointer',
                         backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235f6368' stroke-width='2.5' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E")`,
                         backgroundRepeat: 'no-repeat', backgroundPosition: 'right 10px center',
                         transition: 'border-color 0.15s',
                     }}
-                    onFocus={e => e.target.style.borderColor = '#1a73e8'}
+                    onFocus={e => e.target.style.borderColor = 'var(--t-primary)'}
                     onBlur={e => e.target.style.borderColor = '#e0e0e0'}
                 >
                     <option value="">Select a saved location…</option>
@@ -102,7 +102,7 @@ function RouteCard({
                 display: 'flex', gap: '10px', padding: '12px',
                 borderRadius: '12px', marginBottom: '8px',
                 border: `1.5px solid ${selected ? color : '#e8e8e8'}`,
-                backgroundColor: selected ? '#f8f9fa' : 'white',
+                backgroundColor: selected ? 'var(--t-surface-2)' : 'var(--t-surface)',
                 cursor: 'pointer', transition: 'all 0.15s',
                 borderLeft: `4px solid ${color}`,
             }}
@@ -111,10 +111,10 @@ function RouteCard({
             <div style={{
                 width: '18px', height: '18px', borderRadius: '50%', flexShrink: 0, marginTop: '1px',
                 border: `2px solid ${selected ? color : '#bdbdbd'}`,
-                backgroundColor: selected ? color : 'white',
+                backgroundColor: selected ? color : 'var(--t-surface)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
-                {selected && <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'white' }} />}
+                {selected && <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--t-surface)' }} />}
             </div>
 
             <div style={{ flex: 1, minWidth: 0 }}>
@@ -142,7 +142,7 @@ function RouteCard({
                 {/* Timing — the key info */}
                 <div style={{ fontSize: '14px', color: '#202124', marginBottom: '3px' }}>
                     <span style={{ fontWeight: '700' }}>Leave by </span>
-                    <span style={{ fontWeight: '800', color: '#1B5E20', fontSize: '15px' }}>{departBy}</span>
+                    <span style={{ fontWeight: '800', color: 'var(--t-accent-dark)', fontSize: '15px' }}>{departBy}</span>
                     <span style={{ color: '#5f6368', fontSize: '13px' }}> → arrive {arriveBy}</span>
                 </div>
                 <div style={{ fontSize: '12px', color: '#5f6368' }}>
@@ -171,11 +171,11 @@ export default function TripSchedulePanel({ ctrl, onPreviewLocation }: TripSched
             />
 
             {/* Panel */}
-            <div style={{
+            <div className="t-panel t-drawer" style={{
                 position: 'fixed', top: '52px', right: 0,
                 width: 'min(340px, 100vw)',
                 height: 'calc(100vh - 52px)',
-                backgroundColor: 'white',
+                backgroundColor: 'var(--t-surface)',
                 boxShadow: '-4px 0 20px rgba(0,0,0,0.12)',
                 zIndex: 1100,
                 display: 'flex', flexDirection: 'column',
@@ -184,12 +184,12 @@ export default function TripSchedulePanel({ ctrl, onPreviewLocation }: TripSched
             }}>
 
                 {/* Header */}
-                <div style={{
+                <div className="t-panel-header" style={{
                     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    padding: '14px 16px 12px', borderBottom: '1px solid #f0f0f0', flexShrink: 0,
+                    padding: '14px 16px 12px', borderBottom: '1px solid var(--t-border-soft)', flexShrink: 0,
                 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <div style={{ width: '28px', height: '28px', borderRadius: '8px', backgroundColor: '#e8f0fe', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#1a73e8' }}>
+                        <div style={{ width: '28px', height: '28px', borderRadius: '8px', backgroundColor: 'var(--t-primary-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--t-primary)' }}>
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 <rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
                             </svg>
@@ -198,9 +198,9 @@ export default function TripSchedulePanel({ ctrl, onPreviewLocation }: TripSched
                     </div>
                     <button
                         onClick={ctrl.handleClose}
-                        style={{ width: '28px', height: '28px', borderRadius: '8px', border: 'none', backgroundColor: '#f1f3f4', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#5f6368', transition: 'background-color 0.15s' }}
+                        style={{ width: '28px', height: '28px', borderRadius: '8px', border: 'none', backgroundColor: 'var(--t-chip)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#5f6368', transition: 'background-color 0.15s' }}
                         onMouseEnter={e => e.currentTarget.style.backgroundColor = '#e0e0e0'}
-                        onMouseLeave={e => e.currentTarget.style.backgroundColor = '#f1f3f4'}
+                        onMouseLeave={e => e.currentTarget.style.backgroundColor = 'var(--t-chip)'}
                     >
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                             <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
@@ -220,7 +220,7 @@ export default function TripSchedulePanel({ ctrl, onPreviewLocation }: TripSched
                                 Sign in and save locations to use the route planner.
                             </div>
                             <Link to="/login" onClick={ctrl.handleClose}>
-                                <button style={{ padding: '9px 24px', borderRadius: '10px', border: 'none', backgroundColor: '#1a73e8', color: 'white', fontSize: '13px', fontWeight: '700', cursor: 'pointer' }}>
+                                <button style={{ padding: '9px 24px', borderRadius: '10px', border: 'none', backgroundColor: 'var(--t-primary)', color: 'white', fontSize: '13px', fontWeight: '700', cursor: 'pointer' }}>
                                     Sign In
                                 </button>
                             </Link>
@@ -233,7 +233,7 @@ export default function TripSchedulePanel({ ctrl, onPreviewLocation }: TripSched
                             {!ctrl.destsLoading && ctrl.savedDests.length < 2 && (
                                 <div style={{ padding: '12px 14px', backgroundColor: '#FFF8E1', borderRadius: '10px', border: '1.5px solid #FFE082', marginBottom: '16px', fontSize: '13px', color: '#795548', lineHeight: '1.5' }}>
                                     You need at least <strong>2 saved locations</strong> to plan a route.{' '}
-                                    <Link to="/map" onClick={ctrl.handleClose} style={{ color: '#1a73e8', fontWeight: '600' }}>
+                                    <Link to="/map" onClick={ctrl.handleClose} style={{ color: 'var(--t-primary)', fontWeight: '600' }}>
                                         Add them first →
                                     </Link>
                                 </div>
@@ -242,7 +242,7 @@ export default function TripSchedulePanel({ ctrl, onPreviewLocation }: TripSched
                             {/* Loading state */}
                             {ctrl.destsLoading && (
                                 <div style={{ textAlign: 'center', padding: '20px', color: '#5f6368', fontSize: '13px' }}>
-                                    <div style={{ width: '20px', height: '20px', border: '2.5px solid #e0e0e0', borderTop: '2.5px solid #1a73e8', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 8px' }} />
+                                    <div style={{ width: '20px', height: '20px', border: '2.5px solid var(--t-border-soft)', borderTop: '2.5px solid var(--t-primary)', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 8px' }} />
                                     Loading your saved locations…
                                 </div>
                             )}
@@ -272,8 +272,8 @@ export default function TripSchedulePanel({ ctrl, onPreviewLocation }: TripSched
                                                 ctrl.setSelectedIndex(null);
                                             }}
                                             title="Swap From and To"
-                                            style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1.5px solid #e0e0e0', backgroundColor: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#5f6368', flexShrink: 0, transition: 'all 0.15s' }}
-                                            onMouseEnter={e => { e.currentTarget.style.borderColor = '#1a73e8'; e.currentTarget.style.color = '#1a73e8'; }}
+                                            style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1.5px solid var(--t-border-soft)', backgroundColor: 'var(--t-surface)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#5f6368', flexShrink: 0, transition: 'all 0.15s' }}
+                                            onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--t-primary)'; e.currentTarget.style.color = 'var(--t-primary)'; }}
                                             onMouseLeave={e => { e.currentTarget.style.borderColor = '#e0e0e0'; e.currentTarget.style.color = '#5f6368'; }}
                                         >
                                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
@@ -303,8 +303,8 @@ export default function TripSchedulePanel({ ctrl, onPreviewLocation }: TripSched
                                             type="time"
                                             value={ctrl.arriveBy}
                                             onChange={e => { ctrl.setArriveBy(e.target.value); ctrl.setSelectedIndex(null); }}
-                                            style={{ width: '100%', padding: '9px 12px', borderRadius: '10px', border: '1.5px solid #e0e0e0', fontSize: '15px', fontWeight: '600', color: '#202124', outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.15s' }}
-                                            onFocus={e => e.target.style.borderColor = '#1a73e8'}
+                                            style={{ width: '100%', padding: '9px 12px', borderRadius: '10px', border: '1.5px solid var(--t-border-soft)', fontSize: '15px', fontWeight: '600', color: '#202124', outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.15s' }}
+                                            onFocus={e => e.target.style.borderColor = 'var(--t-primary)'}
                                             onBlur={e => e.target.style.borderColor = '#e0e0e0'}
                                         />
                                     </div>
@@ -315,14 +315,14 @@ export default function TripSchedulePanel({ ctrl, onPreviewLocation }: TripSched
                                         disabled={ctrl.calculating || !ctrl.fromId || !ctrl.toId}
                                         style={{
                                             width: '100%', padding: '11px', borderRadius: '10px', border: 'none',
-                                            backgroundColor: ctrl.calculating || !ctrl.fromId || !ctrl.toId ? '#b3d4fc' : '#1a73e8',
+                                            backgroundColor: ctrl.calculating || !ctrl.fromId || !ctrl.toId ? '#b3d4fc' : 'var(--t-primary)',
                                             color: 'white', fontSize: '14px', fontWeight: '700',
                                             cursor: ctrl.calculating || !ctrl.fromId || !ctrl.toId ? 'not-allowed' : 'pointer',
                                             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '7px',
                                             transition: 'background-color 0.15s',
                                         }}
                                         onMouseEnter={e => { if (!ctrl.calculating && ctrl.fromId && ctrl.toId) e.currentTarget.style.backgroundColor = '#1557b0'; }}
-                                        onMouseLeave={e => { if (!ctrl.calculating && ctrl.fromId && ctrl.toId) e.currentTarget.style.backgroundColor = '#1a73e8'; }}
+                                        onMouseLeave={e => { if (!ctrl.calculating && ctrl.fromId && ctrl.toId) e.currentTarget.style.backgroundColor = 'var(--t-primary)'; }}
                                     >
                                         {ctrl.calculating ? (
                                             <>
@@ -378,12 +378,12 @@ export default function TripSchedulePanel({ ctrl, onPreviewLocation }: TripSched
 
                 {/* Footer — only shown when there are results */}
                 {ctrl.isAuthenticated && ctrl.options.length > 0 && (
-                    <div style={{ padding: '12px 14px', borderTop: '1px solid #f0f0f0', flexShrink: 0 }}>
+                    <div style={{ padding: '12px 14px', borderTop: '1px solid var(--t-border-soft)', flexShrink: 0 }}>
                         <button
                             onClick={ctrl.handleReset}
-                            style={{ width: '100%', padding: '9px', borderRadius: '10px', border: '1.5px solid #e0e0e0', backgroundColor: 'white', fontSize: '13px', fontWeight: '600', color: '#5f6368', cursor: 'pointer', transition: 'background-color 0.15s' }}
-                            onMouseEnter={e => e.currentTarget.style.backgroundColor = '#f5f5f5'}
-                            onMouseLeave={e => e.currentTarget.style.backgroundColor = 'white'}
+                            style={{ width: '100%', padding: '9px', borderRadius: '10px', border: '1.5px solid var(--t-border-soft)', backgroundColor: 'var(--t-surface)', fontSize: '13px', fontWeight: '600', color: '#5f6368', cursor: 'pointer', transition: 'background-color 0.15s' }}
+                            onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--t-surface-2)'}
+                            onMouseLeave={e => e.currentTarget.style.backgroundColor = 'var(--t-surface)'}
                         >
                             Reset
                         </button>

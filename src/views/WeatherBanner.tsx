@@ -43,8 +43,8 @@ function getTheme(w: WeatherSnapshot): Theme {
         case 'snowy':        return { bg: '#E8EAF6', text: '#283593', border: '#9FA8DA' };
         case 'rainy':        return { bg: '#E1F5FE', text: '#01579B', border: '#81D4FA' };
         case 'smoky':        return { bg: '#FFF3E0', text: '#E65100', border: '#FFCC80' };
-        case 'windy':        return { bg: '#F5F5F5', text: '#424242', border: '#E0E0E0' };
-        case 'cloudy':       return { bg: '#F5F5F5', text: '#616161', border: '#E0E0E0' };
+        case 'windy':        return { bg: 'var(--t-chip)', text: '#424242', border: 'var(--t-border)' };   // neutral weather follows the character theme
+        case 'cloudy':       return { bg: 'var(--t-chip)', text: '#424242', border: 'var(--t-border)' };
         case 'sunny': default: return { bg: '#FFFDE7', text: '#E65100', border: '#FFE082' };
     }
 }

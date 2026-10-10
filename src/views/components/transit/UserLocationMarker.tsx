@@ -123,6 +123,8 @@ export default function UserLocationMarker() {
 
     if (!fix || !pos) return null;
     const art = MARKER_CHARACTERS.find(c => c.id === character) ?? MARKER_CHARACTERS[0];
+    const isDot = art.id === 'default';
+    const size = isDot ? 40 : SIZE;
 
     return (
         <OverlayView
@@ -133,16 +135,16 @@ export default function UserLocationMarker() {
                 role="img"
                 aria-label={lost ? 'Your last known location' : 'You are here'}
                 style={{
-                    position: 'relative', width: SIZE, height: SIZE, pointerEvents: 'none',
-                    // Anchor the character's base (bottom-centre) on the GPS point
-                    transform: 'translate(-50%, -100%)',
+                    position: 'relative', width: size, height: size, pointerEvents: 'none',
+                    // A character stands on the GPS point (bottom-centre); the plain dot is centred on it
+                    transform: isDot ? 'translate(-50%, -50%)' : 'translate(-50%, -100%)',
                     filter: lost ? 'grayscale(1) opacity(0.6)' : undefined,
                 }}
             >
                 {/* Direction cone — only while moving */}
                 {fix.heading !== null && (
                     <div style={{
-                        position: 'absolute', left: '50%', bottom: 0, width: 110, height: 110,
+                        position: 'absolute', left: '50%', bottom: isDot ? size / 2 : 0, width: 110, height: 110,
                         transform: `translate(-50%, 50%) rotate(${fix.heading}deg)`,
                         borderRadius: '50%',
                         background: 'conic-gradient(from -28deg, rgba(0,61,165,0.6) 0deg 56deg, transparent 56deg)',
@@ -151,24 +153,26 @@ export default function UserLocationMarker() {
                     }} />
                 )}
                 {/* Pulse ring + ground shadow at the feet */}
-                {!lost && (
+                {!lost && !isDot && (
                     <div className="animate-ping" style={{
                         position: 'absolute', left: '50%', bottom: -6, width: 30, height: 12, marginLeft: -15,
                         borderRadius: '50%', background: 'rgba(0,61,165,0.35)',
                     }} />
                 )}
-                <div style={{
-                    position: 'absolute', left: '50%', bottom: -5, width: 30, height: 10, marginLeft: -15,
-                    borderRadius: '50%', background: 'rgba(0,0,0,0.28)', filter: 'blur(2px)',
-                }} />
+                {!isDot && (
+                    <div style={{
+                        position: 'absolute', left: '50%', bottom: -5, width: 30, height: 10, marginLeft: -15,
+                        borderRadius: '50%', background: 'rgba(0,0,0,0.28)', filter: 'blur(2px)',
+                    }} />
+                )}
                 <img
                     src={art.src}
                     alt=""
-                    width={SIZE}
-                    height={SIZE}
+                    width={size}
+                    height={size}
                     draggable={false}
-                    className={fix.heading !== null && !lost ? 'marker-walk' : undefined}
-                    style={{ position: 'relative', filter: 'drop-shadow(0 3px 4px rgba(0,0,0,0.3))' }}
+                    className={fix.heading !== null && !lost && !isDot ? 'marker-walk' : undefined}
+                    style={{ position: 'relative', filter: isDot ? undefined : 'drop-shadow(0 3px 4px rgba(0,0,0,0.3))' }}
                 />
             </div>
         </OverlayView>

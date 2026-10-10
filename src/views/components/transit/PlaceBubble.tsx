@@ -31,6 +31,17 @@ const star = (x: number, y: number, o = 1) =>
     `radial-gradient(1.6px 1.6px at ${x}% ${y}%, rgba(255,255,255,${o}) 60%, transparent 61%)`;
 
 const THEMES: Record<MarkerCharacterId, BubbleTheme> = {
+    // Plain card in the original blue
+    default: {
+        caption: 'Find buses to', verb: 'Buses',
+        card: {
+            background: '#ffffff', color: '#202124', border: '1px solid #dadce0', borderRadius: 14,
+            boxShadow: '0 6px 16px rgba(0,0,0,0.18)',
+        },
+        captionStyle: { color: '#5f6368' },
+        button: { background: '#1a73e8', color: '#ffffff' },
+        accent: '#5f6368', tail: '#ffffff',
+    },
     // Mission-control panel: a starfield, and the trip is a launch
     astronaut: {
         caption: 'Destination locked', verb: 'Launch',
@@ -171,7 +182,7 @@ interface BubbleProps extends CardProps {
     position: { lat: number; lng: number };
 }
 
-const PIN_HEIGHT = 34;
+const PIN_HEIGHT = 50;
 
 export default function PlaceBubble({ position, ...card }: BubbleProps) {
     const ref = useRef<HTMLDivElement>(null);
@@ -192,7 +203,7 @@ export default function PlaceBubble({ position, ...card }: BubbleProps) {
 
 /** Destination flag in the character's colour (replaces Google's red pin). */
 export function destinationPinFor(character: MarkerCharacterId) {
-    const c = character === 'astronaut' ? '#d9483b' : character === 'penguin' ? '#1d2433' : THEMES[character].accent;
+    const c = { default: '#ea4335', astronaut: '#d9483b', penguin: '#1d2433' }[character as string] ?? THEMES[character].accent;
     const svg = `
 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="36" viewBox="0 0 28 36">
   <ellipse cx="9" cy="33.5" rx="6" ry="2" fill="#000" opacity="0.25"/>
@@ -201,6 +212,7 @@ export function destinationPinFor(character: MarkerCharacterId) {
 </svg>`;
     return {
         url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`,
-        width: 28, height: PIN_HEIGHT + 2, anchorX: 9, anchorY: 33,
+        // Drawn at 1.5× the 28×36 artwork so the flag is easy to spot on a busy map
+        width: 42, height: 54, anchorX: 13.5, anchorY: 49.5,
     };
 }

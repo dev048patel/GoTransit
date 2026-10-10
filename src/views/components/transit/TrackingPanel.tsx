@@ -1,14 +1,23 @@
-/* TrackingPanel — bottom panel showing live trip tracking with timeline, ETA, and stop controls */
-import React from 'react';
+/* TrackingPanel — live trip tracking: summary, what to do right now, and the step-by-step timeline.
+   Docked on the right on desktop (the map stays visible); a collapsible bottom sheet on phones. */
+import React, { useState } from 'react';
+import { ArrowLeft, ChevronDown, X } from 'lucide-react';
 import transitColors from '../../../models/data/transitColors';
 import { TrackingPanelProps } from '../../../models/components/TrackingPanelProps';
 import { formatTime, calculateArrivalTime, calculateBoardTime } from '../../../models/services/TimeService';
 
+// Step dot colours carry meaning and are the same in every theme
+const BLUE = '#4285F4', GREY = '#5f6368', RED = '#ea4335', ORANGE = '#e37400', GREEN = '#34a853';
+
 // Pure view component — time calculations delegated to TimeService
 export default function TrackingPanel({ tripOption, onStopTracking, onBack }: TrackingPanelProps) {
+    const [collapsed, setCollapsed] = useState(false);
+
     const now = new Date();
     const effectiveTime = tripOption.totalTimeWithWait ?? tripOption.totalTime;
     const arrivalTime = calculateArrivalTime(effectiveTime);
+    const first = tripOption.segments[0];
+    const walkToStop = tripOption.walkToFirstStop ?? tripOption.walkingDistance;
 
     // Look up official bus route color from transit color data
     const getRouteColor = (routeNum: string): string => {
@@ -16,319 +25,175 @@ export default function TrackingPanel({ tripOption, onStopTracking, onBack }: Tr
         return colorData ? colorData.colour : '#1a73e8';
     };
 
-    const primaryColor = getRouteColor(tripOption.segments[0]?.routeNum);
+    // One sentence telling the rider what to do this minute
+    const live = tripOption.isLivePrediction && tripOption.waitTime !== undefined;
+    const busIn = !live ? '' : tripOption.waitTime! <= 1 ? 'bus arriving now' : `bus in ~${tripOption.waitTime} min`;
 
     return (
-        <div style={panelStyle}>
-            {/* Drag handle */}
-            <div style={handleBarStyle}><div style={handleStyle} /></div>
+        <div className="tracking-panel t-panel" style={panelStyle}>
+            {/* Handle: tap to shrink to the summary or open the steps */}
+            <button
+                type="button"
+                onClick={() => setCollapsed(c => !c)}
+                aria-expanded={!collapsed}
+                aria-label={collapsed ? 'Show trip steps' : 'Hide trip steps'}
+                style={handleBtnStyle}
+            >
+                <ChevronDown size={16} style={{ transform: collapsed ? 'rotate(180deg)' : undefined, transition: 'transform 0.2s' }} aria-hidden />
+            </button>
 
-            {/* Header with gradient accent */}
-            <div style={{
-                ...headerStyle,
-                background: `linear-gradient(135deg, ${primaryColor}10 0%, ${primaryColor}05 100%)`
-            }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1 }}>
-                    <div style={{
-                        width: '42px', height: '42px', borderRadius: '12px',
-                        background: `linear-gradient(135deg, ${primaryColor}, ${primaryColor}cc)`,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        color: 'white', fontSize: '18px', flexShrink: 0,
-                        boxShadow: `0 2px 8px ${primaryColor}40`
-                    }}>🚌</div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontWeight: '700', fontSize: '18px', color: '#202124' }}>
-                            {effectiveTime} min
-                        </div>
-                        <div style={{ fontSize: '12px', color: '#5f6368' }}>
+            {/* Summary: total time, arrival, routes, and the two actions */}
+            <div className="t-panel-header" style={headerStyle}>
+                <div style={{ minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', flexWrap: 'wrap' }}>
+                        <span style={{ fontWeight: 700, fontSize: '20px', color: '#202124', whiteSpace: 'nowrap' }}>{effectiveTime} min</span>
+                        <span style={{ fontSize: '13px', color: '#5f6368', whiteSpace: 'nowrap' }}>
                             Arrive {formatTime(arrivalTime)}
-                            {tripOption.isLivePrediction && (
-                                <span style={{
-                                    marginLeft: '6px', color: '#2e7d32',
-                                    fontWeight: '600', fontSize: '11px'
-                                }}>
-                                    • Live
-                                </span>
-                            )}
-                        </div>
+                            {tripOption.isLivePrediction && <span style={{ fontWeight: 600 }}> · Live</span>}
+                        </span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '5px', flexWrap: 'wrap' }}>
+                        {tripOption.segments.map((seg, i) => (
+                            <React.Fragment key={i}>
+                                {i > 0 && <span style={{ fontSize: '12px' }} aria-hidden>›</span>}
+                                <span className="t-keep" style={{ ...routeBadgeStyle, backgroundColor: getRouteColor(seg.routeNum) }}>Route {seg.routeNum}</span>
+                            </React.Fragment>
+                        ))}
                     </div>
                 </div>
-
-                {/* Route summary chips */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap', flexShrink: 0 }}>
-                    <span style={miniIconStyle}>🚶</span>
-                    {tripOption.segments.map((seg, i) => (
-                        <React.Fragment key={i}>
-                            <span style={{ color: '#5f6368', fontSize: '12px' }}>›</span>
-                            <span style={{
-                                ...routeBadgeSmallStyle,
-                                backgroundColor: getRouteColor(seg.routeNum)
-                            }}>
-                                {seg.routeNum}
-                            </span>
-                        </React.Fragment>
-                    ))}
-                    <span style={{ color: '#5f6368', fontSize: '12px' }}>›</span>
-                    <span style={miniIconStyle}>🚶</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
+                    {onBack && (
+                        <button type="button" onClick={onBack} style={backBtnStyle}>
+                            <ArrowLeft size={14} aria-hidden /> Routes
+                        </button>
+                    )}
+                    <button type="button" className="t-keep" onClick={onStopTracking} style={stopBtnStyle}>
+                        <X size={14} aria-hidden /> Stop
+                    </button>
                 </div>
             </div>
 
-            {/* Live bus ETA banner */}
-            {tripOption.isLivePrediction && tripOption.waitTime !== undefined && (
-                <div style={{
-                    margin: '0 14px',
-                    padding: '8px 12px',
-                    background: 'linear-gradient(135deg, #e8f5e9, #f1f8e9)',
-                    borderRadius: '10px',
-                    display: 'flex', alignItems: 'center', gap: '8px',
-                    marginTop: '8px'
-                }}>
-                    <span style={{
-                        width: '10px', height: '10px', borderRadius: '50%',
-                        backgroundColor: '#4caf50', display: 'inline-block',
-                        boxShadow: '0 0 6px #4caf5080',
-                        animation: 'pulse 2s infinite'
-                    }} />
-                    <span style={{ fontSize: '13px', fontWeight: '500', color: '#2e7d32' }}>
-                        {tripOption.waitTime <= 1
-                            ? '🎉 Bus arriving now!'
-                            : `Next bus in ~${tripOption.waitTime} min`
-                        }
-                        {tripOption.segments[0]?.busDistanceAway && (
-                            <span style={{ color: '#5f6368', fontWeight: '400', fontSize: '12px' }}>
-                                {' '}· {(tripOption.segments[0].busDistanceAway / 1000).toFixed(1)} km away
-                            </span>
-                        )}
-                    </span>
+            {/* Right now */}
+            <div style={nowStyle} role="status">
+                {live && <span style={liveDotStyle} aria-hidden />}
+                <span>
+                    <strong>Walk {walkToStop} m</strong> to {first.fromStop}
+                    {busIn && <span style={{ fontWeight: 600 }}> · {busIn}</span>}
+                    {live && first.busDistanceAway ? (
+                        <span style={{ color: '#5f6368' }}> ({(first.busDistanceAway / 1000).toFixed(1)} km away)</span>
+                    ) : null}
+                </span>
+            </div>
+
+            {/* Step-by-step timeline */}
+            {!collapsed && (
+                <div style={timelineStyle}>
+                    <Step time={formatTime(now)} color={BLUE} line={GREY} dashed title="Your location" />
+                    <Step small color={GREY} line={GREY} dashed title={`Walk ${walkToStop} m`} />
+
+                    {tripOption.segments.map((seg, i) => {
+                        const segColor = getRouteColor(seg.routeNum);
+                        const walkMinutes = Math.round((tripOption.walkingDistance / 1000) / 5 * 60);
+                        // Cumulative time of previous segments, for the fallback estimate
+                        const prevSegmentsTotalTime = tripOption.segments.slice(0, i).reduce((acc, s) => acc + s.estimatedTime, 0);
+                        // Live prediction when available, otherwise an estimate
+                        const boardTime = calculateBoardTime(i, seg.predTime, walkMinutes, tripOption.waitTime, prevSegmentsTotalTime, now);
+                        const isLast = i === tripOption.segments.length - 1;
+                        const nextSeg = tripOption.segments[i + 1];
+                        const isWalkTransfer = !isLast && seg.toStop !== nextSeg?.fromStop;
+
+                        return (
+                            <React.Fragment key={i}>
+                                <Step
+                                    time={formatTime(boardTime)} color={segColor} line={segColor} thick
+                                    title={seg.fromStop}
+                                    detail={
+                                        <>
+                                            <span style={{ ...routeBadgeStyle, backgroundColor: segColor, marginRight: '6px' }}>{seg.routeNum}</span>
+                                            <span>{seg.routeName}</span>{' '}
+                                            {i === 0 && seg.nextBusETA !== undefined && (
+                                                <span style={waitChipStyle}>{seg.nextBusETA <= 1 ? 'Now' : `~${seg.nextBusETA} min wait`}</span>
+                                            )}
+                                        </>
+                                    }
+                                />
+                                <Step small color={segColor} line={segColor} thick title={`Ride ~${seg.estimatedTime} min`} />
+                                <Step
+                                    color={RED} line={isLast ? GREY : ORANGE} dashed
+                                    title={seg.toStop}
+                                    tag={<span style={{ color: '#c5221f', fontWeight: 600, whiteSpace: 'nowrap' }}>Get off</span>}
+                                />
+                                {!isLast && isWalkTransfer && tripOption.transferWalkDistance ? (
+                                    <Step small color={GREY} line={GREY} dashed title={`Walk ${tripOption.transferWalkDistance} m to ${nextSeg?.fromStop}`} />
+                                ) : null}
+                                {!isLast && (
+                                    <Step small color={ORANGE} line={ORANGE} dashed
+                                        title={<span style={{ color: '#b06000', fontWeight: 600 }}>Transfer · wait ~5 min</span>} />
+                                )}
+                            </React.Fragment>
+                        );
+                    })}
+
+                    <Step time={formatTime(arrivalTime)} color={GREEN} title="Arrive at destination" last />
                 </div>
             )}
 
-            {/* Step-by-step timeline */}
-            <div style={timelineContainerStyle}>
-                {/* Your location */}
-                <TimelineStep
-                    color="#4285F4"
-                    icon="📍"
-                    title="Your location"
-                    subtitle=""
-                    time={formatTime(now)}
-                    lineColor="#5f6368"
-                    dashed
-                />
-
-                {/* Walk to first stop */}
-                <TimelineStep
-                    color="#5f6368"
-                    icon="🚶"
-                    title={`Walk ${tripOption.walkToFirstStop ?? tripOption.walkingDistance}m`}
-                    subtitle={`to ${tripOption.segments[0].fromStop}`}
-                    time=""
-                    lineColor="#5f6368"
-                    dashed
-                />
-
-                {/* Bus segments — board, ride, alight, transfer */}
-                {tripOption.segments.map((seg, i) => {
-                    const segColor = getRouteColor(seg.routeNum);
-                    const walkMinutes = Math.round((tripOption.walkingDistance / 1000) / 5 * 60);
-                    // Calculate cumulative time of previous segments for fallback estimation
-                    const prevSegmentsTotalTime = tripOption.segments.slice(0, i).reduce((acc, s) => acc + s.estimatedTime, 0);
-
-                    // Use TimeService to calculate board time (live prediction or fallback estimate)
-                    const boardTime = calculateBoardTime(
-                        i,
-                        seg.predTime,
-                        walkMinutes,
-                        tripOption.waitTime,
-                        prevSegmentsTotalTime,
-                        now
-                    );
-
-                    return (
-                        <React.Fragment key={i}>
-                            {/* Board bus */}
-                            <TimelineStep
-                                color={segColor}
-                                icon="🚏"
-                                title={seg.fromStop}
-                                subtitle={
-                                    <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                        <span style={{ ...routeBadgeTinyStyle, backgroundColor: segColor }}>{seg.routeNum}</span>
-                                        <span>{seg.routeName}</span>
-                                        {i === 0 && seg.nextBusETA !== undefined && (
-                                            <span style={{
-                                                fontSize: '10px', fontWeight: '600', color: '#2e7d32',
-                                                backgroundColor: '#e8f5e9', padding: '1px 6px', borderRadius: '6px'
-                                            }}>
-                                                {seg.nextBusETA <= 1 ? 'Now!' : `~${seg.nextBusETA}m wait`}
-                                            </span>
-                                        )}
-                                    </span>
-                                }
-                                time={formatTime(boardTime)}
-                                lineColor={segColor}
-                                dashed={false}
-                                lineThick
-                            />
-
-                            {/* Ride info */}
-                            <TimelineStep
-                                color={segColor}
-                                icon=""
-                                title={`Ride ~${seg.estimatedTime} min`}
-                                subtitle={`${seg.fromStop} → ${seg.toStop}`}
-                                time=""
-                                lineColor={segColor}
-                                dashed={false}
-                                small
-                                lineThick
-                            />
-
-                            {/* Alight */}
-                            <TimelineStep
-                                color="#ea4335"
-                                icon="🚏"
-                                title={seg.toStop}
-                                subtitle="Get off here"
-                                time=""
-                                lineColor={i < tripOption.segments.length - 1 ? '#e37400' : '#5f6368'}
-                                dashed={i === tripOption.segments.length - 1}
-                            />
-
-                            {/* Transfer */}
-                            {i < tripOption.segments.length - 1 && (() => {
-                                const nextSeg = tripOption.segments[i + 1];
-                                const isWalkTransfer = seg.toStop !== nextSeg?.fromStop;
-                                return (
-                                    <>
-                                        {isWalkTransfer && tripOption.transferWalkDistance && (
-                                            <TimelineStep
-                                                color="#5f6368"
-                                                icon="🚶"
-                                                title={`Walk ${tripOption.transferWalkDistance}m`}
-                                                subtitle={`to ${nextSeg?.fromStop}`}
-                                                time=""
-                                                lineColor="#5f6368"
-                                                dashed
-                                            />
-                                        )}
-                                        <TimelineStep
-                                            color="#e37400"
-                                            icon="🔄"
-                                            title="Transfer"
-                                            subtitle={isWalkTransfer
-                                                ? `Board at ${nextSeg?.fromStop} (~5 min wait)`
-                                                : 'Wait for next bus (~5 min)'}
-                                            time=""
-                                            lineColor="#e37400"
-                                            dashed
-                                        />
-                                    </>
-                                );
-                            })()}
-                        </React.Fragment>
-                    );
-                })}
-
-                {/* Walk to destination */}
-                <TimelineStep
-                    color="#34a853"
-                    icon="🏁"
-                    title="Destination"
-                    subtitle={tripOption.destinationStop}
-                    time={formatTime(arrivalTime)}
-                    lineColor="transparent"
-                    dashed={false}
-                    last
-                />
-            </div>
-
-            {/* Button area */}
-            <div style={buttonsStyle}>
-                {onBack && (
-                    <button onClick={onBack} style={backBtnStyle}
-                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e8f0fe'}
-                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
-                    >
-                        ← Back to Routes
-                    </button>
-                )}
-                <button onClick={onStopTracking} style={stopBtnStyle}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#c62828'}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ea4335'}
-                >
-                    ✕ Stop Tracking
-                </button>
-            </div>
-
-            {/* Animations */}
             <style>{`
                 @keyframes pulse {
                     0%, 100% { opacity: 1; transform: scale(1); }
                     50% { opacity: 0.6; transform: scale(1.2); }
+                }
+                /* Desktop: dock on the right so the map stays visible */
+                @media (min-width: 641px) {
+                    .tracking-panel {
+                        top: 10px !important;
+                        bottom: auto !important;
+                        right: 10px !important;
+                        left: auto !important;
+                        width: 360px !important;
+                        max-height: calc(100vh - 20px) !important;
+                        border-radius: 16px !important;
+                        box-shadow: 0 8px 32px rgba(0,0,0,0.18) !important;
+                    }
                 }
             `}</style>
         </div>
     );
 }
 
-// TimelineStep — reusable timeline row with dot, line, content, and time
-function TimelineStep({ color, icon, title, subtitle, time, lineColor, dashed, small, lineThick, last }: {
-    color: string; icon: string; title: string; subtitle: React.ReactNode; time: string;
-    lineColor: string; dashed: boolean; small?: boolean; lineThick?: boolean; last?: boolean;
+/* One timeline row: [time] [dot + line] [what happens]. `small` rows are the in-between
+   moments (walk, ride, transfer); normal rows are places. */
+function Step({ time, color, line, dashed, thick, small, last, title, tag, detail }: {
+    time?: string; color: string; line?: string; dashed?: boolean; thick?: boolean; small?: boolean; last?: boolean;
+    title: React.ReactNode; tag?: React.ReactNode; detail?: React.ReactNode;
 }) {
     return (
-        <div style={{ display: 'flex', alignItems: 'stretch', minHeight: small ? '28px' : '48px' }}>
-            {/* Left timeline column */}
-            <div style={{ width: '32px', display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 }}>
-                {small ? (
+        <div style={{ display: 'flex', alignItems: 'stretch', minHeight: small ? '24px' : '34px' }}>
+            <div style={timeColStyle}>{time}</div>
+            <div style={{ width: '18px', display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 }}>
+                <div style={small
+                    ? { width: '7px', height: '7px', borderRadius: '50%', backgroundColor: color, marginTop: '6px', flexShrink: 0 }
+                    : { width: '12px', height: '12px', borderRadius: '50%', backgroundColor: color, border: '2px solid white', boxShadow: `0 0 0 1px ${color}`, marginTop: '4px', flexShrink: 0 }
+                } />
+                {!last && line && (
                     <div style={{
-                        width: '8px', height: '8px', borderRadius: '50%',
-                        backgroundColor: color, marginTop: '8px', flexShrink: 0
-                    }} />
-                ) : (
-                    <div style={{
-                        width: '14px', height: '14px', borderRadius: '50%',
-                        backgroundColor: color, border: '2px solid white',
-                        boxShadow: `0 0 0 1px ${color}`, flexShrink: 0, marginTop: '4px'
-                    }} />
-                )}
-                {!last && (
-                    <div style={{
-                        flex: 1, width: lineThick ? '4px' : '2px',
-                        backgroundColor: dashed ? 'transparent' : lineColor,
-                        backgroundImage: dashed ? `linear-gradient(${lineColor} 50%, transparent 50%)` : 'none',
-                        backgroundSize: dashed ? '2px 8px' : 'auto',
-                        backgroundRepeat: 'repeat-y',
-                        marginTop: '2px', borderRadius: '1px'
+                        flex: 1, width: thick ? '4px' : '2px', marginTop: '2px', borderRadius: '1px',
+                        backgroundColor: dashed ? 'transparent' : line,
+                        backgroundImage: dashed ? `linear-gradient(${line} 50%, transparent 50%)` : 'none',
+                        backgroundSize: dashed ? '2px 8px' : 'auto', backgroundRepeat: 'repeat-y',
                     }} />
                 )}
             </div>
-
-            {/* Content */}
-            <div style={{
-                flex: 1, paddingLeft: '10px', paddingBottom: small ? '4px' : '12px',
-                display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'
-            }}>
-                <div style={{ minWidth: 0, flex: 1 }}>
-                    <div style={{
-                        display: 'flex', alignItems: 'center', gap: '6px',
-                        fontSize: small ? '12px' : '14px',
-                        fontWeight: small ? '400' : '500',
-                        color: small ? '#5f6368' : '#202124'
-                    }}>
-                        {icon && <span style={{ fontSize: small ? '12px' : '14px', flexShrink: 0 }}>{icon}</span>}
-                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{title}</span>
-                    </div>
-                    {subtitle && (
-                        <div style={{ fontSize: '12px', color: '#5f6368', marginTop: '2px' }}>
-                            {subtitle}
-                        </div>
-                    )}
+            <div style={{ flex: 1, minWidth: 0, paddingLeft: '8px', paddingBottom: small ? '4px' : '8px' }}>
+                <div style={{
+                    fontSize: small ? '12.5px' : '14px', fontWeight: small ? 400 : 600,
+                    color: small ? '#5f6368' : '#202124', lineHeight: 1.3, overflowWrap: 'anywhere',
+                }}>
+                    {title}{tag && <span style={{ fontSize: '12.5px', fontWeight: 400, whiteSpace: 'nowrap' }}> · {tag}</span>}
                 </div>
-                {time && (
-                    <div style={{ fontSize: '13px', fontWeight: '600', color: '#202124', whiteSpace: 'nowrap', marginLeft: '8px' }}>
-                        {time}
+                {detail && (
+                    <div style={{ fontSize: '12.5px', color: '#5f6368', marginTop: '3px', lineHeight: 1.5 }}>
+                        {detail}
                     </div>
                 )}
             </div>
@@ -341,91 +206,72 @@ function TimelineStep({ color, icon, title, subtitle, time, lineColor, dashed, s
 const panelStyle: React.CSSProperties = {
     position: 'fixed',
     bottom: 0, left: 0, right: 0,
-    maxHeight: '55vh',
-    backgroundColor: 'white',
+    maxHeight: '46vh',
+    backgroundColor: 'var(--t-surface)',
     borderRadius: '20px 20px 0 0',
     boxShadow: '0 -4px 24px rgba(0,0,0,0.15)',
     zIndex: 1500,
     display: 'flex',
     flexDirection: 'column',
-    overflow: 'hidden'
+    overflow: 'hidden',
 };
 
-const handleBarStyle: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'center',
-    padding: '10px 0 4px'
-};
-
-const handleStyle: React.CSSProperties = {
-    width: '36px',
-    height: '4px',
-    backgroundColor: '#dadce0',
-    borderRadius: '2px'
+const handleBtnStyle: React.CSSProperties = {
+    display: 'flex', justifyContent: 'center', alignItems: 'center',
+    width: '100%', height: '24px', flexShrink: 0,
+    border: 'none', background: 'transparent', color: '#80868b', cursor: 'pointer', padding: 0,
 };
 
 const headerStyle: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '4px 18px 12px',
-    borderBottom: '1px solid #e8eaed'
+    display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '10px',
+    padding: '0 14px 10px',
+    borderBottom: '1px solid var(--t-border-soft)',
 };
 
-const timelineContainerStyle: React.CSSProperties = {
-    padding: '12px 18px',
+const nowStyle: React.CSSProperties = {
+    display: 'flex', alignItems: 'flex-start', gap: '8px',
+    margin: '8px 12px 10px', padding: '8px 10px', borderRadius: '10px',
+    backgroundColor: 'var(--t-accent-soft)', color: 'var(--t-accent-dark)',
+    fontSize: '13.5px', lineHeight: 1.35,
+};
+
+const liveDotStyle: React.CSSProperties = {
+    width: '9px', height: '9px', borderRadius: '50%', backgroundColor: '#34a853',
+    boxShadow: '0 0 6px #34a85380', animation: 'pulse 2s infinite', flexShrink: 0, marginTop: '4px',
+};
+
+const timelineStyle: React.CSSProperties = {
+    padding: '0 14px 12px',
     overflowY: 'auto',
     flex: 1,
     WebkitOverflowScrolling: 'touch' as any,
 };
 
-const buttonsStyle: React.CSSProperties = {
-    padding: '10px 18px calc(16px + env(safe-area-inset-bottom, 0px))',
-    borderTop: '1px solid #e8eaed',
-    display: 'flex',
-    gap: '10px'
+const timeColStyle: React.CSSProperties = {
+    width: '58px', flexShrink: 0, paddingRight: '6px', paddingTop: '2px', textAlign: 'right',
+    fontSize: '12.5px', fontWeight: 600, color: '#202124', whiteSpace: 'nowrap',
 };
 
-const stopBtnStyle: React.CSSProperties = {
-    flex: 1,
-    padding: '12px',
-    backgroundColor: '#ea4335',
-    color: 'white',
-    border: 'none',
-    borderRadius: '24px',
-    fontSize: '14px',
-    fontWeight: '600',
-    cursor: 'pointer',
-    transition: 'background-color 0.2s'
+const btnBase: React.CSSProperties = {
+    display: 'inline-flex', alignItems: 'center', gap: '4px', height: '32px', padding: '0 10px',
+    borderRadius: '16px', fontSize: '12.5px', fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap',
 };
 
 const backBtnStyle: React.CSSProperties = {
-    flex: 1,
-    padding: '12px',
-    backgroundColor: 'white',
-    color: '#1a73e8',
-    border: '2px solid #1a73e8',
-    borderRadius: '24px',
-    fontSize: '14px',
-    fontWeight: '600',
-    cursor: 'pointer',
-    transition: 'background-color 0.2s'
+    // Outline in the header's own text colour, so it reads on light and dark themed headers alike
+    ...btnBase, backgroundColor: 'transparent', color: 'inherit', border: '1.5px solid currentColor',
 };
 
-const miniIconStyle: React.CSSProperties = { fontSize: '14px' };
-
-const routeBadgeSmallStyle: React.CSSProperties = {
-    color: 'white',
-    padding: '2px 8px',
-    borderRadius: '10px',
-    fontSize: '11px',
-    fontWeight: '600'
+const stopBtnStyle: React.CSSProperties = {
+    ...btnBase, backgroundColor: '#d93025', color: 'white', border: '1.5px solid #d93025',
 };
 
-const routeBadgeTinyStyle: React.CSSProperties = {
-    color: 'white',
-    padding: '1px 6px',
-    borderRadius: '8px',
-    fontSize: '10px',
-    fontWeight: '600'
+const routeBadgeStyle: React.CSSProperties = {
+    color: 'white', padding: '1px 8px', borderRadius: '10px',
+    fontSize: '11.5px', fontWeight: 700, whiteSpace: 'nowrap',
+};
+
+const waitChipStyle: React.CSSProperties = {
+    fontSize: '11px', fontWeight: 600, color: 'var(--t-accent-dark)',
+    backgroundColor: 'var(--t-accent-soft)', padding: '1px 6px', borderRadius: '6px',
 };
