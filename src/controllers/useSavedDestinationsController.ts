@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
+import { usePlacesAutocomplete } from './usePlacesAutocomplete';
 import { useAuth } from '../models/context/AuthContext';
 import { SavedDestination } from '../models/transit/SavedDestination';
 import { SavedDestinationsService } from '../models/services/SavedDestinationsService';
@@ -39,13 +39,8 @@ export function useSavedDestinationsController() {
         suggestions: { status: searchStatus, data: searchData },
         setValue: setSearchValue,
         clearSuggestions,
-    } = usePlacesAutocomplete({
-        requestOptions: {
-            location: new google.maps.LatLng(50.4452, -104.6189),
-            radius: 50 * 1000,
-        },
-        debounce: 300,
-    });
+        getLocation,
+    } = usePlacesAutocomplete(300);
 
     useEffect(() => {
         if (!user || !isOpen) return;
@@ -107,13 +102,12 @@ export function useSavedDestinationsController() {
         clearSuggestions();
         setShowSearchResults(false);
         try {
-            const results = await getGeocode({ address: description });
-            const { lat, lng } = await getLatLng(results[0]);
+            const { lat, lng } = await getLocation(placeId);
             setSelectedPlace({ address: description, lat, lng, place_id: placeId });
         } catch {
             setAddError('Failed to get location coordinates. Try again.');
         }
-    }, [setSearchValue, clearSuggestions]);
+    }, [setSearchValue, clearSuggestions, getLocation]);
 
     const handleSave = useCallback(async () => {
         if (!selectedPlace) { setAddError('Please search and select a location first.'); return; }

@@ -90,7 +90,7 @@ export default function TripPlannerModal({ isOpen, onClose, onSelectRoute, liveB
                                         return (
                                             <div
                                                 key={place_id}
-                                                onClick={() => ctrl.handleDestSelect(suggestion.description)}
+                                                onClick={() => ctrl.handleDestSelect(suggestion.description, place_id)}
                                                 style={suggestionItemStyle}
                                                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e8f0fe'}
                                                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}

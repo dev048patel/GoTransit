@@ -3,9 +3,8 @@
  * @description Entry point for the Express Backend Server.
  * @purpose Initializes the App, sets up middleware (CORS, JSON), and mounts routes.
  */
-import dotenv from 'dotenv';
-// Load environment variables from .env.local (only needed locally; Railway sets vars directly)
-dotenv.config({ path: '.env.local' });
+// Must stay the first import: loads .env.local before any module reads process.env
+import './env';
 
 import express from 'express';
 import cors from 'cors'; // Cross Origin Resource Sharing : Allow cross-origin requests (Frontend -> Backend) like React -> Node.js ( Port 3000 -> Port 3001)
@@ -29,7 +28,6 @@ const port = Number(process.env.PORT) || 3001; // Railway assigns PORT dynamical
 const allowedOrigins = [
     'https://www.transitregina.ca',
     'https://transitregina.ca',
-    'https://gotransit-production.up.railway.app', // Railway deployment
     'http://localhost:3000', // Vite dev (npm run start)
     'http://localhost:5173', // Vite dev (npm run dev)
 ];
