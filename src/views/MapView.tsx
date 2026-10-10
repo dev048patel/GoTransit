@@ -8,7 +8,6 @@ import { Coordinates } from '../models/MapModel';
 import { TripOption } from '../models/transit/RoutePlanning';
 import { BusPosition } from '../models/transit/BusPosition';
 import { Stop } from '../models/transit/Stop';
-import { StopDirection, STOP_DIRECTION_ARROW, STOP_DIRECTION_HEADING, STOP_DIRECTION_LABEL, directionOfStop } from '../models/transit/StopDirection';
 import { MapViewProps } from '../models/views/MapViewProps';
 import transitColors from '../models/data/transitColors';
 import StopDetailPanel from './components/transit/StopDetailPanel';
@@ -236,7 +235,7 @@ export const MapView: React.FC<MapViewProps> = ({
       >
         {/* Route Tracking Overlay (when tracking is active) */}
         {activeTracking && (
-          <RouteTrackingOverlay tripOption={activeTracking} userLocation={userLocation} />
+          <RouteTrackingOverlay tripOption={activeTracking} />
         )}
 
         {/* Render Stops — viewport-culled, hidden during tracking */}
