@@ -47,6 +47,13 @@ a, button {
     margin: 0;
     padding: 0;
 }
+/* Map-screen theme colours. Defaults = the original look; applyCharacterTheme() overrides them. */
+:root {
+  --t-primary: #1a73e8; --t-primary-soft: #e8f0fe; --t-primary-dark: #0d47a1;
+  --t-accent: #2e7d32; --t-accent-soft: #e8f5e9; --t-accent-dark: #1b5e20; --t-accent-border: #c8e6c9;
+  --t-surface: #ffffff; --t-surface-2: #f8f9fa; --t-chip: #f1f3f4; --t-border: #dadce0; --t-border-soft: #e8eaed;
+}
+
 /* Map character bobs gently while the user is moving (UserLocationMarker) */
 @keyframes marker-walk {
   0%, 100% { transform: translateY(0) rotate(-4deg); }
@@ -57,4 +64,178 @@ a, button {
 }
 @media (prefers-reduced-motion: reduce) {
   .marker-walk { animation: none; }
+}
+
+/* ── Character themes: signature look for the map panels and top bar ──────────
+   Colours come from the --t-* variables; these rules add each character's shape,
+   texture and heading style. .t-panel = a panel's frame, .t-panel-header = its
+   title bar. Timetable text inside panels is deliberately left plain. */
+/* Header text follows the themed header colour instead of the built-in greys */
+/* (.t-keep marks things with their own meaning-carrying colours, e.g. route badges) */
+/* Anything with its own background (icon tiles, chips, badges) also keeps its own text colour. */
+:root:not([data-character-theme="default"])[data-character-theme] .t-panel-header *:not(.t-keep):not(.t-keep *):not(.t-panel-header [style*="background-color"]):not(.t-panel-header [style*="background-color"] *) {
+  color: inherit !important;
+}
+
+/* Astronaut — mission-control panel with a starfield title bar */
+[data-character-theme="astronaut"] .t-panel {
+  border: 1px solid #4a5aa8 !important;
+  box-shadow: 0 0 0 3px rgba(74, 90, 168, 0.22), 0 8px 28px rgba(8, 12, 40, 0.35) !important;
+}
+/* The drag-handle strip above the title bar matches it */
+[data-character-theme="astronaut"] .t-panel:has(> .t-panel-header) > :first-child { background: #0b1026 !important; color: #fff !important; }
+[data-character-theme="robot"] .t-panel:has(> .t-panel-header) > :first-child { background: #2c343f !important; color: #fff !important; }
+[data-character-theme="fox"] .t-panel:has(> .t-panel-header) > :first-child { background: #fff6ea !important; }
+[data-character-theme="astronaut"] .t-panel-header {
+  color: #ffffff !important;
+  background:
+    radial-gradient(1.6px 1.6px at 6% 30%, #fff 60%, transparent 61%),
+    radial-gradient(1.6px 1.6px at 19% 78%, rgba(255,255,255,.7) 60%, transparent 61%),
+    radial-gradient(1.6px 1.6px at 37% 16%, rgba(255,255,255,.8) 60%, transparent 61%),
+    radial-gradient(1.6px 1.6px at 55% 84%, #fff 60%, transparent 61%),
+    radial-gradient(1.6px 1.6px at 72% 22%, rgba(255,255,255,.6) 60%, transparent 61%),
+    radial-gradient(1.6px 1.6px at 90% 66%, rgba(255,255,255,.9) 60%, transparent 61%),
+    linear-gradient(135deg, #0b1026, #1c2658) !important;
+  border-bottom: 1px solid #4a5aa8 !important;
+  letter-spacing: 0.02em;
+}
+
+/* Robot — squared terminal with scanlines and a typewriter title */
+[data-character-theme="robot"] .t-panel {
+  border-radius: 6px !important;
+  border: 1px solid #f5b82e !important;
+}
+[data-character-theme="robot"] .t-panel-header {
+  color: #eef2f6 !important;
+  background: repeating-linear-gradient(0deg, rgba(255,255,255,.045) 0 1px, transparent 1px 3px), #2c343f !important;
+  border-bottom: 2px solid #f5b82e !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+[data-character-theme="robot"] .t-panel-header * { font-family: inherit; }
+
+/* Fox — warm, soft and rounded */
+[data-character-theme="fox"] .t-panel {
+  border: 2px solid #c2531a !important;
+  box-shadow: 0 8px 24px rgba(194, 83, 26, 0.22) !important;
+}
+[data-character-theme="fox"] .t-panel-header {
+  color: #4a2a14 !important;
+  background: #fff6ea !important;
+  border-bottom: 2px solid #f0cfa8 !important;
+}
+
+/* Penguin — frosty panel with an icy rim */
+[data-character-theme="penguin"] .t-panel {
+  border: 1px solid #9fd3ff !important;
+  box-shadow: 0 0 0 3px rgba(159, 211, 255, 0.35), 0 8px 24px rgba(29, 36, 51, 0.18) !important;
+}
+[data-character-theme="penguin"] .t-panel-header {
+  color: #1d2433 !important;
+  background: linear-gradient(180deg, #f2f9ff 0%, #d9edff 100%) !important;
+  border-bottom: 1px solid #9fd3ff !important;
+}
+
+/* Hero — comic-book panel: bold outline, halftone dots, hard shadow */
+[data-character-theme="hero"] .t-panel {
+  border: 2.5px solid #16305f !important;
+  box-shadow: 5px 5px 0 #16305f !important;
+}
+[data-character-theme="hero"] .t-panel-header {
+  color: #16305f !important;
+  background: radial-gradient(rgba(22,48,95,.13) 1px, transparent 1.6px) 0 0 / 6px 6px, #fff3dc !important;
+  border-bottom: 2.5px solid #16305f !important;
+}
+[data-character-theme="hero"] .t-panel-header > div:first-child > div:first-child {
+  font-weight: 800 !important;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* ── Stronger character theming: top bar, panel body and route cards ─────────
+   The top bar's search box and buttons are self-contained light pills, so they stay
+   readable on any bar colour. Card left edges keep their route colour. */
+[data-character-theme="astronaut"] .navbar-root {
+  background:
+    radial-gradient(1.6px 1.6px at 4% 30%, #fff 60%, transparent 61%),
+    radial-gradient(1.6px 1.6px at 16% 76%, rgba(255,255,255,.7) 60%, transparent 61%),
+    radial-gradient(1.6px 1.6px at 31% 18%, rgba(255,255,255,.8) 60%, transparent 61%),
+    radial-gradient(1.6px 1.6px at 63% 80%, #fff 60%, transparent 61%),
+    radial-gradient(1.6px 1.6px at 78% 24%, rgba(255,255,255,.6) 60%, transparent 61%),
+    radial-gradient(1.6px 1.6px at 96% 62%, rgba(255,255,255,.9) 60%, transparent 61%),
+    linear-gradient(135deg, #0b1026, #1c2658) !important;
+}
+[data-character-theme="astronaut"] .t-card {
+  border-top: 1px solid #c9d0f5; border-right: 1px solid #c9d0f5; border-bottom: 1px solid #c9d0f5;
+  box-shadow: 0 2px 10px rgba(28, 38, 88, 0.10);
+}
+
+[data-character-theme="robot"] .navbar-root {
+  background: repeating-linear-gradient(0deg, rgba(255,255,255,.045) 0 1px, transparent 1px 3px), #2c343f !important;
+}
+[data-character-theme="robot"] .t-card {
+  border-radius: 4px !important;
+  border-top: 1px solid #c3ccd6; border-right: 1px solid #c3ccd6; border-bottom: 1px solid #c3ccd6;
+}
+
+[data-character-theme="fox"] .navbar-root { background: #fff6ea !important; }
+[data-character-theme="fox"] .t-card {
+  border-radius: 18px !important;
+  border-top: 1.5px solid #f0cfa8; border-right: 1.5px solid #f0cfa8; border-bottom: 1.5px solid #f0cfa8;
+}
+
+[data-character-theme="penguin"] .navbar-root {
+  background: linear-gradient(180deg, #f2f9ff 0%, #d5eaff 100%) !important;
+}
+[data-character-theme="penguin"] .t-card {
+  border-top: 1px solid #b9defa; border-right: 1px solid #b9defa; border-bottom: 1px solid #b9defa;
+  box-shadow: 0 2px 10px rgba(47, 134, 200, 0.10);
+}
+
+[data-character-theme="hero"] .navbar-root {
+  background: radial-gradient(rgba(22,48,95,.13) 1px, transparent 1.6px) 0 0 / 6px 6px, #fff3dc !important;
+}
+[data-character-theme="hero"] .t-card {
+  border-radius: 8px !important;
+  border-top: 2px solid #16305f; border-right: 2px solid #16305f; border-bottom: 2px solid #16305f;
+  box-shadow: 3px 3px 0 #16305f;
+}
+
+/* ── Bus suggestions: the "recommended" tag and Start button in each character's style ── */
+[data-character-theme="astronaut"] .t-ribbon {
+  background: #1c2658 !important; color: #ffffff !important;
+  letter-spacing: 0.08em; text-transform: uppercase; border-radius: 4px !important;
+}
+[data-character-theme="robot"] .t-ribbon {
+  background: #2c343f !important; color: #f5b82e !important; border-radius: 3px !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+[data-character-theme="robot"] .t-start { border-radius: 4px !important; }
+[data-character-theme="fox"] .t-ribbon {
+  background: #ffe6cc !important; color: #8e3a0e !important; border-radius: 12px !important; font-style: italic;
+}
+[data-character-theme="penguin"] .t-ribbon {
+  background: #dcefff !important; color: #15588c !important; border: 1px solid #9fd3ff;
+}
+[data-character-theme="hero"] .t-ribbon {
+  background: #ff8a1f !important; color: #16305f !important; border: 2px solid #16305f; border-radius: 4px !important;
+  font-weight: 800 !important; font-style: italic; text-transform: uppercase; transform: rotate(-2deg);
+  box-shadow: 2px 2px 0 #16305f;
+}
+[data-character-theme="hero"] .t-start {
+  background: #ff8a1f !important; color: #16305f !important; border: 2px solid #16305f !important;
+  box-shadow: 2px 2px 0 #16305f; text-transform: uppercase; font-style: italic;
+}
+
+/* ── Side drawers (planner, saved places, schedule) sit flush against the screen edge ── */
+[data-character-theme] .t-drawer { box-shadow: -4px 0 24px rgba(0,0,0,0.12) !important; border-right: none !important; border-bottom: none !important; }
+[data-character-theme="hero"] .t-drawer { box-shadow: -5px 0 0 #16305f !important; }
+
+/* ── Google's pop-up bubble (bus details) takes the theme's panel colour ── */
+:root:not([data-character-theme="default"])[data-character-theme] .gm-style .gm-style-iw-c,
+:root:not([data-character-theme="default"])[data-character-theme] .gm-style .gm-style-iw-d {
+  background: var(--t-surface) !important;
+}
+:root:not([data-character-theme="default"])[data-character-theme] .gm-style .gm-style-iw-tc::after {
+  background: var(--t-surface) !important;
 }

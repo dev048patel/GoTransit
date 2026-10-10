@@ -42,6 +42,8 @@ function badge({ fill, ring, behind = '', front = '' }: Theme): StopIcon {
 }
 
 const STOP_ICONS: Record<MarkerCharacterId, StopIcon> = {
+    // The original plain blue stop
+    default: badge({ fill: '#1a73e8', ring: '#1a73e8' }),
     // Antenna with a yellow bulb and two side prongs
     robot: badge({
         fill: '#4a5563', ring: '#f5b82e',

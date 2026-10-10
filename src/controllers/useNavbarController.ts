@@ -8,7 +8,7 @@ interface PlaceResult {
     location: { lat: number; lng: number };
 }
 
-export function useNavbarController(onPlaceSelect?: (place: PlaceResult) => void) {
+export function useNavbarController(onPlaceSelect?: (place: PlaceResult) => void, onClearPlace?: () => void) {
     const [showResults, setShowResults] = useState(false);
 
     // Google Places autocomplete hook with Regina-centered search
@@ -25,7 +25,17 @@ export function useNavbarController(onPlaceSelect?: (place: PlaceResult) => void
     const handleInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setValue(e.target.value);
         setShowResults(true);
-    }, [setValue]);
+        // Emptying the box also removes the selected place from the map
+        if (e.target.value === '') onClearPlace?.();
+    }, [setValue, onClearPlace]);
+
+    // Clear button: empty the search box and remove the selected place from the map
+    const handleClear = useCallback(() => {
+        setValue('', false);
+        clearSuggestions();
+        setShowResults(false);
+        onClearPlace?.();
+    }, [setValue, clearSuggestions, onClearPlace]);
 
     // Geocode selected place, notify parent, and track analytics event
     const handleSelect = useCallback(async (description: string, placeId: string) => {
@@ -64,6 +74,7 @@ export function useNavbarController(onPlaceSelect?: (place: PlaceResult) => void
         data,
         showResults,
         handleInput,
+        handleClear,
         handleSelect,
         handleFocus,
     };

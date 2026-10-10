@@ -36,7 +36,7 @@ CREATE TABLE public.user_preferences (
   notif_alerts  BOOLEAN DEFAULT TRUE,
   notif_delays  BOOLEAN DEFAULT TRUE,
   notif_promos  BOOLEAN DEFAULT FALSE,
-  marker_character TEXT NOT NULL DEFAULT 'robot' CHECK (marker_character IN ('robot','fox','penguin','astronaut','hero')),
+  marker_character TEXT NOT NULL DEFAULT 'default' CHECK (marker_character IN ('default','robot','fox','penguin','astronaut','hero')),
   updated_at    TIMESTAMPTZ DEFAULT now()
 );
 

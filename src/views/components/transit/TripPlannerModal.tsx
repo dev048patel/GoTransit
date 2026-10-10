@@ -19,7 +19,7 @@ export default function TripPlannerModal({ isOpen, onClose, onSelectRoute, liveB
 
     return (
         <div className="trip-planner-overlay" style={overlayStyle} onClick={handleClose}>
-            <div className="trip-planner-modal" style={modalStyle} onClick={(e) => e.stopPropagation()}>
+            <div className="trip-planner-modal t-panel" style={modalStyle} onClick={(e) => e.stopPropagation()}>
                 {/* Drag handle for mobile */}
                 <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '8px' }}>
                     <div style={{ width: '36px', height: '4px', backgroundColor: '#dadce0', borderRadius: '2px' }} />
@@ -28,7 +28,7 @@ export default function TripPlannerModal({ isOpen, onClose, onSelectRoute, liveB
                 <div style={headerStyle}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         <span style={{ fontSize: '22px' }}>🗺️</span>
-                        <span style={{ fontSize: '18px', fontWeight: '600', color: '#1a73e8' }}>Plan Your Trip</span>
+                        <span style={{ fontSize: '18px', fontWeight: '600', color: 'var(--t-primary)' }}>Plan Your Trip</span>
                     </div>
                     <button onClick={handleClose} style={closeButtonStyle}>✕</button>
                 </div>
@@ -92,8 +92,8 @@ export default function TripPlannerModal({ isOpen, onClose, onSelectRoute, liveB
                                                 key={place_id}
                                                 onClick={() => ctrl.handleDestSelect(suggestion.description, place_id)}
                                                 style={suggestionItemStyle}
-                                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e8f0fe'}
-                                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
+                                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--t-primary-soft)'}
+                                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--t-surface)'}
                                             >
                                                 <div style={{ fontWeight: '500', color: '#202124', fontSize: '14px' }}>{main_text}</div>
                                                 {secondary_text && (
@@ -237,17 +237,17 @@ function RouteCard({ option, index }: { option: TripOption; index: number }) {
             {option.isLivePrediction && option.waitTime !== undefined && (
                 <div style={{
                     display: 'flex', alignItems: 'center', gap: '6px',
-                    padding: '6px 10px', backgroundColor: '#e8f5e9', borderRadius: '8px',
+                    padding: '6px 10px', backgroundColor: 'var(--t-accent-soft)', borderRadius: '8px',
                     marginBottom: '10px', fontSize: '12px', fontWeight: '500'
                 }}>
                     <span style={{ fontSize: '14px' }}>🟢</span>
-                    <span style={{ color: '#2e7d32' }}>
+                    <span style={{ color: 'var(--t-accent)' }}>
                         {option.waitTime <= 1
                             ? 'Bus arriving now!'
                             : `Next bus in ~${option.waitTime} min`
                         }
                         {option.segments[0]?.predTime && (
-                            <span style={{ color: '#1a73e8', fontWeight: '600' }}>
+                            <span style={{ color: 'var(--t-primary)', fontWeight: '600' }}>
                                 {' '}· arrives {option.segments[0].predTime}
                             </span>
                         )}
@@ -292,7 +292,7 @@ function RouteCard({ option, index }: { option: TripOption; index: number }) {
                                 {seg.busId && (
                                     <span style={{
                                         marginLeft: '6px', fontSize: '11px', fontWeight: '600',
-                                        color: '#1a73e8', backgroundColor: '#e8f0fe',
+                                        color: 'var(--t-primary)', backgroundColor: 'var(--t-primary-soft)',
                                         padding: '1px 6px', borderRadius: '6px'
                                     }}>
                                         Bus #{seg.busId}
@@ -309,7 +309,7 @@ function RouteCard({ option, index }: { option: TripOption; index: number }) {
                                     style={{
                                         ...timelineStepStyle,
                                         cursor: 'pointer',
-                                        color: '#1a73e8',
+                                        color: 'var(--t-primary)',
                                         fontSize: '12px',
                                         userSelect: 'none'
                                     }}
@@ -403,7 +403,7 @@ const overlayStyle: React.CSSProperties = {
 };
 
 const modalStyle: React.CSSProperties = {
-    backgroundColor: 'white',
+    backgroundColor: 'var(--t-surface)',
     borderRadius: '20px 20px 0 0',
     width: '100%',
     maxWidth: '480px',
@@ -420,7 +420,7 @@ const headerStyle: React.CSSProperties = {
     alignItems: 'center',
     marginBottom: '20px',
     paddingBottom: '16px',
-    borderBottom: '1px solid #e8eaed'
+    borderBottom: '1px solid var(--t-border-soft)'
 };
 
 const closeButtonStyle: React.CSSProperties = {
@@ -449,7 +449,7 @@ const labelStyle: React.CSSProperties = {
 const locationDisplayStyle: React.CSSProperties = {
     display: 'flex',
     alignItems: 'center',
-    backgroundColor: '#e8f0fe',
+    backgroundColor: 'var(--t-primary-soft)',
     borderRadius: '10px',
     padding: '10px 14px',
     gap: '8px'
@@ -468,12 +468,12 @@ const clearBtnStyle: React.CSSProperties = {
 const useLocationBtnStyle: React.CSSProperties = {
     width: '100%',
     padding: '12px',
-    backgroundColor: '#f8f9fa',
+    backgroundColor: 'var(--t-surface-2)',
     border: '2px dashed #dadce0',
     borderRadius: '10px',
     fontSize: '14px',
     fontWeight: '500',
-    color: '#1a73e8',
+    color: 'var(--t-primary)',
     cursor: 'pointer',
     transition: 'all 0.2s'
 };
@@ -481,7 +481,7 @@ const useLocationBtnStyle: React.CSSProperties = {
 const inputStyle: React.CSSProperties = {
     width: '100%',
     padding: '12px 14px',
-    border: '2px solid #dadce0',
+    border: '2px solid var(--t-border)',
     borderRadius: '10px',
     fontSize: '16px',
     outline: 'none',
@@ -495,7 +495,7 @@ const suggestionsDropdownStyle: React.CSSProperties = {
     top: '100%',
     left: 0, right: 0,
     marginTop: '4px',
-    backgroundColor: 'white',
+    backgroundColor: 'var(--t-surface)',
     borderRadius: '10px',
     boxShadow: '0 4px 16px rgba(0, 0, 0, 0.15)',
     maxHeight: '200px',
@@ -513,7 +513,7 @@ const suggestionItemStyle: React.CSSProperties = {
 const findRoutesBtnStyle: React.CSSProperties = {
     width: '100%',
     padding: '14px',
-    backgroundColor: '#1a73e8',
+    backgroundColor: 'var(--t-primary)',
     color: 'white',
     border: 'none',
     borderRadius: '12px',
@@ -525,7 +525,7 @@ const findRoutesBtnStyle: React.CSSProperties = {
 };
 
 const resultsContainerStyle: React.CSSProperties = {
-    borderTop: '1px solid #e8eaed',
+    borderTop: '1px solid var(--t-border-soft)',
     paddingTop: '16px'
 };
 
@@ -535,7 +535,7 @@ const noResultsStyle: React.CSSProperties = {
 };
 
 const cardStyle: React.CSSProperties = {
-    backgroundColor: '#f8f9fa',
+    backgroundColor: 'var(--t-surface-2)',
     borderRadius: '12px',
     padding: '14px',
     marginBottom: '10px',
@@ -614,8 +614,8 @@ const errorStyle: React.CSSProperties = {
 const spinnerStyle: React.CSSProperties = {
     width: '14px',
     height: '14px',
-    border: '2px solid #dadce0',
-    borderTop: '2px solid #1a73e8',
+    border: '2px solid var(--t-border)',
+    borderTop: '2px solid var(--t-primary)',
     borderRadius: '50%',
     animation: 'spin 1s linear infinite',
     display: 'inline-block'

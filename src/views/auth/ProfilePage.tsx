@@ -45,7 +45,7 @@ function SectionCard({ title, icon: Icon, children, action }: {
 function CharacterPicker() {
     const { character, setCharacter } = useMarkerCharacter();
     return (
-        <div role="radiogroup" aria-label="Map character" className="grid grid-cols-3 sm:grid-cols-5 gap-3">
+        <div role="radiogroup" aria-label="Map character" className="grid grid-cols-3 sm:grid-cols-6 gap-3">
             {MARKER_CHARACTERS.map(c => {
                 const selected = c.id === character;
                 return (

@@ -2,7 +2,7 @@
  Only responsible for UX/UI rendering. 
  It receives all data as props and determines how the map looks on screen. It contains NO business logic.
  */
-import React, { useState, useCallback, useRef, useMemo } from 'react';
+import React, { useState, useCallback, useRef, useMemo, useEffect } from 'react';
 import { GoogleMap, Marker, Polyline, InfoWindow } from '@react-google-maps/api';
 import { Coordinates } from '../models/MapModel';
 import { TripOption } from '../models/transit/RoutePlanning';
@@ -19,6 +19,7 @@ import TrackingPanel from './components/transit/TrackingPanel';
 import UserLocationMarker from './components/transit/UserLocationMarker';
 import { useMarkerCharacter } from '../controllers/useMarkerCharacter';
 import { stopIconFor } from '../models/data/stopIcons';
+import { applyCharacterTheme } from '../models/data/characterThemes';
 import PlaceBubble, { destinationPinFor } from './components/transit/PlaceBubble';
 
 /*
@@ -60,6 +61,12 @@ export const MapView: React.FC<MapViewProps> = ({
   const stopIcon = stopIconFor(character);
   const placePin = destinationPinFor(character);
 
+  // Theme the map screens to the chosen character; other pages keep the original colours
+  useEffect(() => {
+    applyCharacterTheme(character);
+    return () => applyCharacterTheme('default');
+  }, [character]);
+
   // Handle stop marker click — open the departure board panel
   const handleStopClick = (stop: Stop) => {
     setSelectedStop(stop);
@@ -88,6 +95,13 @@ export const MapView: React.FC<MapViewProps> = ({
     setShowBusSuggestions(false);
     setShowStopDetail(false);
   };
+
+  // Search box cleared: drop the flag, bubble and suggestions for that place
+  const handleClearPlace = useCallback(() => {
+    setSelectedPlaceMarker(null);
+    setShowInfoWindow(false);
+    setShowBusSuggestions(false);
+  }, [setSelectedPlaceMarker]);
 
   // When a route card is clicked, start tracking and recenter to user GPS
   const handleSelectRoute = (option: TripOption) => {
@@ -160,6 +174,7 @@ export const MapView: React.FC<MapViewProps> = ({
       {!activeTracking && (
         <Navbar
           onPlaceSelect={handlePlaceSelectWithPopup}
+          onClearPlace={handleClearPlace}
           routes={routes}
           selectedRoute={selectedRoute}
           onRouteSelect={setSelectedRoute}
@@ -186,6 +201,7 @@ export const MapView: React.FC<MapViewProps> = ({
           onSelectRoute={handleSelectRoute}
           liveBuses={liveBuses}
           weather={weather}
+          character={character}
         />
       )}
 
