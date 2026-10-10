@@ -109,6 +109,19 @@ export function formatMobile(raw: string): string {
 }
 
 /**
+ * Email a password-reset link. The link signs the user in and lands on /reset-password.
+ * Returns null on success, or an error message string on failure.
+ * Supabase reports success for unknown emails too (prevents email enumeration).
+ */
+export async function requestPasswordReset(email: string): Promise<string | null> {
+    if (!EMAIL_REGEX.test(email.trim())) return 'Enter a valid email address';
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+        redirectTo: `${window.location.origin}/reset-password`,
+    });
+    return error ? error.message : null;
+}
+
+/**
  * Register a new user via Supabase Auth.
  * The database trigger `on_auth_user_created` auto-creates the profiles row.
  */
