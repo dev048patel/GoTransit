@@ -19,6 +19,7 @@ import TrackingPanel from './components/transit/TrackingPanel';
 import UserLocationMarker from './components/transit/UserLocationMarker';
 import { useMarkerCharacter } from '../controllers/useMarkerCharacter';
 import { stopIconFor } from '../models/data/stopIcons';
+import PlaceBubble, { destinationPinFor } from './components/transit/PlaceBubble';
 
 /*
  -> <MapView isLoaded={...} center={...} />
@@ -57,6 +58,7 @@ export const MapView: React.FC<MapViewProps> = ({
   // Bus stops are drawn to match the user's chosen map character
   const { character } = useMarkerCharacter();
   const stopIcon = stopIconFor(character);
+  const placePin = destinationPinFor(character);
 
   // Handle stop marker click — open the departure board panel
   const handleStopClick = (stop: Stop) => {
@@ -79,7 +81,7 @@ export const MapView: React.FC<MapViewProps> = ({
     return dirs[index];
   };
 
-  // When a place is selected, also show the InfoWindow
+  // When a place is selected, also show the place bubble
   const handlePlaceSelectWithPopup = (place: any) => {
     handlePlaceSelect(place);
     setShowInfoWindow(true);
@@ -172,7 +174,7 @@ export const MapView: React.FC<MapViewProps> = ({
         weather={weather}
       />
 
-      {/* Bus Suggestion Panel (shown after user clicks Yes on InfoWindow) */}
+      {/* Bus Suggestion Panel (shown after the user confirms in the place bubble) */}
       {showBusSuggestions && selectedPlaceMarker && !activeTracking && (
         <BusSuggestionPanel
           destination={{
@@ -265,48 +267,28 @@ export const MapView: React.FC<MapViewProps> = ({
           />
         ))}
 
-        {/* Render Selected Place Marker with InfoWindow */}
+        {/* Selected place: themed flag pin + the character's speech bubble */}
         {selectedPlaceMarker && !activeTracking && (
           <Marker
             position={selectedPlaceMarker.location}
             title={selectedPlaceMarker.name}
             zIndex={200}
+            icon={{
+              url: placePin.url,
+              scaledSize: isLoaded ? new google.maps.Size(placePin.width, placePin.height) : undefined,
+              anchor: isLoaded ? new google.maps.Point(placePin.anchorX, placePin.anchorY) : undefined,
+            }}
             onClick={() => setShowInfoWindow(true)}
-          >
-            {showInfoWindow && (
-              <InfoWindow
-                position={selectedPlaceMarker.location}
-                onCloseClick={() => setShowInfoWindow(false)}
-                options={{ maxWidth: 260 }}
-              >
-                <div style={{
-                  padding: '4px 2px',
-                  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
-                }}>
-                  <div style={{ fontWeight: '600', fontSize: '13px', color: '#202124', marginBottom: '6px', lineHeight: '1.3' }}>
-                    📍 {selectedPlaceMarker.name}
-                  </div>
-                  <div style={{ fontSize: '12px', color: '#5f6368', marginBottom: '8px' }}>
-                    Bus suggestions to here?
-                  </div>
-                  <div style={{ display: 'flex', gap: '6px' }}>
-                    <button
-                      onClick={() => { setShowInfoWindow(false); setShowBusSuggestions(true); }}
-                      style={{ padding: '6px 14px', backgroundColor: '#1a73e8', color: 'white', border: 'none', borderRadius: '16px', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}
-                    >
-                      Yes 🚌
-                    </button>
-                    <button
-                      onClick={() => { setShowInfoWindow(false); setSelectedPlaceMarker(null); }}
-                      style={{ padding: '6px 14px', backgroundColor: '#f1f3f4', color: '#5f6368', border: 'none', borderRadius: '16px', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}
-                    >
-                      No
-                    </button>
-                  </div>
-                </div>
-              </InfoWindow>
-            )}
-          </Marker>
+          />
+        )}
+        {selectedPlaceMarker && !activeTracking && showInfoWindow && (
+          <PlaceBubble
+            character={character}
+            position={selectedPlaceMarker.location}
+            name={selectedPlaceMarker.name}
+            onConfirm={() => { setShowInfoWindow(false); setShowBusSuggestions(true); }}
+            onClose={() => { setShowInfoWindow(false); setSelectedPlaceMarker(null); }}
+          />
         )}
 
         {/* User's live GPS location — chosen character marker */}
