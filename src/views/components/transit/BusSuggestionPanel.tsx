@@ -10,7 +10,7 @@ import type { WeatherSnapshot } from '../../../models/services/WeatherService';
 
 // Pure view component — all GPS/route logic lives in useBusSuggestionController
 export default function BusSuggestionPanel({ destination, onClose, onSelectRoute, liveBuses, weather }: BusSuggestionPanelProps) {
-    const { gpsLoading, gpsError, results, searching, handleRefresh } = useBusSuggestionController({
+    const { gpsLoading, gpsError, results, searching, updating, lastUpdated, handleRefresh } = useBusSuggestionController({
         destination,
         liveBuses,
         walkMultiplier: weather?.walkMultiplier ?? 1.0,
@@ -49,7 +49,7 @@ export default function BusSuggestionPanel({ destination, onClose, onSelectRoute
                             transition: 'all 0.2s'
                         }}
                     >
-                        {gpsLoading || searching ? (
+                        {gpsLoading || searching || updating ? (
                             <span style={{ display: 'inline-block', animation: 'spin 1s linear infinite' }}>↻</span>
                         ) : '↻'}
                     </button>
@@ -89,6 +89,26 @@ export default function BusSuggestionPanel({ destination, onClose, onSelectRoute
                     </span>
                 )}
             </div>
+
+            {/* Live status — background refreshes update here instead of replacing the results */}
+            {results.length > 0 && (
+                <div style={liveStatusStyle}>
+                    {updating ? (
+                        <>
+                            <div style={smallSpinnerStyle} />
+                            <span>Refreshing with live bus positions…</span>
+                        </>
+                    ) : (
+                        <>
+                            <span style={liveDotStyle} />
+                            <span>
+                                Live bus times
+                                {lastUpdated && ` · updated ${lastUpdated.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`}
+                            </span>
+                        </>
+                    )}
+                </div>
+            )}
 
             {/* Content — loading, error, empty, or route cards */}
             <div style={contentStyle}>
@@ -605,6 +625,36 @@ const errorStyle: React.CSSProperties = {
     padding: '6px 10px',
     backgroundColor: '#fce8e6',
     borderRadius: '8px'
+};
+
+const liveStatusStyle: React.CSSProperties = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    height: '28px',
+    padding: '0 14px',
+    borderBottom: '1px solid #f0f0f0',
+    fontSize: '11px',
+    color: '#5f6368',
+    flexShrink: 0,
+};
+
+const liveDotStyle: React.CSSProperties = {
+    width: '6px',
+    height: '6px',
+    borderRadius: '50%',
+    backgroundColor: '#2E7D32',
+    display: 'inline-block',
+};
+
+const smallSpinnerStyle: React.CSSProperties = {
+    width: '10px',
+    height: '10px',
+    border: '1.5px solid #dadce0',
+    borderTop: '1.5px solid #2E7D32',
+    borderRadius: '50%',
+    animation: 'spin 1s linear infinite',
+    display: 'inline-block',
 };
 
 const spinnerStyle: React.CSSProperties = {
