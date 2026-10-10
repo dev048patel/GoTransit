@@ -8,7 +8,6 @@ import gtfsStopRoutes from '../data/gtfsStopRoutes.json';
 import gtfsDirectionalShapes from '../data/gtfsDirectionalShapes.json';
 import gtfsStopSequences from '../data/gtfsStopSequences.json';
 import { ShapeFeature } from '../transit/ShapeFeature';
-import { checkCompassDirection } from './StopDirectionIndex';
 
 // Singleton index
 let stopToRoutes: Map<string, Set<string>> | null = null;
@@ -18,12 +17,6 @@ let routeShapesCache: Map<string, number[][][]> | null = null;
 let gtfsDirCache: Map<string, number[][]> | null = null;
 // Per-direction GTFS stop sequences: key = "routeNum-dir", value = ordered stop ID array
 let gtfsSeqCache: Map<string, string[]> | null = null;
-// Cumulative distance (metres) along each stop sequence: same keys/indices as gtfsSeqCache
-let gtfsSeqDistCache: Map<string, number[]> | null = null;
-// Stop ID → stop, for O(1) lookups on hot paths
-let stopById: Map<string, (typeof transitStops)[number]> | null = null;
-// Memoized checkStopDirection results: key = "routeNum|stopA|stopB" (inputs are static data)
-const directionCheckCache = new Map<string, { valid: boolean; shapeDistance: number } | null>();
 
 const PROXIMITY_THRESHOLD_METERS = 65; // Stop must be within 65m of shape line for projection
 // (40m was too tight — directional shapes for NB/SB routes are on opposite sides of the road,
@@ -32,8 +25,8 @@ const PROXIMITY_THRESHOLD_METERS = 65; // Stop must be within 65m of shape line 
 /**
  * Calculate distance in meters between two lat/lng points using Haversine formula.
  */
-function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number { // assuming lat and lon are in degree
-    const earthRadius = 6371e3;
+export function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number { // assuming lat and lon are in degree
+    const earthRadius = 6173e3;
 
     // converting coordinates to radians 
     const radLat1 = lat1 * Math.PI / 180;
@@ -303,27 +296,11 @@ function buildIndex(): void {
 
     // Build stop-sequence cache: authoritative ordered stop lists per route+direction.
     // Keys: "routeNum-dir". Values: ordered stop ID array (from stop_times.txt).
-    stopById = new Map(transitStops.map(s => [s.STOP_ID, s]));
-
     const seqs = gtfsStopSequences as Record<string, Record<string, string[]>>;
     gtfsSeqCache = new Map<string, string[]>();
-    gtfsSeqDistCache = new Map<string, number[]>();
     for (const [routeNum, dirMap] of Object.entries(seqs)) {
         for (const [dir, stops] of Object.entries(dirMap)) {
             gtfsSeqCache.set(`${routeNum}-${dir}`, stops);
-
-            // Cumulative stop-to-stop distance, so a ride's length follows the bus's actual path
-            // (including loops and doglegs) rather than a straight line between the two stops
-            const cumulative = [0];
-            for (let i = 1; i < stops.length; i++) {
-                const prev = stopById.get(stops[i - 1]);
-                const cur = stopById.get(stops[i]);
-                const step = prev && cur
-                    ? haversineDistance(parseFloat(prev.LAT), parseFloat(prev.LON), parseFloat(cur.LAT), parseFloat(cur.LON))
-                    : 0;
-                cumulative.push(cumulative[i - 1] + step);
-            }
-            gtfsSeqDistCache.set(`${routeNum}-${dir}`, cumulative);
         }
     }
 
@@ -528,39 +505,17 @@ export function checkStopDirection(
 ): { valid: boolean; shapeDistance: number } | null {
     ensureIndex();
 
-    const cacheKey = `${routeNum}|${stopAId}|${stopBId}`;
-    if (directionCheckCache.has(cacheKey)) return directionCheckCache.get(cacheKey)!;
-    const result = computeStopDirection(routeNum, stopAId, stopBId);
-    directionCheckCache.set(cacheKey, result);
-    return result;
-}
-
-function computeStopDirection(
-    routeNum: string,
-    stopAId: string,
-    stopBId: string
-): { valid: boolean; shapeDistance: number } | null {
-    const stopA = stopById!.get(stopAId);
-    const stopB = stopById!.get(stopBId);
+    const stopA = transitStops.find(s => s.STOP_ID === stopAId);
+    const stopB = transitStops.find(s => s.STOP_ID === stopBId);
     if (!stopA || !stopB) return null;
 
     const aLat = parseFloat(stopA.LAT), aLon = parseFloat(stopA.LON);
     const bLat = parseFloat(stopB.LAT), bLon = parseFloat(stopB.LON);
-    const straightLine = haversineDistance(aLat, aLon, bLat, bLon);
 
     const gtfs = gtfsStopRoutes as Record<string, Record<string, number[]>>;
     const dirsA = gtfs[stopAId]?.[routeNum] ?? [];
     const dirsB = gtfs[stopBId]?.[routeNum] ?? [];
     const sharedDirs = dirsA.filter(d => dirsB.includes(d));
-
-    // Both stops are known to GTFS but no single trip direction serves both (e.g. a SB-only stop
-    // and a NB-only stop): the rider would have to ride to the terminus and back. Without this,
-    // the geometric tiers below project the stop onto the opposite direction's shape (the two
-    // carriageways are well within tolerance) and report a short, "valid" ride the wrong way.
-    if (dirsA.length > 0 && dirsB.length > 0 && sharedDirs.length === 0) {
-        return { valid: false, shapeDistance: straightLine };
-    }
-
     // Prioritize directions shared by both stops; fall back to all dirs either stop serves
     const orderedDirs = sharedDirs.length > 0
         ? sharedDirs
@@ -569,52 +524,36 @@ function computeStopDirection(
     // ── TIER 1: GTFS stop-sequence lookup (most authoritative) ───────────────
     // Uses the actual ordered stop list from stop_times.txt.
     // No geometry involved — pure index lookup, never fails due to GPS offset.
-    if (orderedDirs.length > 0 && gtfsSeqCache && gtfsSeqDistCache) {
+    if (orderedDirs.length > 0 && gtfsSeqCache) {
         let bestSeqResult: { valid: boolean; shapeDistance: number } | null = null;
 
         for (const dir of orderedDirs) {
-            const key = `${routeNum}-${dir}`;
-            const seq = gtfsSeqCache.get(key);
-            const cumulative = gtfsSeqDistCache.get(key);
-            if (!seq || !cumulative) continue;
+            const seq = gtfsSeqCache.get(`${routeNum}-${dir}`);
+            if (!seq) continue;
             const posA = seq.indexOf(stopAId);
             const posB = seq.indexOf(stopBId);
             if (posA === -1 || posB === -1) continue; // one or both stops not in this direction's sequence
 
-            // Loop route detection: if first stop == last stop, the bus circles back.
-            // On a loop (A→B→C→D→A), going from C→A is valid (C→D→A forward around loop),
-            // but the rider travels the rest of the loop — measure that, not the straight line.
-            const isLoop = seq.length > 2 && seq[0] === seq[seq.length - 1];
-            let candidate: { valid: boolean; shapeDistance: number };
-            if (posA === posB) {
-                candidate = { valid: false, shapeDistance: 0 }; // same stop — not a ride
-            } else if (posA < posB) {
-                candidate = { valid: true, shapeDistance: cumulative[posB] - cumulative[posA] };
-            } else if (isLoop) {
-                const loopLength = cumulative[cumulative.length - 1];
-                candidate = { valid: true, shapeDistance: loopLength - cumulative[posA] + cumulative[posB] };
-            } else {
-                candidate = { valid: false, shapeDistance: straightLine };
-            }
-            // Never report less than the straight line (guards against sequence data gaps)
-            candidate.shapeDistance = Math.max(candidate.shapeDistance, straightLine);
+            // Estimate on-route distance using haversine between the two stop coordinates
+            const shapeDist = haversineDistance(aLat, aLon, bLat, bLon);
 
-            // Prefer any valid result over invalid; among valid results take the shortest ride
-            if (!bestSeqResult
-                || (candidate.valid && !bestSeqResult.valid)
-                || (candidate.valid && bestSeqResult.valid && candidate.shapeDistance < bestSeqResult.shapeDistance)) {
+            // Loop route detection: if first stop == last stop, the bus circles back.
+            // On a loop (A→B→C→D→A), going from C→A is valid (C→D→A forward around loop)
+            // but posC > posA would incorrectly say INVALID. Both orderings are reachable.
+            const isLoop = seq.length > 2 && seq[0] === seq[seq.length - 1];
+            if (isLoop) {
+                return { valid: true, shapeDistance: shapeDist };
+            }
+
+            const candidate = { valid: posA < posB, shapeDistance: shapeDist };
+
+            // Prefer any valid result over invalid; among valids take the first found
+            if (!bestSeqResult || (candidate.valid && !bestSeqResult.valid)) {
                 bestSeqResult = candidate;
             }
         }
         if (bestSeqResult !== null) return bestSeqResult;
     }
-
-    // Tiers 2–3 are geometric guesses, so cross-check them against the stops' compass directions
-    // (NB/SB/EB/WB). A compass contradiction means the bus would be heading away from stop B —
-    // typically the rider was matched to the stop on the wrong side of the street.
-    const compass = checkCompassDirection(stopAId, stopBId);
-    const withCompass = (geo: { valid: boolean; shapeDistance: number }) =>
-        geo.valid && compass && !compass.valid ? { ...geo, valid: false } : geo;
 
     // ── TIER 2: GTFS directional shape projection (geometric, 150m tolerance) ─
     // Fallback when a stop isn't in the sequence data (e.g. route variant coverage gap).
@@ -635,17 +574,15 @@ function computeStopDirection(
                 bestGeoResult = candidate;
             }
         }
-        if (bestGeoResult !== null) return withCompass(bestGeoResult);
+        if (bestGeoResult !== null) return bestGeoResult;
     }
 
     // ── TIER 3: merged transitShapes.json per-line projection ────────────────
     // Last resort for routes that have no GTFS directional data at all.
     const shapes = routeShapesCache!.get(routeNum);
-    const result = shapes ? projectStopPairOntoRoute(aLat, aLon, bLat, bLon, shapes) : null;
-    if (result) return withCompass({ valid: result.posA < result.posB, shapeDistance: result.shapeDistance });
-
-    // ── TIER 4: compass directions alone ─────────────────────────────────────
-    // No route geometry covers both stops; the stop directions are the only evidence left.
-    if (compass) return { valid: compass.valid, shapeDistance: straightLine };
-    return null;
+    if (!shapes) return null;
+    const result = projectStopPairOntoRoute(aLat, aLon, bLat, bLon, shapes);
+    if (!result) return null;
+    return { valid: result.posA < result.posB, shapeDistance: result.shapeDistance };
 }
+
