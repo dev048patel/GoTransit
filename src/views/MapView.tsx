@@ -16,27 +16,9 @@ import TripPlannerModal from './components/transit/TripPlannerModal';
 import BusSuggestionPanel from './components/transit/BusSuggestionPanel';
 import RouteTrackingOverlay from './components/transit/RouteTrackingOverlay';
 import TrackingPanel from './components/transit/TrackingPanel';
-
-// Bus stop marker SVG — generated once, reused for all stop markers
-const BUS_STOP_ICON_URL = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
-<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
-  <circle cx="14" cy="14" r="13" fill="#1a73e8" stroke="white" stroke-width="2"/>
-  <rect x="9" y="7" width="10" height="14" rx="2" fill="white"/>
-  <rect x="10.5" y="9" width="7" height="3.5" rx="1" fill="#1a73e8"/>
-  <circle cx="11.5" cy="17.5" r="1.2" fill="#1a73e8"/>
-  <circle cx="16.5" cy="17.5" r="1.2" fill="#1a73e8"/>
-  <rect x="10.5" y="14" width="7" height="0.8" rx="0.4" fill="#1a73e8" opacity="0.4"/>
-</svg>
-`)}`;
-
-// User location "You are here" pulsing blue dot marker
-const USER_LOCATION_ICON_URL = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
-<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
-  <circle cx="20" cy="20" r="18" fill="#4285F4" opacity="0.15"/>
-  <circle cx="20" cy="20" r="12" fill="#4285F4" opacity="0.25"/>
-  <circle cx="20" cy="20" r="7" fill="#4285F4" stroke="white" stroke-width="2.5"/>
-</svg>
-`)}`;
+import UserLocationMarker from './components/transit/UserLocationMarker';
+import { useMarkerCharacter } from '../controllers/useMarkerCharacter';
+import { stopIconFor } from '../models/data/stopIcons';
 
 /*
  -> <MapView isLoaded={...} center={...} />
@@ -61,7 +43,6 @@ export const MapView: React.FC<MapViewProps> = ({
   setSelectedPlaceMarker,
   currentZoom,
   onZoomChanged,
-  userLocation,
   activeDetours,
   weather,
 }) => {
@@ -72,6 +53,10 @@ export const MapView: React.FC<MapViewProps> = ({
   const [selectedBus, setSelectedBus] = useState<BusPosition | null>(null);
   const [selectedStop, setSelectedStop] = useState<Stop | null>(null);
   const [showStopDetail, setShowStopDetail] = useState(false);
+
+  // Bus stops are drawn to match the user's chosen map character
+  const { character } = useMarkerCharacter();
+  const stopIcon = stopIconFor(character);
 
   // Handle stop marker click — open the departure board panel
   const handleStopClick = (stop: Stop) => {
@@ -245,9 +230,9 @@ export const MapView: React.FC<MapViewProps> = ({
             }}
             title={`${stop.STOP_NAME} (#${stop.STOP_ID})`}
             icon={{
-              url: BUS_STOP_ICON_URL,
-              scaledSize: isLoaded ? new google.maps.Size(24, 24) : undefined,
-              anchor: isLoaded ? new google.maps.Point(12, 12) : undefined,
+              url: stopIcon.url,
+              scaledSize: isLoaded ? new google.maps.Size(stopIcon.width, stopIcon.height) : undefined,
+              anchor: isLoaded ? new google.maps.Point(stopIcon.anchorX, stopIcon.anchorY) : undefined,
             }}
             onClick={() => handleStopClick(stop)}
           />
@@ -324,20 +309,8 @@ export const MapView: React.FC<MapViewProps> = ({
           </Marker>
         )}
 
-        {/* User's live GPS location — pulsing blue dot */}
-        {userLocation && (
-          <Marker
-            position={userLocation}
-            icon={{
-              url: USER_LOCATION_ICON_URL,
-              scaledSize: new google.maps.Size(40, 40),
-              anchor: new google.maps.Point(20, 20),
-            }}
-            title="You are here"
-            zIndex={300}
-            clickable={false}
-          />
-        )}
+        {/* User's live GPS location — chosen character marker */}
+        <UserLocationMarker />
 
         {/* Render Live Buses — colored by route using transitColors data */}
         {(activeTracking

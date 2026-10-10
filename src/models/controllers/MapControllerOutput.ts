@@ -27,7 +27,6 @@ export interface MapControllerOutput {
     setSelectedPlaceMarker: (marker: { location: Coordinates; name: string } | null) => void;
     currentZoom: number;
     onZoomChanged: (newZoom: number) => void;
-    userLocation: Coordinates | null;
     activeDetours: ActiveDetour[];
     weather: WeatherSnapshot | null;
 }
