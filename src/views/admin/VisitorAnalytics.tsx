@@ -3,11 +3,12 @@
   Displays real-time visitor data: IP addresses, devices, browsers, OS, and activity.
   All data comes from props via the controller (MVC pattern).
 */
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { useVisitorAnalyticsController, DatePreset } from '../../controllers/admin/useVisitorAnalyticsController';
 import {
     Globe, Monitor, Smartphone, Tablet, Chrome, Clock, Users, Eye,
-    RefreshCw, Wifi, Activity, MapPin, Calendar, ChevronDown, ChevronRight, Search
+    RefreshCw, Wifi, Activity, MapPin, Calendar, ChevronDown, ChevronRight, Search, Shield
 } from 'lucide-react';
 import {
     PieChart, Pie, Cell, ResponsiveContainer, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid
@@ -351,7 +352,7 @@ export default function VisitorAnalytics() {
                 <div className="bg-gray-50 border-b border-gray-100">
                     <div className="grid grid-cols-12 px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                         <div className="col-span-1"></div>
-                        <div className="col-span-3">IP Address</div>
+                        <div className="col-span-3">IP / User</div>
                         <div className="col-span-2">Browser</div>
                         <div className="col-span-2">Device</div>
                         <div className="col-span-2">Last Active</div>
@@ -390,7 +391,12 @@ export default function VisitorAnalytics() {
                                                     <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500" />
                                                 </span>
                                             )}
-                                            <code className="bg-gray-100 px-2 py-0.5 rounded text-xs font-mono text-gray-700">{visitor.ip}</code>
+                                            <div className="min-w-0">
+                                                <code className="bg-gray-100 px-2 py-0.5 rounded text-xs font-mono text-gray-700">{visitor.ip}</code>
+                                                {visitor.email && (
+                                                    <p className="text-xs text-blue-600 font-medium truncate mt-0.5">{visitor.email}</p>
+                                                )}
+                                            </div>
                                         </div>
                                         <div className="col-span-2 text-sm text-gray-700">{visitor.browser}</div>
                                         <div className="col-span-2 text-sm flex items-center gap-1.5">
@@ -427,6 +433,17 @@ export default function VisitorAnalytics() {
                                                             <div className="flex items-center justify-between">
                                                                 <span className="text-gray-500">Email</span>
                                                                 <span className="font-medium text-blue-600">{visitor.email}</span>
+                                                            </div>
+                                                        )}
+                                                        {visitor.email && (
+                                                            <div className="pt-1">
+                                                                <Link
+                                                                    to={`/admin/fac?search=${encodeURIComponent(visitor.email)}`}
+                                                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-xs font-medium hover:bg-slate-200 transition"
+                                                                >
+                                                                    <Shield size={12} />
+                                                                    Manage Access
+                                                                </Link>
                                                             </div>
                                                         )}
                                                         <div className="flex items-center justify-between">

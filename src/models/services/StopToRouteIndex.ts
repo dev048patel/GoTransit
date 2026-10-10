@@ -536,6 +536,15 @@ export function checkStopDirection(
 
             // Estimate on-route distance using haversine between the two stop coordinates
             const shapeDist = haversineDistance(aLat, aLon, bLat, bLon);
+
+            // Loop route detection: if first stop == last stop, the bus circles back.
+            // On a loop (A→B→C→D→A), going from C→A is valid (C→D→A forward around loop)
+            // but posC > posA would incorrectly say INVALID. Both orderings are reachable.
+            const isLoop = seq.length > 2 && seq[0] === seq[seq.length - 1];
+            if (isLoop) {
+                return { valid: true, shapeDistance: shapeDist };
+            }
+
             const candidate = { valid: posA < posB, shapeDistance: shapeDist };
 
             // Prefer any valid result over invalid; among valids take the first found

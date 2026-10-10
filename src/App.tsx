@@ -27,6 +27,7 @@ import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAnalyticsBeacon } from './controllers/hooks/useAnalyticsBeacon';
 import { AuthProvider, useAuth } from './models/context/AuthContext';
+import { FeatureAccessProvider } from './models/context/FeatureAccessContext';
 import ProtectedRoute from './views/components/ProtectedRoute';
 import PublicOnlyRoute from './views/components/PublicOnlyRoute';
 import AdminRoute from './views/components/AdminRoute';
@@ -46,6 +47,7 @@ const Dashboard = React.lazy(() => import('./views/admin/Dashboard'));
 const RouteManager = React.lazy(() => import('./views/admin/RouteManager'));
 const UserManager = React.lazy(() => import('./views/admin/UserManager'));
 const VisitorAnalytics = React.lazy(() => import('./views/admin/VisitorAnalytics'));
+const FeatureAccessControl = React.lazy(() => import('./views/admin/FeatureAccessControl'));
 
 /**
  * AppRoutes — renders all routes ONLY after auth state has been resolved.
@@ -55,6 +57,13 @@ const VisitorAnalytics = React.lazy(() => import('./views/admin/VisitorAnalytics
 function AppRoutes() {
     const { isLoading } = useAuth();
     useAnalyticsBeacon();
+
+    // Register service worker once on first load (enables push notifications)
+    React.useEffect(() => {
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(() => {});
+        }
+    }, []);
 
     if (isLoading) {
         return (
@@ -145,6 +154,7 @@ function AppRoutes() {
                     <Route path="routes" element={<RouteManager />} />
                     <Route path="users" element={<UserManager />} />
                     <Route path="analytics" element={<VisitorAnalytics />} />
+                    <Route path="fac" element={<FeatureAccessControl />} />
                 </Route>
 
                 {/* ── Public: /connect — Meet the Team ─────────────────── */}
@@ -164,10 +174,12 @@ function AppRoutes() {
 export default function App() {
     return (
         <BrowserRouter>
-            {/* AuthProvider must wrap everything so all routes can access auth state */}
             <AuthProvider>
-                <AppRoutes />
+                <FeatureAccessProvider>
+                    <AppRoutes />
+                </FeatureAccessProvider>
             </AuthProvider>
         </BrowserRouter>
     );
 }
+// delete it later.

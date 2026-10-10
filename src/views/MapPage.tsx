@@ -9,6 +9,8 @@
 import React from 'react';
 import { MapView } from './MapView';
 import { useMapController } from '../controllers/useMapController';
+import DepartureReminderBanner from './DepartureReminderBanner';
+import WeatherBanner from './WeatherBanner';
 
 export default function MapPage() {
     const {
@@ -16,9 +18,13 @@ export default function MapPage() {
         zoom, setZoom, stops, routes, selectedRoute, setSelectedRoute,
         routePaths, liveBuses, handlePlaceSelect, selectedPlaceMarker,
         setSelectedPlaceMarker, currentZoom, onZoomChanged, userLocation,
+        activeDetours, weather,
     } = useMapController();
 
     return (
+        <>
+        <WeatherBanner weather={weather} />
+        <DepartureReminderBanner />
         <MapView
             isLoaded={isLoaded}
             loadError={loadError}
@@ -40,6 +46,9 @@ export default function MapPage() {
             currentZoom={currentZoom}
             onZoomChanged={onZoomChanged}
             userLocation={userLocation}
+            activeDetours={activeDetours}
+            weather={weather}
         />
+        </>
     );
 }

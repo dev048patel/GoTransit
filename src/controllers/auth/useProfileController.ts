@@ -10,6 +10,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../../models/lib/supabase';
 import { useAuth } from '../../models/context/AuthContext';
 import { formatMobile } from '../../models/services/AuthService';
+import { SmsService } from '../../models/services/SmsService';
 
 /* ── Types ──────────────────────────────────────────────────────── */
 export interface ProfileData {
@@ -17,6 +18,8 @@ export interface ProfileData {
     mobile_number: string | null;
     mobile_verified: boolean;
     account_status: string;
+    sms_opted_in: boolean;
+    sms_consent_at: string | null;
 }
 
 export interface Preferences {
@@ -84,6 +87,10 @@ export function useProfileController() {
     const [deleteLoading, setDeleteLoading] = useState(false);
     const [deleteError, setDeleteError] = useState('');
 
+    // SMS notifications
+    const [smsLoading, setSmsLoading] = useState(false);
+    const [smsError, setSmsError] = useState('');
+
     /* ── Load all profile data when user is available ───────────── */
     useEffect(() => {
         if (!user) {
@@ -99,9 +106,9 @@ export function useProfileController() {
         (async () => {
             try {
                 const { data } = await supabase.from('profiles')
-                    .select('full_name, mobile_number, mobile_verified, account_status')
+                    .select('full_name, mobile_number, mobile_verified, account_status, sms_opted_in, sms_consent_at')
                     .eq('id', uid).single();
-                if (data) setProfile(data);
+                if (data) setProfile(data as ProfileData);
             } finally { setProfileLoading(false); }
         })();
 
@@ -254,6 +261,28 @@ export function useProfileController() {
         }
     }, [user, editName, editEmail, editMobile]);
 
+    /* ── SMS Notifications ──────────────────────────────────────── */
+    const handleSmsToggle = useCallback(async (enable: boolean) => {
+        setSmsLoading(true);
+        setSmsError('');
+        try {
+            if (enable) {
+                await SmsService.optIn();
+            } else {
+                await SmsService.optOut();
+            }
+            setProfile(prev => prev ? {
+                ...prev,
+                sms_opted_in: enable,
+                sms_consent_at: enable ? new Date().toISOString() : prev.sms_consent_at,
+            } : prev);
+        } catch (err: any) {
+            setSmsError(err?.message ?? 'Failed to update SMS preference');
+        } finally {
+            setSmsLoading(false);
+        }
+    }, []);
+
     /* ── Delete Account ─────────────────────────────────────────── */
     const handleDeleteAccount = useCallback(async () => {
         setDeleteLoading(true);
@@ -309,6 +338,8 @@ export function useProfileController() {
         showDeleteConfirm, setShowDeleteConfirm,
         deleteLoading, deleteError,
         handleDeleteAccount,
+        // SMS notifications
+        smsLoading, smsError, handleSmsToggle,
         // Actions
         handleLogout,
         updatePref,

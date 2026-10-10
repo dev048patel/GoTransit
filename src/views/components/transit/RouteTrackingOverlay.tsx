@@ -12,6 +12,8 @@ import { Marker, Polyline, Circle } from '@react-google-maps/api';
 import transitShapesData from '../../../models/data/transitShapes.json';
 import transitColors from '../../../models/data/transitColors';
 import { RouteTrackingOverlayProps } from '../../../models/transit/RouteTrackingOverlayProps';
+import { DetourService } from '../../../models/services/DetourService';
+import { ActiveDetour } from '../../../models/transit/Detour';
 
 /** Squared distance between two points (no need for sqrt for comparison). */
 function distSq(a: { lat: number; lng: number }, b: { lat: number; lng: number }): number {
@@ -162,6 +164,18 @@ export default function RouteTrackingOverlay({ tripOption }: RouteTrackingOverla
         lng: tripOption.originLng
     });
     const watchIdRef = useRef<number | null>(null);
+    const [activeDetours, setActiveDetours] = useState<ActiveDetour[]>([]);
+
+    // Fetch detours for each unique route in this trip
+    useEffect(() => {
+        let cancelled = false;
+        const routeNums = [...new Set(tripOption.segments.map(s => s.routeNum))];
+        Promise.all(routeNums.map(r => DetourService.getActiveDetours(r))).then(results => {
+            if (cancelled) return;
+            setActiveDetours(results.flat());
+        });
+        return () => { cancelled = true; };
+    }, [tripOption]);
 
     // Real-time GPS tracking
     useEffect(() => {
@@ -272,6 +286,21 @@ export default function RouteTrackingOverlay({ tripOption }: RouteTrackingOverla
                         strokeOpacity: 0.9,
                         strokeWeight: 6,
                         zIndex: 201
+                    }}
+                />
+            ))}
+
+            {/* Active detour polylines — drawn on top of route segments so users see the
+                actual path the bus is taking when their route is detoured */}
+            {activeDetours.map((detour) => (
+                <Polyline
+                    key={`tracking-detour-${detour.detourId}`}
+                    path={detour.path}
+                    options={{
+                        strokeColor: detour.color,
+                        strokeOpacity: detour.opacity,
+                        strokeWeight: 6,
+                        zIndex: 210
                     }}
                 />
             ))}

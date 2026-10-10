@@ -1,13 +1,3 @@
-/**
- * useUserManagerController.ts — GoTransit Regina  [MVC Controller]
- *
- * Real users only — from Supabase profiles table.
- * Provides handlers for: Edit details, Temporary Ban (24h), Soft Delete.
- *
- * These mutations require admin RLS policies on public.profiles.
- * See the comment block in UserRegistry.ts for the SQL to run.
- */
-
 import { useState, useEffect, useCallback } from 'react';
 import { User } from '../../models/admin/AdminTypes';
 import { getAllUsers, updateUserProfile, softDeleteUser } from '../../models/services/UserRegistry';
@@ -22,7 +12,6 @@ export function useUserManagerController() {
     const [users, setUsers] = useState<User[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [isLoading, setIsLoading] = useState(true);
-    const [actionError, setActionError] = useState<string | null>(null);
 
     // Edit modal
     const [editTarget, setEditTarget] = useState<User | null>(null);
@@ -50,13 +39,9 @@ export function useUserManagerController() {
     const openEdit = (user: User) => {
         setEditTarget(user);
         setEditFields({ full_name: user.name, role: user.role, account_status: user.status === 'Active' ? 'active' : 'suspended' });
-        setActionError(null);
     };
 
-    const closeEdit = () => {
-        setEditTarget(null);
-        setActionError(null);
-    };
+    const closeEdit = () => setEditTarget(null);
 
     const saveEdit = async () => {
         if (!editTarget) return;
@@ -67,24 +52,22 @@ export function useUserManagerController() {
             account_status: editFields.account_status,
         });
         setEditLoading(false);
-        if (err) { setActionError(err); return; }
+        if (err) { console.error('[UserManager] Save edit failed:', err); return; }
         await loadUsers();
         closeEdit();
     };
 
-    /* ── Temporary Ban (24 h) ─────────────────────────────────────── */
+    /* ── Ban ──────────────────────────────────────────────────────── */
     const banUser = async (user: User) => {
-        setActionError(null);
         const err = await updateUserProfile(user.id, { account_status: 'suspended' });
-        if (err) { setActionError(err); return; }
+        if (err) { console.error('[UserManager] Ban failed:', err); return; }
         await loadUsers();
     };
 
     /* ── Delete ───────────────────────────────────────────────────── */
     const deleteUser = async (user: User) => {
-        setActionError(null);
         const err = await softDeleteUser(user.id);
-        if (err) { setActionError(err); return; }
+        if (err) { console.error('[UserManager] Delete failed:', err); return; }
         setUsers(prev => prev.filter(u => u.id !== user.id));
     };
 
@@ -93,11 +76,8 @@ export function useUserManagerController() {
         isLoading,
         searchTerm,
         setSearchTerm,
-        actionError,
-        // Edit modal
         editTarget, editFields, setEditFields, editLoading,
         openEdit, closeEdit, saveEdit,
-        // Actions
         banUser, deleteUser,
     };
 }
