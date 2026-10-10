@@ -47,3 +47,14 @@ a, button {
     margin: 0;
     padding: 0;
 }
+/* Map character bobs gently while the user is moving (UserLocationMarker) */
+@keyframes marker-walk {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50%      { transform: translateY(-5px) rotate(4deg); }
+}
+.marker-walk {
+  animation: marker-walk 0.6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marker-walk { animation: none; }
+}

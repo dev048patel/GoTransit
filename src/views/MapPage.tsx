@@ -17,7 +17,7 @@ export default function MapPage() {
         isLoaded, loadError, center, setCenter, options, containerStyle,
         zoom, setZoom, stops, routes, selectedRoute, setSelectedRoute,
         routePaths, liveBuses, handlePlaceSelect, selectedPlaceMarker,
-        setSelectedPlaceMarker, currentZoom, onZoomChanged, userLocation,
+        setSelectedPlaceMarker, currentZoom, onZoomChanged,
         activeDetours, weather,
     } = useMapController();
 
@@ -45,7 +45,6 @@ export default function MapPage() {
             setSelectedPlaceMarker={setSelectedPlaceMarker}
             currentZoom={currentZoom}
             onZoomChanged={onZoomChanged}
-            userLocation={userLocation}
             activeDetours={activeDetours}
             weather={weather}
         />

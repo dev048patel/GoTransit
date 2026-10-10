@@ -39,7 +39,6 @@ export const useMapController = (): MapControllerOutput => {
   const [currentZoom, setCurrentZoom] = useState(MapModel.defaultZoom);
   const [shapesData, setShapesData] = useState<any>(null);
   const [apiRoutes, setApiRoutes] = useState<Route[]>(transitRoutes); // start with static data, API overrides
-  const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
   const [activeDetours, setActiveDetours] = useState<ActiveDetour[]>([]);
   const [weather, setWeather] = useState<WeatherSnapshot | null>(null);
 
@@ -70,23 +69,6 @@ export const useMapController = (): MapControllerOutput => {
     });
     return () => { cancelled = true; };
   }, [selectedRoute]);
-
-  // Track user's live GPS location
-  useEffect(() => {
-    if (!navigator.geolocation) return;
-    // Get initial position
-    navigator.geolocation.getCurrentPosition(
-      (pos) => setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-      (err) => console.warn('Geolocation error:', err.message)
-    );
-    // Watch for position changes
-    const watchId = navigator.geolocation.watchPosition(
-      (pos) => setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-      (err) => console.warn('Geolocation watch error:', err.message),
-      { enableHighAccuracy: true, maximumAge: 10000 }
-    );
-    return () => navigator.geolocation.clearWatch(watchId);
-  }, []);
 
   // Callback for MapView to report zoom changes
   const onZoomChanged = useCallback((newZoom: number) => {
@@ -258,7 +240,6 @@ export const useMapController = (): MapControllerOutput => {
     setSelectedPlaceMarker,
     currentZoom,
     onZoomChanged,
-    userLocation,
     activeDetours,
     weather,
   };

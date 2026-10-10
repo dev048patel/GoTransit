@@ -15,11 +15,13 @@ import {
 
     LogOut, Trash2, CheckCircle2, Pencil,
     Eye, MessageSquare,
-    ArrowLeft, KeyRound,
+    ArrowLeft, KeyRound, MapPin,
 } from 'lucide-react';
 import logo from '../../New-Image.jpeg';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useProfileController } from '../../controllers/auth/useProfileController';
+import { useMarkerCharacter } from '../../controllers/useMarkerCharacter';
+import { MARKER_CHARACTERS } from '../../models/data/markerCharacters';
 
 
 
@@ -35,6 +37,37 @@ function SectionCard({ title, icon: Icon, children, action }: {
                 {action}
             </div>
             <div className="px-5 py-4">{children}</div>
+        </div>
+    );
+}
+
+/* ── Map character picker ───────────────────────────────────────── */
+function CharacterPicker() {
+    const { character, setCharacter } = useMarkerCharacter();
+    return (
+        <div role="radiogroup" aria-label="Map character" className="grid grid-cols-3 sm:grid-cols-5 gap-3">
+            {MARKER_CHARACTERS.map(c => {
+                const selected = c.id === character;
+                return (
+                    <button
+                        key={c.id}
+                        type="button"
+                        role="radio"
+                        aria-checked={selected}
+                        onClick={() => setCharacter(c.id)}
+                        className={
+                            'flex flex-col items-center gap-1.5 rounded-xl border-2 px-2 py-3 transition ' +
+                            'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#003DA5]/40 ' +
+                            (selected ? 'border-[#003DA5] bg-[#003DA5]/5' : 'border-gray-100 hover:border-gray-300')
+                        }
+                    >
+                        <img src={c.src} alt="" width={48} height={48} draggable={false} />
+                        <span className={'text-xs font-medium ' + (selected ? 'text-[#003DA5]' : 'text-gray-600')}>
+                            {c.label}
+                        </span>
+                    </button>
+                );
+            })}
         </div>
     );
 }
@@ -352,6 +385,12 @@ export default function ProfilePage() {
 
 
 
+
+                {/* MAP CHARACTER */}
+                <SectionCard title="Your Map Character" icon={MapPin}>
+                    <p className="text-sm text-gray-500 mb-3">Shown on the map where you are.</p>
+                    <CharacterPicker />
+                </SectionCard>
 
                 {/* SMS NOTIFICATIONS */}
                 <SectionCard title="SMS Departure Reminders" icon={MessageSquare}>
