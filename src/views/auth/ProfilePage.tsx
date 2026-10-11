@@ -1,5 +1,5 @@
 /**
- * ProfilePage.tsx — GoTransit Regina user profile
+ * ProfilePage.tsx — Transit Regina user profile
  *
  * All data and logic lives in useProfileController.
  * Sections:
@@ -258,8 +258,8 @@ export default function ProfilePage() {
             <div className="bg-white border-b border-gray-100 sticky top-0 z-20">
                 <div className="max-w-lg mx-auto flex items-center justify-between px-4 py-3">
                     <Link to="/" className="inline-flex items-center gap-2">
-                        <img src={logo} alt="GoTransit Regina" className="w-8 h-8 rounded-lg object-cover" />
-                        <span className="font-bold text-gray-900">GoTransit Regina</span>
+                        <img src={logo} alt="Transit Regina" className="w-8 h-8 rounded-lg object-cover" />
+                        <span className="font-bold text-gray-900">Transit Regina</span>
                     </Link>
                     <Link to="/map" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 transition">
                         <ArrowLeft className="w-4 h-4" /> Back to Map
@@ -425,7 +425,7 @@ export default function ProfilePage() {
                             {/* Consent copy — shown when not yet opted in */}
                             {!profile?.sms_opted_in && (
                                 <p className="text-xs text-gray-400 leading-relaxed border-t border-gray-50 pt-3">
-                                    By enabling, you agree to receive departure reminder texts from GoTransit Regina to{' '}
+                                    By enabling, you agree to receive departure reminder texts from Transit Regina to{' '}
                                     <span className="font-medium text-gray-600">{phone}</span>.
                                     Standard message rates may apply. Reply STOP anytime to unsubscribe.
                                 </p>

@@ -9,7 +9,7 @@ import ssRouteTrack from '../../images/SS03.png';
 import ssRoutePlanner from '../../images/SS04.png';
 
 const demoSteps = [
-    { id: 1, title: 'Open App', description: 'Launch GoTransit Regina', screenshot: ssRouteSelect },
+    { id: 1, title: 'Open App', description: 'Launch Transit Regina', screenshot: ssRouteSelect },
     { id: 2, title: 'View Map', description: 'See nearby buses in real-time', screenshot: ssMapOverview },
     { id: 3, title: 'Track Bus', description: 'Watch your bus approach', screenshot: ssRouteTrack },
     { id: 4, title: 'Plan Route', description: 'Get route suggestions', screenshot: ssRoutePlanner },
@@ -87,7 +87,7 @@ export default function VisualDemo() {
                                     <svg className="w-3 h-3 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                     </svg>
-                                    gotransitregina.ca
+                                    transitregina.ca
                                 </div>
                             </div>
                         </div>

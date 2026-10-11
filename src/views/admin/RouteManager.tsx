@@ -1,5 +1,5 @@
 /**
- * RouteManager.tsx — GoTransit Regina  [VIEW — MVC]
+ * RouteManager.tsx — Transit Regina  [VIEW — MVC]
  *
  * Shows all Regina Transit routes loaded from the static dataset.
  * Columns: Route Id/Bus No. · Route Name · Status · Total Stops · Last Updated · Actions

@@ -1,5 +1,5 @@
 /**
- * AdminRoute.tsx — GoTransit Regina
+ * AdminRoute.tsx — Transit Regina
  *
  * Guards all /admin/* routes. Three states:
  *  - Loading   → shows a spinner while the session + role are being fetched

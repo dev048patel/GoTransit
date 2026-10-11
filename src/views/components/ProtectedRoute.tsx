@@ -1,5 +1,5 @@
 /**
- * ProtectedRoute.tsx — GoTransit Regina
+ * ProtectedRoute.tsx — Transit Regina
  *
  * Wraps any route that requires authentication.
  * - While auth is loading  → shows a spinner (prevents flash redirect on page refresh)

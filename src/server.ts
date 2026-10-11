@@ -130,7 +130,7 @@ cron.schedule('* * * * *', async () => {
                 const arriveLabel = (s.arrive_by ?? '').slice(0, 5);
                 return [{
                     phone: profile.mobile_number as string,
-                    body: `GoTransit: Leave by ${departLabel} for Bus ${s.route_num ?? '?'} → arrive by ${arriveLabel}. Reply STOP to unsubscribe.`,
+                    body: `Transit Regina: Leave by ${departLabel} for Bus ${s.route_num ?? '?'} → arrive by ${arriveLabel}. Reply STOP to unsubscribe.`,
                 }];
             });
             if (recipients.length) await TwilioService.sendBatch(recipients);

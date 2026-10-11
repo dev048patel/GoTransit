@@ -1,5 +1,5 @@
 /**
- * AuthModel.ts — GoTransit Regina
+ * AuthModel.ts — Transit Regina
  *
  * Model layer for authentication (MVC).
  * Contains all shared types used by AuthService and the auth controllers.

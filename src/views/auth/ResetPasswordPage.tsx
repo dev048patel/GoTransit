@@ -1,5 +1,5 @@
 /**
- * ResetPasswordPage.tsx — GoTransit Regina  [VIEW ONLY — MVC]
+ * ResetPasswordPage.tsx — Transit Regina  [VIEW ONLY — MVC]
  *
  * Landing page for the emailed reset link. Lets the user choose a new password.
  * Logic lives in useResetPasswordController.
@@ -33,7 +33,7 @@ export default function ResetPasswordPage() {
             >
                 <div className="text-center mb-10">
                     <Link to="/" className="inline-block mb-4">
-                        <img src={logo} alt="GoTransit Regina" className="w-16 h-16 mx-auto rounded-2xl object-cover shadow-[0_8px_24px_rgba(0,61,165,0.2)]" />
+                        <img src={logo} alt="Transit Regina" className="w-16 h-16 mx-auto rounded-2xl object-cover shadow-[0_8px_24px_rgba(0,61,165,0.2)]" />
                     </Link>
                     <h1 className="text-4xl font-bold text-[#003DA5] mb-2">Reset Password</h1>
                     <p className="text-gray-500 text-sm">Choose a new password for your account</p>

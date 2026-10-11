@@ -1,5 +1,5 @@
 /**
- * useLoginController.ts — GoTransit Regina
+ * useLoginController.ts — Transit Regina
  *
  * Controller layer for the Login page (MVC).
  * - Owns all form state: identifier, password, errors, loading

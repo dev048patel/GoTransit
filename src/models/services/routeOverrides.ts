@@ -1,5 +1,5 @@
 /**
- * routeOverrides.ts — GoTransit Regina [Service]
+ * routeOverrides.ts — Transit Regina [Service]
  *
  * Lightweight persistence layer for admin route changes.
  * Stores overrides (renames, hidden status) in a JSON file

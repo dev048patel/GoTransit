@@ -1,12 +1,12 @@
-/* GoTransit Regina — Service Worker (push notifications) */
+/* Transit Regina — Service Worker (push notifications) */
 
 self.addEventListener('push', event => {
     const data = event.data?.json() ?? {};
     event.waitUntil(
-        self.registration.showNotification(data.title || 'GoTransit Regina', {
+        self.registration.showNotification(data.title || 'Transit Regina', {
             body: data.body || '',
             icon: '/image.png',
-            badge: '/favicon.ico',
+            badge: '/image.png',
             tag: 'departure-reminder',   // replaces previous instead of stacking
             renotify: true,
             data: { url: data.url || '/map' },

@@ -56,7 +56,7 @@ function computeWalkMultiplier(tempC: number | null, windchillC: number | null):
 async function fetchFromEC(): Promise<WeatherSnapshot> {
     const res = await fetch(EC_URL, {
         signal: AbortSignal.timeout(8000),
-        headers: { 'User-Agent': 'GoTransitRegina/1.0 (p.p.dev2004@gmail.com)' },
+        headers: { 'User-Agent': 'TransitRegina/1.0 (p.p.dev2004@gmail.com)' },
     });
 
     if (!res.ok) throw new Error(`EC GeoMet returned ${res.status}`);

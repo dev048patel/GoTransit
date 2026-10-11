@@ -1,5 +1,5 @@
 /**
- * useDashboardController.ts — GoTransit Regina  [MVC Controller]
+ * useDashboardController.ts — Transit Regina  [MVC Controller]
  *
  * Real data sources:
  *  - registeredUsers   → Supabase profiles table (polled every 10s)

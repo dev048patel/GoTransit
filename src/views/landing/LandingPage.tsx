@@ -1,5 +1,5 @@
 /**
- * LandingPage.tsx — GoTransit Regina  [VIEW — MVC]
+ * LandingPage.tsx — Transit Regina  [VIEW — MVC]
  *
  * The transit route network background now lives HERE, behind all sections.
  * Each section is transparent so the shared background shows through.
@@ -163,7 +163,7 @@ export default function LandingPage() {
                     <img
                         src={logo}
 
-                        alt="GoTransit Regina"
+                        alt="Transit Regina"
                         className="w-20 h-20 rounded-xl object-cover"
                     />
                 </Link>

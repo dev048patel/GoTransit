@@ -1,5 +1,5 @@
 /**
- * LandingFooter.tsx — GoTransit Regina (Simplified)
+ * LandingFooter.tsx — Transit Regina (Simplified)
  *
  * Clean minimal footer:
  *  - Brand logo + tagline
@@ -25,7 +25,7 @@ export default function LandingFooter() {
                     {/* Brand */}
                     <div className="text-center md:text-left">
                         <h3 className="text-2xl font-bold mb-1" style={{ color: '#003DA5' }}>
-                            GoTransit Regina
+                            Transit Regina
                         </h3>
                         <p className="text-sm" style={{ color: '#64748b' }}>
                             Built by students of University of Regina for Regina commuters.
@@ -52,7 +52,7 @@ export default function LandingFooter() {
                     className="mt-10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs"
                     style={{ borderTop: '1px solid rgba(0,0,0,0.06)', color: '#94a3b8' }}
                 >
-                    <p>© 2026 GoTransit Regina. Built for Regina Commuters 🤟.</p>
+                    <p>© 2026 Transit Regina. Built for Regina Commuters 🤟.</p>
                     <p>Powered by Regina Transit · Google Maps · PostgreSQL</p>
                 </div>
             </div>
