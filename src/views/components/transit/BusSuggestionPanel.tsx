@@ -5,6 +5,7 @@ import transitColors from '../../../models/data/transitColors';
 import { BusSuggestionPanelProps } from '../../../models/components/BusSuggestionPanelProps';
 import { useBusSuggestionController } from '../../../controllers/useBusSuggestionController';
 import { computeDepartBy } from '../../../models/transit/TripSchedule';
+import { STOP_DIRECTION_LABEL } from '../../../models/transit/StopDirection';
 import { DetourService } from '../../../models/services/DetourService';
 import type { WeatherSnapshot } from '../../../models/services/WeatherService';
 import { Bus, ChevronDown } from 'lucide-react';
@@ -22,7 +23,6 @@ export default function BusSuggestionPanel({ destination, onClose, onSelectRoute
     const voice = CHARACTER_VOICE[character];
     const { gpsLoading, gpsError, results, searching, updating, lastUpdated, handleRefresh } = useBusSuggestionController({
         destination,
-        liveBuses,
         walkMultiplier: weather?.walkMultiplier ?? 1.0,
     });
 
@@ -106,7 +106,7 @@ export default function BusSuggestionPanel({ destination, onClose, onSelectRoute
                     {updating ? (
                         <>
                             <div style={smallSpinnerStyle} />
-                            <span>Refreshing with live bus positions…</span>
+                            <span>{lastUpdated ? 'Refreshing live arrival times…' : 'Getting live arrival times…'}</span>
                         </>
                     ) : (
                         <>
@@ -376,6 +376,9 @@ function RouteCard({ option, index, arriveBy, weather, character, onStart }: {
                             <span>
                                 Board <strong style={{ color: getRouteColor(seg.routeNum) }}>Route {seg.routeNum}</strong>
                                 <span style={{ color: '#5f6368' }}> ({seg.routeName})</span>
+                                {seg.direction && (
+                                    <span style={{ color: '#5f6368' }}> · {STOP_DIRECTION_LABEL[seg.direction]}</span>
+                                )}
                                 {seg.busId && (
                                     <span style={{
                                         marginLeft: '6px', fontSize: '11px', fontWeight: '600',
