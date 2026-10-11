@@ -17,8 +17,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44416",
         "LON": "-104.54913",
         "ONSTREET": "University Park Dr",
-        "ATSTREET": "Quance St (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Quance St (NB)"
     },
     {
         "OBJECTID": 59931,
@@ -27,8 +26,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44592",
         "LON": "-104.54915",
         "ONSTREET": "University Park Dr",
-        "ATSTREET": "Vic Square (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Vic Square (NB)"
     },
     {
         "OBJECTID": 59932,
@@ -37,8 +35,7 @@ const transitStops: Stop[] = [
         "LAT": "50.448609",
         "LON": "-104.549126",
         "ONSTREET": "Fleet St",
-        "ATSTREET": "North Service Rd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "North Service Rd (NB)"
     },
     {
         "OBJECTID": 59933,
@@ -47,8 +44,7 @@ const transitStops: Stop[] = [
         "LAT": "50.449614",
         "LON": "-104.549111",
         "ONSTREET": "Fleet St",
-        "ATSTREET": "Fines Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Fines Dr (NB)"
     },
     {
         "OBJECTID": 59934,
@@ -57,8 +53,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45041",
         "LON": "-104.5513",
         "ONSTREET": "Cambridge Ave",
-        "ATSTREET": "Milford Cres (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Milford Cres (WB)"
     },
     {
         "OBJECTID": 59935,
@@ -67,8 +62,7 @@ const transitStops: Stop[] = [
         "LAT": "50.450435",
         "LON": "-104.555519",
         "ONSTREET": "Cambridge Ave",
-        "ATSTREET": "Glencairn Rd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Glencairn Rd (WB)"
     },
     {
         "OBJECTID": 59936,
@@ -77,8 +71,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45041",
         "LON": "-104.558621",
         "ONSTREET": "Cambridge Ave",
-        "ATSTREET": "Cavendish St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Cavendish St (WB)"
     },
     {
         "OBJECTID": 59937,
@@ -87,8 +80,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45226",
         "LON": "-104.560568",
         "ONSTREET": "Oxford St",
-        "ATSTREET": "10th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "10th Ave (NB)"
     },
     {
         "OBJECTID": 59938,
@@ -97,8 +89,7 @@ const transitStops: Stop[] = [
         "LAT": "50.450769",
         "LON": "-104.560586",
         "ONSTREET": "Oxford St",
-        "ATSTREET": "Cambridge Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Cambridge Ave (NB)"
     },
     {
         "OBJECTID": 59939,
@@ -107,8 +98,7 @@ const transitStops: Stop[] = [
         "LAT": "50.453429",
         "LON": "-104.56007",
         "ONSTREET": "9th Ave",
-        "ATSTREET": "Oxford St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Oxford St (EB)"
     },
     {
         "OBJECTID": 59940,
@@ -117,8 +107,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45396",
         "LON": "-104.55782",
         "ONSTREET": "Cavendish St",
-        "ATSTREET": "9th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "9th Ave (NB)"
     },
     {
         "OBJECTID": 59941,
@@ -127,8 +116,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4155",
         "LON": "-104.621511",
         "ONSTREET": "Parliament Ave",
-        "ATSTREET": "Rae St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Rae St (WB)"
     },
     {
         "OBJECTID": 59942,
@@ -137,8 +125,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41548",
         "LON": "-104.62433",
         "ONSTREET": "Parliament Ave",
-        "ATSTREET": "Robinson St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Robinson St (WB)"
     },
     {
         "OBJECTID": 59943,
@@ -147,8 +134,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41549",
         "LON": "-104.62681",
         "ONSTREET": "Parliament Ave",
-        "ATSTREET": "Garnet St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Garnet St (WB)"
     },
     {
         "OBJECTID": 59944,
@@ -157,8 +143,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41518",
         "LON": "-104.62976",
         "ONSTREET": "Montague St",
-        "ATSTREET": "Parliament Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Parliament Ave (SB)"
     },
     {
         "OBJECTID": 59945,
@@ -167,8 +152,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41352",
         "LON": "-104.629721",
         "ONSTREET": "Montague St",
-        "ATSTREET": "28th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "28th Ave (SB)"
     },
     {
         "OBJECTID": 59946,
@@ -177,8 +161,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41145",
         "LON": "-104.62972",
         "ONSTREET": "Montague St",
-        "ATSTREET": "29th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "29th Ave (SB)"
     },
     {
         "OBJECTID": 59947,
@@ -187,8 +170,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41017",
         "LON": "-104.62973",
         "ONSTREET": "Montague St",
-        "ATSTREET": "Simpson Rd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Simpson Rd (SB)"
     },
     {
         "OBJECTID": 59948,
@@ -197,8 +179,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4088",
         "LON": "-104.63022",
         "ONSTREET": "Sunset Dr",
-        "ATSTREET": "Montague St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Montague St (WB)"
     },
     {
         "OBJECTID": 59949,
@@ -207,8 +188,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40886",
         "LON": "-104.63305",
         "ONSTREET": "Sunset Dr",
-        "ATSTREET": "Argyle St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Argyle St (WB)"
     },
     {
         "OBJECTID": 59950,
@@ -217,8 +197,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40884",
         "LON": "-104.63663",
         "ONSTREET": "Sunset Dr",
-        "ATSTREET": "Queen St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Queen St (WB)"
     },
     {
         "OBJECTID": 59951,
@@ -227,8 +206,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40687",
         "LON": "-104.63699",
         "ONSTREET": "Queen St",
-        "ATSTREET": "Prospect Pl (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Prospect Pl (SB)"
     },
     {
         "OBJECTID": 59952,
@@ -237,8 +215,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40551",
         "LON": "-104.63788",
         "ONSTREET": "Gordon Rd",
-        "ATSTREET": "Queen St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Queen St (WB)"
     },
     {
         "OBJECTID": 59953,
@@ -247,8 +224,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40507",
         "LON": "-104.640991",
         "ONSTREET": "Pasqua St",
-        "ATSTREET": "Gordon Rd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Gordon Rd (SB)"
     },
     {
         "OBJECTID": 59954,
@@ -257,8 +233,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40384",
         "LON": "-104.640951",
         "ONSTREET": "Pasqua St",
-        "ATSTREET": "Lincoln Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Lincoln Dr (SB)"
     },
     {
         "OBJECTID": 59955,
@@ -267,8 +242,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40205",
         "LON": "-104.64028",
         "ONSTREET": "Ryan Rd",
-        "ATSTREET": "Pasqua St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Pasqua St (EB)"
     },
     {
         "OBJECTID": 59956,
@@ -277,8 +251,7 @@ const transitStops: Stop[] = [
         "LAT": "50.402018",
         "LON": "-104.637221",
         "ONSTREET": "Ryan Rd",
-        "ATSTREET": "Queen St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Queen St (EB)"
     },
     {
         "OBJECTID": 59957,
@@ -287,8 +260,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40539",
         "LON": "-104.63654",
         "ONSTREET": "Gordon Rd",
-        "ATSTREET": "Queen St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Queen St (EB)"
     },
     {
         "OBJECTID": 59958,
@@ -297,8 +269,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40538",
         "LON": "-104.63343",
         "ONSTREET": "Gordon Rd",
-        "ATSTREET": "McTavish St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "McTavish St (EB)"
     },
     {
         "OBJECTID": 59959,
@@ -307,8 +278,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4054",
         "LON": "-104.630269",
         "ONSTREET": "Gordon Rd",
-        "ATSTREET": "Montague St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Montague St (EB)"
     },
     {
         "OBJECTID": 59960,
@@ -317,8 +287,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40497",
         "LON": "-104.62509",
         "ONSTREET": "Gordon Rd",
-        "ATSTREET": "Lockwood Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Lockwood Rd (EB)"
     },
     {
         "OBJECTID": 59961,
@@ -327,8 +296,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40478",
         "LON": "-104.62294",
         "ONSTREET": "Gordon Rd",
-        "ATSTREET": "Rae St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Rae St (EB)"
     },
     {
         "OBJECTID": 59962,
@@ -337,8 +305,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40453",
         "LON": "-104.61693",
         "ONSTREET": "Gordon Rd",
-        "ATSTREET": "Albert St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Albert St (EB)"
     },
     {
         "OBJECTID": 59963,
@@ -347,8 +314,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40424",
         "LON": "-104.61334",
         "ONSTREET": "Grant Rd",
-        "ATSTREET": "Gordon Rd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Gordon Rd (SB)"
     },
     {
         "OBJECTID": 59964,
@@ -357,8 +323,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4029",
         "LON": "-104.61335",
         "ONSTREET": "Grant Rd",
-        "ATSTREET": "Marsh Cres (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Marsh Cres (SB)"
     },
     {
         "OBJECTID": 59965,
@@ -367,8 +332,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40183",
         "LON": "-104.61228",
         "ONSTREET": "Grant Rd",
-        "ATSTREET": "Shannon Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Shannon Rd (EB)"
     },
     {
         "OBJECTID": 59966,
@@ -377,8 +341,7 @@ const transitStops: Stop[] = [
         "LAT": "50.401287",
         "LON": "-104.609101",
         "ONSTREET": "Grant Rd",
-        "ATSTREET": "Wesley Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Wesley Rd (EB)"
     },
     {
         "OBJECTID": 59967,
@@ -387,8 +350,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40129",
         "LON": "-104.606561",
         "ONSTREET": "Grant Rd",
-        "ATSTREET": "Chisholm Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Chisholm Rd (EB)"
     },
     {
         "OBJECTID": 59968,
@@ -397,8 +359,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40134",
         "LON": "-104.60416",
         "ONSTREET": "Grant Rd",
-        "ATSTREET": "Birchwood Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Birchwood Rd (EB)"
     },
     {
         "OBJECTID": 59969,
@@ -407,8 +368,7 @@ const transitStops: Stop[] = [
         "LAT": "50.401847",
         "LON": "-104.602588",
         "ONSTREET": "Grant Rd",
-        "ATSTREET": "Norris Rd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Norris Rd (NB)"
     },
     {
         "OBJECTID": 59970,
@@ -417,8 +377,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40393",
         "LON": "-104.6002",
         "ONSTREET": "Grant Rd",
-        "ATSTREET": "McDougall Cres (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "McDougall Cres (NB)"
     },
     {
         "OBJECTID": 59971,
@@ -427,8 +386,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40624",
         "LON": "-104.59908",
         "ONSTREET": "Grant Rd",
-        "ATSTREET": "Shannon Rd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Shannon Rd (NB)"
     },
     {
         "OBJECTID": 59972,
@@ -437,8 +395,7 @@ const transitStops: Stop[] = [
         "LAT": "50.407615",
         "LON": "-104.598515",
         "ONSTREET": "Grant Dr",
-        "ATSTREET": "Grant Rd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Grant Rd (WB)"
     },
     {
         "OBJECTID": 59973,
@@ -447,8 +404,7 @@ const transitStops: Stop[] = [
         "LAT": "50.408008",
         "LON": "-104.601661",
         "ONSTREET": "Grant Dr",
-        "ATSTREET": "Cowburn Cres (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Cowburn Cres (WB)"
     },
     {
         "OBJECTID": 59974,
@@ -457,8 +413,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40796",
         "LON": "-104.60405",
         "ONSTREET": "Grant Dr",
-        "ATSTREET": "Castle Rd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Castle Rd (WB)"
     },
     {
         "OBJECTID": 59975,
@@ -467,8 +422,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40867",
         "LON": "-104.60891",
         "ONSTREET": "Massey Rd",
-        "ATSTREET": "Grant Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Grant Dr (NB)"
     },
     {
         "OBJECTID": 59976,
@@ -477,8 +431,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41084",
         "LON": "-104.60898",
         "ONSTREET": "Massey Rd",
-        "ATSTREET": "Balfour Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Balfour Dr (NB)"
     },
     {
         "OBJECTID": 59977,
@@ -487,8 +440,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41223",
         "LON": "-104.60898",
         "ONSTREET": "Massey Rd",
-        "ATSTREET": "Parker Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Parker Ave (NB)"
     },
     {
         "OBJECTID": 59978,
@@ -497,8 +449,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41463",
         "LON": "-104.608989",
         "ONSTREET": "Massey Rd",
-        "ATSTREET": "Davis Pl (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Davis Pl (NB)"
     },
     {
         "OBJECTID": 59979,
@@ -507,8 +458,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44392",
         "LON": "-104.60575",
         "ONSTREET": "14th Ave",
-        "ATSTREET": "Broad St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Broad St (EB)"
     },
     {
         "OBJECTID": 59980,
@@ -517,8 +467,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44371",
         "LON": "-104.60348",
         "ONSTREET": "Halifax St",
-        "ATSTREET": "14th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "14th Ave (SB)"
     },
     {
         "OBJECTID": 59649,
@@ -527,8 +476,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47761",
         "LON": "-104.652451",
         "ONSTREET": "McIntosh St",
-        "ATSTREET": "Sherwood Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Sherwood Dr (NB)"
     },
     {
         "OBJECTID": 59650,
@@ -537,8 +485,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47925",
         "LON": "-104.652491",
         "ONSTREET": "McIntosh St",
-        "ATSTREET": "Alcove Pl (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Alcove Pl (NB)"
     },
     {
         "OBJECTID": 59651,
@@ -547,8 +494,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48256",
         "LON": "-104.652471",
         "ONSTREET": "McIntosh St",
-        "ATSTREET": "Rupert Pl (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Rupert Pl (NB)"
     },
     {
         "OBJECTID": 59652,
@@ -557,8 +503,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48542",
         "LON": "-104.6525",
         "ONSTREET": "McIntosh St",
-        "ATSTREET": "Dalgliesh Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Dalgliesh Dr (NB)"
     },
     {
         "OBJECTID": 59653,
@@ -567,8 +512,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48578",
         "LON": "-104.64778",
         "ONSTREET": "Dalgliesh Dr",
-        "ATSTREET": "Cooper Cr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Cooper Cr (EB)"
     },
     {
         "OBJECTID": 59654,
@@ -577,8 +521,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4861",
         "LON": "-104.644",
         "ONSTREET": "Dalgliesh Dr",
-        "ATSTREET": "Kennedy Cr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Kennedy Cr (EB)"
     },
     {
         "OBJECTID": 59655,
@@ -587,8 +530,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48786",
         "LON": "-104.6437",
         "ONSTREET": "Dalgliesh Dr",
-        "ATSTREET": "Rink Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Rink Ave (NB)"
     },
     {
         "OBJECTID": 59656,
@@ -597,8 +539,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49064",
         "LON": "-104.643691",
         "ONSTREET": "Dalgliesh Dr",
-        "ATSTREET": "Wheeler Cr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Wheeler Cr (NB)"
     },
     {
         "OBJECTID": 59657,
@@ -607,8 +548,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49126",
         "LON": "-104.64764",
         "ONSTREET": "Dalgliesh Dr",
-        "ATSTREET": "Wells St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Wells St (WB)"
     },
     {
         "OBJECTID": 59658,
@@ -617,8 +557,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49124",
         "LON": "-104.65028",
         "ONSTREET": "Dalgliesh Dr",
-        "ATSTREET": "Kyle St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Kyle St (WB)"
     },
     {
         "OBJECTID": 59659,
@@ -627,8 +566,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49291",
         "LON": "-104.652601",
         "ONSTREET": "McIntosh St",
-        "ATSTREET": "Tremaine Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Tremaine Ave (NB)"
     },
     {
         "OBJECTID": 59660,
@@ -637,8 +575,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49453",
         "LON": "-104.652331",
         "ONSTREET": "McIntosh St",
-        "ATSTREET": "Juniper Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Juniper Dr (NB)"
     },
     {
         "OBJECTID": 59661,
@@ -647,8 +584,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49601",
         "LON": "-104.65189",
         "ONSTREET": "McIntosh St",
-        "ATSTREET": "Marigold Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Marigold Dr (NB)"
     },
     {
         "OBJECTID": 59662,
@@ -657,8 +593,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49653",
         "LON": "-104.65302",
         "ONSTREET": "Rochdale Blvd",
-        "ATSTREET": "McIntosh St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "McIntosh St (WB)"
     },
     {
         "OBJECTID": 59663,
@@ -667,8 +602,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49603",
         "LON": "-104.658",
         "ONSTREET": "Rochdale Blvd",
-        "ATSTREET": "Lakeridge Rd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Lakeridge Rd (WB)"
     },
     {
         "OBJECTID": 59664,
@@ -677,8 +611,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4958",
         "LON": "-104.66263",
         "ONSTREET": "Rochdale Blvd",
-        "ATSTREET": "McCarthy Blvd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "McCarthy Blvd (WB)"
     },
     {
         "OBJECTID": 59665,
@@ -687,8 +620,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49574",
         "LON": "-104.66496",
         "ONSTREET": "Rochdale Blvd",
-        "ATSTREET": "McCarthy Blvd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "McCarthy Blvd (WB)"
     },
     {
         "OBJECTID": 59666,
@@ -697,8 +629,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48112",
         "LON": "-104.70596",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Herman Crescent (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Herman Crescent (WB)"
     },
     {
         "OBJECTID": 59667,
@@ -707,8 +638,7 @@ const transitStops: Stop[] = [
         "LAT": "50.481307",
         "LON": "-104.700784",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Fairway Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Fairway Rd (EB)"
     },
     {
         "OBJECTID": 59668,
@@ -717,8 +647,7 @@ const transitStops: Stop[] = [
         "LAT": "50.481685",
         "LON": "-104.697599",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Warwick Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Warwick Dr (EB)"
     },
     {
         "OBJECTID": 59669,
@@ -727,8 +656,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4815",
         "LON": "-104.69486",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Doiron Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Doiron Rd (EB)"
     },
     {
         "OBJECTID": 59670,
@@ -737,8 +665,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48091",
         "LON": "-104.689909",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Venture Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Venture Rd (EB)"
     },
     {
         "OBJECTID": 59671,
@@ -747,8 +674,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48095",
         "LON": "-104.68439",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Goldie St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Goldie St (EB)"
     },
     {
         "OBJECTID": 59672,
@@ -757,8 +683,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48059",
         "LON": "-104.681849",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Dorothy St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Dorothy St (EB)"
     },
     {
         "OBJECTID": 59673,
@@ -767,8 +692,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48004",
         "LON": "-104.68167",
         "ONSTREET": "Dorothy St",
-        "ATSTREET": "Sherwood Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Sherwood Dr (SB)"
     },
     {
         "OBJECTID": 59674,
@@ -777,8 +701,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47669",
         "LON": "-104.682771",
         "ONSTREET": "1060 Dorothy St (SB)",
-        "ATSTREET": "",
-        "DIRECTION": "SB"
+        "ATSTREET": ""
     },
     {
         "OBJECTID": 59675,
@@ -787,8 +710,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47522",
         "LON": "-104.68273",
         "ONSTREET": "Dorothy St",
-        "ATSTREET": "1st Ave N (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "1st Ave N (SB)"
     },
     {
         "OBJECTID": 59676,
@@ -797,8 +719,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47505",
         "LON": "-104.67904",
         "ONSTREET": "1st Ave N",
-        "ATSTREET": "Greenwood St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Greenwood St (EB)"
     },
     {
         "OBJECTID": 59677,
@@ -807,8 +728,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47504",
         "LON": "-104.67598",
         "ONSTREET": "1st Ave N",
-        "ATSTREET": "Greenwood Cr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Greenwood Cr (EB)"
     },
     {
         "OBJECTID": 59678,
@@ -817,8 +737,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47944",
         "LON": "-104.66865",
         "ONSTREET": "7th Ave N",
-        "ATSTREET": "Sherwood Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Sherwood Dr (NB)"
     },
     {
         "OBJECTID": 59679,
@@ -827,8 +746,7 @@ const transitStops: Stop[] = [
         "LAT": "50.480689",
         "LON": "-104.664634",
         "ONSTREET": "7th Ave N",
-        "ATSTREET": "McCarthy Blvd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "McCarthy Blvd (EB)"
     },
     {
         "OBJECTID": 59680,
@@ -837,8 +755,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48088",
         "LON": "-104.658761",
         "ONSTREET": "7th Ave N",
-        "ATSTREET": "Champ Cr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Champ Cr (EB)"
     },
     {
         "OBJECTID": 59681,
@@ -847,8 +764,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48087",
         "LON": "-104.65553",
         "ONSTREET": "7th Ave N",
-        "ATSTREET": "Milne St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Milne St (EB)"
     },
     {
         "OBJECTID": 59682,
@@ -857,8 +773,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47703",
         "LON": "-104.648361",
         "ONSTREET": "Stapleford Cr",
-        "ATSTREET": "Sherwood Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Sherwood Dr (NB)"
     },
     {
         "OBJECTID": 59683,
@@ -867,8 +782,7 @@ const transitStops: Stop[] = [
         "LAT": "50.479432",
         "LON": "-104.645828",
         "ONSTREET": "Stapleford Cr",
-        "ATSTREET": "Eddy St (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Eddy St (NB)"
     },
     {
         "OBJECTID": 59684,
@@ -877,8 +791,7 @@ const transitStops: Stop[] = [
         "LAT": "50.480437",
         "LON": "-104.64326",
         "ONSTREET": "Stapleford Cr",
-        "ATSTREET": "Drope St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Drope St (EB)"
     },
     {
         "OBJECTID": 59685,
@@ -887,8 +800,7 @@ const transitStops: Stop[] = [
         "LAT": "50.480582",
         "LON": "-104.640491",
         "ONSTREET": "Donahue Ave",
-        "ATSTREET": "Pasqua St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Pasqua St (EB)"
     },
     {
         "OBJECTID": 59686,
@@ -897,8 +809,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48062",
         "LON": "-104.63674",
         "ONSTREET": "Donahue Ave",
-        "ATSTREET": "Derby St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Derby St (EB)"
     },
     {
         "OBJECTID": 59687,
@@ -907,8 +818,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48028",
         "LON": "-104.63271",
         "ONSTREET": "Argyle St N",
-        "ATSTREET": "Donahue Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Donahue Ave (SB)"
     },
     {
         "OBJECTID": 59688,
@@ -917,8 +827,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47923",
         "LON": "-104.63203",
         "ONSTREET": "6th Ave N",
-        "ATSTREET": "Argyle St N (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Argyle St N (EB)"
     },
     {
         "OBJECTID": 59689,
@@ -927,8 +836,7 @@ const transitStops: Stop[] = [
         "LAT": "50.478997",
         "LON": "-104.627029",
         "ONSTREET": "Garnet St",
-        "ATSTREET": "6th Ave N (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "6th Ave N (SB)"
     },
     {
         "OBJECTID": 59690,
@@ -937,8 +845,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47775",
         "LON": "-104.62693",
         "ONSTREET": "Garnet St",
-        "ATSTREET": "Woodward Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Woodward Ave (SB)"
     },
     {
         "OBJECTID": 59691,
@@ -947,8 +854,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47542",
         "LON": "-104.626901",
         "ONSTREET": "Garnet St",
-        "ATSTREET": "4th Ave N (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "4th Ave N (SB)"
     },
     {
         "OBJECTID": 59692,
@@ -957,8 +863,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47419",
         "LON": "-104.62691",
         "ONSTREET": "Garnet St",
-        "ATSTREET": "3rd Ave N (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "3rd Ave N (SB)"
     },
     {
         "OBJECTID": 59693,
@@ -967,8 +872,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47203",
         "LON": "-104.62662",
         "ONSTREET": "Avonhurst Dr",
-        "ATSTREET": "Patricia Ave (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Patricia Ave (EB)"
     },
     {
         "OBJECTID": 59694,
@@ -977,8 +881,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47068",
         "LON": "-104.621871",
         "ONSTREET": "Avonhurst Dr",
-        "ATSTREET": "Retallack St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Retallack St (EB)"
     },
     {
         "OBJECTID": 59695,
@@ -987,8 +890,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47094",
         "LON": "-104.61899",
         "ONSTREET": "Avonhurst Dr",
-        "ATSTREET": "Albert St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Albert St (WB)"
     },
     {
         "OBJECTID": 59696,
@@ -997,8 +899,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47082",
         "LON": "-104.6229",
         "ONSTREET": "Avonhurst Dr",
-        "ATSTREET": "Retallack St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Retallack St (WB)"
     },
     {
         "OBJECTID": 59697,
@@ -1007,8 +908,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4721",
         "LON": "-104.626419",
         "ONSTREET": "Avonhurst Dr",
-        "ATSTREET": "Patricia Ave (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Patricia Ave (WB)"
     },
     {
         "OBJECTID": 59698,
@@ -1017,8 +917,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47316",
         "LON": "-104.6268",
         "ONSTREET": "Garnet St",
-        "ATSTREET": "Avonhurst Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Avonhurst Dr (NB)"
     },
     {
         "OBJECTID": 59699,
@@ -1027,8 +926,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47423",
         "LON": "-104.62681",
         "ONSTREET": "Garnet St",
-        "ATSTREET": "3rd Ave N (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "3rd Ave N (NB)"
     },
     {
         "OBJECTID": 59700,
@@ -1037,8 +935,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47598",
         "LON": "-104.6268",
         "ONSTREET": "Garnet St",
-        "ATSTREET": "4th Ave N (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "4th Ave N (NB)"
     },
     {
         "OBJECTID": 59701,
@@ -1047,8 +944,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47875",
         "LON": "-104.626819",
         "ONSTREET": "Garnet St",
-        "ATSTREET": "Woodward Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Woodward Ave (NB)"
     },
     {
         "OBJECTID": 59702,
@@ -1057,8 +953,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47937",
         "LON": "-104.62934",
         "ONSTREET": "6th Ave N",
-        "ATSTREET": "Garnet St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Garnet St (WB)"
     },
     {
         "OBJECTID": 59703,
@@ -1067,8 +962,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48008",
         "LON": "-104.632559",
         "ONSTREET": "Argyle St N",
-        "ATSTREET": "6th Ave N (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "6th Ave N (NB)"
     },
     {
         "OBJECTID": 59704,
@@ -1077,8 +971,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48068",
         "LON": "-104.636861",
         "ONSTREET": "Donahue Ave",
-        "ATSTREET": "Derby St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Derby St (WB)"
     },
     {
         "OBJECTID": 59705,
@@ -1087,8 +980,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48068",
         "LON": "-104.641579",
         "ONSTREET": "Stapleford Cr",
-        "ATSTREET": "Pasqua St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Pasqua St (WB)"
     },
     {
         "OBJECTID": 59706,
@@ -1097,8 +989,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48029",
         "LON": "-104.64415",
         "ONSTREET": "Stapleford Cr",
-        "ATSTREET": "Drope St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Drope St (WB)"
     },
     {
         "OBJECTID": 59707,
@@ -1107,8 +998,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47911",
         "LON": "-104.64655",
         "ONSTREET": "Stapleford Cr",
-        "ATSTREET": "Eddy St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Eddy St (WB)"
     },
     {
         "OBJECTID": 59708,
@@ -1117,8 +1007,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48098",
         "LON": "-104.65304",
         "ONSTREET": "7th Ave N",
-        "ATSTREET": "McIntosh St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "McIntosh St (WB)"
     },
     {
         "OBJECTID": 59709,
@@ -1127,8 +1016,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48094",
         "LON": "-104.65801",
         "ONSTREET": "7th Ave N",
-        "ATSTREET": "Pickard St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Pickard St (WB)"
     },
     {
         "OBJECTID": 59710,
@@ -1137,8 +1025,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48092",
         "LON": "-104.66187",
         "ONSTREET": "7th Ave N",
-        "ATSTREET": "Hanley Cr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Hanley Cr (WB)"
     },
     {
         "OBJECTID": 59711,
@@ -1147,8 +1034,7 @@ const transitStops: Stop[] = [
         "LAT": "50.481085",
         "LON": "-104.66474",
         "ONSTREET": "7th Ave N",
-        "ATSTREET": "McCarthy Blvd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "McCarthy Blvd (WB)"
     },
     {
         "OBJECTID": 59712,
@@ -1157,8 +1043,7 @@ const transitStops: Stop[] = [
         "LAT": "50.475281",
         "LON": "-104.682562",
         "ONSTREET": "Dorothy St",
-        "ATSTREET": "1st Ave N (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "1st Ave N (NB)"
     },
     {
         "OBJECTID": 59713,
@@ -1167,8 +1052,7 @@ const transitStops: Stop[] = [
         "LAT": "50.477766",
         "LON": "-104.68252",
         "ONSTREET": "Dorothy St",
-        "ATSTREET": "Murphy Cr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Murphy Cr (NB)"
     },
     {
         "OBJECTID": 59714,
@@ -1177,8 +1061,7 @@ const transitStops: Stop[] = [
         "LAT": "50.480008",
         "LON": "-104.68146",
         "ONSTREET": "Dorothy St",
-        "ATSTREET": "Westbrook Ct (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Westbrook Ct (NB)"
     },
     {
         "OBJECTID": 59715,
@@ -1187,8 +1070,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48071",
         "LON": "-104.68175",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Dorothy St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Dorothy St (WB)"
     },
     {
         "OBJECTID": 59716,
@@ -1197,8 +1079,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48106",
         "LON": "-104.68596",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Goldie St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Goldie St (WB)"
     },
     {
         "OBJECTID": 59717,
@@ -1207,8 +1088,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48107",
         "LON": "-104.68929",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Courtney St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Courtney St (WB)"
     },
     {
         "OBJECTID": 59718,
@@ -1217,8 +1097,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48119",
         "LON": "-104.69118",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Discovery Rd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Discovery Rd (WB)"
     },
     {
         "OBJECTID": 59719,
@@ -1227,8 +1106,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48183",
         "LON": "-104.696431",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Doiron Rd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Doiron Rd (WB)"
     },
     {
         "OBJECTID": 59720,
@@ -1237,8 +1115,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48126",
         "LON": "-104.702181",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Fairway Rd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Fairway Rd (WB)"
     },
     {
         "OBJECTID": 59721,
@@ -1247,8 +1124,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45517",
         "LON": "-104.55885",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Cavendish St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Cavendish St (EB)"
     },
     {
         "OBJECTID": 59722,
@@ -1257,8 +1133,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4535",
         "LON": "-104.55844",
         "ONSTREET": "9th Ave",
-        "ATSTREET": "Cavendish St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Cavendish St (WB)"
     },
     {
         "OBJECTID": 59723,
@@ -1267,8 +1142,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4516",
         "LON": "-104.56067",
         "ONSTREET": "Oxford St",
-        "ATSTREET": "10th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "10th Ave (SB)"
     },
     {
         "OBJECTID": 59724,
@@ -1277,8 +1151,7 @@ const transitStops: Stop[] = [
         "LAT": "50.450263",
         "LON": "-104.560188",
         "ONSTREET": "Cambridge Ave",
-        "ATSTREET": "Oxford St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Oxford St (EB)"
     },
     {
         "OBJECTID": 59725,
@@ -1287,8 +1160,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45032",
         "LON": "-104.55732",
         "ONSTREET": "Cambridge Ave",
-        "ATSTREET": "Cavendish St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Cavendish St (EB)"
     },
     {
         "OBJECTID": 59726,
@@ -1297,8 +1169,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45034",
         "LON": "-104.55448",
         "ONSTREET": "Cambridge Ave",
-        "ATSTREET": "Glencairn Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Glencairn Rd (EB)"
     },
     {
         "OBJECTID": 59727,
@@ -1307,8 +1178,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44996",
         "LON": "-104.549181",
         "ONSTREET": "Fleet St",
-        "ATSTREET": "Cambridge Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Cambridge Ave (SB)"
     },
     {
         "OBJECTID": 59728,
@@ -1317,8 +1187,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44485",
         "LON": "-104.549331",
         "ONSTREET": "University Park Dr",
-        "ATSTREET": "Vic Sq Mall (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Vic Sq Mall (SB)"
     },
     {
         "OBJECTID": 59729,
@@ -1327,8 +1196,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44356",
         "LON": "-104.54826",
         "ONSTREET": "Quance St",
-        "ATSTREET": "University Park Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "University Park Dr (EB)"
     },
     {
         "OBJECTID": 59730,
@@ -1337,8 +1205,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44414",
         "LON": "-104.545609",
         "ONSTREET": "Quance St",
-        "ATSTREET": "Heseltine Gate (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Heseltine Gate (EB)"
     },
     {
         "OBJECTID": 59731,
@@ -1347,8 +1214,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44605",
         "LON": "-104.542021",
         "ONSTREET": "Quance St",
-        "ATSTREET": "Coleman St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Coleman St (EB)"
     },
     {
         "OBJECTID": 59732,
@@ -1357,8 +1223,7 @@ const transitStops: Stop[] = [
         "LAT": "50.445096",
         "LON": "-104.537568",
         "ONSTREET": "Quance St",
-        "ATSTREET": "Westfair Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Westfair Rd (EB)"
     },
     {
         "OBJECTID": 59733,
@@ -1367,8 +1232,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44353",
         "LON": "-104.53433",
         "ONSTREET": "Quance St",
-        "ATSTREET": "Tregarva Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Tregarva Dr (EB)"
     },
     {
         "OBJECTID": 59734,
@@ -1377,8 +1241,7 @@ const transitStops: Stop[] = [
         "LAT": "50.443527",
         "LON": "-104.531827",
         "ONSTREET": "Quance St",
-        "ATSTREET": "Prince Of Wales Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Prince Of Wales Dr (EB)"
     },
     {
         "OBJECTID": 59735,
@@ -1387,8 +1250,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44552",
         "LON": "-104.52936",
         "ONSTREET": "Westfair Rd",
-        "ATSTREET": "Superstore (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Superstore (WB)"
     },
     {
         "OBJECTID": 59736,
@@ -1397,8 +1259,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44515",
         "LON": "-104.532771",
         "ONSTREET": "Prince Of Wales Dr",
-        "ATSTREET": "Westfair Rd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Westfair Rd (NB)"
     },
     {
         "OBJECTID": 59737,
@@ -1407,8 +1268,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44431",
         "LON": "-104.533151",
         "ONSTREET": "Prince Of Wales Dr",
-        "ATSTREET": "Westfair Rd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Westfair Rd (SB)"
     },
     {
         "OBJECTID": 59738,
@@ -1417,8 +1277,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44358",
         "LON": "-104.53393",
         "ONSTREET": "Quance St",
-        "ATSTREET": "Prince Of Wales Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Prince Of Wales Dr (WB)"
     },
     {
         "OBJECTID": 59739,
@@ -1427,8 +1286,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44524",
         "LON": "-104.5376",
         "ONSTREET": "Quance St",
-        "ATSTREET": "Westfair Rd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Westfair Rd (WB)"
     },
     {
         "OBJECTID": 59740,
@@ -1437,8 +1295,7 @@ const transitStops: Stop[] = [
         "LAT": "50.448771",
         "LON": "-104.540473",
         "ONSTREET": "Coleman Cr",
-        "ATSTREET": "Eastgate Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Eastgate Dr (NB)"
     },
     {
         "OBJECTID": 59741,
@@ -1447,8 +1304,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44987",
         "LON": "-104.53932",
         "ONSTREET": "Fines Dr",
-        "ATSTREET": "Fines Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Fines Dr (NB)"
     },
     {
         "OBJECTID": 59742,
@@ -1457,8 +1313,7 @@ const transitStops: Stop[] = [
         "LAT": "50.452249",
         "LON": "-104.540478",
         "ONSTREET": "Brown St",
-        "ATSTREET": "Thomson Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Thomson Ave (NB)"
     },
     {
         "OBJECTID": 59743,
@@ -1467,8 +1322,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45556",
         "LON": "-104.54052",
         "ONSTREET": "Brown St",
-        "ATSTREET": "Dewdney Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Dewdney Ave (NB)"
     },
     {
         "OBJECTID": 59744,
@@ -1477,8 +1331,7 @@ const transitStops: Stop[] = [
         "LAT": "50.457739",
         "LON": "-104.54063",
         "ONSTREET": "Brown St",
-        "ATSTREET": "Mackenzie Cr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Mackenzie Cr (NB)"
     },
     {
         "OBJECTID": 59745,
@@ -1487,8 +1340,7 @@ const transitStops: Stop[] = [
         "LAT": "50.459293",
         "LON": "-104.540732",
         "ONSTREET": "7th Ave E",
-        "ATSTREET": "Brown St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Brown St (EB)"
     },
     {
         "OBJECTID": 59746,
@@ -1497,8 +1349,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45945",
         "LON": "-104.537451",
         "ONSTREET": "7th Ave E",
-        "ATSTREET": "McVeety Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "McVeety Dr (EB)"
     },
     {
         "OBJECTID": 59747,
@@ -1507,8 +1358,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45654",
         "LON": "-104.536",
         "ONSTREET": "McVeety Dr",
-        "ATSTREET": "Barton Pl (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Barton Pl (EB)"
     },
     {
         "OBJECTID": 59748,
@@ -1517,8 +1367,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45657",
         "LON": "-104.532359",
         "ONSTREET": "McVeety Dr",
-        "ATSTREET": "Swan Pl (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Swan Pl (EB)"
     },
     {
         "OBJECTID": 59749,
@@ -1527,8 +1376,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4588",
         "LON": "-104.529649",
         "ONSTREET": "McVeety Dr",
-        "ATSTREET": "Creekside Rd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Creekside Rd (NB)"
     },
     {
         "OBJECTID": 59750,
@@ -1537,8 +1385,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46024",
         "LON": "-104.53054",
         "ONSTREET": "McVeety Dr",
-        "ATSTREET": "Degelman Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Degelman Dr (NB)"
     },
     {
         "OBJECTID": 59751,
@@ -1547,8 +1394,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46327",
         "LON": "-104.53086",
         "ONSTREET": "Wadey Dr",
-        "ATSTREET": "Deutsch Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Deutsch Dr (NB)"
     },
     {
         "OBJECTID": 59752,
@@ -1557,8 +1403,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46462",
         "LON": "-104.53149",
         "ONSTREET": "Jenkins Dr",
-        "ATSTREET": "Cormorant Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Cormorant Dr (WB)"
     },
     {
         "OBJECTID": 59753,
@@ -1567,8 +1412,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46443",
         "LON": "-104.53588",
         "ONSTREET": "Jenkins Dr",
-        "ATSTREET": "Cherry Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Cherry Dr (WB)"
     },
     {
         "OBJECTID": 59754,
@@ -1577,8 +1421,7 @@ const transitStops: Stop[] = [
         "LAT": "50.463293",
         "LON": "-104.539084",
         "ONSTREET": "Graham Rd",
-        "ATSTREET": "Jenkins Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Jenkins Dr (WB)"
     },
     {
         "OBJECTID": 59755,
@@ -1587,8 +1430,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46336",
         "LON": "-104.542481",
         "ONSTREET": "Graham Rd",
-        "ATSTREET": "Hartman Cr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Hartman Cr (WB)"
     },
     {
         "OBJECTID": 59756,
@@ -1597,8 +1439,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46092",
         "LON": "-104.54627",
         "ONSTREET": "Graham Rd",
-        "ATSTREET": "Hall Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Hall Ave (SB)"
     },
     {
         "OBJECTID": 59757,
@@ -1607,8 +1448,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45833",
         "LON": "-104.545403",
         "ONSTREET": "Bentley Dr",
-        "ATSTREET": "7th Ave E (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "7th Ave E (SB)"
     },
     {
         "OBJECTID": 59758,
@@ -1617,8 +1457,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45517",
         "LON": "-104.545411",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Bentley Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Bentley Dr (WB)"
     },
     {
         "OBJECTID": 59759,
@@ -1627,8 +1466,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45522",
         "LON": "-104.54938",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Fleet St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Fleet St (WB)"
     },
     {
         "OBJECTID": 59760,
@@ -1637,8 +1475,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45638",
         "LON": "-104.55256",
         "ONSTREET": "Cannon St",
-        "ATSTREET": "Nagel Cr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Nagel Cr (NB)"
     },
     {
         "OBJECTID": 59761,
@@ -1647,8 +1484,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45976",
         "LON": "-104.552531",
         "ONSTREET": "Cannon St",
-        "ATSTREET": "Scrivener Cr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Scrivener Cr (NB)"
     },
     {
         "OBJECTID": 59762,
@@ -1657,8 +1493,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46126",
         "LON": "-104.55254",
         "ONSTREET": "Cannon St",
-        "ATSTREET": "Young Cr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Young Cr (NB)"
     },
     {
         "OBJECTID": 59763,
@@ -1667,8 +1502,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46088",
         "LON": "-104.55664",
         "ONSTREET": "Cavendish St",
-        "ATSTREET": "Armstrong Bay (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Armstrong Bay (WB)"
     },
     {
         "OBJECTID": 59764,
@@ -1677,8 +1511,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45806",
         "LON": "-104.55821",
         "ONSTREET": "Cavendish St",
-        "ATSTREET": "7th Ave E (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "7th Ave E (SB)"
     },
     {
         "OBJECTID": 59765,
@@ -1687,8 +1520,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4552",
         "LON": "-104.55841",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Cavendish St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Cavendish St (WB)"
     },
     {
         "OBJECTID": 59766,
@@ -1697,8 +1529,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45523",
         "LON": "-104.5611",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Oxford St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Oxford St (WB)"
     },
     {
         "OBJECTID": 59767,
@@ -1707,8 +1538,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45523",
         "LON": "-104.56695",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Rupert St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Rupert St (WB)"
     },
     {
         "OBJECTID": 59768,
@@ -1717,8 +1547,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45522",
         "LON": "-104.56991",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Lacon St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Lacon St (WB)"
     },
     {
         "OBJECTID": 59769,
@@ -1727,8 +1556,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45461",
         "LON": "-104.57247",
         "ONSTREET": "Park St",
-        "ATSTREET": "Dewdney Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Dewdney Ave (SB)"
     },
     {
         "OBJECTID": 59770,
@@ -1737,8 +1565,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45332",
         "LON": "-104.57237",
         "ONSTREET": "Park St",
-        "ATSTREET": "9th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "9th Ave (SB)"
     },
     {
         "OBJECTID": 59771,
@@ -1747,8 +1574,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45156",
         "LON": "-104.572339",
         "ONSTREET": "Park St",
-        "ATSTREET": "10th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "10th Ave (SB)"
     },
     {
         "OBJECTID": 59772,
@@ -1757,8 +1583,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44987",
         "LON": "-104.57238",
         "ONSTREET": "Park St",
-        "ATSTREET": "11th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "11th Ave (SB)"
     },
     {
         "OBJECTID": 59773,
@@ -1767,8 +1592,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44725",
         "LON": "-104.57315",
         "ONSTREET": "Victoria Ave",
-        "ATSTREET": "Park St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Park St (WB)"
     },
     {
         "OBJECTID": 59774,
@@ -1777,8 +1601,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44728",
         "LON": "-104.57774",
         "ONSTREET": "Victoria Ave",
-        "ATSTREET": "Fleury St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Fleury St (WB)"
     },
     {
         "OBJECTID": 59775,
@@ -1787,8 +1610,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44724",
         "LON": "-104.581909",
         "ONSTREET": "Victoria Ave",
-        "ATSTREET": "McAra St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "McAra St (WB)"
     },
     {
         "OBJECTID": 59776,
@@ -1797,8 +1619,7 @@ const transitStops: Stop[] = [
         "LAT": "50.447222",
         "LON": "-104.584815",
         "ONSTREET": "Victoria Ave",
-        "ATSTREET": "Lindsay St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Lindsay St (WB)"
     },
     {
         "OBJECTID": 59777,
@@ -1807,8 +1628,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44722",
         "LON": "-104.58855",
         "ONSTREET": "Victoria Ave",
-        "ATSTREET": "Edgar St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Edgar St (WB)"
     },
     {
         "OBJECTID": 59778,
@@ -1817,8 +1637,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44724",
         "LON": "-104.59279",
         "ONSTREET": "Victoria Ave",
-        "ATSTREET": "Atkinson St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Atkinson St (WB)"
     },
     {
         "OBJECTID": 59779,
@@ -1827,8 +1646,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44726",
         "LON": "-104.595699",
         "ONSTREET": "Victoria Ave",
-        "ATSTREET": "Winnipeg St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Winnipeg St (WB)"
     },
     {
         "OBJECTID": 59780,
@@ -1837,8 +1655,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44727",
         "LON": "-104.59823",
         "ONSTREET": "Victoria Ave",
-        "ATSTREET": "Montreal St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Montreal St (WB)"
     },
     {
         "OBJECTID": 59781,
@@ -1847,8 +1664,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44729",
         "LON": "-104.60106",
         "ONSTREET": "Victoria Ave",
-        "ATSTREET": "Ottawa St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Ottawa St (WB)"
     },
     {
         "OBJECTID": 59782,
@@ -1857,8 +1673,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44736",
         "LON": "-104.60568",
         "ONSTREET": "Victoria Ave",
-        "ATSTREET": "Osler St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Osler St (WB)"
     },
     {
         "OBJECTID": 59783,
@@ -1867,8 +1682,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42293",
         "LON": "-104.618121",
         "ONSTREET": "Albert St",
-        "ATSTREET": "23rd Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "23rd Ave (SB)"
     },
     {
         "OBJECTID": 59784,
@@ -1877,8 +1691,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41874",
         "LON": "-104.61883",
         "ONSTREET": "25th Ave",
-        "ATSTREET": "Albert St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Albert St (WB)"
     },
     {
         "OBJECTID": 59785,
@@ -1887,8 +1700,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41731",
         "LON": "-104.62108",
         "ONSTREET": "Rae St",
-        "ATSTREET": "Golden Mile (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Golden Mile (SB)"
     },
     {
         "OBJECTID": 59786,
@@ -1897,8 +1709,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4154",
         "LON": "-104.62043",
         "ONSTREET": "Parliament Ave",
-        "ATSTREET": "Rae St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Rae St (EB)"
     },
     {
         "OBJECTID": 59787,
@@ -1907,8 +1718,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41493",
         "LON": "-104.60905",
         "ONSTREET": "Massey Rd",
-        "ATSTREET": "Parliament Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Parliament Ave (SB)"
     },
     {
         "OBJECTID": 59788,
@@ -1917,8 +1727,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41284",
         "LON": "-104.609051",
         "ONSTREET": "Massey Rd",
-        "ATSTREET": "Parker Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Parker Ave (SB)"
     },
     {
         "OBJECTID": 59789,
@@ -1927,8 +1736,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40973",
         "LON": "-104.609059",
         "ONSTREET": "Massey Rd",
-        "ATSTREET": "Balfour Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Balfour Dr (SB)"
     },
     {
         "OBJECTID": 59790,
@@ -1937,8 +1745,7 @@ const transitStops: Stop[] = [
         "LAT": "50.407884",
         "LON": "-104.607731",
         "ONSTREET": "Grant Dr",
-        "ATSTREET": "Durham Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Durham Dr (EB)"
     },
     {
         "OBJECTID": 59791,
@@ -1947,8 +1754,7 @@ const transitStops: Stop[] = [
         "LAT": "50.407904",
         "LON": "-104.60235",
         "ONSTREET": "Grant Dr",
-        "ATSTREET": "Castle Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Castle Rd (EB)"
     },
     {
         "OBJECTID": 59792,
@@ -1957,8 +1763,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40743",
         "LON": "-104.598339",
         "ONSTREET": "Grant Dr",
-        "ATSTREET": "Grant Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Grant Rd (EB)"
     },
     {
         "OBJECTID": 59793,
@@ -1967,8 +1772,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40463",
         "LON": "-104.60037",
         "ONSTREET": "Grant Rd",
-        "ATSTREET": "Capitol Rd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Capitol Rd (SB)"
     },
     {
         "OBJECTID": 59794,
@@ -1977,8 +1781,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40211",
         "LON": "-104.60241",
         "ONSTREET": "Grant Rd",
-        "ATSTREET": "Castle Rd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Castle Rd (SB)"
     },
     {
         "OBJECTID": 59795,
@@ -1987,8 +1790,7 @@ const transitStops: Stop[] = [
         "LAT": "50.401389",
         "LON": "-104.60637",
         "ONSTREET": "Grant Rd",
-        "ATSTREET": "Orchard Rd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Orchard Rd (WB)"
     },
     {
         "OBJECTID": 59796,
@@ -1997,8 +1799,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40169",
         "LON": "-104.6119",
         "ONSTREET": "Grant Rd",
-        "ATSTREET": "Shannon Rd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Shannon Rd (WB)"
     },
     {
         "OBJECTID": 59797,
@@ -2007,8 +1808,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40465",
         "LON": "-104.613819",
         "ONSTREET": "Gordon Rd",
-        "ATSTREET": "Grant Rd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Grant Rd (WB)"
     },
     {
         "OBJECTID": 59798,
@@ -2017,8 +1817,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40459",
         "LON": "-104.61646",
         "ONSTREET": "Gordon Rd",
-        "ATSTREET": "Richardson Cr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Richardson Cr (WB)"
     },
     {
         "OBJECTID": 59799,
@@ -2027,8 +1826,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4046",
         "LON": "-104.6207",
         "ONSTREET": "Gordon Rd",
-        "ATSTREET": "Rae St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Rae St (WB)"
     },
     {
         "OBJECTID": 59800,
@@ -2037,8 +1835,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40447",
         "LON": "-104.62572",
         "ONSTREET": "Lockwood Rd",
-        "ATSTREET": "Gordon Rd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Gordon Rd (SB)"
     },
     {
         "OBJECTID": 59801,
@@ -2047,8 +1844,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40256",
         "LON": "-104.625704",
         "ONSTREET": "Lockwood Rd",
-        "ATSTREET": "Lincoln Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Lincoln Dr (SB)"
     },
     {
         "OBJECTID": 59802,
@@ -2057,8 +1853,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40129",
         "LON": "-104.6248",
         "ONSTREET": "Plainsview Dr",
-        "ATSTREET": "Lockwood Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Lockwood Rd (EB)"
     },
     {
         "OBJECTID": 59803,
@@ -2067,8 +1862,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40198",
         "LON": "-104.62468",
         "ONSTREET": "Southland Mall",
-        "ATSTREET": "Plainsview Rd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Plainsview Rd (WB)"
     },
     {
         "OBJECTID": 59804,
@@ -2077,8 +1871,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40265",
         "LON": "-104.62557",
         "ONSTREET": "Lockwood Rd",
-        "ATSTREET": "Lincoln Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Lincoln Dr (NB)"
     },
     {
         "OBJECTID": 59805,
@@ -2087,8 +1880,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40421",
         "LON": "-104.62556",
         "ONSTREET": "Lockwood Rd",
-        "ATSTREET": "Gordon Rd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Gordon Rd (NB)"
     },
     {
         "OBJECTID": 59806,
@@ -2097,8 +1889,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40553",
         "LON": "-104.63017",
         "ONSTREET": "Gordon Rd",
-        "ATSTREET": "Montague St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Montague St (WB)"
     },
     {
         "OBJECTID": 59807,
@@ -2107,8 +1898,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40547",
         "LON": "-104.63327",
         "ONSTREET": "Gordon Rd",
-        "ATSTREET": "Argyle St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Argyle St (WB)"
     },
     {
         "OBJECTID": 59808,
@@ -2117,8 +1907,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40601",
         "LON": "-104.636841",
         "ONSTREET": "Queen St",
-        "ATSTREET": "Gordon Rd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Gordon Rd (NB)"
     },
     {
         "OBJECTID": 59809,
@@ -2127,8 +1916,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40876",
         "LON": "-104.6362",
         "ONSTREET": "Sunset Dr",
-        "ATSTREET": "Queen St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Queen St (EB)"
     },
     {
         "OBJECTID": 59810,
@@ -2137,8 +1925,7 @@ const transitStops: Stop[] = [
         "LAT": "50.408734",
         "LON": "-104.633361",
         "ONSTREET": "Sunset Dr",
-        "ATSTREET": "McTavish St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "McTavish St (EB)"
     },
     {
         "OBJECTID": 59811,
@@ -2147,8 +1934,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40912",
         "LON": "-104.6296",
         "ONSTREET": "Montague St",
-        "ATSTREET": "Sunset Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Sunset Dr (NB)"
     },
     {
         "OBJECTID": 59812,
@@ -2157,8 +1943,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41252",
         "LON": "-104.62962",
         "ONSTREET": "Montague St",
-        "ATSTREET": "29th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "29th Ave (NB)"
     },
     {
         "OBJECTID": 59813,
@@ -2167,8 +1952,7 @@ const transitStops: Stop[] = [
         "LAT": "50.415388",
         "LON": "-104.629189",
         "ONSTREET": "Parliament Ave",
-        "ATSTREET": "Montague St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Montague St (EB)"
     },
     {
         "OBJECTID": 59814,
@@ -2177,8 +1961,7 @@ const transitStops: Stop[] = [
         "LAT": "50.415387",
         "LON": "-104.62636",
         "ONSTREET": "Parliament Ave",
-        "ATSTREET": "Garnet St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Garnet St (EB)"
     },
     {
         "OBJECTID": 59815,
@@ -2187,8 +1970,7 @@ const transitStops: Stop[] = [
         "LAT": "50.415385",
         "LON": "-104.623451",
         "ONSTREET": "Parliament Ave",
-        "ATSTREET": "Robinson St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Robinson St (EB)"
     },
     {
         "OBJECTID": 59816,
@@ -2197,8 +1979,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41913",
         "LON": "-104.617911",
         "ONSTREET": "Albert St",
-        "ATSTREET": "25th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "25th Ave (NB)"
     },
     {
         "OBJECTID": 59817,
@@ -2207,8 +1988,7 @@ const transitStops: Stop[] = [
         "LAT": "50.447123",
         "LON": "-104.605639",
         "ONSTREET": "Victoria Ave",
-        "ATSTREET": "Broad St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Broad St (EB)"
     },
     {
         "OBJECTID": 59818,
@@ -2217,8 +1997,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44716",
         "LON": "-104.60004",
         "ONSTREET": "Victoria Ave",
-        "ATSTREET": "Ottawa St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Ottawa St (EB)"
     },
     {
         "OBJECTID": 59819,
@@ -2227,8 +2006,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44712",
         "LON": "-104.598289",
         "ONSTREET": "Victoria Ave",
-        "ATSTREET": "Montreal St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Montreal St (EB)"
     },
     {
         "OBJECTID": 59820,
@@ -2237,8 +2015,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44712",
         "LON": "-104.59465",
         "ONSTREET": "Victoria Ave",
-        "ATSTREET": "Winnipeg St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Winnipeg St (EB)"
     },
     {
         "OBJECTID": 59821,
@@ -2247,8 +2024,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44712",
         "LON": "-104.59186",
         "ONSTREET": "Victoria Ave",
-        "ATSTREET": "Atkinson St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Atkinson St (EB)"
     },
     {
         "OBJECTID": 59822,
@@ -2257,8 +2033,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44717",
         "LON": "-104.58878",
         "ONSTREET": "Victoria Ave",
-        "ATSTREET": "Reynolds St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Reynolds St (EB)"
     },
     {
         "OBJECTID": 59823,
@@ -2267,8 +2042,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44712",
         "LON": "-104.58454",
         "ONSTREET": "Victoria Ave",
-        "ATSTREET": "Lindsay St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Lindsay St (EB)"
     },
     {
         "OBJECTID": 59824,
@@ -2277,8 +2051,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44711",
         "LON": "-104.582001",
         "ONSTREET": "Victoria Ave",
-        "ATSTREET": "McAra St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "McAra St (EB)"
     },
     {
         "OBJECTID": 59825,
@@ -2287,8 +2060,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44716",
         "LON": "-104.577559",
         "ONSTREET": "Victoria Ave",
-        "ATSTREET": "Harvey St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Harvey St (EB)"
     },
     {
         "OBJECTID": 59826,
@@ -2297,8 +2069,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44717",
         "LON": "-104.574761",
         "ONSTREET": "Victoria Ave",
-        "ATSTREET": "Abbott St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Abbott St (EB)"
     },
     {
         "OBJECTID": 59827,
@@ -2307,8 +2078,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44795",
         "LON": "-104.57212",
         "ONSTREET": "Park St",
-        "ATSTREET": "Service Rd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Service Rd (NB)"
     },
     {
         "OBJECTID": 59828,
@@ -2317,8 +2087,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45099",
         "LON": "-104.57216",
         "ONSTREET": "Park St",
-        "ATSTREET": "11th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "11th Ave (NB)"
     },
     {
         "OBJECTID": 59829,
@@ -2327,8 +2096,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45229",
         "LON": "-104.572179",
         "ONSTREET": "Park St",
-        "ATSTREET": "10th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "10th Ave (NB)"
     },
     {
         "OBJECTID": 59830,
@@ -2337,8 +2105,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45385",
         "LON": "-104.572191",
         "ONSTREET": "Park St",
-        "ATSTREET": "9th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "9th Ave (NB)"
     },
     {
         "OBJECTID": 59831,
@@ -2347,8 +2114,7 @@ const transitStops: Stop[] = [
         "LAT": "50.455114",
         "LON": "-104.57142",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Park St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Park St (EB)"
     },
     {
         "OBJECTID": 59832,
@@ -2357,8 +2123,7 @@ const transitStops: Stop[] = [
         "LAT": "50.455117",
         "LON": "-104.568931",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Lacon St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Lacon St (EB)"
     },
     {
         "OBJECTID": 59833,
@@ -2367,8 +2132,7 @@ const transitStops: Stop[] = [
         "LAT": "50.455117",
         "LON": "-104.566011",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Rupert St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Rupert St (EB)"
     },
     {
         "OBJECTID": 59834,
@@ -2377,8 +2141,7 @@ const transitStops: Stop[] = [
         "LAT": "50.455121",
         "LON": "-104.5616",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Grosvenor St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Grosvenor St (EB)"
     },
     {
         "OBJECTID": 59835,
@@ -2387,8 +2150,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44959",
         "LON": "-104.66282",
         "ONSTREET": "Garrett Ave",
-        "ATSTREET": "Shaw St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Shaw St (WB)"
     },
     {
         "OBJECTID": 59836,
@@ -2397,8 +2159,7 @@ const transitStops: Stop[] = [
         "LAT": "50.450512",
         "LON": "-104.653021",
         "ONSTREET": "11th Ave",
-        "ATSTREET": "Empress St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Empress St (EB)"
     },
     {
         "OBJECTID": 59837,
@@ -2407,8 +2168,7 @@ const transitStops: Stop[] = [
         "LAT": "50.450508",
         "LON": "-104.650211",
         "ONSTREET": "11th Ave",
-        "ATSTREET": "Royal St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Royal St (EB)"
     },
     {
         "OBJECTID": 59838,
@@ -2417,8 +2177,7 @@ const transitStops: Stop[] = [
         "LAT": "50.450502",
         "LON": "-104.648311",
         "ONSTREET": "11th Ave",
-        "ATSTREET": "Forget St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Forget St (EB)"
     },
     {
         "OBJECTID": 59839,
@@ -2427,8 +2186,7 @@ const transitStops: Stop[] = [
         "LAT": "50.450504",
         "LON": "-104.64595",
         "ONSTREET": "11th Ave",
-        "ATSTREET": "Connaught St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Connaught St (EB)"
     },
     {
         "OBJECTID": 59840,
@@ -2437,8 +2195,7 @@ const transitStops: Stop[] = [
         "LAT": "50.450504",
         "LON": "-104.644568",
         "ONSTREET": "11th Ave",
-        "ATSTREET": "Alexandra St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Alexandra St (EB)"
     },
     {
         "OBJECTID": 59841,
@@ -2447,8 +2204,7 @@ const transitStops: Stop[] = [
         "LAT": "50.445392",
         "LON": "-104.640488",
         "ONSTREET": "13th Ave",
-        "ATSTREET": "Pasqua St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Pasqua St (EB)"
     },
     {
         "OBJECTID": 59842,
@@ -2457,8 +2213,7 @@ const transitStops: Stop[] = [
         "LAT": "50.445445",
         "LON": "-104.637929",
         "ONSTREET": "13th Ave",
-        "ATSTREET": "King St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "King St (EB)"
     },
     {
         "OBJECTID": 59843,
@@ -2467,8 +2222,7 @@ const transitStops: Stop[] = [
         "LAT": "50.445454",
         "LON": "-104.63507",
         "ONSTREET": "13th Ave",
-        "ATSTREET": "Princess St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Princess St (EB)"
     },
     {
         "OBJECTID": 59844,
@@ -2477,8 +2231,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44546",
         "LON": "-104.632121",
         "ONSTREET": "13th Ave",
-        "ATSTREET": "Argyle St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Argyle St (EB)"
     },
     {
         "OBJECTID": 59845,
@@ -2487,8 +2240,7 @@ const transitStops: Stop[] = [
         "LAT": "50.445455",
         "LON": "-104.629149",
         "ONSTREET": "13th Ave",
-        "ATSTREET": "Montague St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Montague St (EB)"
     },
     {
         "OBJECTID": 59846,
@@ -2497,8 +2249,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44546",
         "LON": "-104.626391",
         "ONSTREET": "13th Ave",
-        "ATSTREET": "Garnet St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Garnet St (EB)"
     },
     {
         "OBJECTID": 59847,
@@ -2507,8 +2258,7 @@ const transitStops: Stop[] = [
         "LAT": "50.445474",
         "LON": "-104.62335",
         "ONSTREET": "13th Ave",
-        "ATSTREET": "Robinson St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Robinson St (EB)"
     },
     {
         "OBJECTID": 59848,
@@ -2517,8 +2267,7 @@ const transitStops: Stop[] = [
         "LAT": "50.445468",
         "LON": "-104.620601",
         "ONSTREET": "13th Ave",
-        "ATSTREET": "Rae St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Rae St (EB)"
     },
     {
         "OBJECTID": 59849,
@@ -2527,8 +2276,7 @@ const transitStops: Stop[] = [
         "LAT": "50.445466",
         "LON": "-104.619118",
         "ONSTREET": "13th Ave",
-        "ATSTREET": "Angus St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Angus St (EB)"
     },
     {
         "OBJECTID": 59850,
@@ -2537,8 +2285,7 @@ const transitStops: Stop[] = [
         "LAT": "50.450323",
         "LON": "-104.602917",
         "ONSTREET": "11th Ave",
-        "ATSTREET": "Halifax St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Halifax St (EB)"
     },
     {
         "OBJECTID": 59851,
@@ -2547,8 +2294,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45036",
         "LON": "-104.60003",
         "ONSTREET": "11th Ave",
-        "ATSTREET": "Ottawa St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Ottawa St (EB)"
     },
     {
         "OBJECTID": 59852,
@@ -2557,8 +2303,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45028",
         "LON": "-104.59722",
         "ONSTREET": "11th Ave",
-        "ATSTREET": "Montreal St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Montreal St (EB)"
     },
     {
         "OBJECTID": 59853,
@@ -2567,8 +2312,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45072",
         "LON": "-104.595099",
         "ONSTREET": "Winnipeg St",
-        "ATSTREET": "11th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "11th Ave (NB)"
     },
     {
         "OBJECTID": 59854,
@@ -2577,8 +2321,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45232",
         "LON": "-104.59512",
         "ONSTREET": "Winnipeg St",
-        "ATSTREET": "Saskatchewan Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Saskatchewan Dr (NB)"
     },
     {
         "OBJECTID": 59855,
@@ -2587,8 +2330,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45467",
         "LON": "-104.595122",
         "ONSTREET": "Winnipeg St",
-        "ATSTREET": "Dewdney Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Dewdney Ave (NB)"
     },
     {
         "OBJECTID": 59856,
@@ -2597,8 +2339,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45708",
         "LON": "-104.595111",
         "ONSTREET": "Winnipeg St",
-        "ATSTREET": "8th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "8th Ave (NB)"
     },
     {
         "OBJECTID": 59857,
@@ -2607,8 +2348,7 @@ const transitStops: Stop[] = [
         "LAT": "50.458519",
         "LON": "-104.59512",
         "ONSTREET": "Winnipeg St",
-        "ATSTREET": "7th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "7th Ave (NB)"
     },
     {
         "OBJECTID": 59858,
@@ -2617,8 +2357,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45973",
         "LON": "-104.59458",
         "ONSTREET": "6th Ave",
-        "ATSTREET": "Winnipeg St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Winnipeg St (EB)"
     },
     {
         "OBJECTID": 59859,
@@ -2627,8 +2366,7 @@ const transitStops: Stop[] = [
         "LAT": "50.459781",
         "LON": "-104.591699",
         "ONSTREET": "6th Ave",
-        "ATSTREET": "Atkinson St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Atkinson St (EB)"
     },
     {
         "OBJECTID": 59860,
@@ -2637,8 +2375,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45982",
         "LON": "-104.59048",
         "ONSTREET": "6th Ave",
-        "ATSTREET": "Broder St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Broder St (EB)"
     },
     {
         "OBJECTID": 59861,
@@ -2647,8 +2384,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45982",
         "LON": "-104.5874",
         "ONSTREET": "6th Ave",
-        "ATSTREET": "Edgar St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Edgar St (EB)"
     },
     {
         "OBJECTID": 59862,
@@ -2657,8 +2393,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45983",
         "LON": "-104.58453",
         "ONSTREET": "6th Ave",
-        "ATSTREET": "Lindsay St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Lindsay St (EB)"
     },
     {
         "OBJECTID": 59863,
@@ -2667,8 +2402,7 @@ const transitStops: Stop[] = [
         "LAT": "50.462999",
         "LON": "-104.573349",
         "ONSTREET": "4th Ave",
-        "ATSTREET": "Park St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Park St (WB)"
     },
     {
         "OBJECTID": 59864,
@@ -2677,8 +2411,7 @@ const transitStops: Stop[] = [
         "LAT": "50.462998",
         "LON": "-104.577439",
         "ONSTREET": "4th Ave",
-        "ATSTREET": "Fleury St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Fleury St (WB)"
     },
     {
         "OBJECTID": 59865,
@@ -2687,8 +2420,7 @@ const transitStops: Stop[] = [
         "LAT": "50.462997",
         "LON": "-104.583199",
         "ONSTREET": "4th Ave",
-        "ATSTREET": "McDonald St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "McDonald St (WB)"
     },
     {
         "OBJECTID": 59866,
@@ -2697,8 +2429,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46297",
         "LON": "-104.58563",
         "ONSTREET": "4th Ave",
-        "ATSTREET": "Lindsay St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Lindsay St (WB)"
     },
     {
         "OBJECTID": 59867,
@@ -2707,8 +2438,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46295",
         "LON": "-104.5887",
         "ONSTREET": "4th Ave",
-        "ATSTREET": "Edgar St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Edgar St (WB)"
     },
     {
         "OBJECTID": 59868,
@@ -2717,8 +2447,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46297",
         "LON": "-104.591499",
         "ONSTREET": "4th Ave",
-        "ATSTREET": "Broder St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Broder St (WB)"
     },
     {
         "OBJECTID": 59869,
@@ -2727,8 +2456,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46296",
         "LON": "-104.59487",
         "ONSTREET": "4th Ave",
-        "ATSTREET": "Winnipeg St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Winnipeg St (WB)"
     },
     {
         "OBJECTID": 59870,
@@ -2737,8 +2465,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46128",
         "LON": "-104.59528",
         "ONSTREET": "Winnipeg St",
-        "ATSTREET": "5th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "5th Ave (SB)"
     },
     {
         "OBJECTID": 59871,
@@ -2747,8 +2474,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45956",
         "LON": "-104.595249",
         "ONSTREET": "Winnipeg St",
-        "ATSTREET": "6th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "6th Ave (SB)"
     },
     {
         "OBJECTID": 59872,
@@ -2757,8 +2483,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45802",
         "LON": "-104.595201",
         "ONSTREET": "Winnipeg St",
-        "ATSTREET": "7th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "7th Ave (SB)"
     },
     {
         "OBJECTID": 59873,
@@ -2767,8 +2492,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45692",
         "LON": "-104.59521",
         "ONSTREET": "Winnipeg St",
-        "ATSTREET": "8th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "8th Ave (SB)"
     },
     {
         "OBJECTID": 59874,
@@ -2777,8 +2501,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45445",
         "LON": "-104.59522",
         "ONSTREET": "Winnipeg St",
-        "ATSTREET": "Dewdney Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Dewdney Ave (SB)"
     },
     {
         "OBJECTID": 59875,
@@ -2787,8 +2510,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45159",
         "LON": "-104.595191",
         "ONSTREET": "Winnipeg St",
-        "ATSTREET": "Saskatchewan Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Saskatchewan Dr (SB)"
     },
     {
         "OBJECTID": 59876,
@@ -2797,8 +2519,7 @@ const transitStops: Stop[] = [
         "LAT": "50.450416",
         "LON": "-104.595642",
         "ONSTREET": "11th Ave",
-        "ATSTREET": "Winnipeg St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Winnipeg St (WB)"
     },
     {
         "OBJECTID": 59877,
@@ -2807,8 +2528,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45038",
         "LON": "-104.59841",
         "ONSTREET": "11th Ave",
-        "ATSTREET": "Montreal St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Montreal St (WB)"
     },
     {
         "OBJECTID": 59878,
@@ -2817,8 +2537,7 @@ const transitStops: Stop[] = [
         "LAT": "50.450424",
         "LON": "-104.601739",
         "ONSTREET": "11th Ave",
-        "ATSTREET": "Ottawa St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Ottawa St (WB)"
     },
     {
         "OBJECTID": 59879,
@@ -2827,8 +2546,7 @@ const transitStops: Stop[] = [
         "LAT": "50.450425",
         "LON": "-104.603939",
         "ONSTREET": "11th Ave",
-        "ATSTREET": "Halifax St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Halifax St (WB)"
     },
     {
         "OBJECTID": 59880,
@@ -2837,8 +2555,7 @@ const transitStops: Stop[] = [
         "LAT": "50.450427",
         "LON": "-104.60577",
         "ONSTREET": "11th Ave",
-        "ATSTREET": "Broad St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Broad St (WB)"
     },
     {
         "OBJECTID": 59881,
@@ -2847,8 +2564,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44556",
         "LON": "-104.61873",
         "ONSTREET": "13th Ave",
-        "ATSTREET": "Albert St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Albert St (WB)"
     },
     {
         "OBJECTID": 59882,
@@ -2857,8 +2573,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44552",
         "LON": "-104.62154",
         "ONSTREET": "13th Ave",
-        "ATSTREET": "Rae St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Rae St (WB)"
     },
     {
         "OBJECTID": 59883,
@@ -2867,8 +2582,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44552",
         "LON": "-104.62445",
         "ONSTREET": "13th Ave",
-        "ATSTREET": "Robinson St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Robinson St (WB)"
     },
     {
         "OBJECTID": 59884,
@@ -2877,8 +2591,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44553",
         "LON": "-104.62736",
         "ONSTREET": "13th Ave",
-        "ATSTREET": "Garnet St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Garnet St (WB)"
     },
     {
         "OBJECTID": 59885,
@@ -2887,8 +2600,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44555",
         "LON": "-104.63024",
         "ONSTREET": "13th Ave",
-        "ATSTREET": "Montague St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Montague St (WB)"
     },
     {
         "OBJECTID": 59886,
@@ -2897,8 +2609,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44557",
         "LON": "-104.63149",
         "ONSTREET": "13th Ave",
-        "ATSTREET": "Elphinstone St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Elphinstone St (WB)"
     },
     {
         "OBJECTID": 59887,
@@ -2907,8 +2618,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44555",
         "LON": "-104.63453",
         "ONSTREET": "13th Ave",
-        "ATSTREET": "McTavish St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "McTavish St (WB)"
     },
     {
         "OBJECTID": 59888,
@@ -2917,8 +2627,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44553",
         "LON": "-104.63742",
         "ONSTREET": "13th Ave",
-        "ATSTREET": "Queen St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Queen St (WB)"
     },
     {
         "OBJECTID": 59889,
@@ -2927,8 +2636,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44555",
         "LON": "-104.63883",
         "ONSTREET": "13th Ave",
-        "ATSTREET": "King St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "King St (WB)"
     },
     {
         "OBJECTID": 59890,
@@ -2937,8 +2645,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44555",
         "LON": "-104.64148",
         "ONSTREET": "13th Ave",
-        "ATSTREET": "Pasqua St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Pasqua St (WB)"
     },
     {
         "OBJECTID": 59891,
@@ -2947,8 +2654,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45092",
         "LON": "-104.64374",
         "ONSTREET": "Alexandra St",
-        "ATSTREET": "11th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "11th Ave (NB)"
     },
     {
         "OBJECTID": 59892,
@@ -2957,8 +2663,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45216",
         "LON": "-104.645209",
         "ONSTREET": "10th Ave",
-        "ATSTREET": "York St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "York St (WB)"
     },
     {
         "OBJECTID": 59893,
@@ -2967,8 +2672,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45215",
         "LON": "-104.64649",
         "ONSTREET": "10th Ave",
-        "ATSTREET": "Connaught St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Connaught St (WB)"
     },
     {
         "OBJECTID": 59894,
@@ -2977,8 +2681,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45217",
         "LON": "-104.64871",
         "ONSTREET": "10th Ave",
-        "ATSTREET": "Arthur St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Arthur St (WB)"
     },
     {
         "OBJECTID": 59895,
@@ -2987,8 +2690,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45215",
         "LON": "-104.65139",
         "ONSTREET": "10th Ave",
-        "ATSTREET": "Royal St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Royal St (WB)"
     },
     {
         "OBJECTID": 59896,
@@ -2997,8 +2699,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45182",
         "LON": "-104.65361",
         "ONSTREET": "Empress St",
-        "ATSTREET": "10th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "10th Ave (SB)"
     },
     {
         "OBJECTID": 59897,
@@ -3007,8 +2708,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45084",
         "LON": "-104.65359",
         "ONSTREET": "Empress St",
-        "ATSTREET": "11th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "11th Ave (SB)"
     },
     {
         "OBJECTID": 59898,
@@ -3017,8 +2717,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45676",
         "LON": "-104.558112",
         "ONSTREET": "Cavendish St",
-        "ATSTREET": "Bradley Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Bradley Ave (NB)"
     },
     {
         "OBJECTID": 59899,
@@ -3027,8 +2726,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45867",
         "LON": "-104.558128",
         "ONSTREET": "Cavendish St",
-        "ATSTREET": "7th Ave E (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "7th Ave E (NB)"
     },
     {
         "OBJECTID": 59900,
@@ -3037,8 +2735,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46035",
         "LON": "-104.558129",
         "ONSTREET": "Cavendish St",
-        "ATSTREET": "Rootman Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Rootman Ave (NB)"
     },
     {
         "OBJECTID": 59901,
@@ -3047,8 +2744,7 @@ const transitStops: Stop[] = [
         "LAT": "50.461024",
         "LON": "-104.555255",
         "ONSTREET": "Cavendish St",
-        "ATSTREET": "Cooksley Bay (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Cooksley Bay (EB)"
     },
     {
         "OBJECTID": 59902,
@@ -3057,8 +2753,7 @@ const transitStops: Stop[] = [
         "LAT": "50.461307",
         "LON": "-104.55272",
         "ONSTREET": "Cannon St",
-        "ATSTREET": "Cavendish St (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Cavendish St (SB)"
     },
     {
         "OBJECTID": 59903,
@@ -3067,8 +2762,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45974",
         "LON": "-104.55258",
         "ONSTREET": "Cannon St",
-        "ATSTREET": "Rosen Cr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Rosen Cr (SB)"
     },
     {
         "OBJECTID": 59904,
@@ -3077,8 +2771,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45788",
         "LON": "-104.552658",
         "ONSTREET": "Cannon St",
-        "ATSTREET": "7th Ave E (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "7th Ave E (SB)"
     },
     {
         "OBJECTID": 59905,
@@ -3087,8 +2780,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45514",
         "LON": "-104.551999",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Cannon St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Cannon St (EB)"
     },
     {
         "OBJECTID": 59906,
@@ -3097,8 +2789,7 @@ const transitStops: Stop[] = [
         "LAT": "50.455115",
         "LON": "-104.54932",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Fleet St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Fleet St (EB)"
     },
     {
         "OBJECTID": 59907,
@@ -3107,8 +2798,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45546",
         "LON": "-104.54483",
         "ONSTREET": "Bentley Dr",
-        "ATSTREET": "Dewdney Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Dewdney Ave (NB)"
     },
     {
         "OBJECTID": 59908,
@@ -3117,8 +2807,7 @@ const transitStops: Stop[] = [
         "LAT": "50.459036",
         "LON": "-104.545337",
         "ONSTREET": "Graham Rd",
-        "ATSTREET": "7th Ave E (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "7th Ave E (NB)"
     },
     {
         "OBJECTID": 59909,
@@ -3127,8 +2816,7 @@ const transitStops: Stop[] = [
         "LAT": "50.461419",
         "LON": "-104.546353",
         "ONSTREET": "Graham Rd",
-        "ATSTREET": "Hall Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Hall Ave (NB)"
     },
     {
         "OBJECTID": 59910,
@@ -3137,8 +2825,7 @@ const transitStops: Stop[] = [
         "LAT": "50.463102",
         "LON": "-104.543407",
         "ONSTREET": "Graham Rd",
-        "ATSTREET": "Pawson St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Pawson St (EB)"
     },
     {
         "OBJECTID": 59911,
@@ -3147,8 +2834,7 @@ const transitStops: Stop[] = [
         "LAT": "50.463442",
         "LON": "-104.541509",
         "ONSTREET": "Graham Rd",
-        "ATSTREET": "Brown St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Brown St (EB)"
     },
     {
         "OBJECTID": 59912,
@@ -3157,8 +2843,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46346",
         "LON": "-104.53816",
         "ONSTREET": "Jenkins Dr",
-        "ATSTREET": "Graham Rd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Graham Rd (NB)"
     },
     {
         "OBJECTID": 59913,
@@ -3167,8 +2852,7 @@ const transitStops: Stop[] = [
         "LAT": "50.464481",
         "LON": "-104.534854",
         "ONSTREET": "Jenkins Dr",
-        "ATSTREET": "Middleton Cr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Middleton Cr (EB)"
     },
     {
         "OBJECTID": 59914,
@@ -3177,8 +2861,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46428",
         "LON": "-104.53087",
         "ONSTREET": "Wadey Dr",
-        "ATSTREET": "Jenkins Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Jenkins Dr (SB)"
     },
     {
         "OBJECTID": 59915,
@@ -3187,8 +2870,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4627",
         "LON": "-104.530829",
         "ONSTREET": "Wadey Dr",
-        "ATSTREET": "Bercovich Cr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Bercovich Cr (SB)"
     },
     {
         "OBJECTID": 59916,
@@ -3197,8 +2879,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46117",
         "LON": "-104.53058",
         "ONSTREET": "Wadey Dr",
-        "ATSTREET": "7th Ave E (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "7th Ave E (SB)"
     },
     {
         "OBJECTID": 59917,
@@ -3207,8 +2888,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45837",
         "LON": "-104.529893",
         "ONSTREET": "McVeety Dr",
-        "ATSTREET": "Hammstrom Way (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Hammstrom Way (SB)"
     },
     {
         "OBJECTID": 59918,
@@ -3217,8 +2897,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45636",
         "LON": "-104.53462",
         "ONSTREET": "McVeety Dr",
-        "ATSTREET": "Swan Pl (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Swan Pl (WB)"
     },
     {
         "OBJECTID": 59919,
@@ -3227,8 +2906,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45914",
         "LON": "-104.537109",
         "ONSTREET": "McVeety Dr",
-        "ATSTREET": "Gould Bay (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Gould Bay (NB)"
     },
     {
         "OBJECTID": 59920,
@@ -3237,8 +2915,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45884",
         "LON": "-104.54121",
         "ONSTREET": "Brown St",
-        "ATSTREET": "7th Ave E (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "7th Ave E (SB)"
     },
     {
         "OBJECTID": 59921,
@@ -3247,8 +2924,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45733",
         "LON": "-104.54063",
         "ONSTREET": "Brown St",
-        "ATSTREET": "Mackenzie Way (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Mackenzie Way (SB)"
     },
     {
         "OBJECTID": 59922,
@@ -3257,8 +2933,7 @@ const transitStops: Stop[] = [
         "LAT": "50.454728",
         "LON": "-104.540614",
         "ONSTREET": "Brown St",
-        "ATSTREET": "Dewdney Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Dewdney Ave (SB)"
     },
     {
         "OBJECTID": 59923,
@@ -3267,8 +2942,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45298",
         "LON": "-104.540625",
         "ONSTREET": "Brown St",
-        "ATSTREET": "Peart Cres (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Peart Cres (SB)"
     },
     {
         "OBJECTID": 59924,
@@ -3277,8 +2951,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4515",
         "LON": "-104.53941",
         "ONSTREET": "Fines Dr",
-        "ATSTREET": "Thomson Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Thomson Ave (SB)"
     },
     {
         "OBJECTID": 59925,
@@ -3287,8 +2960,7 @@ const transitStops: Stop[] = [
         "LAT": "50.449278",
         "LON": "-104.539946",
         "ONSTREET": "Fines Dr",
-        "ATSTREET": "Fines Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Fines Dr (WB)"
     },
     {
         "OBJECTID": 59926,
@@ -3297,8 +2969,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44534",
         "LON": "-104.544489",
         "ONSTREET": "Quance St",
-        "ATSTREET": "Starlite St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Starlite St (EB)"
     },
     {
         "OBJECTID": 59927,
@@ -3307,8 +2978,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44607",
         "LON": "-104.53989",
         "ONSTREET": "Quance St",
-        "ATSTREET": "Coleman St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Coleman St (EB)"
     },
     {
         "OBJECTID": 59928,
@@ -3317,8 +2987,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44612",
         "LON": "-104.541662",
         "ONSTREET": "Quance St",
-        "ATSTREET": "Coleman St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Coleman St (WB)"
     },
     {
         "OBJECTID": 59929,
@@ -3327,8 +2996,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44476",
         "LON": "-104.54517",
         "ONSTREET": "Quance St",
-        "ATSTREET": "Starlite St (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Starlite St (SB)"
     },
     {
         "OBJECTID": 59981,
@@ -3337,8 +3005,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44221",
         "LON": "-104.60348",
         "ONSTREET": "Halifax St",
-        "ATSTREET": "15th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "15th Ave (SB)"
     },
     {
         "OBJECTID": 59982,
@@ -3347,8 +3014,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44104",
         "LON": "-104.603511",
         "ONSTREET": "Halifax St",
-        "ATSTREET": "College Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "College Ave (SB)"
     },
     {
         "OBJECTID": 59983,
@@ -3357,8 +3023,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44071",
         "LON": "-104.601609",
         "ONSTREET": "College Ave",
-        "ATSTREET": "Saint John St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Saint John St (EB)"
     },
     {
         "OBJECTID": 59984,
@@ -3367,8 +3032,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44072",
         "LON": "-104.599941",
         "ONSTREET": "College Ave",
-        "ATSTREET": "Ottawa St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Ottawa St (EB)"
     },
     {
         "OBJECTID": 59985,
@@ -3377,8 +3041,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44072",
         "LON": "-104.59722",
         "ONSTREET": "College Ave",
-        "ATSTREET": "Montreal St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Montreal St (EB)"
     },
     {
         "OBJECTID": 59986,
@@ -3387,8 +3050,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44085",
         "LON": "-104.59324",
         "ONSTREET": "College Ave",
-        "ATSTREET": "Wallace St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Wallace St (EB)"
     },
     {
         "OBJECTID": 59987,
@@ -3397,8 +3059,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44086",
         "LON": "-104.59049",
         "ONSTREET": "College Ave",
-        "ATSTREET": "Broder St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Broder St (EB)"
     },
     {
         "OBJECTID": 59988,
@@ -3407,8 +3068,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44086",
         "LON": "-104.58744",
         "ONSTREET": "College Ave",
-        "ATSTREET": "Edgar St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Edgar St (EB)"
     },
     {
         "OBJECTID": 59989,
@@ -3417,8 +3077,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44086",
         "LON": "-104.58453",
         "ONSTREET": "College Ave",
-        "ATSTREET": "Lindsay St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Lindsay St (EB)"
     },
     {
         "OBJECTID": 59990,
@@ -3427,8 +3086,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44086",
         "LON": "-104.581821",
         "ONSTREET": "College Ave",
-        "ATSTREET": "McAra St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "McAra St (EB)"
     },
     {
         "OBJECTID": 59991,
@@ -3437,8 +3095,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44085",
         "LON": "-104.57887",
         "ONSTREET": "College Ave",
-        "ATSTREET": "Francis St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Francis St (EB)"
     },
     {
         "OBJECTID": 59992,
@@ -3447,8 +3104,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44086",
         "LON": "-104.57703",
         "ONSTREET": "College Ave",
-        "ATSTREET": "Abbott Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Abbott Rd (EB)"
     },
     {
         "OBJECTID": 59993,
@@ -3457,8 +3113,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4421",
         "LON": "-104.572099",
         "ONSTREET": "Park St",
-        "ATSTREET": "Arcola Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Arcola Ave (NB)"
     },
     {
         "OBJECTID": 59994,
@@ -3467,8 +3122,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44403",
         "LON": "-104.57173",
         "ONSTREET": "14th Ave",
-        "ATSTREET": "Park St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Park St (EB)"
     },
     {
         "OBJECTID": 59995,
@@ -3477,8 +3131,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44402",
         "LON": "-104.567089",
         "ONSTREET": "14th Ave",
-        "ATSTREET": "Campus Regina (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Campus Regina (EB)"
     },
     {
         "OBJECTID": 59996,
@@ -3487,8 +3140,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44364",
         "LON": "-104.56481",
         "ONSTREET": "Froom Cres",
-        "ATSTREET": "14th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "14th Ave (SB)"
     },
     {
         "OBJECTID": 59997,
@@ -3497,8 +3149,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44179",
         "LON": "-104.566139",
         "ONSTREET": "Dixon Cres",
-        "ATSTREET": "Froom Cres (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Froom Cres (WB)"
     },
     {
         "OBJECTID": 59998,
@@ -3507,8 +3158,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44012",
         "LON": "-104.56857",
         "ONSTREET": "Dixon Cres",
-        "ATSTREET": "Arcola Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Arcola Ave (SB)"
     },
     {
         "OBJECTID": 59999,
@@ -3517,8 +3167,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43489",
         "LON": "-104.55458",
         "ONSTREET": "University Park Dr",
-        "ATSTREET": "Cunning Cr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Cunning Cr (NB)"
     },
     {
         "OBJECTID": 60000,
@@ -3527,8 +3176,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43586",
         "LON": "-104.55476",
         "ONSTREET": "Truesdale Dr",
-        "ATSTREET": "University Pk Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "University Pk Dr (WB)"
     },
     {
         "OBJECTID": 60001,
@@ -3537,8 +3185,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43643",
         "LON": "-104.557281",
         "ONSTREET": "Truesdale Dr",
-        "ATSTREET": "Ehman Bay (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Ehman Bay (WB)"
     },
     {
         "OBJECTID": 60002,
@@ -3547,8 +3194,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4379",
         "LON": "-104.558391",
         "ONSTREET": "Truesdale Dr",
-        "ATSTREET": "Blair Bay (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Blair Bay (NB)"
     },
     {
         "OBJECTID": 60003,
@@ -3557,8 +3203,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43939",
         "LON": "-104.55837",
         "ONSTREET": "Truesdale Dr",
-        "ATSTREET": "Wagman Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Wagman Dr (NB)"
     },
     {
         "OBJECTID": 60004,
@@ -3567,8 +3212,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44096",
         "LON": "-104.558349",
         "ONSTREET": "Truesdale Dr",
-        "ATSTREET": "Laurier Cr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Laurier Cr (NB)"
     },
     {
         "OBJECTID": 60005,
@@ -3577,8 +3221,7 @@ const transitStops: Stop[] = [
         "LAT": "50.442413",
         "LON": "-104.558129",
         "ONSTREET": "Truesdale Dr",
-        "ATSTREET": "Mahony Cres (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Mahony Cres (NB)"
     },
     {
         "OBJECTID": 60006,
@@ -3587,8 +3230,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44399",
         "LON": "-104.55673",
         "ONSTREET": "Truesdale Dr",
-        "ATSTREET": "Boyd St (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Boyd St (NB)"
     },
     {
         "OBJECTID": 60007,
@@ -3597,8 +3239,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44387",
         "LON": "-104.55073",
         "ONSTREET": "Quance St",
-        "ATSTREET": "Vic Square Mall (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Vic Square Mall (EB)"
     },
     {
         "OBJECTID": 60008,
@@ -3607,8 +3248,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43646",
         "LON": "-104.53631",
         "ONSTREET": "Arens Rd",
-        "ATSTREET": "Prince Of Wales Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Prince Of Wales Dr (WB)"
     },
     {
         "OBJECTID": 60009,
@@ -3617,8 +3257,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43858",
         "LON": "-104.53994",
         "ONSTREET": "Arens Rd",
-        "ATSTREET": "Parkland Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Parkland Dr (WB)"
     },
     {
         "OBJECTID": 60010,
@@ -3627,8 +3266,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43988",
         "LON": "-104.543141",
         "ONSTREET": "Arens Rd",
-        "ATSTREET": "Heseltine Rd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Heseltine Rd (WB)"
     },
     {
         "OBJECTID": 60011,
@@ -3637,8 +3275,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44061",
         "LON": "-104.54712",
         "ONSTREET": "Arens Rd",
-        "ATSTREET": "Crocus Cres (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Crocus Cres (WB)"
     },
     {
         "OBJECTID": 60012,
@@ -3647,8 +3284,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43708",
         "LON": "-104.55338",
         "ONSTREET": "University Park Dr",
-        "ATSTREET": "Elderkin Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Elderkin Dr (SB)"
     },
     {
         "OBJECTID": 60013,
@@ -3657,8 +3293,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43498",
         "LON": "-104.550449",
         "ONSTREET": "Truesdale Dr",
-        "ATSTREET": "Cunning Cr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Cunning Cr (EB)"
     },
     {
         "OBJECTID": 60014,
@@ -3667,8 +3302,7 @@ const transitStops: Stop[] = [
         "LAT": "50.433895",
         "LON": "-104.543319",
         "ONSTREET": "Truesdale Dr",
-        "ATSTREET": "Fowler St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Fowler St (EB)"
     },
     {
         "OBJECTID": 60015,
@@ -3677,8 +3311,7 @@ const transitStops: Stop[] = [
         "LAT": "50.432698",
         "LON": "-104.538974",
         "ONSTREET": "Truesdale Dr",
-        "ATSTREET": "Harding St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Harding St (EB)"
     },
     {
         "OBJECTID": 60016,
@@ -3687,8 +3320,7 @@ const transitStops: Stop[] = [
         "LAT": "50.429",
         "LON": "-104.53658",
         "ONSTREET": "Woodhams Rd",
-        "ATSTREET": "Prince Of Wales Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Prince Of Wales Dr (EB)"
     },
     {
         "OBJECTID": 60017,
@@ -3697,8 +3329,7 @@ const transitStops: Stop[] = [
         "LAT": "50.428881",
         "LON": "-104.535271",
         "ONSTREET": "Woodhams Rd",
-        "ATSTREET": "SS Leisure Centre (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "SS Leisure Centre (EB)"
     },
     {
         "OBJECTID": 60018,
@@ -3707,8 +3338,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42159",
         "LON": "-104.54485",
         "ONSTREET": "Assiniboine Ave",
-        "ATSTREET": "Prince Of Wales (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Prince Of Wales (WB)"
     },
     {
         "OBJECTID": 60019,
@@ -3717,8 +3347,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42164",
         "LON": "-104.5468",
         "ONSTREET": "Assiniboine Ave",
-        "ATSTREET": "Philip Rd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Philip Rd (WB)"
     },
     {
         "OBJECTID": 60020,
@@ -3727,8 +3356,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42308",
         "LON": "-104.55067",
         "ONSTREET": "Assiniboine Ave",
-        "ATSTREET": "Balmoral Gate (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Balmoral Gate (WB)"
     },
     {
         "OBJECTID": 60021,
@@ -3737,8 +3365,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42571",
         "LON": "-104.55615",
         "ONSTREET": "Assiniboine Ave",
-        "ATSTREET": "Banberry Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Banberry Dr (WB)"
     },
     {
         "OBJECTID": 60022,
@@ -3747,8 +3374,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42609",
         "LON": "-104.56223",
         "ONSTREET": "Assiniboine Ave",
-        "ATSTREET": "University Pk Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "University Pk Dr (WB)"
     },
     {
         "OBJECTID": 60023,
@@ -3757,8 +3383,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42608",
         "LON": "-104.57044",
         "ONSTREET": "Assiniboine Ave",
-        "ATSTREET": "Windfield Rd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Windfield Rd (WB)"
     },
     {
         "OBJECTID": 60024,
@@ -3767,8 +3392,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42689",
         "LON": "-104.57209",
         "ONSTREET": "Park St",
-        "ATSTREET": "Assiniboine Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Assiniboine Ave (NB)"
     },
     {
         "OBJECTID": 60025,
@@ -3777,8 +3401,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42598",
         "LON": "-104.5716",
         "ONSTREET": "Assiniboine Ave",
-        "ATSTREET": "Park St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Park St (EB)"
     },
     {
         "OBJECTID": 60026,
@@ -3787,8 +3410,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4264",
         "LON": "-104.5681",
         "ONSTREET": "Windfield Rd",
-        "ATSTREET": "Assiniboine Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Assiniboine Ave (NB)"
     },
     {
         "OBJECTID": 60027,
@@ -3797,8 +3419,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42892",
         "LON": "-104.56694",
         "ONSTREET": "Windfield Rd",
-        "ATSTREET": "Windfield Gate (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Windfield Gate (NB)"
     },
     {
         "OBJECTID": 60028,
@@ -3807,8 +3428,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43055",
         "LON": "-104.56534",
         "ONSTREET": "Windfield Rd",
-        "ATSTREET": "Mayfield Rd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Mayfield Rd (NB)"
     },
     {
         "OBJECTID": 60029,
@@ -3817,8 +3437,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43186",
         "LON": "-104.56393",
         "ONSTREET": "Windfield Rd",
-        "ATSTREET": "Metcalfe Rd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Metcalfe Rd (NB)"
     },
     {
         "OBJECTID": 60310,
@@ -3827,8 +3446,7 @@ const transitStops: Stop[] = [
         "LAT": "50.438639",
         "LON": "-104.63884",
         "ONSTREET": "Qu'Appelle Dr",
-        "ATSTREET": "Wascana St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Wascana St (EB)"
     },
     {
         "OBJECTID": 60311,
@@ -3837,8 +3455,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4377",
         "LON": "-104.63549",
         "ONSTREET": "Qu'Appelle Dr",
-        "ATSTREET": "Coronation St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Coronation St (EB)"
     },
     {
         "OBJECTID": 60312,
@@ -3847,8 +3464,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43704",
         "LON": "-104.63348",
         "ONSTREET": "Qu'Appelle Dr",
-        "ATSTREET": "Argyle St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Argyle St (EB)"
     },
     {
         "OBJECTID": 60313,
@@ -3857,8 +3473,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44117",
         "LON": "-104.631084",
         "ONSTREET": "Elphinstone St",
-        "ATSTREET": "College Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "College Ave (NB)"
     },
     {
         "OBJECTID": 60314,
@@ -3867,8 +3482,7 @@ const transitStops: Stop[] = [
         "LAT": "50.444319",
         "LON": "-104.631073",
         "ONSTREET": "Elphinstone St",
-        "ATSTREET": "14th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "14th Ave (NB)"
     },
     {
         "OBJECTID": 60315,
@@ -3877,8 +3491,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44972",
         "LON": "-104.62611",
         "ONSTREET": "Saskatchewan Dr",
-        "ATSTREET": "Cameron St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Cameron St (WB)"
     },
     {
         "OBJECTID": 60316,
@@ -3887,8 +3500,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44935",
         "LON": "-104.62834",
         "ONSTREET": "Saskatchewan Dr",
-        "ATSTREET": "Athol St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Athol St (WB)"
     },
     {
         "OBJECTID": 60317,
@@ -3897,8 +3509,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45126",
         "LON": "-104.631068",
         "ONSTREET": "Elphinstone St",
-        "ATSTREET": "10th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "10th Ave (NB)"
     },
     {
         "OBJECTID": 60318,
@@ -3907,8 +3518,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45322",
         "LON": "-104.631141",
         "ONSTREET": "Elphinstone St",
-        "ATSTREET": "9th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "9th Ave (NB)"
     },
     {
         "OBJECTID": 60319,
@@ -3917,8 +3527,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4572",
         "LON": "-104.652461",
         "ONSTREET": "McIntosh St",
-        "ATSTREET": "8th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "8th Ave (NB)"
     },
     {
         "OBJECTID": 60320,
@@ -3927,8 +3536,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45875",
         "LON": "-104.652451",
         "ONSTREET": "McIntosh St",
-        "ATSTREET": "7th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "7th Ave (NB)"
     },
     {
         "OBJECTID": 60321,
@@ -3937,8 +3545,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46091",
         "LON": "-104.6537",
         "ONSTREET": "North West Blvd",
-        "ATSTREET": "McIntosh St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "McIntosh St (WB)"
     },
     {
         "OBJECTID": 60322,
@@ -3947,8 +3554,7 @@ const transitStops: Stop[] = [
         "LAT": "50.460935",
         "LON": "-104.657149",
         "ONSTREET": "North West Blvd",
-        "ATSTREET": "Minto St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Minto St (WB)"
     },
     {
         "OBJECTID": 60323,
@@ -3957,8 +3563,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46111",
         "LON": "-104.659605",
         "ONSTREET": "Horace St",
-        "ATSTREET": "North West Blvd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "North West Blvd (NB)"
     },
     {
         "OBJECTID": 60324,
@@ -3967,8 +3572,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46299",
         "LON": "-104.66035",
         "ONSTREET": "4th Ave",
-        "ATSTREET": "Horace St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Horace St (WB)"
     },
     {
         "OBJECTID": 60325,
@@ -3977,8 +3581,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46259",
         "LON": "-104.66437",
         "ONSTREET": "4th Ave",
-        "ATSTREET": "Campbell St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Campbell St (WB)"
     },
     {
         "OBJECTID": 60326,
@@ -3987,8 +3590,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46263",
         "LON": "-104.668311",
         "ONSTREET": "4th Ave",
-        "ATSTREET": "Lyons St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Lyons St (WB)"
     },
     {
         "OBJECTID": 60327,
@@ -3997,8 +3599,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46282",
         "LON": "-104.67247",
         "ONSTREET": "McCarthy Blvd",
-        "ATSTREET": "4th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "4th Ave (NB)"
     },
     {
         "OBJECTID": 60328,
@@ -4007,8 +3608,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46419",
         "LON": "-104.67246",
         "ONSTREET": "McCarthy Blvd",
-        "ATSTREET": "Oriole Pl (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Oriole Pl (NB)"
     },
     {
         "OBJECTID": 60329,
@@ -4017,8 +3617,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46683",
         "LON": "-104.672",
         "ONSTREET": "Mikkelson Dr",
-        "ATSTREET": "McCarthy Blvd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "McCarthy Blvd (WB)"
     },
     {
         "OBJECTID": 60330,
@@ -4027,8 +3626,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46727",
         "LON": "-104.67632",
         "ONSTREET": "Mikkelson Dr",
-        "ATSTREET": "Straub Cres (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Straub Cres (WB)"
     },
     {
         "OBJECTID": 60331,
@@ -4037,8 +3635,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46728",
         "LON": "-104.678811",
         "ONSTREET": "Mikkelson Dr",
-        "ATSTREET": "Sweeney St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Sweeney St (WB)"
     },
     {
         "OBJECTID": 60332,
@@ -4047,8 +3644,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46728",
         "LON": "-104.68218",
         "ONSTREET": "Mikkelson Dr",
-        "ATSTREET": "Dorothy St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Dorothy St (WB)"
     },
     {
         "OBJECTID": 60333,
@@ -4057,8 +3653,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46989",
         "LON": "-104.68265",
         "ONSTREET": "Dorothy St",
-        "ATSTREET": "Read Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Read Ave (NB)"
     },
     {
         "OBJECTID": 60309,
@@ -4067,8 +3662,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4376",
         "LON": "-104.64088",
         "ONSTREET": "Pasqua St",
-        "ATSTREET": "18th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "18th Ave (NB)"
     },
     {
         "OBJECTID": 60356,
@@ -4077,8 +3671,7 @@ const transitStops: Stop[] = [
         "LAT": "50.50338",
         "LON": "-104.65601",
         "ONSTREET": "Lakeridge Rd",
-        "ATSTREET": "Boswell Cres (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Boswell Cres (NB)"
     },
     {
         "OBJECTID": 60357,
@@ -4087,8 +3680,7 @@ const transitStops: Stop[] = [
         "LAT": "50.50399",
         "LON": "-104.65771",
         "ONSTREET": "Lakeridge Rd",
-        "ATSTREET": "Fenwick Cres (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Fenwick Cres (WB)"
     },
     {
         "OBJECTID": 60358,
@@ -4097,8 +3689,7 @@ const transitStops: Stop[] = [
         "LAT": "50.50367",
         "LON": "-104.66102",
         "ONSTREET": "Lakeridge Rd",
-        "ATSTREET": "Rousseau Cres (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Rousseau Cres (WB)"
     },
     {
         "OBJECTID": 60334,
@@ -4107,8 +3698,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47306",
         "LON": "-104.68266",
         "ONSTREET": "Dorothy St",
-        "ATSTREET": "Rendek Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Rendek Ave (NB)"
     },
     {
         "OBJECTID": 60335,
@@ -4117,8 +3707,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47993",
         "LON": "-104.677339",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Murphy Cres (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Murphy Cres (EB)"
     },
     {
         "OBJECTID": 60336,
@@ -4127,8 +3716,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47993",
         "LON": "-104.67355",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Hastings Cres (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Hastings Cres (EB)"
     },
     {
         "OBJECTID": 60337,
@@ -4137,8 +3725,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47991",
         "LON": "-104.672209",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Auld Bay (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Auld Bay (EB)"
     },
     {
         "OBJECTID": 60338,
@@ -4147,8 +3734,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4681",
         "LON": "-104.56652",
         "ONSTREET": "Henderson Dr",
-        "ATSTREET": "Sioux St (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Sioux St (NB)"
     },
     {
         "OBJECTID": 60339,
@@ -4157,8 +3743,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46974",
         "LON": "-104.56783",
         "ONSTREET": "Henderson Dr",
-        "ATSTREET": "Maxwell Cres (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Maxwell Cres (NB)"
     },
     {
         "OBJECTID": 60340,
@@ -4167,8 +3752,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47242",
         "LON": "-104.57097",
         "ONSTREET": "Henderson Dr",
-        "ATSTREET": "Maxwell Cres (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Maxwell Cres (NB)"
     },
     {
         "OBJECTID": 60341,
@@ -4177,8 +3761,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47503",
         "LON": "-104.5747",
         "ONSTREET": "Leonard St",
-        "ATSTREET": "Henderson Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Henderson Dr (NB)"
     },
     {
         "OBJECTID": 60342,
@@ -4187,8 +3770,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47705",
         "LON": "-104.5725",
         "ONSTREET": "Leonard St",
-        "ATSTREET": "Pettigrew Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Pettigrew Ave (NB)"
     },
     {
         "OBJECTID": 60343,
@@ -4197,8 +3779,7 @@ const transitStops: Stop[] = [
         "LAT": "50.476069",
         "LON": "-104.573529",
         "ONSTREET": "Leonard St",
-        "ATSTREET": "199 Leonard St (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "199 Leonard St (NB)"
     },
     {
         "OBJECTID": 60344,
@@ -4207,8 +3788,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44586",
         "LON": "-104.625389",
         "ONSTREET": "Cameron St",
-        "ATSTREET": "13th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "13th Ave (SB)"
     },
     {
         "OBJECTID": 60345,
@@ -4217,8 +3797,7 @@ const transitStops: Stop[] = [
         "LAT": "50.448551",
         "LON": "-104.595259",
         "ONSTREET": "Winnipeg St",
-        "ATSTREET": "12th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "12th Ave (SB)"
     },
     {
         "OBJECTID": 60346,
@@ -4227,8 +3806,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44671",
         "LON": "-104.595255",
         "ONSTREET": "Winnipeg St",
-        "ATSTREET": "Victoria Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Victoria Ave (SB)"
     },
     {
         "OBJECTID": 60347,
@@ -4237,8 +3815,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44477",
         "LON": "-104.59517",
         "ONSTREET": "Winnipeg St",
-        "ATSTREET": "13th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "13th Ave (SB)"
     },
     {
         "OBJECTID": 60348,
@@ -4247,8 +3824,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43837",
         "LON": "-104.59527",
         "ONSTREET": "Winnipeg St",
-        "ATSTREET": "Broadway Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Broadway Ave (SB)"
     },
     {
         "OBJECTID": 60349,
@@ -4257,8 +3833,7 @@ const transitStops: Stop[] = [
         "LAT": "50.442679",
         "LON": "-104.607801",
         "ONSTREET": "Rose St",
-        "ATSTREET": "15th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "15th Ave (NB)"
     },
     {
         "OBJECTID": 60350,
@@ -4267,8 +3842,7 @@ const transitStops: Stop[] = [
         "LAT": "50.445067",
         "LON": "-104.607865",
         "ONSTREET": "Rose St",
-        "ATSTREET": "13th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "13th Ave (NB)"
     },
     {
         "OBJECTID": 60351,
@@ -4277,8 +3851,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4444",
         "LON": "-104.61523",
         "ONSTREET": "Smith St",
-        "ATSTREET": "14th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "14th Ave (SB)"
     },
     {
         "OBJECTID": 60352,
@@ -4287,8 +3860,7 @@ const transitStops: Stop[] = [
         "LAT": "50.443335",
         "LON": "-104.616493",
         "ONSTREET": "McIntyre St",
-        "ATSTREET": "15th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "15th Ave (NB)"
     },
     {
         "OBJECTID": 60353,
@@ -4297,8 +3869,7 @@ const transitStops: Stop[] = [
         "LAT": "50.444691",
         "LON": "-104.616494",
         "ONSTREET": "McIntyre St",
-        "ATSTREET": "13th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "13th Ave (NB)"
     },
     {
         "OBJECTID": 60354,
@@ -4307,8 +3878,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44593",
         "LON": "-104.623871",
         "ONSTREET": "Robinson St",
-        "ATSTREET": "13th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "13th Ave (NB)"
     },
     {
         "OBJECTID": 60355,
@@ -4317,8 +3887,7 @@ const transitStops: Stop[] = [
         "LAT": "50.500966",
         "LON": "-104.655199",
         "ONSTREET": "Lakeridge Rd",
-        "ATSTREET": "Genereux Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Genereux Dr (NB)"
     },
     {
         "OBJECTID": 60048,
@@ -4327,8 +3896,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43781",
         "LON": "-104.60358",
         "ONSTREET": "Broadway Ave",
-        "ATSTREET": "St Chads Cres (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "St Chads Cres (WB)"
     },
     {
         "OBJECTID": 60049,
@@ -4337,8 +3905,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47942",
         "LON": "-104.66949",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "7th Ave N (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "7th Ave N (WB)"
     },
     {
         "OBJECTID": 60050,
@@ -4347,8 +3914,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48003",
         "LON": "-104.67283",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Hastings Cres (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Hastings Cres (WB)"
     },
     {
         "OBJECTID": 60051,
@@ -4357,8 +3923,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48003",
         "LON": "-104.675289",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Hastings Cres (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Hastings Cres (WB)"
     },
     {
         "OBJECTID": 60052,
@@ -4367,8 +3932,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48005",
         "LON": "-104.677909",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Williston Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Williston Dr (WB)"
     },
     {
         "OBJECTID": 60053,
@@ -4377,8 +3941,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47229",
         "LON": "-104.6827",
         "ONSTREET": "Dorothy St",
-        "ATSTREET": "Rendek Cres (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Rendek Cres (SB)"
     },
     {
         "OBJECTID": 60054,
@@ -4387,8 +3950,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46976",
         "LON": "-104.68273",
         "ONSTREET": "Dorothy St",
-        "ATSTREET": "Hansen Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Hansen Dr (SB)"
     },
     {
         "OBJECTID": 60030,
@@ -4397,8 +3959,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4331",
         "LON": "-104.56203",
         "ONSTREET": "Michener Dr",
-        "ATSTREET": "Windfield Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Windfield Rd (EB)"
     },
     {
         "OBJECTID": 60031,
@@ -4407,8 +3968,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43187",
         "LON": "-104.559651",
         "ONSTREET": "Michener Dr",
-        "ATSTREET": "Houston Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Houston Rd (EB)"
     },
     {
         "OBJECTID": 60032,
@@ -4417,8 +3977,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4318",
         "LON": "-104.55796",
         "ONSTREET": "University Park Dr",
-        "ATSTREET": "Laval Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Laval Dr (NB)"
     },
     {
         "OBJECTID": 60033,
@@ -4427,8 +3986,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43996",
         "LON": "-104.572469",
         "ONSTREET": "Park St",
-        "ATSTREET": "Broadway Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Broadway Ave (SB)"
     },
     {
         "OBJECTID": 60034,
@@ -4437,8 +3995,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43776",
         "LON": "-104.5725",
         "ONSTREET": "Park St",
-        "ATSTREET": "18th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "18th Ave (SB)"
     },
     {
         "OBJECTID": 60035,
@@ -4447,8 +4004,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43544",
         "LON": "-104.57249",
         "ONSTREET": "Park St",
-        "ATSTREET": "19th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "19th Ave (SB)"
     },
     {
         "OBJECTID": 60036,
@@ -4457,8 +4013,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43326",
         "LON": "-104.573229",
         "ONSTREET": "Douglas Ave",
-        "ATSTREET": "Park St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Park St (WB)"
     },
     {
         "OBJECTID": 60037,
@@ -4467,8 +4022,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43327",
         "LON": "-104.576961",
         "ONSTREET": "Douglas Ave",
-        "ATSTREET": "Fleury St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Fleury St (WB)"
     },
     {
         "OBJECTID": 60038,
@@ -4477,8 +4031,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43328",
         "LON": "-104.579701",
         "ONSTREET": "Douglas Ave",
-        "ATSTREET": "Francis St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Francis St (WB)"
     },
     {
         "OBJECTID": 60039,
@@ -4487,8 +4040,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43357",
         "LON": "-104.5836",
         "ONSTREET": "McDonald St",
-        "ATSTREET": "Douglas Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Douglas Ave (NB)"
     },
     {
         "OBJECTID": 60040,
@@ -4497,8 +4049,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43639",
         "LON": "-104.583591",
         "ONSTREET": "McDonald St",
-        "ATSTREET": "18th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "18th Ave (NB)"
     },
     {
         "OBJECTID": 60041,
@@ -4507,8 +4058,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43779",
         "LON": "-104.584189",
         "ONSTREET": "Broadway Ave",
-        "ATSTREET": "McDonald St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "McDonald St (WB)"
     },
     {
         "OBJECTID": 60042,
@@ -4517,8 +4067,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43778",
         "LON": "-104.58701",
         "ONSTREET": "Broadway Ave",
-        "ATSTREET": "Elliott St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Elliott St (WB)"
     },
     {
         "OBJECTID": 60043,
@@ -4527,8 +4076,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43778",
         "LON": "-104.5898",
         "ONSTREET": "Broadway Ave",
-        "ATSTREET": "Reynolds St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Reynolds St (WB)"
     },
     {
         "OBJECTID": 60044,
@@ -4537,8 +4085,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43778",
         "LON": "-104.59273",
         "ONSTREET": "Broadway Ave",
-        "ATSTREET": "Atkinson St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Atkinson St (WB)"
     },
     {
         "OBJECTID": 60045,
@@ -4547,8 +4094,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43776",
         "LON": "-104.59574",
         "ONSTREET": "Broadway Ave",
-        "ATSTREET": "Winnipeg St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Winnipeg St (WB)"
     },
     {
         "OBJECTID": 60046,
@@ -4557,8 +4103,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43776",
         "LON": "-104.59937",
         "ONSTREET": "Broadway Ave",
-        "ATSTREET": "Montreal Cres (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Montreal Cres (WB)"
     },
     {
         "OBJECTID": 60047,
@@ -4567,8 +4112,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43778",
         "LON": "-104.601961",
         "ONSTREET": "Broadway Ave",
-        "ATSTREET": "Ottawa St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Ottawa St (WB)"
     },
     {
         "OBJECTID": 60056,
@@ -4577,8 +4121,7 @@ const transitStops: Stop[] = [
         "LAT": "50.467196",
         "LON": "-104.67725",
         "ONSTREET": "Mikkelson Dr",
-        "ATSTREET": "Sweeney St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Sweeney St (EB)"
     },
     {
         "OBJECTID": 60057,
@@ -4587,8 +4130,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46724",
         "LON": "-104.67525",
         "ONSTREET": "Mikkelson Dr",
-        "ATSTREET": "Straub St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Straub St (EB)"
     },
     {
         "OBJECTID": 60058,
@@ -4597,8 +4139,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46632",
         "LON": "-104.67183",
         "ONSTREET": "McCarthy Blvd",
-        "ATSTREET": "Mikkelson Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Mikkelson Dr (SB)"
     },
     {
         "OBJECTID": 60059,
@@ -4607,8 +4148,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4642",
         "LON": "-104.67271",
         "ONSTREET": "McCarthy Blvd",
-        "ATSTREET": "Oriole Pl (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Oriole Pl (SB)"
     },
     {
         "OBJECTID": 60060,
@@ -4617,8 +4157,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46252",
         "LON": "-104.671519",
         "ONSTREET": "4th Ave",
-        "ATSTREET": "Krauss St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Krauss St (EB)"
     },
     {
         "OBJECTID": 60061,
@@ -4627,8 +4166,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46254",
         "LON": "-104.66638",
         "ONSTREET": "4th Ave",
-        "ATSTREET": "Fort St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Fort St (EB)"
     },
     {
         "OBJECTID": 60062,
@@ -4637,8 +4175,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46291",
         "LON": "-104.66347",
         "ONSTREET": "4th Ave",
-        "ATSTREET": "Campbell St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Campbell St (EB)"
     },
     {
         "OBJECTID": 60063,
@@ -4647,8 +4184,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46256",
         "LON": "-104.65971",
         "ONSTREET": "Horace St",
-        "ATSTREET": "4th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "4th Ave (SB)"
     },
     {
         "OBJECTID": 60064,
@@ -4657,8 +4193,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46073",
         "LON": "-104.65913",
         "ONSTREET": "North West Blvd",
-        "ATSTREET": "Horace St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Horace St (EB)"
     },
     {
         "OBJECTID": 60065,
@@ -4667,8 +4202,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46075",
         "LON": "-104.65626",
         "ONSTREET": "North West Blvd",
-        "ATSTREET": "Minto St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Minto St (EB)"
     },
     {
         "OBJECTID": 60066,
@@ -4677,8 +4211,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46049",
         "LON": "-104.65272",
         "ONSTREET": "North West Blvd",
-        "ATSTREET": "McIntosh St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "McIntosh St (EB)"
     },
     {
         "OBJECTID": 60067,
@@ -4687,8 +4220,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45799",
         "LON": "-104.65251",
         "ONSTREET": "McIntosh St",
-        "ATSTREET": "7th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "7th Ave (SB)"
     },
     {
         "OBJECTID": 60068,
@@ -4697,8 +4229,7 @@ const transitStops: Stop[] = [
         "LAT": "50.454608",
         "LON": "-104.631235",
         "ONSTREET": "Elphinstone St",
-        "ATSTREET": "Dewdney Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Dewdney Ave (SB)"
     },
     {
         "OBJECTID": 60069,
@@ -4707,8 +4238,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4512",
         "LON": "-104.63119",
         "ONSTREET": "Elphinstone St",
-        "ATSTREET": "10th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "10th Ave (SB)"
     },
     {
         "OBJECTID": 60070,
@@ -4717,8 +4247,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44936",
         "LON": "-104.62757",
         "ONSTREET": "Saskatchewan Dr",
-        "ATSTREET": "Athol St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Athol St (EB)"
     },
     {
         "OBJECTID": 60071,
@@ -4727,8 +4256,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44981",
         "LON": "-104.62502",
         "ONSTREET": "Saskatchewan Dr",
-        "ATSTREET": "Cameron St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Cameron St (EB)"
     },
     {
         "OBJECTID": 60072,
@@ -4737,8 +4265,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4076",
         "LON": "-104.59766",
         "ONSTREET": "Grant Rd",
-        "ATSTREET": "Grant Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Grant Dr (NB)"
     },
     {
         "OBJECTID": 60073,
@@ -4747,8 +4274,7 @@ const transitStops: Stop[] = [
         "LAT": "50.446512",
         "LON": "-104.60937",
         "ONSTREET": "Hamilton St",
-        "ATSTREET": "Victoria Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Victoria Ave (SB)"
     },
     {
         "OBJECTID": 60074,
@@ -4757,8 +4283,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44512",
         "LON": "-104.609375",
         "ONSTREET": "Hamilton St",
-        "ATSTREET": "13th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "13th Ave (SB)"
     },
     {
         "OBJECTID": 60075,
@@ -4767,8 +4292,7 @@ const transitStops: Stop[] = [
         "LAT": "50.443115",
         "LON": "-104.609362",
         "ONSTREET": "Hamilton St",
-        "ATSTREET": "14th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "14th Ave (SB)"
     },
     {
         "OBJECTID": 60076,
@@ -4777,8 +4301,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44219",
         "LON": "-104.609381",
         "ONSTREET": "Hamilton St",
-        "ATSTREET": "15th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "15th Ave (SB)"
     },
     {
         "OBJECTID": 60077,
@@ -4787,8 +4310,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44087",
         "LON": "-104.609929",
         "ONSTREET": "College Ave",
-        "ATSTREET": "Hamilton St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Hamilton St (WB)"
     },
     {
         "OBJECTID": 60078,
@@ -4797,8 +4319,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4409",
         "LON": "-104.61284",
         "ONSTREET": "College Ave",
-        "ATSTREET": "Cornwall St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Cornwall St (WB)"
     },
     {
         "OBJECTID": 60079,
@@ -4807,8 +4328,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4409",
         "LON": "-104.61562",
         "ONSTREET": "College Ave",
-        "ATSTREET": "Smith St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Smith St (WB)"
     },
     {
         "OBJECTID": 60055,
@@ -4817,8 +4337,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46719",
         "LON": "-104.68199",
         "ONSTREET": "Mikkelson Dr",
-        "ATSTREET": "Dorothy St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Dorothy St (EB)"
     },
     {
         "OBJECTID": 60080,
@@ -4827,8 +4346,7 @@ const transitStops: Stop[] = [
         "LAT": "50.441212",
         "LON": "-104.616499",
         "ONSTREET": "McIntyre St",
-        "ATSTREET": "College Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "College Ave (NB)"
     },
     {
         "OBJECTID": 60081,
@@ -4837,8 +4355,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44247",
         "LON": "-104.617161",
         "ONSTREET": "15th Ave",
-        "ATSTREET": "McIntyre St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "McIntyre St (WB)"
     },
     {
         "OBJECTID": 60082,
@@ -4847,8 +4364,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44248",
         "LON": "-104.61888",
         "ONSTREET": "15th Ave",
-        "ATSTREET": "Albert St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Albert St (WB)"
     },
     {
         "OBJECTID": 60083,
@@ -4857,8 +4373,7 @@ const transitStops: Stop[] = [
         "LAT": "50.440912",
         "LON": "-104.62009",
         "ONSTREET": "College Ave",
-        "ATSTREET": "Angus St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Angus St (WB)"
     },
     {
         "OBJECTID": 60084,
@@ -4867,8 +4382,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44087",
         "LON": "-104.62298",
         "ONSTREET": "College Ave",
-        "ATSTREET": "Retallack St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Retallack St (WB)"
     },
     {
         "OBJECTID": 60085,
@@ -4877,8 +4391,7 @@ const transitStops: Stop[] = [
         "LAT": "50.440919",
         "LON": "-104.62502",
         "ONSTREET": "College Ave",
-        "ATSTREET": "Cameron St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Cameron St (WB)"
     },
     {
         "OBJECTID": 60086,
@@ -4887,8 +4400,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44088",
         "LON": "-104.62872",
         "ONSTREET": "College Ave",
-        "ATSTREET": "Athol St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Athol St (WB)"
     },
     {
         "OBJECTID": 60087,
@@ -4897,8 +4409,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44045",
         "LON": "-104.63126",
         "ONSTREET": "Elphinstone St",
-        "ATSTREET": "College Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "College Ave (SB)"
     },
     {
         "OBJECTID": 60088,
@@ -4907,8 +4418,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43835",
         "LON": "-104.63119",
         "ONSTREET": "Elphinstone St",
-        "ATSTREET": "17th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "17th Ave (SB)"
     },
     {
         "OBJECTID": 60089,
@@ -4917,8 +4427,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43708",
         "LON": "-104.63196",
         "ONSTREET": "Qu'Appelle Dr",
-        "ATSTREET": "Elphinstone St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Elphinstone St (WB)"
     },
     {
         "OBJECTID": 60090,
@@ -4927,8 +4436,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43855",
         "LON": "-104.63753",
         "ONSTREET": "Qu'Appelle Dr",
-        "ATSTREET": "Qu'Appelle (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Qu'Appelle (WB)"
     },
     {
         "OBJECTID": 60091,
@@ -4937,8 +4445,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43739",
         "LON": "-104.634621",
         "ONSTREET": "Qu'Appelle Dr",
-        "ATSTREET": "McTavish St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "McTavish St (WB)"
     },
     {
         "OBJECTID": 60092,
@@ -4947,8 +4454,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43875",
         "LON": "-104.63909",
         "ONSTREET": "Qu'Appelle Dr",
-        "ATSTREET": "Wascana St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Wascana St (WB)"
     },
     {
         "OBJECTID": 60093,
@@ -4957,8 +4463,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43752",
         "LON": "-104.641",
         "ONSTREET": "Pasqua St",
-        "ATSTREET": "18th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "18th Ave (SB)"
     },
     {
         "OBJECTID": 60094,
@@ -4967,8 +4472,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43558",
         "LON": "-104.64098",
         "ONSTREET": "Pasqua St",
-        "ATSTREET": "19th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "19th Ave (SB)"
     },
     {
         "OBJECTID": 60095,
@@ -4977,8 +4481,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43483",
         "LON": "-104.64047",
         "ONSTREET": "Regina Ave",
-        "ATSTREET": "Pasqua St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Pasqua St (EB)"
     },
     {
         "OBJECTID": 60096,
@@ -4987,8 +4490,7 @@ const transitStops: Stop[] = [
         "LAT": "50.409032",
         "LON": "-104.596135",
         "ONSTREET": "Grant Rd",
-        "ATSTREET": "Castle Rd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Castle Rd (NB)"
     },
     {
         "OBJECTID": 60097,
@@ -4997,8 +4499,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43489",
         "LON": "-104.63738",
         "ONSTREET": "Regina Ave",
-        "ATSTREET": "Queen St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Queen St (EB)"
     },
     {
         "OBJECTID": 60098,
@@ -5007,8 +4508,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43456",
         "LON": "-104.635551",
         "ONSTREET": "Princess St",
-        "ATSTREET": "Regina Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Regina Ave (SB)"
     },
     {
         "OBJECTID": 60099,
@@ -5017,8 +4517,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43271",
         "LON": "-104.635561",
         "ONSTREET": "Princess St",
-        "ATSTREET": "20th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "20th Ave (SB)"
     },
     {
         "OBJECTID": 60100,
@@ -5027,8 +4526,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43128",
         "LON": "-104.635529",
         "ONSTREET": "Princess St",
-        "ATSTREET": "McCallum Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "McCallum Ave (SB)"
     },
     {
         "OBJECTID": 60101,
@@ -5037,8 +4535,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4295",
         "LON": "-104.63753",
         "ONSTREET": "Kings Rd",
-        "ATSTREET": "McCallum Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "McCallum Ave (SB)"
     },
     {
         "OBJECTID": 60102,
@@ -5047,8 +4544,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42804",
         "LON": "-104.63519",
         "ONSTREET": "Kings Rd",
-        "ATSTREET": "21st Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "21st Ave (SB)"
     },
     {
         "OBJECTID": 60103,
@@ -5057,8 +4553,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4266",
         "LON": "-104.63464",
         "ONSTREET": "Hill Ave",
-        "ATSTREET": "Kings Rd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Kings Rd (WB)"
     },
     {
         "OBJECTID": 60104,
@@ -5067,8 +4562,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42636",
         "LON": "-104.63977",
         "ONSTREET": "Hill Ave",
-        "ATSTREET": "Pasqua St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Pasqua St (WB)"
     },
     {
         "OBJECTID": 60105,
@@ -5077,8 +4571,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42129",
         "LON": "-104.640969",
         "ONSTREET": "Pasqua St",
-        "ATSTREET": "Lakeview Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Lakeview Ave (SB)"
     },
     {
         "OBJECTID": 60106,
@@ -5087,8 +4580,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41866",
         "LON": "-104.63979",
         "ONSTREET": "25th Ave",
-        "ATSTREET": "Pasqua St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Pasqua St (EB)"
     },
     {
         "OBJECTID": 60107,
@@ -5097,8 +4589,7 @@ const transitStops: Stop[] = [
         "LAT": "50.418665",
         "LON": "-104.635801",
         "ONSTREET": "25th Ave",
-        "ATSTREET": "Queen St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Queen St (EB)"
     },
     {
         "OBJECTID": 60108,
@@ -5107,8 +4598,7 @@ const transitStops: Stop[] = [
         "LAT": "50.418666",
         "LON": "-104.63286",
         "ONSTREET": "25th Ave",
-        "ATSTREET": "McTavish St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "McTavish St (EB)"
     },
     {
         "OBJECTID": 60109,
@@ -5117,8 +4607,7 @@ const transitStops: Stop[] = [
         "LAT": "50.418664",
         "LON": "-104.627649",
         "ONSTREET": "25th Ave",
-        "ATSTREET": "Athol St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Athol St (EB)"
     },
     {
         "OBJECTID": 60110,
@@ -5127,8 +4616,7 @@ const transitStops: Stop[] = [
         "LAT": "50.418663",
         "LON": "-104.623231",
         "ONSTREET": "25th Ave",
-        "ATSTREET": "Robinson St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Robinson St (EB)"
     },
     {
         "OBJECTID": 60111,
@@ -5137,8 +4625,7 @@ const transitStops: Stop[] = [
         "LAT": "50.418662",
         "LON": "-104.622001",
         "ONSTREET": "25th Ave",
-        "ATSTREET": "Retallack St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Retallack St (EB)"
     },
     {
         "OBJECTID": 60112,
@@ -5147,8 +4634,7 @@ const transitStops: Stop[] = [
         "LAT": "50.414919",
         "LON": "-104.6211",
         "ONSTREET": "Rae St",
-        "ATSTREET": "Parliament Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Parliament Ave (SB)"
     },
     {
         "OBJECTID": 60113,
@@ -5157,8 +4643,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41349",
         "LON": "-104.621093",
         "ONSTREET": "Rae St",
-        "ATSTREET": "28th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "28th Ave (SB)"
     },
     {
         "OBJECTID": 60114,
@@ -5167,8 +4652,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4119",
         "LON": "-104.621071",
         "ONSTREET": "Rae St",
-        "ATSTREET": "29th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "29th Ave (SB)"
     },
     {
         "OBJECTID": 60115,
@@ -5177,8 +4661,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41079",
         "LON": "-104.62107",
         "ONSTREET": "Rae St",
-        "ATSTREET": "Compton Rd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Compton Rd (SB)"
     },
     {
         "OBJECTID": 60116,
@@ -5187,8 +4670,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40929",
         "LON": "-104.62107",
         "ONSTREET": "Rae St",
-        "ATSTREET": "Sommerville Rd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Sommerville Rd (SB)"
     },
     {
         "OBJECTID": 60117,
@@ -5197,8 +4679,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40745",
         "LON": "-104.62105",
         "ONSTREET": "Rae St",
-        "ATSTREET": "Extendicare (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Extendicare (SB)"
     },
     {
         "OBJECTID": 60118,
@@ -5207,8 +4688,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40506",
         "LON": "-104.62106",
         "ONSTREET": "Rae St",
-        "ATSTREET": "Westfield Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Westfield Dr (SB)"
     },
     {
         "OBJECTID": 60119,
@@ -5217,8 +4697,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40519",
         "LON": "-104.61803",
         "ONSTREET": "Albert St",
-        "ATSTREET": "Gordon Rd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Gordon Rd (NB)"
     },
     {
         "OBJECTID": 60120,
@@ -5227,8 +4706,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40793",
         "LON": "-104.61793",
         "ONSTREET": "Albert St",
-        "ATSTREET": "Albert St Srvrd E (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Albert St Srvrd E (NB)"
     },
     {
         "OBJECTID": 60121,
@@ -5237,8 +4715,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4105",
         "LON": "-104.6179",
         "ONSTREET": "Albert St",
-        "ATSTREET": "31st Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "31st Ave (NB)"
     },
     {
         "OBJECTID": 60122,
@@ -5247,8 +4724,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41419",
         "LON": "-104.61785",
         "ONSTREET": "Albert St",
-        "ATSTREET": "28th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "28th Ave (NB)"
     },
     {
         "OBJECTID": 60123,
@@ -5257,8 +4733,7 @@ const transitStops: Stop[] = [
         "LAT": "50.419302",
         "LON": "-104.622809",
         "ONSTREET": "Argyle Rd",
-        "ATSTREET": "25th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "25th Ave (NB)"
     },
     {
         "OBJECTID": 60124,
@@ -5267,8 +4742,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42065",
         "LON": "-104.62377",
         "ONSTREET": "Argyle Rd",
-        "ATSTREET": "24th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "24th Ave (NB)"
     },
     {
         "OBJECTID": 60125,
@@ -5277,8 +4751,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42249",
         "LON": "-104.62499",
         "ONSTREET": "Argyle Rd",
-        "ATSTREET": "Lakeview Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Lakeview Ave (NB)"
     },
     {
         "OBJECTID": 60126,
@@ -5287,8 +4760,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42373",
         "LON": "-104.6261",
         "ONSTREET": "Argyle Rd",
-        "ATSTREET": "Assiniboine Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Assiniboine Ave (NB)"
     },
     {
         "OBJECTID": 60127,
@@ -5297,8 +4769,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42526",
         "LON": "-104.62804",
         "ONSTREET": "Argyle Rd",
-        "ATSTREET": "Westgate Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Westgate Ave (NB)"
     },
     {
         "OBJECTID": 60128,
@@ -5307,8 +4778,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42628",
         "LON": "-104.629271",
         "ONSTREET": "Argyle Rd",
-        "ATSTREET": "Garner Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Garner Ave (NB)"
     },
     {
         "OBJECTID": 60129,
@@ -5317,8 +4787,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42894",
         "LON": "-104.62961",
         "ONSTREET": "Montague St",
-        "ATSTREET": "Hill Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Hill Ave (NB)"
     },
     {
         "OBJECTID": 60130,
@@ -5327,8 +4796,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43039",
         "LON": "-104.629613",
         "ONSTREET": "Montague St",
-        "ATSTREET": "21st Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "21st Ave (NB)"
     },
     {
         "OBJECTID": 60131,
@@ -5337,8 +4805,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43222",
         "LON": "-104.629616",
         "ONSTREET": "Montague St",
-        "ATSTREET": "McCallum Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "McCallum Ave (NB)"
     },
     {
         "OBJECTID": 60132,
@@ -5347,8 +4814,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43369",
         "LON": "-104.629611",
         "ONSTREET": "Montague St",
-        "ATSTREET": "20th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "20th Ave (NB)"
     },
     {
         "OBJECTID": 60133,
@@ -5357,8 +4823,7 @@ const transitStops: Stop[] = [
         "LAT": "50.435332",
         "LON": "-104.629567",
         "ONSTREET": "Montague St",
-        "ATSTREET": "Regina Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Regina Ave (NB)"
     },
     {
         "OBJECTID": 60134,
@@ -5367,8 +4832,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43747",
         "LON": "-104.63105",
         "ONSTREET": "Elphinstone St",
-        "ATSTREET": "Qu'Appelle Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Qu'Appelle Dr (NB)"
     },
     {
         "OBJECTID": 60135,
@@ -5377,8 +4841,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43915",
         "LON": "-104.63112",
         "ONSTREET": "Elphinstone St",
-        "ATSTREET": "17th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "17th Ave (NB)"
     },
     {
         "OBJECTID": 60136,
@@ -5387,8 +4850,7 @@ const transitStops: Stop[] = [
         "LAT": "50.440823",
         "LON": "-104.630599",
         "ONSTREET": "College Ave",
-        "ATSTREET": "Elphinstone St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Elphinstone St (EB)"
     },
     {
         "OBJECTID": 60137,
@@ -5397,8 +4859,7 @@ const transitStops: Stop[] = [
         "LAT": "50.440822",
         "LON": "-104.628481",
         "ONSTREET": "College Ave",
-        "ATSTREET": "Athol St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Athol St (EB)"
     },
     {
         "OBJECTID": 60138,
@@ -5407,8 +4868,7 @@ const transitStops: Stop[] = [
         "LAT": "50.440829",
         "LON": "-104.625709",
         "ONSTREET": "College Ave",
-        "ATSTREET": "Cameron St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Cameron St (EB)"
     },
     {
         "OBJECTID": 60139,
@@ -5417,8 +4877,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44085",
         "LON": "-104.62201",
         "ONSTREET": "College Ave",
-        "ATSTREET": "Retallack St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Retallack St (EB)"
     },
     {
         "OBJECTID": 60140,
@@ -5427,8 +4886,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44144",
         "LON": "-104.6195",
         "ONSTREET": "Angus St",
-        "ATSTREET": "College Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "College Ave (NB)"
     },
     {
         "OBJECTID": 60141,
@@ -5437,8 +4895,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4413",
         "LON": "-104.61364",
         "ONSTREET": "Lorne St",
-        "ATSTREET": "College Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "College Ave (NB)"
     },
     {
         "OBJECTID": 60142,
@@ -5447,8 +4904,7 @@ const transitStops: Stop[] = [
         "LAT": "50.442693",
         "LON": "-104.613599",
         "ONSTREET": "Lorne St",
-        "ATSTREET": "15th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "15th Ave (NB)"
     },
     {
         "OBJECTID": 60143,
@@ -5457,8 +4913,7 @@ const transitStops: Stop[] = [
         "LAT": "50.444741",
         "LON": "-104.613605",
         "ONSTREET": "Lorne St",
-        "ATSTREET": "14th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "14th Ave (NB)"
     },
     {
         "OBJECTID": 60144,
@@ -5467,8 +4922,7 @@ const transitStops: Stop[] = [
         "LAT": "50.446745",
         "LON": "-104.613604",
         "ONSTREET": "Lorne St",
-        "ATSTREET": "Victoria Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Victoria Ave (NB)"
     },
     {
         "OBJECTID": 60145,
@@ -5477,8 +4931,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46299",
         "LON": "-104.607049",
         "ONSTREET": "4th Ave",
-        "ATSTREET": "Broad St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Broad St (WB)"
     },
     {
         "OBJECTID": 60146,
@@ -5487,8 +4940,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46299",
         "LON": "-104.61102",
         "ONSTREET": "4th Ave",
-        "ATSTREET": "Scarth St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Scarth St (WB)"
     },
     {
         "OBJECTID": 60147,
@@ -5497,8 +4949,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46297",
         "LON": "-104.61695",
         "ONSTREET": "4th Ave",
-        "ATSTREET": "Albert St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Albert St (WB)"
     },
     {
         "OBJECTID": 60148,
@@ -5507,8 +4958,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46461",
         "LON": "-104.61864",
         "ONSTREET": "3rd Ave",
-        "ATSTREET": "Albert St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Albert St (WB)"
     },
     {
         "OBJECTID": 60149,
@@ -5517,8 +4967,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46463",
         "LON": "-104.620229",
         "ONSTREET": "3rd Ave",
-        "ATSTREET": "Angus St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Angus St (WB)"
     },
     {
         "OBJECTID": 60150,
@@ -5527,8 +4976,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46462",
         "LON": "-104.623119",
         "ONSTREET": "3rd Ave",
-        "ATSTREET": "Retallack St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Retallack St (WB)"
     },
     {
         "OBJECTID": 60151,
@@ -5537,8 +4985,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46461",
         "LON": "-104.62613",
         "ONSTREET": "3rd Ave",
-        "ATSTREET": "Cameron St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Cameron St (WB)"
     },
     {
         "OBJECTID": 60152,
@@ -5547,8 +4994,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46464",
         "LON": "-104.628981",
         "ONSTREET": "3rd Ave",
-        "ATSTREET": "Athol St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Athol St (WB)"
     },
     {
         "OBJECTID": 60153,
@@ -5557,8 +5003,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4646",
         "LON": "-104.63162",
         "ONSTREET": "3rd Ave",
-        "ATSTREET": "Elphinstone St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Elphinstone St (WB)"
     },
     {
         "OBJECTID": 60154,
@@ -5567,8 +5012,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4646",
         "LON": "-104.6346",
         "ONSTREET": "3rd Ave",
-        "ATSTREET": "McTavish St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "McTavish St (WB)"
     },
     {
         "OBJECTID": 60155,
@@ -5577,8 +5021,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46459",
         "LON": "-104.63738",
         "ONSTREET": "3rd Ave",
-        "ATSTREET": "Queen St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Queen St (WB)"
     },
     {
         "OBJECTID": 60156,
@@ -5587,8 +5030,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46461",
         "LON": "-104.64057",
         "ONSTREET": "3rd Ave",
-        "ATSTREET": "Pasqua St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Pasqua St (WB)"
     },
     {
         "OBJECTID": 60157,
@@ -5597,8 +5039,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46297",
         "LON": "-104.64637",
         "ONSTREET": "4th Ave",
-        "ATSTREET": "Connaught St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Connaught St (WB)"
     },
     {
         "OBJECTID": 60158,
@@ -5607,8 +5048,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46296",
         "LON": "-104.64855",
         "ONSTREET": "4th Ave",
-        "ATSTREET": "Arthur St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Arthur St (WB)"
     },
     {
         "OBJECTID": 60159,
@@ -5617,8 +5057,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46295",
         "LON": "-104.65147",
         "ONSTREET": "4th Ave",
-        "ATSTREET": "Royal St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Royal St (WB)"
     },
     {
         "OBJECTID": 60160,
@@ -5627,8 +5066,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46342",
         "LON": "-104.65246",
         "ONSTREET": "McIntosh St",
-        "ATSTREET": "4th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "4th Ave (NB)"
     },
     {
         "OBJECTID": 60161,
@@ -5637,8 +5075,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46522",
         "LON": "-104.653099",
         "ONSTREET": "2nd Ave",
-        "ATSTREET": "McIntosh St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "McIntosh St (WB)"
     },
     {
         "OBJECTID": 60162,
@@ -5647,8 +5084,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46569",
         "LON": "-104.655121",
         "ONSTREET": "2nd Ave",
-        "ATSTREET": "Grey St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Grey St (WB)"
     },
     {
         "OBJECTID": 60163,
@@ -5657,8 +5093,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46567",
         "LON": "-104.658609",
         "ONSTREET": "2nd Ave",
-        "ATSTREET": "Aberdeen St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Aberdeen St (WB)"
     },
     {
         "OBJECTID": 60164,
@@ -5667,8 +5102,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46571",
         "LON": "-104.660439",
         "ONSTREET": "2nd Ave",
-        "ATSTREET": "Horace St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Horace St (WB)"
     },
     {
         "OBJECTID": 60165,
@@ -5677,8 +5111,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46569",
         "LON": "-104.66465",
         "ONSTREET": "Mikkelson Dr",
-        "ATSTREET": "Campbell St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Campbell St (WB)"
     },
     {
         "OBJECTID": 60166,
@@ -5687,8 +5120,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46568",
         "LON": "-104.66691",
         "ONSTREET": "Mikkelson Dr",
-        "ATSTREET": "McManus St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "McManus St (WB)"
     },
     {
         "OBJECTID": 60167,
@@ -5697,8 +5129,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46583",
         "LON": "-104.669351",
         "ONSTREET": "Mikkelson Dr",
-        "ATSTREET": "McCormick Cres (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "McCormick Cres (WB)"
     },
     {
         "OBJECTID": 60168,
@@ -5707,8 +5138,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46687",
         "LON": "-104.67113",
         "ONSTREET": "McCarthy Blvd",
-        "ATSTREET": "Mikkelson Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Mikkelson Dr (NB)"
     },
     {
         "OBJECTID": 60169,
@@ -5717,8 +5147,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46901",
         "LON": "-104.66928",
         "ONSTREET": "McCarthy Blvd",
-        "ATSTREET": "611 McCarthy (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "611 McCarthy (NB)"
     },
     {
         "OBJECTID": 60170,
@@ -5727,8 +5156,7 @@ const transitStops: Stop[] = [
         "LAT": "50.472",
         "LON": "-104.66646",
         "ONSTREET": "McCarthy Blvd",
-        "ATSTREET": "1st Ave N (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "1st Ave N (NB)"
     },
     {
         "OBJECTID": 60171,
@@ -5737,8 +5165,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47393",
         "LON": "-104.664739",
         "ONSTREET": "McCarthy Blvd",
-        "ATSTREET": "Eden Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Eden Ave (NB)"
     },
     {
         "OBJECTID": 60172,
@@ -5747,8 +5174,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47554",
         "LON": "-104.663811",
         "ONSTREET": "McCarthy Blvd",
-        "ATSTREET": "Ken Jenkins Pk (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Ken Jenkins Pk (NB)"
     },
     {
         "OBJECTID": 60173,
@@ -5757,8 +5183,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43768",
         "LON": "-104.60579",
         "ONSTREET": "Broadway Ave",
-        "ATSTREET": "Broad St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Broad St (EB)"
     },
     {
         "OBJECTID": 60174,
@@ -5767,8 +5192,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43766",
         "LON": "-104.60377",
         "ONSTREET": "Broadway Ave",
-        "ATSTREET": "St Chads Cres (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "St Chads Cres (EB)"
     },
     {
         "OBJECTID": 60175,
@@ -5777,8 +5201,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43768",
         "LON": "-104.60017",
         "ONSTREET": "Broadway Ave",
-        "ATSTREET": "Ottawa St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Ottawa St (EB)"
     },
     {
         "OBJECTID": 60176,
@@ -5787,8 +5210,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43767",
         "LON": "-104.59771",
         "ONSTREET": "Broadway Ave",
-        "ATSTREET": "Montreal Cres (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Montreal Cres (EB)"
     },
     {
         "OBJECTID": 60177,
@@ -5797,8 +5219,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43765",
         "LON": "-104.59467",
         "ONSTREET": "Broadway Ave",
-        "ATSTREET": "Winnipeg St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Winnipeg St (EB)"
     },
     {
         "OBJECTID": 60178,
@@ -5807,8 +5228,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43762",
         "LON": "-104.59316",
         "ONSTREET": "Broadway Ave",
-        "ATSTREET": "Wallace St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Wallace St (EB)"
     },
     {
         "OBJECTID": 60179,
@@ -5817,8 +5237,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43762",
         "LON": "-104.590409",
         "ONSTREET": "Broadway Ave",
-        "ATSTREET": "Broder St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Broder St (EB)"
     },
     {
         "OBJECTID": 60180,
@@ -5827,8 +5246,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43764",
         "LON": "-104.58749",
         "ONSTREET": "Broadway Ave",
-        "ATSTREET": "Edgar St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Edgar St (EB)"
     },
     {
         "OBJECTID": 60181,
@@ -5837,8 +5255,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43766",
         "LON": "-104.584569",
         "ONSTREET": "Broadway Ave",
-        "ATSTREET": "Lindsay St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Lindsay St (EB)"
     },
     {
         "OBJECTID": 60182,
@@ -5847,8 +5264,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43733",
         "LON": "-104.58362",
         "ONSTREET": "McDonald St",
-        "ATSTREET": "Broadway Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Broadway Ave (SB)"
     },
     {
         "OBJECTID": 60183,
@@ -5857,8 +5273,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43598",
         "LON": "-104.58366",
         "ONSTREET": "McDonald St",
-        "ATSTREET": "18th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "18th Ave (SB)"
     },
     {
         "OBJECTID": 60184,
@@ -5867,8 +5282,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43433",
         "LON": "-104.58364",
         "ONSTREET": "McDonald St",
-        "ATSTREET": "19th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "19th Ave (SB)"
     },
     {
         "OBJECTID": 60185,
@@ -5877,8 +5291,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43308",
         "LON": "-104.583049",
         "ONSTREET": "Douglas Ave",
-        "ATSTREET": "McDonald St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "McDonald St (EB)"
     },
     {
         "OBJECTID": 60186,
@@ -5887,8 +5300,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43308",
         "LON": "-104.58024",
         "ONSTREET": "Douglas Ave",
-        "ATSTREET": "Kerr Pl (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Kerr Pl (EB)"
     },
     {
         "OBJECTID": 60187,
@@ -5897,8 +5309,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43308",
         "LON": "-104.57725",
         "ONSTREET": "Douglas Ave",
-        "ATSTREET": "Harvey St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Harvey St (EB)"
     },
     {
         "OBJECTID": 60188,
@@ -5907,8 +5318,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43311",
         "LON": "-104.57316",
         "ONSTREET": "Douglas Ave",
-        "ATSTREET": "Borden St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Borden St (EB)"
     },
     {
         "OBJECTID": 60189,
@@ -5917,8 +5327,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43366",
         "LON": "-104.57213",
         "ONSTREET": "Park St",
-        "ATSTREET": "Douglas Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Douglas Ave (NB)"
     },
     {
         "OBJECTID": 60190,
@@ -5927,8 +5336,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4358",
         "LON": "-104.57219",
         "ONSTREET": "Park St",
-        "ATSTREET": "18th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "18th Ave (NB)"
     },
     {
         "OBJECTID": 60191,
@@ -5937,8 +5345,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43812",
         "LON": "-104.57222",
         "ONSTREET": "Park St",
-        "ATSTREET": "Broadway Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Broadway Ave (NB)"
     },
     {
         "OBJECTID": 60192,
@@ -5947,8 +5354,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44027",
         "LON": "-104.572191",
         "ONSTREET": "Park St",
-        "ATSTREET": "17th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "17th Ave (NB)"
     },
     {
         "OBJECTID": 60193,
@@ -5957,8 +5363,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43253",
         "LON": "-104.55729",
         "ONSTREET": "University Park Dr",
-        "ATSTREET": "Laval Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Laval Dr (SB)"
     },
     {
         "OBJECTID": 60194,
@@ -5967,8 +5372,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43172",
         "LON": "-104.558935",
         "ONSTREET": "Michener Dr",
-        "ATSTREET": "University Pk Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "University Pk Dr (WB)"
     },
     {
         "OBJECTID": 60195,
@@ -5977,8 +5381,7 @@ const transitStops: Stop[] = [
         "LAT": "50.432921",
         "LON": "-104.561457",
         "ONSTREET": "Michener Dr",
-        "ATSTREET": "Houston Rd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Houston Rd (WB)"
     },
     {
         "OBJECTID": 60196,
@@ -5987,8 +5390,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43312",
         "LON": "-104.56272",
         "ONSTREET": "Windfield Rd",
-        "ATSTREET": "Michener Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Michener Dr (SB)"
     },
     {
         "OBJECTID": 60197,
@@ -5997,8 +5399,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4313",
         "LON": "-104.56472",
         "ONSTREET": "Windfield Rd",
-        "ATSTREET": "Metcalfe Rd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Metcalfe Rd (SB)"
     },
     {
         "OBJECTID": 60198,
@@ -6007,8 +5408,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43013",
         "LON": "-104.565931",
         "ONSTREET": "Windfield Rd",
-        "ATSTREET": "Mayfield Rd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Mayfield Rd (SB)"
     },
     {
         "OBJECTID": 60199,
@@ -6017,8 +5417,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42835",
         "LON": "-104.567641",
         "ONSTREET": "Windfield Rd",
-        "ATSTREET": "Windfield Gate (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Windfield Gate (SB)"
     },
     {
         "OBJECTID": 60200,
@@ -6027,8 +5426,7 @@ const transitStops: Stop[] = [
         "LAT": "50.426322",
         "LON": "-104.568242",
         "ONSTREET": "Windfield Rd",
-        "ATSTREET": "Assiniboine Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Assiniboine Ave (SB)"
     },
     {
         "OBJECTID": 60201,
@@ -6037,8 +5435,7 @@ const transitStops: Stop[] = [
         "LAT": "50.425948",
         "LON": "-104.56194",
         "ONSTREET": "Assiniboine Ave",
-        "ATSTREET": "University Pk Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "University Pk Dr (EB)"
     },
     {
         "OBJECTID": 60202,
@@ -6047,8 +5444,7 @@ const transitStops: Stop[] = [
         "LAT": "50.424581",
         "LON": "-104.553979",
         "ONSTREET": "Assiniboine Ave",
-        "ATSTREET": "Edinburgh Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Edinburgh Dr (EB)"
     },
     {
         "OBJECTID": 60203,
@@ -6057,8 +5453,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42305",
         "LON": "-104.550854",
         "ONSTREET": "Assiniboine Ave",
-        "ATSTREET": "Boyle St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Boyle St (EB)"
     },
     {
         "OBJECTID": 60204,
@@ -6067,8 +5462,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42151",
         "LON": "-104.54558",
         "ONSTREET": "Assiniboine Ave",
-        "ATSTREET": "Philip Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Philip Rd (EB)"
     },
     {
         "OBJECTID": 60205,
@@ -6077,8 +5471,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43281",
         "LON": "-104.53811",
         "ONSTREET": "Truesdale Dr",
-        "ATSTREET": "Prince Of Wales (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Prince Of Wales (WB)"
     },
     {
         "OBJECTID": 60206,
@@ -6087,8 +5480,7 @@ const transitStops: Stop[] = [
         "LAT": "50.433473",
         "LON": "-104.541548",
         "ONSTREET": "Truesdale Dr",
-        "ATSTREET": "Helmsing St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Helmsing St (WB)"
     },
     {
         "OBJECTID": 60207,
@@ -6097,8 +5489,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43404",
         "LON": "-104.543219",
         "ONSTREET": "Truesdale Dr",
-        "ATSTREET": "Fowler St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Fowler St (WB)"
     },
     {
         "OBJECTID": 60208,
@@ -6107,8 +5498,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43478",
         "LON": "-104.545681",
         "ONSTREET": "Truesdale Dr",
-        "ATSTREET": "Shooter Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Shooter Dr (WB)"
     },
     {
         "OBJECTID": 60209,
@@ -6117,8 +5507,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43514",
         "LON": "-104.548479",
         "ONSTREET": "Truesdale Dr",
-        "ATSTREET": "Harding St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Harding St (WB)"
     },
     {
         "OBJECTID": 60210,
@@ -6127,8 +5516,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43531",
         "LON": "-104.552301",
         "ONSTREET": "Truesdale Dr",
-        "ATSTREET": "Cunning Cres (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Cunning Cres (WB)"
     },
     {
         "OBJECTID": 60211,
@@ -6137,8 +5525,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43861",
         "LON": "-104.550621",
         "ONSTREET": "University Park Dr",
-        "ATSTREET": "Brodie Bay (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Brodie Bay (NB)"
     },
     {
         "OBJECTID": 60212,
@@ -6147,8 +5534,7 @@ const transitStops: Stop[] = [
         "LAT": "50.440529",
         "LON": "-104.548645",
         "ONSTREET": "Arens Rd",
-        "ATSTREET": "University Park Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "University Park Dr (EB)"
     },
     {
         "OBJECTID": 60213,
@@ -6157,8 +5543,7 @@ const transitStops: Stop[] = [
         "LAT": "50.440462",
         "LON": "-104.546257",
         "ONSTREET": "Arens Rd",
-        "ATSTREET": "Heseltine Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Heseltine Rd (EB)"
     },
     {
         "OBJECTID": 60214,
@@ -6167,8 +5552,7 @@ const transitStops: Stop[] = [
         "LAT": "50.440121",
         "LON": "-104.544021",
         "ONSTREET": "Arens Rd",
-        "ATSTREET": "Crocus Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Crocus Dr (EB)"
     },
     {
         "OBJECTID": 60215,
@@ -6177,8 +5561,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43914",
         "LON": "-104.54141",
         "ONSTREET": "Arens Rd",
-        "ATSTREET": "Meadow Park Cres (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Meadow Park Cres (EB)"
     },
     {
         "OBJECTID": 60216,
@@ -6187,8 +5570,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43798",
         "LON": "-104.539201",
         "ONSTREET": "Arens Rd",
-        "ATSTREET": "Parkland Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Parkland Dr (EB)"
     },
     {
         "OBJECTID": 60217,
@@ -6197,8 +5579,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43655",
         "LON": "-104.53676",
         "ONSTREET": "Arens Rd",
-        "ATSTREET": "3211 Arens Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "3211 Arens Rd (EB)"
     },
     {
         "OBJECTID": 60218,
@@ -6207,8 +5588,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44394",
         "LON": "-104.550531",
         "ONSTREET": "Quance St",
-        "ATSTREET": "Victoria Square Mall (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Victoria Square Mall (WB)"
     },
     {
         "OBJECTID": 60219,
@@ -6217,8 +5597,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44385",
         "LON": "-104.557049",
         "ONSTREET": "Truesdale Dr",
-        "ATSTREET": "Sinclair St (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Sinclair St (SB)"
     },
     {
         "OBJECTID": 60220,
@@ -6227,8 +5606,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44099",
         "LON": "-104.558441",
         "ONSTREET": "Truesdale Dr",
-        "ATSTREET": "Longworthy Bay (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Longworthy Bay (SB)"
     },
     {
         "OBJECTID": 60221,
@@ -6237,8 +5615,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43782",
         "LON": "-104.558429",
         "ONSTREET": "Truesdale Dr",
-        "ATSTREET": "Lee Pl (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Lee Pl (SB)"
     },
     {
         "OBJECTID": 60222,
@@ -6247,8 +5624,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43602",
         "LON": "-104.55592",
         "ONSTREET": "Truesdale Dr",
-        "ATSTREET": "Kliman Cres (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Kliman Cres (EB)"
     },
     {
         "OBJECTID": 60223,
@@ -6257,8 +5633,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43546",
         "LON": "-104.55442",
         "ONSTREET": "University Pk Dr",
-        "ATSTREET": "Truesdale Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Truesdale Dr (SB)"
     },
     {
         "OBJECTID": 60224,
@@ -6267,8 +5642,7 @@ const transitStops: Stop[] = [
         "LAT": "50.440781",
         "LON": "-104.567577",
         "ONSTREET": "Dixon Cres",
-        "ATSTREET": "Froom Cres (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Froom Cres (NB)"
     },
     {
         "OBJECTID": 60225,
@@ -6277,8 +5651,7 @@ const transitStops: Stop[] = [
         "LAT": "50.441565",
         "LON": "-104.566371",
         "ONSTREET": "Dixon Cres",
-        "ATSTREET": "Froom Cres (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Froom Cres (NB)"
     },
     {
         "OBJECTID": 60226,
@@ -6287,8 +5660,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44405",
         "LON": "-104.56491",
         "ONSTREET": "Froom Cres",
-        "ATSTREET": "14th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "14th Ave (NB)"
     },
     {
         "OBJECTID": 60227,
@@ -6297,8 +5669,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44405",
         "LON": "-104.56782",
         "ONSTREET": "14th Ave",
-        "ATSTREET": "Vaughn St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Vaughn St (WB)"
     },
     {
         "OBJECTID": 60228,
@@ -6307,8 +5678,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44405",
         "LON": "-104.569971",
         "ONSTREET": "14th Ave",
-        "ATSTREET": "Rothwell St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Rothwell St (WB)"
     },
     {
         "OBJECTID": 60229,
@@ -6317,8 +5687,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44354",
         "LON": "-104.57242",
         "ONSTREET": "Park St",
-        "ATSTREET": "14th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "14th Ave (SB)"
     },
     {
         "OBJECTID": 60230,
@@ -6327,8 +5696,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44089",
         "LON": "-104.57836",
         "ONSTREET": "College Ave",
-        "ATSTREET": "Harvey St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Harvey St (WB)"
     },
     {
         "OBJECTID": 60231,
@@ -6337,8 +5705,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4409",
         "LON": "-104.58125",
         "ONSTREET": "College Ave",
-        "ATSTREET": "Mackay St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Mackay St (WB)"
     },
     {
         "OBJECTID": 60232,
@@ -6347,8 +5714,7 @@ const transitStops: Stop[] = [
         "LAT": "50.440915",
         "LON": "-104.58418",
         "ONSTREET": "College Ave",
-        "ATSTREET": "McDonald St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "McDonald St (WB)"
     },
     {
         "OBJECTID": 60233,
@@ -6357,8 +5723,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44087",
         "LON": "-104.586971",
         "ONSTREET": "College Ave",
-        "ATSTREET": "Elliott St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Elliott St (WB)"
     },
     {
         "OBJECTID": 60234,
@@ -6367,8 +5732,7 @@ const transitStops: Stop[] = [
         "LAT": "50.440917",
         "LON": "-104.589932",
         "ONSTREET": "College Ave",
-        "ATSTREET": "Reynolds St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Reynolds St (WB)"
     },
     {
         "OBJECTID": 60235,
@@ -6377,8 +5741,7 @@ const transitStops: Stop[] = [
         "LAT": "50.440899",
         "LON": "-104.594158",
         "ONSTREET": "College Ave",
-        "ATSTREET": "Wallace St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Wallace St (WB)"
     },
     {
         "OBJECTID": 60236,
@@ -6387,8 +5750,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44085",
         "LON": "-104.596781",
         "ONSTREET": "College Ave",
-        "ATSTREET": "Quebec St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Quebec St (WB)"
     },
     {
         "OBJECTID": 60237,
@@ -6397,8 +5759,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44085",
         "LON": "-104.599851",
         "ONSTREET": "College Ave",
-        "ATSTREET": "Toronto St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Toronto St (WB)"
     },
     {
         "OBJECTID": 60238,
@@ -6407,8 +5768,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44084",
         "LON": "-104.60261",
         "ONSTREET": "College Ave",
-        "ATSTREET": "Saint John St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Saint John St (WB)"
     },
     {
         "OBJECTID": 60239,
@@ -6417,8 +5777,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44118",
         "LON": "-104.603421",
         "ONSTREET": "Halifax St",
-        "ATSTREET": "College Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "College Ave (NB)"
     },
     {
         "OBJECTID": 60240,
@@ -6427,8 +5786,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44275",
         "LON": "-104.60342",
         "ONSTREET": "Halifax St",
-        "ATSTREET": "15th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "15th Ave (NB)"
     },
     {
         "OBJECTID": 60241,
@@ -6437,8 +5795,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44398",
         "LON": "-104.60399",
         "ONSTREET": "14th Ave",
-        "ATSTREET": "Halifax St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Halifax St (WB)"
     },
     {
         "OBJECTID": 60242,
@@ -6447,8 +5804,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47713",
         "LON": "-104.66407",
         "ONSTREET": "McCarthy Blvd",
-        "ATSTREET": "Sherwood Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Sherwood Dr (SB)"
     },
     {
         "OBJECTID": 60243,
@@ -6457,8 +5813,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47432",
         "LON": "-104.66468",
         "ONSTREET": "McCarthy Blvd",
-        "ATSTREET": "Button Park (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Button Park (SB)"
     },
     {
         "OBJECTID": 60244,
@@ -6467,8 +5822,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47132",
         "LON": "-104.66733",
         "ONSTREET": "McCarthy Blvd",
-        "ATSTREET": "1st Ave N (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "1st Ave N (SB)"
     },
     {
         "OBJECTID": 60245,
@@ -6477,8 +5831,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46788",
         "LON": "-104.6705",
         "ONSTREET": "McCarthy Blvd",
-        "ATSTREET": "Mikkelson Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Mikkelson Dr (SB)"
     },
     {
         "OBJECTID": 60246,
@@ -6487,8 +5840,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4663",
         "LON": "-104.67083",
         "ONSTREET": "Mikkelson Dr",
-        "ATSTREET": "McCarthy Blvd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "McCarthy Blvd (EB)"
     },
     {
         "OBJECTID": 60247,
@@ -6497,8 +5849,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46561",
         "LON": "-104.66826",
         "ONSTREET": "Mikkelson Dr",
-        "ATSTREET": "Lyons St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Lyons St (EB)"
     },
     {
         "OBJECTID": 60248,
@@ -6507,8 +5858,7 @@ const transitStops: Stop[] = [
         "LAT": "50.465584",
         "LON": "-104.66344",
         "ONSTREET": "2nd Ave",
-        "ATSTREET": "Campbell St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Campbell St (EB)"
     },
     {
         "OBJECTID": 60249,
@@ -6517,8 +5867,7 @@ const transitStops: Stop[] = [
         "LAT": "50.465583",
         "LON": "-104.6591",
         "ONSTREET": "2nd Ave",
-        "ATSTREET": "Horace St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Horace St (EB)"
     },
     {
         "OBJECTID": 60250,
@@ -6527,8 +5876,7 @@ const transitStops: Stop[] = [
         "LAT": "50.465582",
         "LON": "-104.654841",
         "ONSTREET": "2nd Ave",
-        "ATSTREET": "Grey St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Grey St (EB)"
     },
     {
         "OBJECTID": 60251,
@@ -6537,8 +5885,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46512",
         "LON": "-104.65353",
         "ONSTREET": "2nd Ave",
-        "ATSTREET": "Empress St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Empress St (EB)"
     },
     {
         "OBJECTID": 60252,
@@ -6547,8 +5894,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4635",
         "LON": "-104.65255",
         "ONSTREET": "McIntosh St",
-        "ATSTREET": "4th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "4th Ave (SB)"
     },
     {
         "OBJECTID": 60253,
@@ -6557,8 +5903,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46287",
         "LON": "-104.65184",
         "ONSTREET": "4th Ave",
-        "ATSTREET": "McIntosh St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "McIntosh St (EB)"
     },
     {
         "OBJECTID": 60254,
@@ -6567,8 +5912,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46292",
         "LON": "-104.64906",
         "ONSTREET": "4th Ave",
-        "ATSTREET": "Forget St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Forget St (EB)"
     },
     {
         "OBJECTID": 60255,
@@ -6577,8 +5921,7 @@ const transitStops: Stop[] = [
         "LAT": "50.462881",
         "LON": "-104.64612",
         "ONSTREET": "4th Ave",
-        "ATSTREET": "Connaught St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Connaught St (EB)"
     },
     {
         "OBJECTID": 60256,
@@ -6587,8 +5930,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46288",
         "LON": "-104.644181",
         "ONSTREET": "4th Ave",
-        "ATSTREET": "Lewvan Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Lewvan Dr (EB)"
     },
     {
         "OBJECTID": 60257,
@@ -6597,8 +5939,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4633",
         "LON": "-104.64092",
         "ONSTREET": "Pasqua St",
-        "ATSTREET": "4th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "4th Ave (NB)"
     },
     {
         "OBJECTID": 60258,
@@ -6607,8 +5948,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46444",
         "LON": "-104.640469",
         "ONSTREET": "3rd Ave",
-        "ATSTREET": "Pasqua St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Pasqua St (EB)"
     },
     {
         "OBJECTID": 60259,
@@ -6617,8 +5957,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46448",
         "LON": "-104.637691",
         "ONSTREET": "3rd Ave",
-        "ATSTREET": "King St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "King St (EB)"
     },
     {
         "OBJECTID": 60260,
@@ -6627,8 +5966,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46451",
         "LON": "-104.634989",
         "ONSTREET": "3rd Ave",
-        "ATSTREET": "Princess St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Princess St (EB)"
     },
     {
         "OBJECTID": 60261,
@@ -6637,8 +5975,7 @@ const transitStops: Stop[] = [
         "LAT": "50.464488",
         "LON": "-104.63205",
         "ONSTREET": "3rd Ave",
-        "ATSTREET": "Argyle St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Argyle St (EB)"
     },
     {
         "OBJECTID": 60262,
@@ -6647,8 +5984,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46451",
         "LON": "-104.63061",
         "ONSTREET": "3rd Ave",
-        "ATSTREET": "Elphinstone St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Elphinstone St (EB)"
     },
     {
         "OBJECTID": 60263,
@@ -6657,8 +5993,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46452",
         "LON": "-104.629151",
         "ONSTREET": "3rd Ave",
-        "ATSTREET": "Montague St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Montague St (EB)"
     },
     {
         "OBJECTID": 60264,
@@ -6667,8 +6002,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46451",
         "LON": "-104.62631",
         "ONSTREET": "3rd Ave",
-        "ATSTREET": "Garnet St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Garnet St (EB)"
     },
     {
         "OBJECTID": 60265,
@@ -6677,8 +6011,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46452",
         "LON": "-104.623501",
         "ONSTREET": "3rd Ave",
-        "ATSTREET": "Robinson St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Robinson St (EB)"
     },
     {
         "OBJECTID": 60266,
@@ -6687,8 +6020,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46452",
         "LON": "-104.62055",
         "ONSTREET": "3rd Ave",
-        "ATSTREET": "Rae St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Rae St (EB)"
     },
     {
         "OBJECTID": 60267,
@@ -6697,8 +6029,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4645",
         "LON": "-104.61849",
         "ONSTREET": "3rd Ave",
-        "ATSTREET": "Albert St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Albert St (EB)"
     },
     {
         "OBJECTID": 60268,
@@ -6707,8 +6038,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4629",
         "LON": "-104.61703",
         "ONSTREET": "4th Ave",
-        "ATSTREET": "Albert St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Albert St (EB)"
     },
     {
         "OBJECTID": 60269,
@@ -6717,8 +6047,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4629",
         "LON": "-104.611011",
         "ONSTREET": "4th Ave",
-        "ATSTREET": "Scarth St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Scarth St (EB)"
     },
     {
         "OBJECTID": 60270,
@@ -6727,8 +6056,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4629",
         "LON": "-104.60686",
         "ONSTREET": "4th Ave",
-        "ATSTREET": "Broad St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Broad St (EB)"
     },
     {
         "OBJECTID": 60271,
@@ -6737,8 +6065,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4421",
         "LON": "-104.63124",
         "ONSTREET": "Elphinstone St",
-        "ATSTREET": "15th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "15th Ave (SB)"
     },
     {
         "OBJECTID": 60272,
@@ -6747,8 +6074,7 @@ const transitStops: Stop[] = [
         "LAT": "50.436706",
         "LON": "-104.63119",
         "ONSTREET": "Elphinstone St",
-        "ATSTREET": "Qu'Appelle Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Qu'Appelle Dr (SB)"
     },
     {
         "OBJECTID": 60273,
@@ -6757,8 +6083,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43524",
         "LON": "-104.62973",
         "ONSTREET": "Montague St",
-        "ATSTREET": "Regina Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Regina Ave (SB)"
     },
     {
         "OBJECTID": 60274,
@@ -6767,8 +6092,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43286",
         "LON": "-104.62973",
         "ONSTREET": "Montague St",
-        "ATSTREET": "20th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "20th Ave (SB)"
     },
     {
         "OBJECTID": 60275,
@@ -6777,8 +6101,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4312",
         "LON": "-104.629709",
         "ONSTREET": "Montague St",
-        "ATSTREET": "McCallum Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "McCallum Ave (SB)"
     },
     {
         "OBJECTID": 60276,
@@ -6787,8 +6110,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42954",
         "LON": "-104.62971",
         "ONSTREET": "Montague St",
-        "ATSTREET": "21st Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "21st Ave (SB)"
     },
     {
         "OBJECTID": 60277,
@@ -6797,8 +6119,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42763",
         "LON": "-104.62973",
         "ONSTREET": "Montague St",
-        "ATSTREET": "Hill Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Hill Ave (SB)"
     },
     {
         "OBJECTID": 60278,
@@ -6807,8 +6128,7 @@ const transitStops: Stop[] = [
         "LAT": "50.426242",
         "LON": "-104.629413",
         "ONSTREET": "Argyle Rd",
-        "ATSTREET": "Garner Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Garner Ave (SB)"
     },
     {
         "OBJECTID": 60279,
@@ -6817,8 +6137,7 @@ const transitStops: Stop[] = [
         "LAT": "50.424781",
         "LON": "-104.627556",
         "ONSTREET": "Argyle Rd",
-        "ATSTREET": "Westgate Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Westgate Ave (SB)"
     },
     {
         "OBJECTID": 60280,
@@ -6827,8 +6146,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42329",
         "LON": "-104.625665",
         "ONSTREET": "Argyle Rd",
-        "ATSTREET": "Assiniboine Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Assiniboine Ave (SB)"
     },
     {
         "OBJECTID": 60281,
@@ -6837,8 +6155,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42171",
         "LON": "-104.6245",
         "ONSTREET": "Argyle Rd",
-        "ATSTREET": "Lakeview Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Lakeview Ave (SB)"
     },
     {
         "OBJECTID": 60282,
@@ -6847,8 +6164,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42017",
         "LON": "-104.623469",
         "ONSTREET": "Argyle Rd",
-        "ATSTREET": "L'Arche Cres (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "L'Arche Cres (SB)"
     },
     {
         "OBJECTID": 60283,
@@ -6857,8 +6173,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41477",
         "LON": "-104.618169",
         "ONSTREET": "Albert St",
-        "ATSTREET": "Parliament Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Parliament Ave (SB)"
     },
     {
         "OBJECTID": 60284,
@@ -6867,8 +6182,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41183",
         "LON": "-104.61827",
         "ONSTREET": "Albert St",
-        "ATSTREET": "29th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "29th Ave (SB)"
     },
     {
         "OBJECTID": 60285,
@@ -6877,8 +6191,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40972",
         "LON": "-104.6183",
         "ONSTREET": "Albert St",
-        "ATSTREET": "31st Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "31st Ave (SB)"
     },
     {
         "OBJECTID": 60286,
@@ -6887,8 +6200,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40758",
         "LON": "-104.6183",
         "ONSTREET": "Albert St",
-        "ATSTREET": "Albert St Service Rd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Albert St Service Rd (SB)"
     },
     {
         "OBJECTID": 60287,
@@ -6897,8 +6209,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40567",
         "LON": "-104.62096",
         "ONSTREET": "Rae St",
-        "ATSTREET": "Westfield Rd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Westfield Rd (NB)"
     },
     {
         "OBJECTID": 60288,
@@ -6907,8 +6218,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40758",
         "LON": "-104.62096",
         "ONSTREET": "Rae St",
-        "ATSTREET": "Extendicare (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Extendicare (NB)"
     },
     {
         "OBJECTID": 60289,
@@ -6917,8 +6227,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40882",
         "LON": "-104.620999",
         "ONSTREET": "Rae St",
-        "ATSTREET": "Sunset Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Sunset Dr (NB)"
     },
     {
         "OBJECTID": 60290,
@@ -6927,8 +6236,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41051",
         "LON": "-104.620947",
         "ONSTREET": "Rae St",
-        "ATSTREET": "31st Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "31st Ave (NB)"
     },
     {
         "OBJECTID": 60291,
@@ -6937,8 +6245,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41262",
         "LON": "-104.62098",
         "ONSTREET": "Rae St",
-        "ATSTREET": "29th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "29th Ave (NB)"
     },
     {
         "OBJECTID": 60292,
@@ -6947,8 +6254,7 @@ const transitStops: Stop[] = [
         "LAT": "50.414091",
         "LON": "-104.620938",
         "ONSTREET": "Rae St",
-        "ATSTREET": "28th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "28th Ave (NB)"
     },
     {
         "OBJECTID": 60293,
@@ -6957,8 +6263,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41874",
         "LON": "-104.623279",
         "ONSTREET": "25th Ave",
-        "ATSTREET": "Argyle Rd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Argyle Rd (WB)"
     },
     {
         "OBJECTID": 60294,
@@ -6967,8 +6272,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41876",
         "LON": "-104.627979",
         "ONSTREET": "25th Ave",
-        "ATSTREET": "Athol St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Athol St (WB)"
     },
     {
         "OBJECTID": 60295,
@@ -6977,8 +6281,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4188",
         "LON": "-104.63354",
         "ONSTREET": "25th Ave",
-        "ATSTREET": "McTavish St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "McTavish St (WB)"
     },
     {
         "OBJECTID": 60296,
@@ -6987,8 +6290,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41878",
         "LON": "-104.63658",
         "ONSTREET": "25th Ave",
-        "ATSTREET": "Queen St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Queen St (WB)"
     },
     {
         "OBJECTID": 60297,
@@ -6997,8 +6299,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41926",
         "LON": "-104.64088",
         "ONSTREET": "Pasqua St",
-        "ATSTREET": "25th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "25th Ave (NB)"
     },
     {
         "OBJECTID": 60298,
@@ -7007,8 +6308,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42104",
         "LON": "-104.64087",
         "ONSTREET": "Pasqua St",
-        "ATSTREET": "Lakeview Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Lakeview Ave (NB)"
     },
     {
         "OBJECTID": 60299,
@@ -7017,8 +6317,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42292",
         "LON": "-104.64088",
         "ONSTREET": "Pasqua St",
-        "ATSTREET": "McPhail Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "McPhail Ave (NB)"
     },
     {
         "OBJECTID": 60300,
@@ -7027,8 +6326,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42626",
         "LON": "-104.64045",
         "ONSTREET": "Hill Ave",
-        "ATSTREET": "Pasqua St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Pasqua St (EB)"
     },
     {
         "OBJECTID": 60301,
@@ -7037,8 +6335,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42712",
         "LON": "-104.634251",
         "ONSTREET": "Kings Rd",
-        "ATSTREET": "Hill Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Hill Ave (NB)"
     },
     {
         "OBJECTID": 60302,
@@ -7047,8 +6344,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4288",
         "LON": "-104.636359",
         "ONSTREET": "Kings Rd",
-        "ATSTREET": "21st Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "21st Ave (NB)"
     },
     {
         "OBJECTID": 60303,
@@ -7057,8 +6353,7 @@ const transitStops: Stop[] = [
         "LAT": "50.430109",
         "LON": "-104.637239",
         "ONSTREET": "McCallum Ave",
-        "ATSTREET": "Kings Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Kings Rd (EB)"
     },
     {
         "OBJECTID": 60304,
@@ -7067,8 +6362,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43161",
         "LON": "-104.635461",
         "ONSTREET": "Princess St",
-        "ATSTREET": "McCallum Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "McCallum Ave (NB)"
     },
     {
         "OBJECTID": 60305,
@@ -7077,8 +6371,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43347",
         "LON": "-104.63546",
         "ONSTREET": "Princess St",
-        "ATSTREET": "20th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "20th Ave (NB)"
     },
     {
         "OBJECTID": 60306,
@@ -7087,8 +6380,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43496",
         "LON": "-104.63617",
         "ONSTREET": "Regina Ave",
-        "ATSTREET": "Princess St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Princess St (WB)"
     },
     {
         "OBJECTID": 60307,
@@ -7097,8 +6389,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43494",
         "LON": "-104.638401",
         "ONSTREET": "Regina Ave",
-        "ATSTREET": "Coronation St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Coronation St (WB)"
     },
     {
         "OBJECTID": 60308,
@@ -7107,8 +6398,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43529",
         "LON": "-104.640807",
         "ONSTREET": "Pasqua St",
-        "ATSTREET": "Regina Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Regina Ave (NB)"
     },
     {
         "OBJECTID": 59281,
@@ -7117,8 +6407,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45593",
         "LON": "-104.68684",
         "ONSTREET": "Courtney St",
-        "ATSTREET": "Dewdney Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Dewdney Ave (NB)"
     },
     {
         "OBJECTID": 59282,
@@ -7127,8 +6416,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45756",
         "LON": "-104.68684",
         "ONSTREET": "Courtney St",
-        "ATSTREET": "8th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "8th Ave (NB)"
     },
     {
         "OBJECTID": 59283,
@@ -7137,8 +6425,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45862",
         "LON": "-104.68684",
         "ONSTREET": "Courtney St",
-        "ATSTREET": "7th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "7th Ave (NB)"
     },
     {
         "OBJECTID": 59284,
@@ -7147,8 +6434,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45954",
         "LON": "-104.68685",
         "ONSTREET": "Courtney St",
-        "ATSTREET": "6th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "6th Ave (NB)"
     },
     {
         "OBJECTID": 59285,
@@ -7157,8 +6443,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46084",
         "LON": "-104.68684",
         "ONSTREET": "Courtney St",
-        "ATSTREET": "Kelly Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Kelly Ave (NB)"
     },
     {
         "OBJECTID": 59286,
@@ -7167,8 +6452,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46146",
         "LON": "-104.685749",
         "ONSTREET": "5th Ave",
-        "ATSTREET": "Duncan Cr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Duncan Cr (EB)"
     },
     {
         "OBJECTID": 59287,
@@ -7177,8 +6461,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46121",
         "LON": "-104.68259",
         "ONSTREET": "Dorothy St",
-        "ATSTREET": "5th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "5th Ave (SB)"
     },
     {
         "OBJECTID": 59288,
@@ -7187,8 +6470,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46",
         "LON": "-104.68233",
         "ONSTREET": "Dorothy St",
-        "ATSTREET": "Kelly Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Kelly Ave (SB)"
     },
     {
         "OBJECTID": 59289,
@@ -7197,8 +6479,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4592",
         "LON": "-104.682039",
         "ONSTREET": "Dorothy St",
-        "ATSTREET": "6th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "6th Ave (SB)"
     },
     {
         "OBJECTID": 59290,
@@ -7207,8 +6488,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45843",
         "LON": "-104.68128",
         "ONSTREET": "Dorothy St",
-        "ATSTREET": "7th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "7th Ave (SB)"
     },
     {
         "OBJECTID": 59291,
@@ -7217,8 +6497,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4571",
         "LON": "-104.6799",
         "ONSTREET": "Dorothy St",
-        "ATSTREET": "8th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "8th Ave (SB)"
     },
     {
         "OBJECTID": 59292,
@@ -7227,8 +6506,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45578",
         "LON": "-104.6797",
         "ONSTREET": "Dorothy St",
-        "ATSTREET": "Bowman Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Bowman Ave (SB)"
     },
     {
         "OBJECTID": 59293,
@@ -7237,8 +6515,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4551",
         "LON": "-104.67884",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Dorothy St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Dorothy St (EB)"
     },
     {
         "OBJECTID": 59294,
@@ -7247,8 +6524,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4551",
         "LON": "-104.676651",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Southam St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Southam St (EB)"
     },
     {
         "OBJECTID": 59295,
@@ -7257,8 +6533,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4551",
         "LON": "-104.67375",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Kent St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Kent St (EB)"
     },
     {
         "OBJECTID": 59296,
@@ -7267,8 +6542,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4551",
         "LON": "-104.67161",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Carlton St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Carlton St (EB)"
     },
     {
         "OBJECTID": 59297,
@@ -7277,8 +6551,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45509",
         "LON": "-104.669061",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Donald St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Donald St (EB)"
     },
     {
         "OBJECTID": 59298,
@@ -7287,8 +6560,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45509",
         "LON": "-104.66553",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Bonner Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Bonner Dr (EB)"
     },
     {
         "OBJECTID": 59299,
@@ -7297,8 +6569,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45509",
         "LON": "-104.66039",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Horace St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Horace St (EB)"
     },
     {
         "OBJECTID": 59300,
@@ -7307,8 +6578,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4551",
         "LON": "-104.65623",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Minto St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Minto St (EB)"
     },
     {
         "OBJECTID": 59301,
@@ -7317,8 +6587,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45511",
         "LON": "-104.653261",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Empress St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Empress St (EB)"
     },
     {
         "OBJECTID": 59302,
@@ -7327,8 +6596,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45511",
         "LON": "-104.65039",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Royal St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Royal St (EB)"
     },
     {
         "OBJECTID": 59303,
@@ -7337,8 +6605,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45511",
         "LON": "-104.64848",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Hewitt Pl (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Hewitt Pl (EB)"
     },
     {
         "OBJECTID": 59304,
@@ -7347,8 +6614,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45509",
         "LON": "-104.6457",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "York St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "York St (EB)"
     },
     {
         "OBJECTID": 59305,
@@ -7357,8 +6623,7 @@ const transitStops: Stop[] = [
         "LAT": "50.455",
         "LON": "-104.639129",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Wascana St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Wascana St (EB)"
     },
     {
         "OBJECTID": 59306,
@@ -7367,8 +6632,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45499",
         "LON": "-104.635011",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Princess St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Princess St (EB)"
     },
     {
         "OBJECTID": 59307,
@@ -7377,8 +6641,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45501",
         "LON": "-104.63217",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Argyle St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Argyle St (EB)"
     },
     {
         "OBJECTID": 59308,
@@ -7387,8 +6650,7 @@ const transitStops: Stop[] = [
         "LAT": "50.455",
         "LON": "-104.63061",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Elphinstone St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Elphinstone St (EB)"
     },
     {
         "OBJECTID": 59309,
@@ -7397,8 +6659,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45502",
         "LON": "-104.62925",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Montague St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Montague St (EB)"
     },
     {
         "OBJECTID": 59310,
@@ -7407,8 +6668,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45502",
         "LON": "-104.62612",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Garnet St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Garnet St (EB)"
     },
     {
         "OBJECTID": 59311,
@@ -7417,8 +6677,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45502",
         "LON": "-104.62349",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Robinson St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Robinson St (EB)"
     },
     {
         "OBJECTID": 59312,
@@ -7427,8 +6686,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45503",
         "LON": "-104.62066",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Rae St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Rae St (EB)"
     },
     {
         "OBJECTID": 59313,
@@ -7437,8 +6695,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45461",
         "LON": "-104.61818",
         "ONSTREET": "Albert St",
-        "ATSTREET": "Dewdney Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Dewdney Ave (SB)"
     },
     {
         "OBJECTID": 59314,
@@ -7447,8 +6704,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44976",
         "LON": "-104.618191",
         "ONSTREET": "Albert St",
-        "ATSTREET": "11th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "11th Ave (SB)"
     },
     {
         "OBJECTID": 59315,
@@ -7457,8 +6713,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44877",
         "LON": "-104.61533",
         "ONSTREET": "12th Ave",
-        "ATSTREET": "Smith St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Smith St (EB)"
     },
     {
         "OBJECTID": 59316,
@@ -7467,8 +6722,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44849",
         "LON": "-104.60631",
         "ONSTREET": "Broad St",
-        "ATSTREET": "12th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "12th Ave (NB)"
     },
     {
         "OBJECTID": 59317,
@@ -7477,8 +6731,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4555",
         "LON": "-104.6063",
         "ONSTREET": "Broad St",
-        "ATSTREET": "Dewdney Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Dewdney Ave (NB)"
     },
     {
         "OBJECTID": 59318,
@@ -7487,8 +6740,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4586",
         "LON": "-104.60628",
         "ONSTREET": "Broad St",
-        "ATSTREET": "7th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "7th Ave (NB)"
     },
     {
         "OBJECTID": 59319,
@@ -7497,8 +6749,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46187",
         "LON": "-104.60632",
         "ONSTREET": "Broad St",
-        "ATSTREET": "5th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "5th Ave (NB)"
     },
     {
         "OBJECTID": 59320,
@@ -7507,8 +6758,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46338",
         "LON": "-104.60629",
         "ONSTREET": "Broad St",
-        "ATSTREET": "4th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "4th Ave (NB)"
     },
     {
         "OBJECTID": 59321,
@@ -7517,8 +6767,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46799",
         "LON": "-104.606289",
         "ONSTREET": "Broad St",
-        "ATSTREET": "1st Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "1st Ave (NB)"
     },
     {
         "OBJECTID": 59322,
@@ -7527,8 +6776,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46985",
         "LON": "-104.60628",
         "ONSTREET": "Broad St",
-        "ATSTREET": "1st Ave N (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "1st Ave N (NB)"
     },
     {
         "OBJECTID": 59323,
@@ -7537,8 +6785,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47126",
         "LON": "-104.606281",
         "ONSTREET": "Broad St",
-        "ATSTREET": "1st Ave N (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "1st Ave N (NB)"
     },
     {
         "OBJECTID": 59324,
@@ -7547,8 +6794,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47247",
         "LON": "-104.607101",
         "ONSTREET": "2nd Ave N",
-        "ATSTREET": "Broad St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Broad St (WB)"
     },
     {
         "OBJECTID": 59325,
@@ -7557,8 +6803,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47268",
         "LON": "-104.609349",
         "ONSTREET": "Hamilton St",
-        "ATSTREET": "2nd Ave N (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "2nd Ave N (NB)"
     },
     {
         "OBJECTID": 59326,
@@ -7567,8 +6812,7 @@ const transitStops: Stop[] = [
         "LAT": "50.474353",
         "LON": "-104.60913",
         "ONSTREET": "Hamilton St",
-        "ATSTREET": "3rd Ave N (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "3rd Ave N (NB)"
     },
     {
         "OBJECTID": 59327,
@@ -7577,8 +6821,7 @@ const transitStops: Stop[] = [
         "LAT": "50.476725",
         "LON": "-104.609195",
         "ONSTREET": "Hamilton St",
-        "ATSTREET": "5th Ave N (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "5th Ave N (NB)"
     },
     {
         "OBJECTID": 59328,
@@ -7587,8 +6830,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4771",
         "LON": "-104.61274",
         "ONSTREET": "5th Ave N",
-        "ATSTREET": "Cornwall St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Cornwall St (WB)"
     },
     {
         "OBJECTID": 59329,
@@ -7597,8 +6839,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47709",
         "LON": "-104.615661",
         "ONSTREET": "5th Ave N",
-        "ATSTREET": "Smith St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Smith St (WB)"
     },
     {
         "OBJECTID": 59330,
@@ -7607,8 +6848,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47767",
         "LON": "-104.61798",
         "ONSTREET": "Albert St",
-        "ATSTREET": "5th Ave N (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "5th Ave N (NB)"
     },
     {
         "OBJECTID": 59331,
@@ -7617,8 +6857,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47932",
         "LON": "-104.61792",
         "ONSTREET": "Albert St",
-        "ATSTREET": "6th Ave N (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "6th Ave N (NB)"
     },
     {
         "OBJECTID": 59332,
@@ -7627,8 +6866,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48066",
         "LON": "-104.615501",
         "ONSTREET": "7th Ave N",
-        "ATSTREET": "Smith St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Smith St (EB)"
     },
     {
         "OBJECTID": 59602,
@@ -7637,8 +6875,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44098",
         "LON": "-104.61812",
         "ONSTREET": "Albert St",
-        "ATSTREET": "College Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "College Ave (SB)"
     },
     {
         "OBJECTID": 59603,
@@ -7647,8 +6884,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4375",
         "LON": "-104.61817",
         "ONSTREET": "Albert St",
-        "ATSTREET": "19th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "19th Ave (SB)"
     },
     {
         "OBJECTID": 59604,
@@ -7657,8 +6893,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43287",
         "LON": "-104.618151",
         "ONSTREET": "Albert St",
-        "ATSTREET": "20th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "20th Ave (SB)"
     },
     {
         "OBJECTID": 59605,
@@ -7667,8 +6902,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43133",
         "LON": "-104.61815",
         "ONSTREET": "Albert St",
-        "ATSTREET": "McCallum Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "McCallum Ave (SB)"
     },
     {
         "OBJECTID": 59606,
@@ -7677,8 +6911,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42961",
         "LON": "-104.61813",
         "ONSTREET": "Albert St",
-        "ATSTREET": "21st Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "21st Ave (SB)"
     },
     {
         "OBJECTID": 59607,
@@ -7687,8 +6920,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42636",
         "LON": "-104.618149",
         "ONSTREET": "Albert St",
-        "ATSTREET": "22nd Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "22nd Ave (SB)"
     },
     {
         "OBJECTID": 59608,
@@ -7697,8 +6929,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42339",
         "LON": "-104.61733",
         "ONSTREET": "23rd Ave",
-        "ATSTREET": "Albert St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Albert St (EB)"
     },
     {
         "OBJECTID": 59609,
@@ -7707,8 +6938,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42396",
         "LON": "-104.61083",
         "ONSTREET": "Memorial Way",
-        "ATSTREET": "Wascana Rehab (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Wascana Rehab (EB)"
     },
     {
         "OBJECTID": 59610,
@@ -7717,8 +6947,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42267",
         "LON": "-104.608446",
         "ONSTREET": "Scott St",
-        "ATSTREET": "Lamont Cr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Lamont Cr (SB)"
     },
     {
         "OBJECTID": 59611,
@@ -7727,8 +6956,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42095",
         "LON": "-104.60773",
         "ONSTREET": "Jubilee Ave",
-        "ATSTREET": "Scott St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Scott St (EB)"
     },
     {
         "OBJECTID": 59612,
@@ -7737,8 +6965,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42135",
         "LON": "-104.604741",
         "ONSTREET": "Jubilee Ave",
-        "ATSTREET": "Turgeon Cr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Turgeon Cr (EB)"
     },
     {
         "OBJECTID": 59613,
@@ -7747,8 +6974,7 @@ const transitStops: Stop[] = [
         "LAT": "50.418369",
         "LON": "-104.583718",
         "ONSTREET": "University Dr E",
-        "ATSTREET": "First Nations Way (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "First Nations Way (NB)"
     },
     {
         "OBJECTID": 59614,
@@ -7757,8 +6983,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41508",
         "LON": "-104.59571",
         "ONSTREET": "Wascana Pkwy",
-        "ATSTREET": "Kramer Blvd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Kramer Blvd (SB)"
     },
     {
         "OBJECTID": 59615,
@@ -7767,8 +6992,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40753",
         "LON": "-104.58188",
         "ONSTREET": "Saskatchewan Polytechnic",
-        "ATSTREET": "Main Campus (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Main Campus (NB)"
     },
     {
         "OBJECTID": 59616,
@@ -7777,8 +7001,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40698",
         "LON": "-104.5756",
         "ONSTREET": "Saskatchewan Polytechnic",
-        "ATSTREET": "Parkway Building (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Parkway Building (NB)"
     },
     {
         "OBJECTID": 59617,
@@ -7787,8 +7010,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42179",
         "LON": "-104.60253",
         "ONSTREET": "Jubilee Ave",
-        "ATSTREET": "Hillsdale St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Hillsdale St (WB)"
     },
     {
         "OBJECTID": 59618,
@@ -7797,8 +7019,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42112",
         "LON": "-104.60567",
         "ONSTREET": "Jubilee Ave",
-        "ATSTREET": "Turgeon Cr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Turgeon Cr (WB)"
     },
     {
         "OBJECTID": 59619,
@@ -7807,8 +7028,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42103",
         "LON": "-104.60796",
         "ONSTREET": "Jubilee Ave",
-        "ATSTREET": "Scott St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Scott St (WB)"
     },
     {
         "OBJECTID": 59620,
@@ -7817,8 +7037,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42401",
         "LON": "-104.61035",
         "ONSTREET": "Memorial Way",
-        "ATSTREET": "Wascana Rehab (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Wascana Rehab (WB)"
     },
     {
         "OBJECTID": 59621,
@@ -7827,8 +7046,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42438",
         "LON": "-104.61795",
         "ONSTREET": "Albert St",
-        "ATSTREET": "23rd Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "23rd Ave (NB)"
     },
     {
         "OBJECTID": 59622,
@@ -7837,8 +7055,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42715",
         "LON": "-104.61797",
         "ONSTREET": "Albert St",
-        "ATSTREET": "22nd Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "22nd Ave (NB)"
     },
     {
         "OBJECTID": 59623,
@@ -7847,8 +7064,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43041",
         "LON": "-104.618",
         "ONSTREET": "Albert St",
-        "ATSTREET": "21st Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "21st Ave (NB)"
     },
     {
         "OBJECTID": 59624,
@@ -7857,8 +7073,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43197",
         "LON": "-104.618049",
         "ONSTREET": "Albert St",
-        "ATSTREET": "McCallum Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "McCallum Ave (NB)"
     },
     {
         "OBJECTID": 59625,
@@ -7867,8 +7082,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43288",
         "LON": "-104.618029",
         "ONSTREET": "Albert St",
-        "ATSTREET": "20th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "20th Ave (NB)"
     },
     {
         "OBJECTID": 59626,
@@ -7877,8 +7091,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43795",
         "LON": "-104.61798",
         "ONSTREET": "Albert St",
-        "ATSTREET": "19th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "19th Ave (NB)"
     },
     {
         "OBJECTID": 59627,
@@ -7887,8 +7100,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44125",
         "LON": "-104.61807",
         "ONSTREET": "Albert St",
-        "ATSTREET": "College Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "College Ave (NB)"
     },
     {
         "OBJECTID": 59628,
@@ -7897,8 +7109,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44277",
         "LON": "-104.618079",
         "ONSTREET": "Albert St",
-        "ATSTREET": "15th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "15th Ave (NB)"
     },
     {
         "OBJECTID": 59629,
@@ -7907,8 +7118,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44429",
         "LON": "-104.61809",
         "ONSTREET": "Albert St",
-        "ATSTREET": "14th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "14th Ave (NB)"
     },
     {
         "OBJECTID": 59630,
@@ -7917,8 +7127,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44611",
         "LON": "-104.618069",
         "ONSTREET": "Albert St",
-        "ATSTREET": "13th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "13th Ave (NB)"
     },
     {
         "OBJECTID": 59631,
@@ -7927,8 +7136,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44819",
         "LON": "-104.617991",
         "ONSTREET": "Albert St",
-        "ATSTREET": "Victoria Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Victoria Ave (NB)"
     },
     {
         "OBJECTID": 59632,
@@ -7937,8 +7145,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45835",
         "LON": "-104.61881",
         "ONSTREET": "7th Ave",
-        "ATSTREET": "Albert St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Albert St (WB)"
     },
     {
         "OBJECTID": 59633,
@@ -7947,8 +7154,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45833",
         "LON": "-104.621539",
         "ONSTREET": "7th Ave",
-        "ATSTREET": "Rae St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Rae St (WB)"
     },
     {
         "OBJECTID": 59634,
@@ -7957,8 +7163,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45832",
         "LON": "-104.62444",
         "ONSTREET": "7th Ave",
-        "ATSTREET": "Robinson St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Robinson St (WB)"
     },
     {
         "OBJECTID": 59635,
@@ -7967,8 +7172,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45829",
         "LON": "-104.62729",
         "ONSTREET": "7th Ave",
-        "ATSTREET": "Garnet St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Garnet St (WB)"
     },
     {
         "OBJECTID": 59636,
@@ -7977,8 +7181,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45894",
         "LON": "-104.63112",
         "ONSTREET": "Elphinstone St",
-        "ATSTREET": "7th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "7th Ave (NB)"
     },
     {
         "OBJECTID": 59637,
@@ -7987,8 +7190,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46183",
         "LON": "-104.63114",
         "ONSTREET": "Elphinstone St",
-        "ATSTREET": "5th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "5th Ave (NB)"
     },
     {
         "OBJECTID": 59638,
@@ -7997,8 +7199,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46327",
         "LON": "-104.63114",
         "ONSTREET": "Elphinstone St",
-        "ATSTREET": "4th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "4th Ave (NB)"
     },
     {
         "OBJECTID": 59639,
@@ -8007,8 +7208,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46489",
         "LON": "-104.63113",
         "ONSTREET": "Elphinstone St",
-        "ATSTREET": "3rd Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "3rd Ave (NB)"
     },
     {
         "OBJECTID": 59640,
@@ -8017,8 +7217,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4665",
         "LON": "-104.63112",
         "ONSTREET": "Elphinstone St",
-        "ATSTREET": "2nd Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "2nd Ave (NB)"
     },
     {
         "OBJECTID": 59641,
@@ -8027,8 +7226,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46807",
         "LON": "-104.631129",
         "ONSTREET": "Elphinstone St",
-        "ATSTREET": "1st Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "1st Ave (NB)"
     },
     {
         "OBJECTID": 59642,
@@ -8037,8 +7235,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47002",
         "LON": "-104.63113",
         "ONSTREET": "Elphinstone St",
-        "ATSTREET": "McKinley Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "McKinley Ave (NB)"
     },
     {
         "OBJECTID": 59643,
@@ -8047,8 +7244,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47277",
         "LON": "-104.63112",
         "ONSTREET": "Elphinstone St",
-        "ATSTREET": "Patricia Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Patricia Ave (NB)"
     },
     {
         "OBJECTID": 59644,
@@ -8057,8 +7253,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47563",
         "LON": "-104.63343",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Argyle St N (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Argyle St N (WB)"
     },
     {
         "OBJECTID": 59645,
@@ -8067,8 +7262,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4756",
         "LON": "-104.63674",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Queen St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Queen St (WB)"
     },
     {
         "OBJECTID": 59646,
@@ -8077,8 +7271,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47562",
         "LON": "-104.638901",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Carey St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Carey St (WB)"
     },
     {
         "OBJECTID": 59647,
@@ -8087,8 +7280,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47594",
         "LON": "-104.64409",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Ellison Cr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Ellison Cr (WB)"
     },
     {
         "OBJECTID": 59648,
@@ -8097,8 +7289,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4769",
         "LON": "-104.649049",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Stapleford Cr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Stapleford Cr (WB)"
     },
     {
         "OBJECTID": 59334,
@@ -8107,8 +7298,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48436",
         "LON": "-104.61322",
         "ONSTREET": "9th Ave N",
-        "ATSTREET": "Lorne St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Lorne St (EB)"
     },
     {
         "OBJECTID": 59335,
@@ -8117,8 +7307,7 @@ const transitStops: Stop[] = [
         "LAT": "50.484301",
         "LON": "-104.609551",
         "ONSTREET": "9th Ave N",
-        "ATSTREET": "Kleisinger Cr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Kleisinger Cr (EB)"
     },
     {
         "OBJECTID": 59336,
@@ -8127,8 +7316,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48472",
         "LON": "-104.60628",
         "ONSTREET": "Broad St",
-        "ATSTREET": "9th Ave N (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "9th Ave N (NB)"
     },
     {
         "OBJECTID": 59337,
@@ -8137,8 +7325,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49008",
         "LON": "-104.606159",
         "ONSTREET": "Broad St",
-        "ATSTREET": "Elmview Rd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Elmview Rd (NB)"
     },
     {
         "OBJECTID": 59338,
@@ -8147,8 +7334,7 @@ const transitStops: Stop[] = [
         "LAT": "50.492295",
         "LON": "-104.605588",
         "ONSTREET": "Fairview Rd",
-        "ATSTREET": "Broad St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Broad St (EB)"
     },
     {
         "OBJECTID": 59339,
@@ -8157,8 +7343,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49233",
         "LON": "-104.60318",
         "ONSTREET": "Fairview Rd",
-        "ATSTREET": "Lloyd Cr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Lloyd Cr (EB)"
     },
     {
         "OBJECTID": 59340,
@@ -8167,8 +7352,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49197",
         "LON": "-104.59856",
         "ONSTREET": "Bothwell Cr",
-        "ATSTREET": "Aitken Cr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Aitken Cr (EB)"
     },
     {
         "OBJECTID": 59341,
@@ -8177,8 +7361,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49386",
         "LON": "-104.597099",
         "ONSTREET": "Sturdy St",
-        "ATSTREET": "12th Ave N (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "12th Ave N (NB)"
     },
     {
         "OBJECTID": 59342,
@@ -8187,8 +7370,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49665",
         "LON": "-104.5978",
         "ONSTREET": "Rodenbush Dr",
-        "ATSTREET": "Andrews Cr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Andrews Cr (NB)"
     },
     {
         "OBJECTID": 59343,
@@ -8197,8 +7379,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49791",
         "LON": "-104.60071",
         "ONSTREET": "Rodenbush Dr",
-        "ATSTREET": "Cullum Pl (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Cullum Pl (WB)"
     },
     {
         "OBJECTID": 59344,
@@ -8207,8 +7388,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4979",
         "LON": "-104.60328",
         "ONSTREET": "Rodenbush Dr",
-        "ATSTREET": "Fairview Rd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Fairview Rd (WB)"
     },
     {
         "OBJECTID": 59345,
@@ -8217,8 +7397,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49738",
         "LON": "-104.60567",
         "ONSTREET": "Rodenbush Dr",
-        "ATSTREET": "Kowalchuck Cr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Kowalchuck Cr (WB)"
     },
     {
         "OBJECTID": 59346,
@@ -8227,8 +7406,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49706",
         "LON": "-104.60782",
         "ONSTREET": "Rodenbush Dr",
-        "ATSTREET": "Broad St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Broad St (WB)"
     },
     {
         "OBJECTID": 59347,
@@ -8237,8 +7415,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49712",
         "LON": "-104.611211",
         "ONSTREET": "Rodenbush Dr",
-        "ATSTREET": "Brandon Cr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Brandon Cr (WB)"
     },
     {
         "OBJECTID": 59348,
@@ -8247,8 +7424,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49665",
         "LON": "-104.613121",
         "ONSTREET": "Rodenbush Dr",
-        "ATSTREET": "Basin Cr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Basin Cr (SB)"
     },
     {
         "OBJECTID": 59349,
@@ -8257,8 +7433,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49452",
         "LON": "-104.614649",
         "ONSTREET": "Rodenbush Dr",
-        "ATSTREET": "12th Ave N (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "12th Ave N (SB)"
     },
     {
         "OBJECTID": 59350,
@@ -8267,8 +7442,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49285",
         "LON": "-104.6155",
         "ONSTREET": "Upland Dr",
-        "ATSTREET": "Carmichael Rd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Carmichael Rd (SB)"
     },
     {
         "OBJECTID": 59351,
@@ -8277,8 +7451,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49118",
         "LON": "-104.615539",
         "ONSTREET": "Upland Dr",
-        "ATSTREET": "Fairview Rd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Fairview Rd (SB)"
     },
     {
         "OBJECTID": 59352,
@@ -8287,8 +7460,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48906",
         "LON": "-104.614279",
         "ONSTREET": "Upland Dr",
-        "ATSTREET": "Spruceview Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Spruceview Rd (EB)"
     },
     {
         "OBJECTID": 59353,
@@ -8297,8 +7469,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48852",
         "LON": "-104.61103",
         "ONSTREET": "Upland Dr",
-        "ATSTREET": "Willowview Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Willowview Rd (EB)"
     },
     {
         "OBJECTID": 59354,
@@ -8307,8 +7478,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48853",
         "LON": "-104.60834",
         "ONSTREET": "Upland Dr",
-        "ATSTREET": "Oakview Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Oakview Rd (EB)"
     },
     {
         "OBJECTID": 59355,
@@ -8317,8 +7487,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48929",
         "LON": "-104.606759",
         "ONSTREET": "Elmview Rd",
-        "ATSTREET": "Broad St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Broad St (EB)"
     },
     {
         "OBJECTID": 59356,
@@ -8327,8 +7496,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48439",
         "LON": "-104.60725",
         "ONSTREET": "9th Ave N",
-        "ATSTREET": "Broad St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Broad St (WB)"
     },
     {
         "OBJECTID": 59357,
@@ -8337,8 +7505,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48438",
         "LON": "-104.610889",
         "ONSTREET": "9th Ave N",
-        "ATSTREET": "Kleisinger Cr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Kleisinger Cr (WB)"
     },
     {
         "OBJECTID": 59333,
@@ -8347,8 +7514,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48235",
         "LON": "-104.61367",
         "ONSTREET": "Lorne St",
-        "ATSTREET": "8th Ave N (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "8th Ave N (NB)"
     },
     {
         "OBJECTID": 59358,
@@ -8357,8 +7523,7 @@ const transitStops: Stop[] = [
         "LAT": "50.484",
         "LON": "-104.61383",
         "ONSTREET": "Lorne St",
-        "ATSTREET": "9th Ave N (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "9th Ave N (SB)"
     },
     {
         "OBJECTID": 59359,
@@ -8367,8 +7532,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48152",
         "LON": "-104.613799",
         "ONSTREET": "Lorne St",
-        "ATSTREET": "8th Ave N (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "8th Ave N (SB)"
     },
     {
         "OBJECTID": 59360,
@@ -8377,8 +7541,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48075",
         "LON": "-104.61599",
         "ONSTREET": "7th Ave N",
-        "ATSTREET": "Smith St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Smith St (WB)"
     },
     {
         "OBJECTID": 59361,
@@ -8387,8 +7550,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48066",
         "LON": "-104.61185",
         "ONSTREET": "7th Ave N",
-        "ATSTREET": "Cornwall St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Cornwall St (EB)"
     },
     {
         "OBJECTID": 59362,
@@ -8397,8 +7559,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48067",
         "LON": "-104.60868",
         "ONSTREET": "7th Ave N",
-        "ATSTREET": "Hamilton St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Hamilton St (EB)"
     },
     {
         "OBJECTID": 59363,
@@ -8407,8 +7568,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48065",
         "LON": "-104.60589",
         "ONSTREET": "7th Ave N",
-        "ATSTREET": "Broad St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Broad St (EB)"
     },
     {
         "OBJECTID": 59364,
@@ -8417,8 +7577,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48066",
         "LON": "-104.60309",
         "ONSTREET": "7th Ave N",
-        "ATSTREET": "Halifax St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Halifax St (EB)"
     },
     {
         "OBJECTID": 59365,
@@ -8427,8 +7586,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48067",
         "LON": "-104.600121",
         "ONSTREET": "7th Ave N",
-        "ATSTREET": "Ottawa St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Ottawa St (EB)"
     },
     {
         "OBJECTID": 59366,
@@ -8437,8 +7595,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48066",
         "LON": "-104.597059",
         "ONSTREET": "7th Ave N",
-        "ATSTREET": "Montreal St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Montreal St (EB)"
     },
     {
         "OBJECTID": 59367,
@@ -8447,8 +7604,7 @@ const transitStops: Stop[] = [
         "LAT": "50.478892",
         "LON": "-104.59607",
         "ONSTREET": "6th Ave N",
-        "ATSTREET": "Winnipeg St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Winnipeg St (WB)"
     },
     {
         "OBJECTID": 59368,
@@ -8457,8 +7613,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47864",
         "LON": "-104.599201",
         "ONSTREET": "Toronto St",
-        "ATSTREET": "6th Ave N (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "6th Ave N (SB)"
     },
     {
         "OBJECTID": 59369,
@@ -8467,8 +7622,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47682",
         "LON": "-104.5992",
         "ONSTREET": "Toronto St",
-        "ATSTREET": "5th Ave N (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "5th Ave N (SB)"
     },
     {
         "OBJECTID": 59370,
@@ -8477,8 +7631,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47528",
         "LON": "-104.599189",
         "ONSTREET": "Toronto St",
-        "ATSTREET": "4th Ave N (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "4th Ave N (SB)"
     },
     {
         "OBJECTID": 59371,
@@ -8487,8 +7640,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47245",
         "LON": "-104.59974",
         "ONSTREET": "2nd Ave N",
-        "ATSTREET": "Toronto St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Toronto St (WB)"
     },
     {
         "OBJECTID": 59372,
@@ -8497,8 +7649,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47245",
         "LON": "-104.60175",
         "ONSTREET": "2nd Ave N",
-        "ATSTREET": "Saint John St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Saint John St (WB)"
     },
     {
         "OBJECTID": 59373,
@@ -8507,8 +7658,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47243",
         "LON": "-104.60396",
         "ONSTREET": "2nd Ave N",
-        "ATSTREET": "Halifax St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Halifax St (WB)"
     },
     {
         "OBJECTID": 59374,
@@ -8517,8 +7667,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47204",
         "LON": "-104.60664",
         "ONSTREET": "Broad St",
-        "ATSTREET": "2nd Ave N (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "2nd Ave N (SB)"
     },
     {
         "OBJECTID": 59375,
@@ -8527,8 +7676,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47042",
         "LON": "-104.60661",
         "ONSTREET": "Broad St",
-        "ATSTREET": "1st Ave N (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "1st Ave N (SB)"
     },
     {
         "OBJECTID": 59376,
@@ -8537,8 +7685,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46798",
         "LON": "-104.606609",
         "ONSTREET": "Broad St",
-        "ATSTREET": "1st Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "1st Ave (SB)"
     },
     {
         "OBJECTID": 59377,
@@ -8547,8 +7694,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46171",
         "LON": "-104.60654",
         "ONSTREET": "Broad St",
-        "ATSTREET": "4th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "4th Ave (SB)"
     },
     {
         "OBJECTID": 59378,
@@ -8557,8 +7703,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45927",
         "LON": "-104.60658",
         "ONSTREET": "Broad St",
-        "ATSTREET": "6th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "6th Ave (SB)"
     },
     {
         "OBJECTID": 59379,
@@ -8567,8 +7712,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45635",
         "LON": "-104.606571",
         "ONSTREET": "Broad St",
-        "ATSTREET": "8th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "8th Ave (SB)"
     },
     {
         "OBJECTID": 59380,
@@ -8577,8 +7721,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45119",
         "LON": "-104.60656",
         "ONSTREET": "Broad St",
-        "ATSTREET": "Saskatchewan Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Saskatchewan Dr (SB)"
     },
     {
         "OBJECTID": 59381,
@@ -8587,8 +7730,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45038",
         "LON": "-104.60923",
         "ONSTREET": "11th Ave",
-        "ATSTREET": "Hamilton St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Hamilton St (WB)"
     },
     {
         "OBJECTID": 59382,
@@ -8597,8 +7739,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45376",
         "LON": "-104.61798",
         "ONSTREET": "Albert St",
-        "ATSTREET": "9th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "9th Ave (NB)"
     },
     {
         "OBJECTID": 59383,
@@ -8607,8 +7748,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45516",
         "LON": "-104.619421",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Albert St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Albert St (WB)"
     },
     {
         "OBJECTID": 59384,
@@ -8617,8 +7757,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45515",
         "LON": "-104.6215",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Rae St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Rae St (WB)"
     },
     {
         "OBJECTID": 59385,
@@ -8627,8 +7766,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45518",
         "LON": "-104.62453",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Robinson St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Robinson St (WB)"
     },
     {
         "OBJECTID": 59386,
@@ -8637,8 +7775,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45515",
         "LON": "-104.62726",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Garnet St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Garnet St (WB)"
     },
     {
         "OBJECTID": 59387,
@@ -8647,8 +7784,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45514",
         "LON": "-104.63014",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Montague St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Montague St (WB)"
     },
     {
         "OBJECTID": 59388,
@@ -8657,8 +7793,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45513",
         "LON": "-104.63175",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Elphinstone St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Elphinstone St (WB)"
     },
     {
         "OBJECTID": 59389,
@@ -8667,8 +7802,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45514",
         "LON": "-104.63447",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "McTavish St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "McTavish St (WB)"
     },
     {
         "OBJECTID": 59390,
@@ -8677,8 +7811,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45513",
         "LON": "-104.63739",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Queen St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Queen St (WB)"
     },
     {
         "OBJECTID": 59391,
@@ -8687,8 +7820,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45513",
         "LON": "-104.64026",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Wascana St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Wascana St (WB)"
     },
     {
         "OBJECTID": 59392,
@@ -8697,8 +7829,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45525",
         "LON": "-104.64586",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "York St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "York St (WB)"
     },
     {
         "OBJECTID": 59393,
@@ -8707,8 +7838,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45526",
         "LON": "-104.64728",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Connaught St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Connaught St (WB)"
     },
     {
         "OBJECTID": 59394,
@@ -8717,8 +7847,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45526",
         "LON": "-104.65019",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Forget St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Forget St (WB)"
     },
     {
         "OBJECTID": 59395,
@@ -8727,8 +7856,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45523",
         "LON": "-104.652891",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "McIntosh St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "McIntosh St (WB)"
     },
     {
         "OBJECTID": 59396,
@@ -8737,8 +7865,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45524",
         "LON": "-104.65578",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Grey St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Grey St (WB)"
     },
     {
         "OBJECTID": 59397,
@@ -8747,8 +7874,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45523",
         "LON": "-104.65879",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Aberdeen St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Aberdeen St (WB)"
     },
     {
         "OBJECTID": 59398,
@@ -8757,8 +7883,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45526",
         "LON": "-104.661669",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Grace St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Grace St (WB)"
     },
     {
         "OBJECTID": 59399,
@@ -8767,8 +7892,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45528",
         "LON": "-104.6661",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Bonner St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Bonner St (WB)"
     },
     {
         "OBJECTID": 59400,
@@ -8777,8 +7901,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45528",
         "LON": "-104.66881",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Ellice St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Ellice St (WB)"
     },
     {
         "OBJECTID": 59401,
@@ -8787,8 +7910,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45527",
         "LON": "-104.67202",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Carlton St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Carlton St (WB)"
     },
     {
         "OBJECTID": 59402,
@@ -8797,8 +7919,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45528",
         "LON": "-104.67448",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Kent St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Kent St (WB)"
     },
     {
         "OBJECTID": 59403,
@@ -8807,8 +7928,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45526",
         "LON": "-104.6773",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Southam St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Southam St (WB)"
     },
     {
         "OBJECTID": 59404,
@@ -8817,8 +7937,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45527",
         "LON": "-104.68008",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Dorothy St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Dorothy St (WB)"
     },
     {
         "OBJECTID": 59405,
@@ -8827,8 +7946,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45525",
         "LON": "-104.68471",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "7100 Dewdney Ave (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "7100 Dewdney Ave (WB)"
     },
     {
         "OBJECTID": 59406,
@@ -8837,8 +7955,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48791",
         "LON": "-104.63007",
         "ONSTREET": "Sangster Blvd",
-        "ATSTREET": "Stern Bay (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Stern Bay (EB)"
     },
     {
         "OBJECTID": 59407,
@@ -8847,8 +7964,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48832",
         "LON": "-104.6264",
         "ONSTREET": "Sangster Blvd",
-        "ATSTREET": "Semple Bay (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Semple Bay (EB)"
     },
     {
         "OBJECTID": 59408,
@@ -8857,8 +7973,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48988",
         "LON": "-104.62363",
         "ONSTREET": "Sangster Blvd",
-        "ATSTREET": "Vernon Cr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Vernon Cr (NB)"
     },
     {
         "OBJECTID": 59409,
@@ -8867,8 +7982,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49155",
         "LON": "-104.62622",
         "ONSTREET": "Sangster Blvd",
-        "ATSTREET": "Hyland St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Hyland St (WB)"
     },
     {
         "OBJECTID": 59410,
@@ -8877,8 +7991,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49153",
         "LON": "-104.62994",
         "ONSTREET": "Sangster Blvd",
-        "ATSTREET": "Carnegie St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Carnegie St (WB)"
     },
     {
         "OBJECTID": 59411,
@@ -8887,8 +8000,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49153",
         "LON": "-104.63307",
         "ONSTREET": "Sangster Blvd",
-        "ATSTREET": "Hicke Bay (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Hicke Bay (WB)"
     },
     {
         "OBJECTID": 59412,
@@ -8897,8 +8009,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49151",
         "LON": "-104.63556",
         "ONSTREET": "Sangster Blvd",
-        "ATSTREET": "Shore Bay (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Shore Bay (WB)"
     },
     {
         "OBJECTID": 59413,
@@ -8907,8 +8018,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49091",
         "LON": "-104.63864",
         "ONSTREET": "Sangster Blvd",
-        "ATSTREET": "Garuik Cr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Garuik Cr (SB)"
     },
     {
         "OBJECTID": 59414,
@@ -8917,8 +8027,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4968",
         "LON": "-104.64227",
         "ONSTREET": "Rochdale Blvd",
-        "ATSTREET": "Pasqua St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Pasqua St (WB)"
     },
     {
         "OBJECTID": 59415,
@@ -8927,8 +8036,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48894",
         "LON": "-104.63859",
         "ONSTREET": "Sangster Blvd",
-        "ATSTREET": "McGee Cr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "McGee Cr (SB)"
     },
     {
         "OBJECTID": 59416,
@@ -8937,8 +8045,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48791",
         "LON": "-104.63802",
         "ONSTREET": "Sangster Blvd",
-        "ATSTREET": "Brockelbank Cr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Brockelbank Cr (EB)"
     },
     {
         "OBJECTID": 59417,
@@ -8947,8 +8054,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48787",
         "LON": "-104.63425",
         "ONSTREET": "Sangster Blvd",
-        "ATSTREET": "Brockelbank Cr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Brockelbank Cr (EB)"
     },
     {
         "OBJECTID": 59418,
@@ -8957,8 +8063,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4875",
         "LON": "-104.63273",
         "ONSTREET": "Argyle St N",
-        "ATSTREET": "Sangster Blvd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Sangster Blvd (SB)"
     },
     {
         "OBJECTID": 59419,
@@ -8967,8 +8072,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4833",
         "LON": "-104.63273",
         "ONSTREET": "Argyle St N",
-        "ATSTREET": "McCaul Cr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "McCaul Cr (SB)"
     },
     {
         "OBJECTID": 59420,
@@ -8977,8 +8081,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48207",
         "LON": "-104.6322",
         "ONSTREET": "McMurchy Ave",
-        "ATSTREET": "Argyle St N (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Argyle St N (EB)"
     },
     {
         "OBJECTID": 59421,
@@ -8987,8 +8090,7 @@ const transitStops: Stop[] = [
         "LAT": "50.482044",
         "LON": "-104.629025",
         "ONSTREET": "McMurchy Ave",
-        "ATSTREET": "McInnis Cr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "McInnis Cr (EB)"
     },
     {
         "OBJECTID": 59422,
@@ -8997,8 +8099,7 @@ const transitStops: Stop[] = [
         "LAT": "50.482054",
         "LON": "-104.62642",
         "ONSTREET": "McMurchy Ave",
-        "ATSTREET": "Garnet St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Garnet St (EB)"
     },
     {
         "OBJECTID": 59423,
@@ -9007,8 +8108,7 @@ const transitStops: Stop[] = [
         "LAT": "50.482048",
         "LON": "-104.624571",
         "ONSTREET": "McMurchy Ave",
-        "ATSTREET": "Lawson St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Lawson St (EB)"
     },
     {
         "OBJECTID": 59424,
@@ -9017,8 +8117,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48184",
         "LON": "-104.62041",
         "ONSTREET": "Angus Rd",
-        "ATSTREET": "McMurchy Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "McMurchy Ave (SB)"
     },
     {
         "OBJECTID": 59425,
@@ -9027,8 +8126,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47965",
         "LON": "-104.62039",
         "ONSTREET": "Angus Rd",
-        "ATSTREET": "Reilly Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Reilly Ave (SB)"
     },
     {
         "OBJECTID": 59426,
@@ -9037,8 +8135,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48033",
         "LON": "-104.615171",
         "ONSTREET": "Smith St",
-        "ATSTREET": "7th Ave N (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "7th Ave N (SB)"
     },
     {
         "OBJECTID": 59427,
@@ -9047,8 +8144,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47846",
         "LON": "-104.61837",
         "ONSTREET": "Albert St",
-        "ATSTREET": "6th Ave N (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "6th Ave N (SB)"
     },
     {
         "OBJECTID": 59428,
@@ -9057,8 +8153,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4767",
         "LON": "-104.61824",
         "ONSTREET": "Albert St",
-        "ATSTREET": "5th Ave N (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "5th Ave N (SB)"
     },
     {
         "OBJECTID": 59429,
@@ -9067,8 +8162,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47366",
         "LON": "-104.61825",
         "ONSTREET": "Albert St",
-        "ATSTREET": "3rd Ave N (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "3rd Ave N (SB)"
     },
     {
         "OBJECTID": 59430,
@@ -9077,8 +8171,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47031",
         "LON": "-104.618251",
         "ONSTREET": "Albert St",
-        "ATSTREET": "Avonhurst Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Avonhurst Dr (SB)"
     },
     {
         "OBJECTID": 59431,
@@ -9087,8 +8180,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46734",
         "LON": "-104.618251",
         "ONSTREET": "Albert St",
-        "ATSTREET": "1st Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "1st Ave (SB)"
     },
     {
         "OBJECTID": 59432,
@@ -9097,8 +8189,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46427",
         "LON": "-104.61823",
         "ONSTREET": "Albert St",
-        "ATSTREET": "3rd Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "3rd Ave (SB)"
     },
     {
         "OBJECTID": 59433,
@@ -9107,8 +8198,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4627",
         "LON": "-104.61823",
         "ONSTREET": "Albert St",
-        "ATSTREET": "4th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "4th Ave (SB)"
     },
     {
         "OBJECTID": 59434,
@@ -9117,8 +8207,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46103",
         "LON": "-104.61817",
         "ONSTREET": "Albert St",
-        "ATSTREET": "5th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "5th Ave (SB)"
     },
     {
         "OBJECTID": 59435,
@@ -9127,8 +8216,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45785",
         "LON": "-104.61824",
         "ONSTREET": "Albert St",
-        "ATSTREET": "7th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "7th Ave (SB)"
     },
     {
         "OBJECTID": 59436,
@@ -9137,8 +8225,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45038",
         "LON": "-104.61238",
         "ONSTREET": "11th Ave",
-        "ATSTREET": "Cornwall St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Cornwall St (WB)"
     },
     {
         "OBJECTID": 59437,
@@ -9147,8 +8234,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45542",
         "LON": "-104.61793",
         "ONSTREET": "Albert St",
-        "ATSTREET": "Dewdney Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Dewdney Ave (NB)"
     },
     {
         "OBJECTID": 59438,
@@ -9157,8 +8243,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45869",
         "LON": "-104.617969",
         "ONSTREET": "Albert St",
-        "ATSTREET": "7th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "7th Ave (NB)"
     },
     {
         "OBJECTID": 59439,
@@ -9167,8 +8252,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46168",
         "LON": "-104.61801",
         "ONSTREET": "Albert St",
-        "ATSTREET": "5th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "5th Ave (NB)"
     },
     {
         "OBJECTID": 59440,
@@ -9177,8 +8261,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46351",
         "LON": "-104.61798",
         "ONSTREET": "Albert St",
-        "ATSTREET": "4th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "4th Ave (NB)"
     },
     {
         "OBJECTID": 59441,
@@ -9187,8 +8270,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46718",
         "LON": "-104.618",
         "ONSTREET": "Albert St",
-        "ATSTREET": "2nd Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "2nd Ave (NB)"
     },
     {
         "OBJECTID": 59442,
@@ -9197,8 +8279,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47136",
         "LON": "-104.61802",
         "ONSTREET": "Albert St",
-        "ATSTREET": "Avonhurst Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Avonhurst Dr (NB)"
     },
     {
         "OBJECTID": 59443,
@@ -9207,8 +8288,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47429",
         "LON": "-104.61792",
         "ONSTREET": "Albert St",
-        "ATSTREET": "3rd Ave N (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "3rd Ave N (NB)"
     },
     {
         "OBJECTID": 59444,
@@ -9217,8 +8297,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4789",
         "LON": "-104.619069",
         "ONSTREET": "6th Ave N",
-        "ATSTREET": "Albert St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Albert St (WB)"
     },
     {
         "OBJECTID": 59445,
@@ -9227,8 +8306,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47923",
         "LON": "-104.62029",
         "ONSTREET": "Angus Rd",
-        "ATSTREET": "6th Ave N (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "6th Ave N (NB)"
     },
     {
         "OBJECTID": 59446,
@@ -9237,8 +8315,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48216",
         "LON": "-104.620821",
         "ONSTREET": "McMurchy Ave",
-        "ATSTREET": "Angus Rd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Angus Rd (WB)"
     },
     {
         "OBJECTID": 59447,
@@ -9247,8 +8324,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48216",
         "LON": "-104.623229",
         "ONSTREET": "McMurchy Ave",
-        "ATSTREET": "Patton St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Patton St (WB)"
     },
     {
         "OBJECTID": 59448,
@@ -9257,8 +8333,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48217",
         "LON": "-104.625649",
         "ONSTREET": "McMurchy Ave",
-        "ATSTREET": "Lawson St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Lawson St (WB)"
     },
     {
         "OBJECTID": 59449,
@@ -9267,8 +8342,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48215",
         "LON": "-104.62813",
         "ONSTREET": "McMurchy Ave",
-        "ATSTREET": "Garnet St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Garnet St (WB)"
     },
     {
         "OBJECTID": 59450,
@@ -9277,8 +8351,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48215",
         "LON": "-104.630541",
         "ONSTREET": "McMurchy Ave",
-        "ATSTREET": "McInnis Cres (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "McInnis Cres (WB)"
     },
     {
         "OBJECTID": 59451,
@@ -9287,8 +8360,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48238",
         "LON": "-104.63256",
         "ONSTREET": "Argyle St N",
-        "ATSTREET": "McMurchy Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "McMurchy Ave (NB)"
     },
     {
         "OBJECTID": 59452,
@@ -9297,8 +8369,7 @@ const transitStops: Stop[] = [
         "LAT": "50.487835",
         "LON": "-104.632138",
         "ONSTREET": "Sangster Blvd",
-        "ATSTREET": "Argyle St N (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Argyle St N (EB)"
     },
     {
         "OBJECTID": 59453,
@@ -9307,8 +8378,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4956",
         "LON": "-104.66611",
         "ONSTREET": "Rochdale Blvd",
-        "ATSTREET": "Sherwood Mall (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Sherwood Mall (EB)"
     },
     {
         "OBJECTID": 59454,
@@ -9317,8 +8387,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49565",
         "LON": "-104.66305",
         "ONSTREET": "Rochdale Blvd",
-        "ATSTREET": "Riffel High (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Riffel High (EB)"
     },
     {
         "OBJECTID": 59455,
@@ -9327,8 +8396,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49609",
         "LON": "-104.65604",
         "ONSTREET": "Rochdale Blvd",
-        "ATSTREET": "Lakeridge Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Lakeridge Rd (EB)"
     },
     {
         "OBJECTID": 59456,
@@ -9337,8 +8405,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49603",
         "LON": "-104.65206",
         "ONSTREET": "McIntosh St",
-        "ATSTREET": "Rochdale Blvd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Rochdale Blvd (SB)"
     },
     {
         "OBJECTID": 59457,
@@ -9347,8 +8414,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49351",
         "LON": "-104.65266",
         "ONSTREET": "McIntosh St",
-        "ATSTREET": "Donnelly Cr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Donnelly Cr (SB)"
     },
     {
         "OBJECTID": 59458,
@@ -9357,8 +8423,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49215",
         "LON": "-104.652899",
         "ONSTREET": "McIntosh St",
-        "ATSTREET": "Tremaine Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Tremaine Ave (SB)"
     },
     {
         "OBJECTID": 59459,
@@ -9367,8 +8432,7 @@ const transitStops: Stop[] = [
         "LAT": "50.491166",
         "LON": "-104.649271",
         "ONSTREET": "Dalgliesh Dr",
-        "ATSTREET": "Kyle St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Kyle St (EB)"
     },
     {
         "OBJECTID": 59460,
@@ -9377,8 +8441,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4898",
         "LON": "-104.643829",
         "ONSTREET": "Dalgliesh Dr",
-        "ATSTREET": "Pasqua Gate (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Pasqua Gate (SB)"
     },
     {
         "OBJECTID": 59461,
@@ -9387,8 +8450,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48716",
         "LON": "-104.64378",
         "ONSTREET": "Dalgliesh Dr",
-        "ATSTREET": "Rink Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Rink Ave (SB)"
     },
     {
         "OBJECTID": 59462,
@@ -9397,8 +8459,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48584",
         "LON": "-104.64722",
         "ONSTREET": "Dalgliesh Dr",
-        "ATSTREET": "Wells St S (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Wells St S (WB)"
     },
     {
         "OBJECTID": 59463,
@@ -9407,8 +8468,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48582",
         "LON": "-104.650019",
         "ONSTREET": "Dalgliesh Dr",
-        "ATSTREET": "Cooper Cr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Cooper Cr (WB)"
     },
     {
         "OBJECTID": 59464,
@@ -9417,8 +8477,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48551",
         "LON": "-104.652651",
         "ONSTREET": "McIntosh St",
-        "ATSTREET": "Dalgliesh Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Dalgliesh Dr (SB)"
     },
     {
         "OBJECTID": 59465,
@@ -9427,8 +8486,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48202",
         "LON": "-104.652661",
         "ONSTREET": "McIntosh St",
-        "ATSTREET": "Rupert Pl (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Rupert Pl (SB)"
     },
     {
         "OBJECTID": 59466,
@@ -9437,8 +8495,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48063",
         "LON": "-104.65266",
         "ONSTREET": "McIntosh St",
-        "ATSTREET": "7th Ave N (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "7th Ave N (SB)"
     },
     {
         "OBJECTID": 59467,
@@ -9447,8 +8504,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47696",
         "LON": "-104.65171",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "McIntosh St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "McIntosh St (EB)"
     },
     {
         "OBJECTID": 59468,
@@ -9457,8 +8513,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47552",
         "LON": "-104.642821",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Edward St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Edward St (EB)"
     },
     {
         "OBJECTID": 59469,
@@ -9467,8 +8522,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47552",
         "LON": "-104.63893",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "King St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "King St (EB)"
     },
     {
         "OBJECTID": 59470,
@@ -9477,8 +8531,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47553",
         "LON": "-104.63635",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Queen St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Queen St (EB)"
     },
     {
         "OBJECTID": 59471,
@@ -9487,8 +8540,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47474",
         "LON": "-104.63274",
         "ONSTREET": "Argyle St",
-        "ATSTREET": "Sherwood Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Sherwood Dr (SB)"
     },
     {
         "OBJECTID": 59472,
@@ -9497,8 +8549,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47368",
         "LON": "-104.631241",
         "ONSTREET": "Elphinstone St",
-        "ATSTREET": "Avonhurst Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Avonhurst Dr (SB)"
     },
     {
         "OBJECTID": 59473,
@@ -9507,8 +8558,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4717",
         "LON": "-104.631241",
         "ONSTREET": "Elphinstone St",
-        "ATSTREET": "Patricia Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Patricia Ave (SB)"
     },
     {
         "OBJECTID": 59474,
@@ -9517,8 +8567,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47028",
         "LON": "-104.63124",
         "ONSTREET": "Elphinstone St",
-        "ATSTREET": "McKinley Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "McKinley Ave (SB)"
     },
     {
         "OBJECTID": 59475,
@@ -9527,8 +8576,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46735",
         "LON": "-104.631242",
         "ONSTREET": "Elphinstone St",
-        "ATSTREET": "1st Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "1st Ave (SB)"
     },
     {
         "OBJECTID": 59476,
@@ -9537,8 +8585,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46574",
         "LON": "-104.6312",
         "ONSTREET": "Elphinstone St",
-        "ATSTREET": "2nd Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "2nd Ave (SB)"
     },
     {
         "OBJECTID": 59477,
@@ -9547,8 +8594,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46417",
         "LON": "-104.63121",
         "ONSTREET": "Elphinstone St",
-        "ATSTREET": "3rd Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "3rd Ave (SB)"
     },
     {
         "OBJECTID": 59478,
@@ -9557,8 +8603,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46269",
         "LON": "-104.63123",
         "ONSTREET": "Elphinstone St",
-        "ATSTREET": "4th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "4th Ave (SB)"
     },
     {
         "OBJECTID": 59479,
@@ -9567,8 +8612,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46097",
         "LON": "-104.63123",
         "ONSTREET": "Elphinstone St",
-        "ATSTREET": "5th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "5th Ave (SB)"
     },
     {
         "OBJECTID": 59480,
@@ -9577,8 +8621,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45954",
         "LON": "-104.63119",
         "ONSTREET": "Elphinstone St",
-        "ATSTREET": "6th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "6th Ave (SB)"
     },
     {
         "OBJECTID": 59481,
@@ -9587,8 +8630,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45825",
         "LON": "-104.63062",
         "ONSTREET": "7th Ave",
-        "ATSTREET": "Elphinstone St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Elphinstone St (EB)"
     },
     {
         "OBJECTID": 59482,
@@ -9597,8 +8639,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45824",
         "LON": "-104.62784",
         "ONSTREET": "7th Ave",
-        "ATSTREET": "Athol St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Athol St (EB)"
     },
     {
         "OBJECTID": 59483,
@@ -9607,8 +8648,7 @@ const transitStops: Stop[] = [
         "LAT": "50.458243",
         "LON": "-104.624839",
         "ONSTREET": "7th Ave",
-        "ATSTREET": "Cameron St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Cameron St (EB)"
     },
     {
         "OBJECTID": 59484,
@@ -9617,8 +8657,7 @@ const transitStops: Stop[] = [
         "LAT": "50.458244",
         "LON": "-104.62063",
         "ONSTREET": "7th Ave",
-        "ATSTREET": "Rae St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Rae St (EB)"
     },
     {
         "OBJECTID": 59485,
@@ -9627,8 +8666,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4466",
         "LON": "-104.60647",
         "ONSTREET": "Broad St",
-        "ATSTREET": "Victoria Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Victoria Ave (SB)"
     },
     {
         "OBJECTID": 59486,
@@ -9637,8 +8675,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44512",
         "LON": "-104.6065",
         "ONSTREET": "Broad St",
-        "ATSTREET": "13th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "13th Ave (SB)"
     },
     {
         "OBJECTID": 59487,
@@ -9647,8 +8684,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44342",
         "LON": "-104.606569",
         "ONSTREET": "Broad St",
-        "ATSTREET": "14th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "14th Ave (SB)"
     },
     {
         "OBJECTID": 59488,
@@ -9657,8 +8693,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44009",
         "LON": "-104.60655",
         "ONSTREET": "Broad St",
-        "ATSTREET": "College Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "College Ave (SB)"
     },
     {
         "OBJECTID": 59489,
@@ -9667,8 +8702,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43836",
         "LON": "-104.60649",
         "ONSTREET": "Broad St",
-        "ATSTREET": "Broadway Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Broadway Ave (SB)"
     },
     {
         "OBJECTID": 59490,
@@ -9677,8 +8711,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43327",
         "LON": "-104.60505",
         "ONSTREET": "Broad St",
-        "ATSTREET": "Quinn Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Quinn Dr (SB)"
     },
     {
         "OBJECTID": 59491,
@@ -9687,8 +8720,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42339",
         "LON": "-104.60089",
         "ONSTREET": "23rd Ave",
-        "ATSTREET": "Hillsdale St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Hillsdale St (EB)"
     },
     {
         "OBJECTID": 59492,
@@ -9697,8 +8729,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42362",
         "LON": "-104.59757",
         "ONSTREET": "23rd Ave",
-        "ATSTREET": "Quincy Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Quincy Dr (EB)"
     },
     {
         "OBJECTID": 59493,
@@ -9707,8 +8738,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4236",
         "LON": "-104.5951",
         "ONSTREET": "Wascana Pkwy",
-        "ATSTREET": "23rd Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "23rd Ave (SB)"
     },
     {
         "OBJECTID": 59494,
@@ -9717,8 +8747,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41909",
         "LON": "-104.593149",
         "ONSTREET": "University Dr W",
-        "ATSTREET": "Classroom Bldg (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Classroom Bldg (SB)"
     },
     {
         "OBJECTID": 59495,
@@ -9727,8 +8756,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41594",
         "LON": "-104.59242",
         "ONSTREET": "University Dr W",
-        "ATSTREET": "Riddell Centre (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Riddell Centre (SB)"
     },
     {
         "OBJECTID": 59496,
@@ -9737,8 +8765,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41566",
         "LON": "-104.59597",
         "ONSTREET": "Kramer Blvd",
-        "ATSTREET": "Wascana Pkwy (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Wascana Pkwy (WB)"
     },
     {
         "OBJECTID": 59497,
@@ -9747,8 +8774,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41566",
         "LON": "-104.59837",
         "ONSTREET": "Kramer Blvd",
-        "ATSTREET": "Darke St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Darke St (WB)"
     },
     {
         "OBJECTID": 59498,
@@ -9757,8 +8783,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41642",
         "LON": "-104.60155",
         "ONSTREET": "Hillsdale St",
-        "ATSTREET": "Latta St (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Latta St (NB)"
     },
     {
         "OBJECTID": 59499,
@@ -9767,8 +8792,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41681",
         "LON": "-104.604531",
         "ONSTREET": "Macpherson Ave",
-        "ATSTREET": "Hillsdale St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Hillsdale St (WB)"
     },
     {
         "OBJECTID": 59500,
@@ -9777,8 +8801,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41677",
         "LON": "-104.60747",
         "ONSTREET": "Macpherson Ave",
-        "ATSTREET": "Cowan Cr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Cowan Cr (WB)"
     },
     {
         "OBJECTID": 59501,
@@ -9787,8 +8810,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41554",
         "LON": "-104.6096",
         "ONSTREET": "Parliament Ave",
-        "ATSTREET": "Massey Rd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Massey Rd (WB)"
     },
     {
         "OBJECTID": 59502,
@@ -9797,8 +8819,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41554",
         "LON": "-104.61262",
         "ONSTREET": "Parliament Ave",
-        "ATSTREET": "Bell St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Bell St (WB)"
     },
     {
         "OBJECTID": 59503,
@@ -9807,8 +8828,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41553",
         "LON": "-104.61475",
         "ONSTREET": "Parliament Ave",
-        "ATSTREET": "Procter Pl (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Procter Pl (WB)"
     },
     {
         "OBJECTID": 59504,
@@ -9817,8 +8837,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41552",
         "LON": "-104.61688",
         "ONSTREET": "Parliament Ave",
-        "ATSTREET": "Albert St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Albert St (WB)"
     },
     {
         "OBJECTID": 59505,
@@ -9827,8 +8846,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41548",
         "LON": "-104.618919",
         "ONSTREET": "Parliament Ave",
-        "ATSTREET": "Albert St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Albert St (WB)"
     },
     {
         "OBJECTID": 59506,
@@ -9837,8 +8855,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41548",
         "LON": "-104.62071",
         "ONSTREET": "Parliament Ave",
-        "ATSTREET": "Rae St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Rae St (WB)"
     },
     {
         "OBJECTID": 59507,
@@ -9847,8 +8864,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41775",
         "LON": "-104.62102",
         "ONSTREET": "Rae St",
-        "ATSTREET": "Golden Mile (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Golden Mile (NB)"
     },
     {
         "OBJECTID": 59508,
@@ -9857,8 +8873,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41839",
         "LON": "-104.61815",
         "ONSTREET": "Albert St",
-        "ATSTREET": "25th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "25th Ave (SB)"
     },
     {
         "OBJECTID": 59509,
@@ -9867,8 +8882,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41536",
         "LON": "-104.61707",
         "ONSTREET": "Parliament Ave",
-        "ATSTREET": "Albert St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Albert St (EB)"
     },
     {
         "OBJECTID": 59510,
@@ -9877,8 +8891,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41535",
         "LON": "-104.61201",
         "ONSTREET": "Parliament Ave",
-        "ATSTREET": "Bell St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Bell St (EB)"
     },
     {
         "OBJECTID": 59511,
@@ -9887,8 +8900,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41586",
         "LON": "-104.608969",
         "ONSTREET": "Massey Rd",
-        "ATSTREET": "Parliament Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Parliament Ave (NB)"
     },
     {
         "OBJECTID": 59512,
@@ -9897,8 +8909,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41672",
         "LON": "-104.60499",
         "ONSTREET": "Macpherson Ave",
-        "ATSTREET": "Knowles St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Knowles St (EB)"
     },
     {
         "OBJECTID": 59513,
@@ -9907,8 +8918,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41556",
         "LON": "-104.60098",
         "ONSTREET": "Kramer Blvd",
-        "ATSTREET": "Hillsdale St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Hillsdale St (EB)"
     },
     {
         "OBJECTID": 59514,
@@ -9917,8 +8927,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41556",
         "LON": "-104.59686",
         "ONSTREET": "Kramer Blvd",
-        "ATSTREET": "Centennial St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Centennial St (EB)"
     },
     {
         "OBJECTID": 59515,
@@ -9927,8 +8936,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41628",
         "LON": "-104.59226",
         "ONSTREET": "University Dr W",
-        "ATSTREET": "Riddell Centre (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Riddell Centre (NB)"
     },
     {
         "OBJECTID": 59516,
@@ -9937,8 +8945,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41954",
         "LON": "-104.59303",
         "ONSTREET": "University Dr W",
-        "ATSTREET": "Classroom Bldg (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Classroom Bldg (NB)"
     },
     {
         "OBJECTID": 59517,
@@ -9947,8 +8954,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42419",
         "LON": "-104.596451",
         "ONSTREET": "23rd Ave",
-        "ATSTREET": "Wascana Pkwy (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Wascana Pkwy (WB)"
     },
     {
         "OBJECTID": 59518,
@@ -9957,8 +8963,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42352",
         "LON": "-104.600389",
         "ONSTREET": "23rd Ave",
-        "ATSTREET": "Hillsdale St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Hillsdale St (WB)"
     },
     {
         "OBJECTID": 59519,
@@ -9967,8 +8972,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42909",
         "LON": "-104.60238",
         "ONSTREET": "Broad St",
-        "ATSTREET": "Lakeshore Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Lakeshore Dr (NB)"
     },
     {
         "OBJECTID": 59520,
@@ -9977,8 +8981,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43435",
         "LON": "-104.605029",
         "ONSTREET": "Broad St",
-        "ATSTREET": "Quinn Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Quinn Dr (NB)"
     },
     {
         "OBJECTID": 59521,
@@ -9987,8 +8990,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43833",
         "LON": "-104.60624",
         "ONSTREET": "Broad St",
-        "ATSTREET": "Broadway Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Broadway Ave (NB)"
     },
     {
         "OBJECTID": 59522,
@@ -9997,8 +8999,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44131",
         "LON": "-104.60635",
         "ONSTREET": "Broad St",
-        "ATSTREET": "College Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "College Ave (NB)"
     },
     {
         "OBJECTID": 59523,
@@ -10007,8 +9008,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44446",
         "LON": "-104.60631",
         "ONSTREET": "Broad St",
-        "ATSTREET": "14th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "14th Ave (NB)"
     },
     {
         "OBJECTID": 59524,
@@ -10017,8 +9017,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44577",
         "LON": "-104.60636",
         "ONSTREET": "Broad St",
-        "ATSTREET": "13th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "13th Ave (NB)"
     },
     {
         "OBJECTID": 59525,
@@ -10027,8 +9026,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46145",
         "LON": "-104.618721",
         "ONSTREET": "5th Ave",
-        "ATSTREET": "Albert St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Albert St (WB)"
     },
     {
         "OBJECTID": 59526,
@@ -10037,8 +9035,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46144",
         "LON": "-104.62152",
         "ONSTREET": "5th Ave",
-        "ATSTREET": "Rae St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Rae St (WB)"
     },
     {
         "OBJECTID": 59527,
@@ -10047,8 +9044,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46144",
         "LON": "-104.62442",
         "ONSTREET": "5th Ave",
-        "ATSTREET": "Robinson St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Robinson St (WB)"
     },
     {
         "OBJECTID": 59528,
@@ -10057,8 +9053,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46146",
         "LON": "-104.627389",
         "ONSTREET": "5th Ave",
-        "ATSTREET": "Garnet St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Garnet St (WB)"
     },
     {
         "OBJECTID": 59529,
@@ -10067,8 +9062,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46144",
         "LON": "-104.630181",
         "ONSTREET": "5th Ave",
-        "ATSTREET": "Montague St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Montague St (WB)"
     },
     {
         "OBJECTID": 59530,
@@ -10077,8 +9071,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46144",
         "LON": "-104.63172",
         "ONSTREET": "5th Ave",
-        "ATSTREET": "Elphinstone St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Elphinstone St (WB)"
     },
     {
         "OBJECTID": 59531,
@@ -10087,8 +9080,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46142",
         "LON": "-104.634581",
         "ONSTREET": "5th Ave",
-        "ATSTREET": "McTavish St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "McTavish St (WB)"
     },
     {
         "OBJECTID": 59532,
@@ -10097,8 +9089,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46147",
         "LON": "-104.63746",
         "ONSTREET": "5th Ave",
-        "ATSTREET": "Queen St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Queen St (WB)"
     },
     {
         "OBJECTID": 59533,
@@ -10107,8 +9098,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46146",
         "LON": "-104.638961",
         "ONSTREET": "5th Ave",
-        "ATSTREET": "King St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "King St (WB)"
     },
     {
         "OBJECTID": 59534,
@@ -10117,8 +9107,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46184",
         "LON": "-104.640881",
         "ONSTREET": "Pasqua St",
-        "ATSTREET": "5th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "5th Ave (NB)"
     },
     {
         "OBJECTID": 59535,
@@ -10127,8 +9116,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46301",
         "LON": "-104.641581",
         "ONSTREET": "4th Ave",
-        "ATSTREET": "Pasqua St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Pasqua St (WB)"
     },
     {
         "OBJECTID": 59536,
@@ -10137,8 +9125,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47103",
         "LON": "-104.6443",
         "ONSTREET": "1st Ave N",
-        "ATSTREET": "Alexandra St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Alexandra St (WB)"
     },
     {
         "OBJECTID": 59537,
@@ -10147,8 +9134,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47098",
         "LON": "-104.64582",
         "ONSTREET": "1st Ave N",
-        "ATSTREET": "York St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "York St (WB)"
     },
     {
         "OBJECTID": 59538,
@@ -10157,8 +9143,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47104",
         "LON": "-104.64864",
         "ONSTREET": "1st Ave N",
-        "ATSTREET": "Arthur St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Arthur St (WB)"
     },
     {
         "OBJECTID": 59539,
@@ -10167,8 +9152,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47107",
         "LON": "-104.65154",
         "ONSTREET": "1st Ave N",
-        "ATSTREET": "Royal St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Royal St (WB)"
     },
     {
         "OBJECTID": 59540,
@@ -10177,8 +9161,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47273",
         "LON": "-104.652481",
         "ONSTREET": "McIntosh St",
-        "ATSTREET": "2nd Ave N (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "2nd Ave N (NB)"
     },
     {
         "OBJECTID": 59541,
@@ -10187,8 +9170,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47457",
         "LON": "-104.65248",
         "ONSTREET": "McIntosh St",
-        "ATSTREET": "Royal St (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Royal St (NB)"
     },
     {
         "OBJECTID": 59542,
@@ -10197,8 +9179,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47713",
         "LON": "-104.65317",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "McIntosh St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "McIntosh St (WB)"
     },
     {
         "OBJECTID": 59543,
@@ -10207,8 +9188,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47712",
         "LON": "-104.65716",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Milne St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Milne St (WB)"
     },
     {
         "OBJECTID": 59544,
@@ -10217,8 +9197,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47712",
         "LON": "-104.66062",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Atchison Cr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Atchison Cr (WB)"
     },
     {
         "OBJECTID": 59545,
@@ -10227,8 +9206,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47734",
         "LON": "-104.66385",
         "ONSTREET": "McCarthy Blvd",
-        "ATSTREET": "Sherwood Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Sherwood Dr (NB)"
     },
     {
         "OBJECTID": 59546,
@@ -10237,8 +9215,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47954",
         "LON": "-104.66382",
         "ONSTREET": "McCarthy Blvd",
-        "ATSTREET": "Krivel Cr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Krivel Cr (NB)"
     },
     {
         "OBJECTID": 59547,
@@ -10247,8 +9224,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48122",
         "LON": "-104.663829",
         "ONSTREET": "McCarthy Blvd",
-        "ATSTREET": "7th Ave N (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "7th Ave N (NB)"
     },
     {
         "OBJECTID": 59548,
@@ -10257,8 +9233,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4882",
         "LON": "-104.66455",
         "ONSTREET": "Rink Ave",
-        "ATSTREET": "McCarthy Blvd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "McCarthy Blvd (WB)"
     },
     {
         "OBJECTID": 59549,
@@ -10267,8 +9242,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48803",
         "LON": "-104.66845",
         "ONSTREET": "Rink Ave",
-        "ATSTREET": "Burgess St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Burgess St (WB)"
     },
     {
         "OBJECTID": 59550,
@@ -10277,8 +9251,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48777",
         "LON": "-104.67128",
         "ONSTREET": "Rink Ave",
-        "ATSTREET": "Fyfe St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Fyfe St (WB)"
     },
     {
         "OBJECTID": 59551,
@@ -10287,8 +9260,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48775",
         "LON": "-104.674389",
         "ONSTREET": "Rink Ave",
-        "ATSTREET": "Markwell Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Markwell Dr (WB)"
     },
     {
         "OBJECTID": 59552,
@@ -10297,8 +9269,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48774",
         "LON": "-104.679609",
         "ONSTREET": "Rink Ave",
-        "ATSTREET": "Kelsey St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Kelsey St (WB)"
     },
     {
         "OBJECTID": 59553,
@@ -10307,8 +9278,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48816",
         "LON": "-104.683659",
         "ONSTREET": "Rink Ave",
-        "ATSTREET": "Nelles St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Nelles St (WB)"
     },
     {
         "OBJECTID": 59554,
@@ -10317,8 +9287,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48841",
         "LON": "-104.68731",
         "ONSTREET": "Rink Ave",
-        "ATSTREET": "Courtney St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Courtney St (WB)"
     },
     {
         "OBJECTID": 59555,
@@ -10327,8 +9296,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49146",
         "LON": "-104.68662",
         "ONSTREET": "Dalgliesh Dr",
-        "ATSTREET": "Courtney St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Courtney St (EB)"
     },
     {
         "OBJECTID": 59556,
@@ -10337,8 +9305,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49148",
         "LON": "-104.682409",
         "ONSTREET": "Dalgliesh Dr",
-        "ATSTREET": "Vanier Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Vanier Dr (EB)"
     },
     {
         "OBJECTID": 59557,
@@ -10347,8 +9314,7 @@ const transitStops: Stop[] = [
         "LAT": "50.491935",
         "LON": "-104.67934",
         "ONSTREET": "Dalgliesh Dr",
-        "ATSTREET": "Battel St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Battel St (EB)"
     },
     {
         "OBJECTID": 59558,
@@ -10357,8 +9323,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49197",
         "LON": "-104.67354",
         "ONSTREET": "Dalgliesh Dr",
-        "ATSTREET": "Landsdowne Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Landsdowne Dr (EB)"
     },
     {
         "OBJECTID": 59559,
@@ -10367,8 +9332,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49399",
         "LON": "-104.67169",
         "ONSTREET": "Devonshire Dr",
-        "ATSTREET": "Hopkins Cr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Hopkins Cr (NB)"
     },
     {
         "OBJECTID": 59560,
@@ -10377,8 +9341,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49513",
         "LON": "-104.67164",
         "ONSTREET": "Rochdale Blvd",
-        "ATSTREET": "Devonshire Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Devonshire Dr (EB)"
     },
     {
         "OBJECTID": 59561,
@@ -10387,8 +9350,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49568",
         "LON": "-104.6688",
         "ONSTREET": "Rochdale Blvd",
-        "ATSTREET": "Radway St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Radway St (EB)"
     },
     {
         "OBJECTID": 59562,
@@ -10397,8 +9359,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49574",
         "LON": "-104.66633",
         "ONSTREET": "Rochdale Blvd",
-        "ATSTREET": "Lakewood Crt (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Lakewood Crt (WB)"
     },
     {
         "OBJECTID": 59563,
@@ -10407,8 +9368,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49575",
         "LON": "-104.66914",
         "ONSTREET": "Rochdale Blvd",
-        "ATSTREET": "Radway St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Radway St (WB)"
     },
     {
         "OBJECTID": 59564,
@@ -10417,8 +9377,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49542",
         "LON": "-104.67085",
         "ONSTREET": "Rochdale Blvd",
-        "ATSTREET": "Engle Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Engle Dr (WB)"
     },
     {
         "OBJECTID": 59565,
@@ -10427,8 +9386,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49463",
         "LON": "-104.67201",
         "ONSTREET": "Devonshire Dr",
-        "ATSTREET": "Rochdale Blvd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Rochdale Blvd (SB)"
     },
     {
         "OBJECTID": 59566,
@@ -10437,8 +9395,7 @@ const transitStops: Stop[] = [
         "LAT": "50.492",
         "LON": "-104.672291",
         "ONSTREET": "Dalgliesh Dr",
-        "ATSTREET": "Devonshire Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Devonshire Dr (WB)"
     },
     {
         "OBJECTID": 59567,
@@ -10447,8 +9404,7 @@ const transitStops: Stop[] = [
         "LAT": "50.492034",
         "LON": "-104.67553",
         "ONSTREET": "Dalgliesh Dr",
-        "ATSTREET": "Heffernan Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Heffernan Dr (WB)"
     },
     {
         "OBJECTID": 59568,
@@ -10457,8 +9413,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49198",
         "LON": "-104.68115",
         "ONSTREET": "Dalgliesh Dr",
-        "ATSTREET": "Arnason St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Arnason St (WB)"
     },
     {
         "OBJECTID": 59569,
@@ -10467,8 +9422,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4915",
         "LON": "-104.68608",
         "ONSTREET": "Dalgliesh Dr",
-        "ATSTREET": "Courtney St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Courtney St (WB)"
     },
     {
         "OBJECTID": 59570,
@@ -10477,8 +9431,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48838",
         "LON": "-104.68714",
         "ONSTREET": "Rink Ave",
-        "ATSTREET": "Courtney St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Courtney St (EB)"
     },
     {
         "OBJECTID": 59571,
@@ -10487,8 +9440,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48791",
         "LON": "-104.6826",
         "ONSTREET": "Rink Ave",
-        "ATSTREET": "Nelles St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Nelles St (EB)"
     },
     {
         "OBJECTID": 59572,
@@ -10497,8 +9449,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4877",
         "LON": "-104.677621",
         "ONSTREET": "Rink Ave",
-        "ATSTREET": "Church Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Church Dr (EB)"
     },
     {
         "OBJECTID": 59573,
@@ -10507,8 +9458,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4877",
         "LON": "-104.673681",
         "ONSTREET": "Rink Ave",
-        "ATSTREET": "Markwell Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Markwell Dr (EB)"
     },
     {
         "OBJECTID": 59574,
@@ -10517,8 +9467,7 @@ const transitStops: Stop[] = [
         "LAT": "50.487902",
         "LON": "-104.668361",
         "ONSTREET": "Rink Ave",
-        "ATSTREET": "Burgess St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Burgess St (EB)"
     },
     {
         "OBJECTID": 59575,
@@ -10527,8 +9476,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48777",
         "LON": "-104.66399",
         "ONSTREET": "McCarthy Blvd",
-        "ATSTREET": "Rink Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Rink Ave (SB)"
     },
     {
         "OBJECTID": 59576,
@@ -10537,8 +9485,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48126",
         "LON": "-104.66407",
         "ONSTREET": "McCarthy Blvd",
-        "ATSTREET": "7th Ave N (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "7th Ave N (SB)"
     },
     {
         "OBJECTID": 59577,
@@ -10547,8 +9494,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47884",
         "LON": "-104.66403",
         "ONSTREET": "McCarthy Blvd",
-        "ATSTREET": "Krivel Cr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Krivel Cr (SB)"
     },
     {
         "OBJECTID": 59578,
@@ -10557,8 +9503,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47697",
         "LON": "-104.663261",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "McCarthy Blvd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "McCarthy Blvd (EB)"
     },
     {
         "OBJECTID": 59579,
@@ -10567,8 +9512,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47701",
         "LON": "-104.660089",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Hanbidge Cr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Hanbidge Cr (EB)"
     },
     {
         "OBJECTID": 59580,
@@ -10577,8 +9521,7 @@ const transitStops: Stop[] = [
         "LAT": "50.477",
         "LON": "-104.65542",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Hanbidge Cr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Hanbidge Cr (EB)"
     },
     {
         "OBJECTID": 59581,
@@ -10587,8 +9530,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47632",
         "LON": "-104.652631",
         "ONSTREET": "McIntosh St",
-        "ATSTREET": "Sherwood Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Sherwood Dr (SB)"
     },
     {
         "OBJECTID": 59582,
@@ -10597,8 +9539,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47371",
         "LON": "-104.652581",
         "ONSTREET": "McIntosh St",
-        "ATSTREET": "3rd Ave N (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "3rd Ave N (SB)"
     },
     {
         "OBJECTID": 59583,
@@ -10607,8 +9548,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47221",
         "LON": "-104.652539",
         "ONSTREET": "McIntosh St",
-        "ATSTREET": "2nd Ave N (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "2nd Ave N (SB)"
     },
     {
         "OBJECTID": 59584,
@@ -10617,8 +9557,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47092",
         "LON": "-104.65176",
         "ONSTREET": "1st Ave N",
-        "ATSTREET": "McIntosh St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "McIntosh St (EB)"
     },
     {
         "OBJECTID": 59585,
@@ -10627,8 +9566,7 @@ const transitStops: Stop[] = [
         "LAT": "50.470912",
         "LON": "-104.64904",
         "ONSTREET": "1st Ave N",
-        "ATSTREET": "Forget St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Forget St (EB)"
     },
     {
         "OBJECTID": 59586,
@@ -10637,8 +9575,7 @@ const transitStops: Stop[] = [
         "LAT": "50.470913",
         "LON": "-104.646211",
         "ONSTREET": "1st Ave N",
-        "ATSTREET": "Connaught St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Connaught St (EB)"
     },
     {
         "OBJECTID": 59587,
@@ -10647,8 +9584,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47074",
         "LON": "-104.643971",
         "ONSTREET": "1st Ave N",
-        "ATSTREET": "Alexandra St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Alexandra St (EB)"
     },
     {
         "OBJECTID": 59588,
@@ -10657,8 +9593,7 @@ const transitStops: Stop[] = [
         "LAT": "50.462589",
         "LON": "-104.641039",
         "ONSTREET": "Pasqua St",
-        "ATSTREET": "4th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "4th Ave (SB)"
     },
     {
         "OBJECTID": 59589,
@@ -10667,8 +9602,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46134",
         "LON": "-104.64048",
         "ONSTREET": "5th Ave",
-        "ATSTREET": "Pasqua St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Pasqua St (EB)"
     },
     {
         "OBJECTID": 59590,
@@ -10677,8 +9611,7 @@ const transitStops: Stop[] = [
         "LAT": "50.461346",
         "LON": "-104.637929",
         "ONSTREET": "5th Ave",
-        "ATSTREET": "King St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "King St (EB)"
     },
     {
         "OBJECTID": 59591,
@@ -10687,8 +9620,7 @@ const transitStops: Stop[] = [
         "LAT": "50.461343",
         "LON": "-104.635121",
         "ONSTREET": "5th Ave",
-        "ATSTREET": "Princess St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Princess St (EB)"
     },
     {
         "OBJECTID": 59592,
@@ -10697,8 +9629,7 @@ const transitStops: Stop[] = [
         "LAT": "50.461337",
         "LON": "-104.63214",
         "ONSTREET": "5th Ave",
-        "ATSTREET": "Argyle St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Argyle St (EB)"
     },
     {
         "OBJECTID": 59593,
@@ -10707,8 +9638,7 @@ const transitStops: Stop[] = [
         "LAT": "50.461337",
         "LON": "-104.629168",
         "ONSTREET": "5th Ave",
-        "ATSTREET": "Montague St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Montague St (EB)"
     },
     {
         "OBJECTID": 59594,
@@ -10717,8 +9647,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46137",
         "LON": "-104.62628",
         "ONSTREET": "5th Ave",
-        "ATSTREET": "Garnet St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Garnet St (EB)"
     },
     {
         "OBJECTID": 59595,
@@ -10727,8 +9656,7 @@ const transitStops: Stop[] = [
         "LAT": "50.461308",
         "LON": "-104.623616",
         "ONSTREET": "5th Ave",
-        "ATSTREET": "Robinson St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Robinson St (EB)"
     },
     {
         "OBJECTID": 59596,
@@ -10737,8 +9665,7 @@ const transitStops: Stop[] = [
         "LAT": "50.461302",
         "LON": "-104.620646",
         "ONSTREET": "5th Ave",
-        "ATSTREET": "Rae St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Rae St (EB)"
     },
     {
         "OBJECTID": 59597,
@@ -10747,8 +9674,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4484",
         "LON": "-104.618171",
         "ONSTREET": "Albert St",
-        "ATSTREET": "12th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "12th Ave (SB)"
     },
     {
         "OBJECTID": 59598,
@@ -10757,8 +9683,7 @@ const transitStops: Stop[] = [
         "LAT": "50.446739",
         "LON": "-104.618171",
         "ONSTREET": "Albert St",
-        "ATSTREET": "Victoria Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Victoria Ave (SB)"
     },
     {
         "OBJECTID": 59599,
@@ -10767,8 +9692,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44517",
         "LON": "-104.61819",
         "ONSTREET": "Albert St",
-        "ATSTREET": "13th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "13th Ave (SB)"
     },
     {
         "OBJECTID": 59600,
@@ -10777,8 +9701,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44366",
         "LON": "-104.61813",
         "ONSTREET": "Albert St",
-        "ATSTREET": "14th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "14th Ave (SB)"
     },
     {
         "OBJECTID": 59601,
@@ -10787,8 +9710,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44202",
         "LON": "-104.61815",
         "ONSTREET": "Albert St",
-        "ATSTREET": "15th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "15th Ave (SB)"
     },
     {
         "OBJECTID": 60359,
@@ -10797,8 +9719,7 @@ const transitStops: Stop[] = [
         "LAT": "50.50237",
         "LON": "-104.66395",
         "ONSTREET": "McCarthy Blvd",
-        "ATSTREET": "Wadge Cres (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Wadge Cres (SB)"
     },
     {
         "OBJECTID": 60360,
@@ -10807,8 +9728,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49913",
         "LON": "-104.66464",
         "ONSTREET": "Whelan Dr",
-        "ATSTREET": "McCarthy Blvd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "McCarthy Blvd (WB)"
     },
     {
         "OBJECTID": 60361,
@@ -10817,8 +9737,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49929",
         "LON": "-104.66738",
         "ONSTREET": "Radway St",
-        "ATSTREET": "Whelan Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Whelan Dr (NB)"
     },
     {
         "OBJECTID": 60362,
@@ -10827,8 +9746,7 @@ const transitStops: Stop[] = [
         "LAT": "50.50144",
         "LON": "-104.66666",
         "ONSTREET": "Radway St",
-        "ATSTREET": "Steele Cres (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Steele Cres (NB)"
     },
     {
         "OBJECTID": 60363,
@@ -10837,8 +9755,7 @@ const transitStops: Stop[] = [
         "LAT": "50.50288",
         "LON": "-104.66779",
         "ONSTREET": "Radway St",
-        "ATSTREET": "Wadge St (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Wadge St (NB)"
     },
     {
         "OBJECTID": 60364,
@@ -10847,8 +9764,7 @@ const transitStops: Stop[] = [
         "LAT": "50.5037",
         "LON": "-104.670821",
         "ONSTREET": "Devonshire Dr",
-        "ATSTREET": "Ehrle Cres (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Ehrle Cres (WB)"
     },
     {
         "OBJECTID": 60365,
@@ -10857,8 +9773,7 @@ const transitStops: Stop[] = [
         "LAT": "50.50306",
         "LON": "-104.67304",
         "ONSTREET": "Devonshire Dr",
-        "ATSTREET": "Hird Cres (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Hird Cres (SB)"
     },
     {
         "OBJECTID": 60366,
@@ -10867,8 +9782,7 @@ const transitStops: Stop[] = [
         "LAT": "50.501606",
         "LON": "-104.673875",
         "ONSTREET": "Devonshire Dr",
-        "ATSTREET": "Gillmore Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Gillmore Dr (SB)"
     },
     {
         "OBJECTID": 60367,
@@ -10877,8 +9791,7 @@ const transitStops: Stop[] = [
         "LAT": "50.500234",
         "LON": "-104.673895",
         "ONSTREET": "Devonshire Dr",
-        "ATSTREET": "Lakewood Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Lakewood Dr (SB)"
     },
     {
         "OBJECTID": 60368,
@@ -10887,8 +9800,7 @@ const transitStops: Stop[] = [
         "LAT": "50.498978",
         "LON": "-104.673937",
         "ONSTREET": "Whelan Dr",
-        "ATSTREET": "Devonshire Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Devonshire Dr (WB)"
     },
     {
         "OBJECTID": 60369,
@@ -10897,8 +9809,7 @@ const transitStops: Stop[] = [
         "LAT": "50.497429",
         "LON": "-104.685064",
         "ONSTREET": "Blackwood St",
-        "ATSTREET": "Butterfield Cr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Butterfield Cr (SB)"
     },
     {
         "OBJECTID": 60370,
@@ -10907,8 +9818,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49527",
         "LON": "-104.68449",
         "ONSTREET": "Rochdale Blvd",
-        "ATSTREET": "Blackwood St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Blackwood St (EB)"
     },
     {
         "OBJECTID": 60371,
@@ -10917,8 +9827,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49475",
         "LON": "-104.67993",
         "ONSTREET": "Rochdale Blvd",
-        "ATSTREET": "Arnason St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Arnason St (EB)"
     },
     {
         "OBJECTID": 60372,
@@ -10927,8 +9836,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49476",
         "LON": "-104.67539",
         "ONSTREET": "Rochdale Blvd",
-        "ATSTREET": "Cedar Meadow Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Cedar Meadow Dr (EB)"
     },
     {
         "OBJECTID": 60373,
@@ -10937,8 +9845,7 @@ const transitStops: Stop[] = [
         "LAT": "50.494793",
         "LON": "-104.672832",
         "ONSTREET": "Rochdale Blvd",
-        "ATSTREET": "Devonshire Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Devonshire Dr (EB)"
     },
     {
         "OBJECTID": 60374,
@@ -10947,8 +9854,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47105",
         "LON": "-104.642911",
         "ONSTREET": "1st Ave N",
-        "ATSTREET": "Edward St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Edward St (WB)"
     },
     {
         "OBJECTID": 60375,
@@ -10957,8 +9863,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41571",
         "LON": "-104.58942",
         "ONSTREET": "University Dr S",
-        "ATSTREET": "Kinesiology Bld (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Kinesiology Bld (WB)"
     },
     {
         "OBJECTID": 60376,
@@ -10967,8 +9872,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40329",
         "LON": "-104.6133",
         "ONSTREET": "Grant Rd",
-        "ATSTREET": "Marsh Cres (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Marsh Cres (NB)"
     },
     {
         "OBJECTID": 60377,
@@ -10977,8 +9881,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47392",
         "LON": "-104.59876",
         "ONSTREET": "3rd Ave N",
-        "ATSTREET": "Toronto St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Toronto St (EB)"
     },
     {
         "OBJECTID": 60378,
@@ -10987,8 +9890,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47244",
         "LON": "-104.59678",
         "ONSTREET": "2nd Ave N",
-        "ATSTREET": "Quebec St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Quebec St (WB)"
     },
     {
         "OBJECTID": 60379,
@@ -10997,8 +9899,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44358",
         "LON": "-104.528169",
         "ONSTREET": "Quance St",
-        "ATSTREET": "Windsor Park Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Windsor Park Rd (EB)"
     },
     {
         "OBJECTID": 60380,
@@ -11007,8 +9908,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48285",
         "LON": "-104.66407",
         "ONSTREET": "McCarthy Blvd",
-        "ATSTREET": "Irvin Cres (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Irvin Cres (SB)"
     },
     {
         "OBJECTID": 60381,
@@ -11017,8 +9917,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48333",
         "LON": "-104.66385",
         "ONSTREET": "McCarthy Blvd",
-        "ATSTREET": "Irvin Cres (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Irvin Cres (NB)"
     },
     {
         "OBJECTID": 60382,
@@ -11027,8 +9926,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48983",
         "LON": "-104.639141",
         "ONSTREET": "Pasqua Gate E",
-        "ATSTREET": "Sangster Blvd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Sangster Blvd (WB)"
     },
     {
         "OBJECTID": 60383,
@@ -11037,8 +9935,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48967",
         "LON": "-104.640291",
         "ONSTREET": "Pasqua Gate East",
-        "ATSTREET": "Pasqua St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Pasqua St (EB)"
     },
     {
         "OBJECTID": 60384,
@@ -11047,8 +9944,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49579",
         "LON": "-104.65868",
         "ONSTREET": "Rochdale Blvd",
-        "ATSTREET": "Lakeridge Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Lakeridge Rd (EB)"
     },
     {
         "OBJECTID": 60385,
@@ -11057,8 +9953,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4248",
         "LON": "-104.640891",
         "ONSTREET": "Pasqua St",
-        "ATSTREET": "Wascana St (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Wascana St (NB)"
     },
     {
         "OBJECTID": 60386,
@@ -11067,8 +9962,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40451",
         "LON": "-104.61999",
         "ONSTREET": "Gordon Rd",
-        "ATSTREET": "Rae St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Rae St (EB)"
     },
     {
         "OBJECTID": 60387,
@@ -11077,8 +9971,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44461",
         "LON": "-104.55559",
         "ONSTREET": "Quance St",
-        "ATSTREET": "Truesdale Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Truesdale Dr (EB)"
     },
     {
         "OBJECTID": 60388,
@@ -11087,8 +9980,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47648",
         "LON": "-104.647621",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "McGillvery Cres (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "McGillvery Cres (EB)"
     },
     {
         "OBJECTID": 60389,
@@ -11097,8 +9989,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44666",
         "LON": "-104.52763",
         "ONSTREET": "Quance Gate",
-        "ATSTREET": "Victoria Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Victoria Ave (SB)"
     },
     {
         "OBJECTID": 60390,
@@ -11107,8 +9998,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48093",
         "LON": "-104.65612",
         "ONSTREET": "7th Ave N",
-        "ATSTREET": "Milne St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Milne St (WB)"
     },
     {
         "OBJECTID": 60391,
@@ -11117,8 +10007,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49493",
         "LON": "-104.68232",
         "ONSTREET": "Rochdale Blvd",
-        "ATSTREET": "Kenderdine Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Kenderdine Dr (EB)"
     },
     {
         "OBJECTID": 60392,
@@ -11127,8 +10016,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45153",
         "LON": "-104.60636",
         "ONSTREET": "Broad St",
-        "ATSTREET": "Saskatchewan Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Saskatchewan Dr (NB)"
     },
     {
         "OBJECTID": 60393,
@@ -11137,8 +10025,7 @@ const transitStops: Stop[] = [
         "LAT": "50.472706",
         "LON": "-104.594289",
         "ONSTREET": "2nd Ave N",
-        "ATSTREET": "Winnipeg St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Winnipeg St (WB)"
     },
     {
         "OBJECTID": 60394,
@@ -11147,8 +10034,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45302",
         "LON": "-104.61817",
         "ONSTREET": "Albert St",
-        "ATSTREET": "9th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "9th Ave (SB)"
     },
     {
         "OBJECTID": 60395,
@@ -11157,8 +10043,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47285",
         "LON": "-104.579721",
         "ONSTREET": "Park St",
-        "ATSTREET": "McDonald St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "McDonald St (EB)"
     },
     {
         "OBJECTID": 60396,
@@ -11167,8 +10052,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47618",
         "LON": "-104.568421",
         "ONSTREET": "Pettigrew Ave",
-        "ATSTREET": "Leonard St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Leonard St (EB)"
     },
     {
         "OBJECTID": 60397,
@@ -11177,8 +10061,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4753",
         "LON": "-104.56279",
         "ONSTREET": "Pettigrew Ave",
-        "ATSTREET": "Henderson Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Henderson Dr (EB)"
     },
     {
         "OBJECTID": 60398,
@@ -11187,8 +10070,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47758",
         "LON": "-104.561511",
         "ONSTREET": "Henderson Dr",
-        "ATSTREET": "Turvey Rd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Turvey Rd (NB)"
     },
     {
         "OBJECTID": 60399,
@@ -11197,8 +10079,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47969",
         "LON": "-104.57112",
         "ONSTREET": "Henderson Dr",
-        "ATSTREET": "Leonard St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Leonard St (WB)"
     },
     {
         "OBJECTID": 60400,
@@ -11207,8 +10088,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47217",
         "LON": "-104.57773",
         "ONSTREET": "Park St",
-        "ATSTREET": "Mcleod St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Mcleod St (EB)"
     },
     {
         "OBJECTID": 60401,
@@ -11217,8 +10097,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47069",
         "LON": "-104.574381",
         "ONSTREET": "Park St",
-        "ATSTREET": "Vennels St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Vennels St (EB)"
     },
     {
         "OBJECTID": 60402,
@@ -11227,8 +10106,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46784",
         "LON": "-104.572329",
         "ONSTREET": "Park St",
-        "ATSTREET": "1st Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "1st Ave (SB)"
     },
     {
         "OBJECTID": 60403,
@@ -11237,8 +10115,7 @@ const transitStops: Stop[] = [
         "LAT": "50.458263",
         "LON": "-104.557819",
         "ONSTREET": "7th Ave",
-        "ATSTREET": "Cavendish St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Cavendish St (EB)"
     },
     {
         "OBJECTID": 60404,
@@ -11247,8 +10124,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45831",
         "LON": "-104.552191",
         "ONSTREET": "7th Ave",
-        "ATSTREET": "Cannon St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Cannon St (EB)"
     },
     {
         "OBJECTID": 60405,
@@ -11257,8 +10133,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4583",
         "LON": "-104.54821",
         "ONSTREET": "7th Ave",
-        "ATSTREET": "Fleet St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Fleet St (EB)"
     },
     {
         "OBJECTID": 60406,
@@ -11267,8 +10142,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45856",
         "LON": "-104.54534",
         "ONSTREET": "7th Ave",
-        "ATSTREET": "Bentley Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Bentley Dr (EB)"
     },
     {
         "OBJECTID": 60407,
@@ -11277,8 +10151,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44926",
         "LON": "-104.542831",
         "ONSTREET": "Fines Dr",
-        "ATSTREET": "Coleman Cres (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Coleman Cres (WB)"
     },
     {
         "OBJECTID": 60677,
@@ -11287,8 +10160,7 @@ const transitStops: Stop[] = [
         "LAT": "50.452173",
         "LON": "-104.609027",
         "ONSTREET": "Saskatchewan Dr",
-        "ATSTREET": "Hamilton St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Hamilton St (EB)"
     },
     {
         "OBJECTID": 60678,
@@ -11297,8 +10169,7 @@ const transitStops: Stop[] = [
         "LAT": "50.420358",
         "LON": "-104.5263",
         "ONSTREET": "Woodland Grove Dr",
-        "ATSTREET": "Arcola Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Arcola Ave (NB)"
     },
     {
         "OBJECTID": 60679,
@@ -11307,8 +10178,7 @@ const transitStops: Stop[] = [
         "LAT": "50.443629",
         "LON": "-104.505364",
         "ONSTREET": "Anaquod Rd",
-        "ATSTREET": "Optimist (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Optimist (SB)"
     },
     {
         "OBJECTID": 60680,
@@ -11317,8 +10187,7 @@ const transitStops: Stop[] = [
         "LAT": "50.437707",
         "LON": "-104.647624",
         "ONSTREET": "Sandra Schmirler Way",
-        "ATSTREET": "Airport Rd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Airport Rd (SB)"
     },
     {
         "OBJECTID": 60408,
@@ -11327,8 +10196,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44924",
         "LON": "-104.5464",
         "ONSTREET": "Fines Dr",
-        "ATSTREET": "2nd St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "2nd St (WB)"
     },
     {
         "OBJECTID": 60409,
@@ -11337,8 +10205,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4033",
         "LON": "-104.636866",
         "ONSTREET": "Queen St",
-        "ATSTREET": "Lincoln Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Lincoln Dr (NB)"
     },
     {
         "OBJECTID": 60410,
@@ -11347,8 +10214,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4507",
         "LON": "-104.557809",
         "ONSTREET": "Cavendish St",
-        "ATSTREET": "Cambridge Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Cambridge Ave (NB)"
     },
     {
         "OBJECTID": 60411,
@@ -11357,8 +10223,7 @@ const transitStops: Stop[] = [
         "LAT": "50.432606",
         "LON": "-104.537431",
         "ONSTREET": "Prince Of Wales Dr",
-        "ATSTREET": "Truesdale Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Truesdale Dr (SB)"
     },
     {
         "OBJECTID": 60412,
@@ -11367,8 +10232,7 @@ const transitStops: Stop[] = [
         "LAT": "50.425965",
         "LON": "-104.56769",
         "ONSTREET": "Assiniboine Ave",
-        "ATSTREET": "Windfield Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Windfield Rd (EB)"
     },
     {
         "OBJECTID": 60413,
@@ -11377,8 +10241,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47092",
         "LON": "-104.56892",
         "ONSTREET": "Henderson Dr",
-        "ATSTREET": "Maxwell Cres (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Maxwell Cres (NB)"
     },
     {
         "OBJECTID": 60414,
@@ -11387,8 +10250,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49199",
         "LON": "-104.678389",
         "ONSTREET": "Dalgliesh Dr",
-        "ATSTREET": "Swainson St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Swainson St (WB)"
     },
     {
         "OBJECTID": 60415,
@@ -11397,8 +10259,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45038",
         "LON": "-104.61153",
         "ONSTREET": "11th Ave",
-        "ATSTREET": "Scarth St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Scarth St (WB)"
     },
     {
         "OBJECTID": 60416,
@@ -11407,8 +10268,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47361",
         "LON": "-104.57335",
         "ONSTREET": "Henderson Dr",
-        "ATSTREET": "Leonard St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Leonard St (WB)"
     },
     {
         "OBJECTID": 60417,
@@ -11417,8 +10277,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42289",
         "LON": "-104.64098",
         "ONSTREET": "Pasqua St",
-        "ATSTREET": "McPhail Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "McPhail Ave (SB)"
     },
     {
         "OBJECTID": 60418,
@@ -11427,8 +10286,7 @@ const transitStops: Stop[] = [
         "LAT": "50.450363",
         "LON": "-104.60851",
         "ONSTREET": "11th Ave",
-        "ATSTREET": "Hamilton St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Hamilton St (EB)"
     },
     {
         "OBJECTID": 60419,
@@ -11437,8 +10295,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44884",
         "LON": "-104.61638",
         "ONSTREET": "12th Ave",
-        "ATSTREET": "McIntyre St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "McIntyre St (WB)"
     },
     {
         "OBJECTID": 60420,
@@ -11447,8 +10304,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44951",
         "LON": "-104.61805",
         "ONSTREET": "Albert St",
-        "ATSTREET": "12th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "12th Ave (NB)"
     },
     {
         "OBJECTID": 60421,
@@ -11457,8 +10313,7 @@ const transitStops: Stop[] = [
         "LAT": "50.450327",
         "LON": "-104.605937",
         "ONSTREET": "11th Ave",
-        "ATSTREET": "Broad St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Broad St (EB)"
     },
     {
         "OBJECTID": 60422,
@@ -11467,8 +10322,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44894",
         "LON": "-104.606509",
         "ONSTREET": "Broad St",
-        "ATSTREET": "12th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "12th Ave (SB)"
     },
     {
         "OBJECTID": 60423,
@@ -11477,8 +10331,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45517",
         "LON": "-104.60775",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Rose St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Rose St (WB)"
     },
     {
         "OBJECTID": 60424,
@@ -11487,8 +10340,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45517",
         "LON": "-104.610411",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Scarth St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Scarth St (WB)"
     },
     {
         "OBJECTID": 60425,
@@ -11497,8 +10349,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45513",
         "LON": "-104.61423",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Lorne St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Lorne St (WB)"
     },
     {
         "OBJECTID": 60426,
@@ -11507,8 +10358,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45501",
         "LON": "-104.61685",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "McIntyre St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "McIntyre St (EB)"
     },
     {
         "OBJECTID": 60427,
@@ -11517,8 +10367,7 @@ const transitStops: Stop[] = [
         "LAT": "50.455",
         "LON": "-104.613129",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Lorne St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Lorne St (EB)"
     },
     {
         "OBJECTID": 60428,
@@ -11527,8 +10376,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45502",
         "LON": "-104.6085",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Rose St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Rose St (EB)"
     },
     {
         "OBJECTID": 60429,
@@ -11537,8 +10385,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40549",
         "LON": "-104.64071",
         "ONSTREET": "Gordon Rd",
-        "ATSTREET": "Pasqua St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Pasqua St (WB)"
     },
     {
         "OBJECTID": 60430,
@@ -11547,8 +10394,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40538",
         "LON": "-104.64042",
         "ONSTREET": "Gordon Rd",
-        "ATSTREET": "Pasqua St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Pasqua St (EB)"
     },
     {
         "OBJECTID": 60431,
@@ -11557,8 +10403,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44847",
         "LON": "-104.53286",
         "ONSTREET": "Prince Of Wales Dr",
-        "ATSTREET": "Victoria Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Victoria Ave (NB)"
     },
     {
         "OBJECTID": 60432,
@@ -11567,8 +10412,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45156",
         "LON": "-104.5334",
         "ONSTREET": "Eastgate Dr",
-        "ATSTREET": "Prince Of Wales Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Prince Of Wales Dr (WB)"
     },
     {
         "OBJECTID": 60433,
@@ -11577,8 +10421,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45054",
         "LON": "-104.535521",
         "ONSTREET": "Eastgate Dr",
-        "ATSTREET": "Eastgate Bay (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Eastgate Bay (SB)"
     },
     {
         "OBJECTID": 60434,
@@ -11587,8 +10430,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44853",
         "LON": "-104.53743",
         "ONSTREET": "Eastgate Dr",
-        "ATSTREET": "Eastgate Bay (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Eastgate Bay (SB)"
     },
     {
         "OBJECTID": 60435,
@@ -11597,8 +10439,7 @@ const transitStops: Stop[] = [
         "LAT": "50.462998",
         "LON": "-104.579399",
         "ONSTREET": "4th Ave",
-        "ATSTREET": "Mackay St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Mackay St (WB)"
     },
     {
         "OBJECTID": 60436,
@@ -11607,8 +10448,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40796",
         "LON": "-104.607121",
         "ONSTREET": "Grant Dr",
-        "ATSTREET": "Academy Park Rd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Academy Park Rd (WB)"
     },
     {
         "OBJECTID": 60437,
@@ -11617,8 +10457,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42477",
         "LON": "-104.64098",
         "ONSTREET": "Pasqua St",
-        "ATSTREET": "Wascana St (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Wascana St (SB)"
     },
     {
         "OBJECTID": 60438,
@@ -11627,8 +10466,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40556",
         "LON": "-104.647051",
         "ONSTREET": "Gordon Rd",
-        "ATSTREET": "Lewvan Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Lewvan Dr (WB)"
     },
     {
         "OBJECTID": 60439,
@@ -11637,8 +10475,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40535",
         "LON": "-104.647061",
         "ONSTREET": "Gordon Rd",
-        "ATSTREET": "Lewvan Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Lewvan Dr (EB)"
     },
     {
         "OBJECTID": 60440,
@@ -11647,8 +10484,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46495",
         "LON": "-104.5724",
         "ONSTREET": "Park St",
-        "ATSTREET": "Ross Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Ross Ave (SB)"
     },
     {
         "OBJECTID": 60441,
@@ -11657,8 +10493,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43303",
         "LON": "-104.595219",
         "ONSTREET": "Powerhouse Dr",
-        "ATSTREET": "Wascana Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Wascana Dr (NB)"
     },
     {
         "OBJECTID": 60442,
@@ -11667,8 +10502,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41546",
         "LON": "-104.630109",
         "ONSTREET": "Parliament Ave",
-        "ATSTREET": "Montague St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Montague St (WB)"
     },
     {
         "OBJECTID": 60443,
@@ -11677,8 +10511,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41545",
         "LON": "-104.633259",
         "ONSTREET": "Parliament Ave",
-        "ATSTREET": "Argyle St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Argyle St (WB)"
     },
     {
         "OBJECTID": 60444,
@@ -11687,8 +10520,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41583",
         "LON": "-104.63653",
         "ONSTREET": "Parliament Ave",
-        "ATSTREET": "Queen St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Queen St (WB)"
     },
     {
         "OBJECTID": 60445,
@@ -11697,8 +10529,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41654",
         "LON": "-104.6403",
         "ONSTREET": "Parliament Ave",
-        "ATSTREET": "Pasqua St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Pasqua St (WB)"
     },
     {
         "OBJECTID": 60446,
@@ -11707,8 +10538,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41749",
         "LON": "-104.64926",
         "ONSTREET": "Parliament Ave",
-        "ATSTREET": "Harbour Landing Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Harbour Landing Dr (WB)"
     },
     {
         "OBJECTID": 60447,
@@ -11717,8 +10547,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40766",
         "LON": "-104.6513",
         "ONSTREET": "Grasslands Dr",
-        "ATSTREET": "Harbour Landing Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Harbour Landing Dr (WB)"
     },
     {
         "OBJECTID": 60448,
@@ -11727,8 +10556,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40271",
         "LON": "-104.648841",
         "ONSTREET": "Harvard Way",
-        "ATSTREET": "Harbour Landing Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Harbour Landing Dr (NB)"
     },
     {
         "OBJECTID": 60449,
@@ -11737,8 +10565,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40458",
         "LON": "-104.648191",
         "ONSTREET": "Harvard Way",
-        "ATSTREET": "Gordon Rd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Gordon Rd (NB)"
     },
     {
         "OBJECTID": 60450,
@@ -11747,8 +10574,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4057",
         "LON": "-104.652321",
         "ONSTREET": "Harbour Landing Dr",
-        "ATSTREET": "Gordon Rd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Gordon Rd (NB)"
     },
     {
         "OBJECTID": 60451,
@@ -11757,8 +10583,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41063",
         "LON": "-104.64881",
         "ONSTREET": "Harbour Landing Dr",
-        "ATSTREET": "Malcolm Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Malcolm Dr (NB)"
     },
     {
         "OBJECTID": 60452,
@@ -11767,8 +10592,7 @@ const transitStops: Stop[] = [
         "LAT": "50.412262",
         "LON": "-104.648656",
         "ONSTREET": "Harbour Landing Dr",
-        "ATSTREET": "Jim Cairns Blvd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Jim Cairns Blvd (NB)"
     },
     {
         "OBJECTID": 60453,
@@ -11777,8 +10601,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41441",
         "LON": "-104.64874",
         "ONSTREET": "Harbour Landing Dr",
-        "ATSTREET": "Skinner Cr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Skinner Cr (NB)"
     },
     {
         "OBJECTID": 60454,
@@ -11787,8 +10610,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41736",
         "LON": "-104.648171",
         "ONSTREET": "Parliament Ave",
-        "ATSTREET": "Harbour Landing Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Harbour Landing Dr (EB)"
     },
     {
         "OBJECTID": 60455,
@@ -11797,8 +10619,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41635",
         "LON": "-104.6402",
         "ONSTREET": "Parliament Ave",
-        "ATSTREET": "Pasqua St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Pasqua St (EB)"
     },
     {
         "OBJECTID": 60456,
@@ -11807,8 +10628,7 @@ const transitStops: Stop[] = [
         "LAT": "50.415549",
         "LON": "-104.635699",
         "ONSTREET": "Parliament Ave",
-        "ATSTREET": "Queen St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Queen St (EB)"
     },
     {
         "OBJECTID": 60457,
@@ -11817,8 +10637,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41543",
         "LON": "-104.632151",
         "ONSTREET": "Parliament Ave",
-        "ATSTREET": "Argyle St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Argyle St (EB)"
     },
     {
         "OBJECTID": 60458,
@@ -11827,8 +10646,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40895",
         "LON": "-104.65052",
         "ONSTREET": "Harbour Landing Dr",
-        "ATSTREET": "Wright Rd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Wright Rd (NB)"
     },
     {
         "OBJECTID": 60459,
@@ -11837,8 +10655,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41651",
         "LON": "-104.64875",
         "ONSTREET": "Harbour Landing Dr",
-        "ATSTREET": "Tutor Way (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Tutor Way (NB)"
     },
     {
         "OBJECTID": 60460,
@@ -11847,8 +10664,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45442",
         "LON": "-104.52907",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Prince Of Wales Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Prince Of Wales Dr (EB)"
     },
     {
         "OBJECTID": 60461,
@@ -11857,8 +10673,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48107",
         "LON": "-104.7079",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Shillington Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Shillington Rd (EB)"
     },
     {
         "OBJECTID": 60462,
@@ -11867,8 +10682,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45023",
         "LON": "-104.532821",
         "ONSTREET": "Prince Of Wales Dr",
-        "ATSTREET": "Eastgate Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Eastgate Dr (NB)"
     },
     {
         "OBJECTID": 60463,
@@ -11877,8 +10691,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49776",
         "LON": "-104.64538",
         "ONSTREET": "Stockton St",
-        "ATSTREET": "Child Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Child Ave (NB)"
     },
     {
         "OBJECTID": 60464,
@@ -11887,8 +10700,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49795",
         "LON": "-104.6481",
         "ONSTREET": "Child Ave",
-        "ATSTREET": "Mazinke Cr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Mazinke Cr (WB)"
     },
     {
         "OBJECTID": 60465,
@@ -11897,8 +10709,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49761",
         "LON": "-104.65245",
         "ONSTREET": "McIntosh St",
-        "ATSTREET": "Child Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Child Ave (SB)"
     },
     {
         "OBJECTID": 60466,
@@ -11907,8 +10718,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49852",
         "LON": "-104.6639",
         "ONSTREET": "McCarthy Blvd",
-        "ATSTREET": "Whelan Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Whelan Dr (NB)"
     },
     {
         "OBJECTID": 60467,
@@ -11917,8 +10727,7 @@ const transitStops: Stop[] = [
         "LAT": "50.50244",
         "LON": "-104.66392",
         "ONSTREET": "McCarthy Blvd",
-        "ATSTREET": "Lakeridge Rd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Lakeridge Rd (NB)"
     },
     {
         "OBJECTID": 60468,
@@ -11927,8 +10736,7 @@ const transitStops: Stop[] = [
         "LAT": "50.50657",
         "LON": "-104.66391",
         "ONSTREET": "McCarthy Blvd",
-        "ATSTREET": "Koep Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Koep Ave (NB)"
     },
     {
         "OBJECTID": 60469,
@@ -11937,8 +10745,7 @@ const transitStops: Stop[] = [
         "LAT": "50.50887",
         "LON": "-104.659839",
         "ONSTREET": "Diefenbaker Dr",
-        "ATSTREET": "Blake Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Blake Rd (EB)"
     },
     {
         "OBJECTID": 60470,
@@ -11947,8 +10754,7 @@ const transitStops: Stop[] = [
         "LAT": "50.508837",
         "LON": "-104.654791",
         "ONSTREET": "Diefenbaker Dr",
-        "ATSTREET": "Simes Blvd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Simes Blvd (EB)"
     },
     {
         "OBJECTID": 60471,
@@ -11957,8 +10763,7 @@ const transitStops: Stop[] = [
         "LAT": "50.50177",
         "LON": "-104.645049",
         "ONSTREET": "Stockton St",
-        "ATSTREET": "Junor Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Junor Dr (SB)"
     },
     {
         "OBJECTID": 60472,
@@ -11967,8 +10772,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49743",
         "LON": "-104.645499",
         "ONSTREET": "Stockton St",
-        "ATSTREET": "Child Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Child Ave (SB)"
     },
     {
         "OBJECTID": 60473,
@@ -11977,8 +10781,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49656",
         "LON": "-104.64468",
         "ONSTREET": "Rochdale Blvd",
-        "ATSTREET": "Stockton St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Stockton St (EB)"
     },
     {
         "OBJECTID": 60474,
@@ -11987,8 +10790,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47933",
         "LON": "-104.595279",
         "ONSTREET": "Winnipeg St",
-        "ATSTREET": "6th Ave N (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "6th Ave N (SB)"
     },
     {
         "OBJECTID": 60475,
@@ -11997,8 +10799,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47308",
         "LON": "-104.595159",
         "ONSTREET": "Winnipeg St",
-        "ATSTREET": "2nd Ave N (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "2nd Ave N (NB)"
     },
     {
         "OBJECTID": 60476,
@@ -12007,8 +10808,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45241",
         "LON": "-104.528351",
         "ONSTREET": "Neville Dr",
-        "ATSTREET": "Dakota Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Dakota Dr (SB)"
     },
     {
         "OBJECTID": 60477,
@@ -12017,8 +10817,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44058",
         "LON": "-104.53163",
         "ONSTREET": "Haughton Rd",
-        "ATSTREET": "Prince Of Wales Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Prince Of Wales Dr (EB)"
     },
     {
         "OBJECTID": 60478,
@@ -12027,8 +10826,7 @@ const transitStops: Stop[] = [
         "LAT": "50.440426",
         "LON": "-104.529687",
         "ONSTREET": "Haughton Rd",
-        "ATSTREET": "Willow Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Willow Rd (EB)"
     },
     {
         "OBJECTID": 60479,
@@ -12037,8 +10835,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44093",
         "LON": "-104.52754",
         "ONSTREET": "Windsor Park Rd",
-        "ATSTREET": "Haughton Rd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Haughton Rd (NB)"
     },
     {
         "OBJECTID": 60480,
@@ -12047,8 +10844,7 @@ const transitStops: Stop[] = [
         "LAT": "50.441",
         "LON": "-104.54916",
         "ONSTREET": "University Park Dr",
-        "ATSTREET": "Arens Rd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Arens Rd (NB)"
     },
     {
         "OBJECTID": 60481,
@@ -12057,8 +10853,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42238",
         "LON": "-104.60149",
         "ONSTREET": "Hillsdale St",
-        "ATSTREET": "Jubilee Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Jubilee Ave (NB)"
     },
     {
         "OBJECTID": 60482,
@@ -12067,8 +10862,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49614",
         "LON": "-104.668569",
         "ONSTREET": "Radway St",
-        "ATSTREET": "Rochdale Blvd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Rochdale Blvd (NB)"
     },
     {
         "OBJECTID": 60483,
@@ -12077,8 +10871,7 @@ const transitStops: Stop[] = [
         "LAT": "50.499008",
         "LON": "-104.677765",
         "ONSTREET": "Mapleridge Dr",
-        "ATSTREET": "Whelan Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Whelan Dr (NB)"
     },
     {
         "OBJECTID": 60484,
@@ -12087,8 +10880,7 @@ const transitStops: Stop[] = [
         "LAT": "50.502357",
         "LON": "-104.677703",
         "ONSTREET": "Mapleridge Dr",
-        "ATSTREET": "Gillmore Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Gillmore Dr (NB)"
     },
     {
         "OBJECTID": 60485,
@@ -12097,8 +10889,7 @@ const transitStops: Stop[] = [
         "LAT": "50.503692",
         "LON": "-104.681339",
         "ONSTREET": "Mapleridge Dr",
-        "ATSTREET": "Maple St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Maple St (WB)"
     },
     {
         "OBJECTID": 60486,
@@ -12107,8 +10898,7 @@ const transitStops: Stop[] = [
         "LAT": "50.50135",
         "LON": "-104.684799",
         "ONSTREET": "Mapleridge Dr",
-        "ATSTREET": "Maple Way (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Maple Way (SB)"
     },
     {
         "OBJECTID": 60487,
@@ -12117,8 +10907,7 @@ const transitStops: Stop[] = [
         "LAT": "50.499242",
         "LON": "-104.682346",
         "ONSTREET": "Mapleridge Dr",
-        "ATSTREET": "Mapleton Bay (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Mapleton Bay (SB)"
     },
     {
         "OBJECTID": 60488,
@@ -12127,8 +10916,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49716",
         "LON": "-104.652239",
         "ONSTREET": "McIntosh St",
-        "ATSTREET": "Rochdale Blvd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Rochdale Blvd (NB)"
     },
     {
         "OBJECTID": 60489,
@@ -12137,8 +10925,7 @@ const transitStops: Stop[] = [
         "LAT": "50.497855",
         "LON": "-104.648145",
         "ONSTREET": "Child Ave",
-        "ATSTREET": "Mazinke Cr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Mazinke Cr (EB)"
     },
     {
         "OBJECTID": 60490,
@@ -12147,8 +10934,7 @@ const transitStops: Stop[] = [
         "LAT": "50.443906",
         "LON": "-104.527303",
         "ONSTREET": "Quance Gate",
-        "ATSTREET": "Quance St (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Quance St (NB)"
     },
     {
         "OBJECTID": 60491,
@@ -12157,8 +10943,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47908",
         "LON": "-104.62166",
         "ONSTREET": "6th Ave N",
-        "ATSTREET": "Angus Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Angus Rd (EB)"
     },
     {
         "OBJECTID": 60492,
@@ -12167,8 +10952,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47937",
         "LON": "-104.623111",
         "ONSTREET": "6th Ave N",
-        "ATSTREET": "Shepherd St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Shepherd St (WB)"
     },
     {
         "OBJECTID": 60493,
@@ -12177,8 +10961,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47885",
         "LON": "-104.61464",
         "ONSTREET": "6th Ave N",
-        "ATSTREET": "Smith St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Smith St (EB)"
     },
     {
         "OBJECTID": 60494,
@@ -12187,8 +10970,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47886",
         "LON": "-104.61191",
         "ONSTREET": "6th Ave N",
-        "ATSTREET": "Cornwall St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Cornwall St (EB)"
     },
     {
         "OBJECTID": 60495,
@@ -12197,8 +10979,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47884",
         "LON": "-104.609",
         "ONSTREET": "6th Ave N",
-        "ATSTREET": "Hamilton St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Hamilton St (EB)"
     },
     {
         "OBJECTID": 60496,
@@ -12207,8 +10988,7 @@ const transitStops: Stop[] = [
         "LAT": "50.478832",
         "LON": "-104.60592",
         "ONSTREET": "6th Ave N",
-        "ATSTREET": "Broad St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Broad St (EB)"
     },
     {
         "OBJECTID": 60497,
@@ -12217,8 +10997,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47886",
         "LON": "-104.60295",
         "ONSTREET": "6th Ave N",
-        "ATSTREET": "Halifax St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Halifax St (EB)"
     },
     {
         "OBJECTID": 60498,
@@ -12227,8 +11006,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47885",
         "LON": "-104.60012",
         "ONSTREET": "6th Ave N",
-        "ATSTREET": "Ottawa St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Ottawa St (EB)"
     },
     {
         "OBJECTID": 60499,
@@ -12237,8 +11015,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47883",
         "LON": "-104.597389",
         "ONSTREET": "6th Ave N",
-        "ATSTREET": "Montreal St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Montreal St (EB)"
     },
     {
         "OBJECTID": 60500,
@@ -12247,8 +11024,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47919",
         "LON": "-104.59513",
         "ONSTREET": "Winnipeg St",
-        "ATSTREET": "6th Ave N (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "6th Ave N (NB)"
     },
     {
         "OBJECTID": 60501,
@@ -12257,8 +11033,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4826",
         "LON": "-104.5787",
         "ONSTREET": "9th Ave N",
-        "ATSTREET": "Coop Refinery (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Coop Refinery (WB)"
     },
     {
         "OBJECTID": 60502,
@@ -12267,8 +11042,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48395",
         "LON": "-104.58156",
         "ONSTREET": "9th Ave N",
-        "ATSTREET": "119 9th Ave N (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "119 9th Ave N (WB)"
     },
     {
         "OBJECTID": 60503,
@@ -12277,8 +11051,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48433",
         "LON": "-104.585731",
         "ONSTREET": "9th Ave N",
-        "ATSTREET": "297 9th Ave N (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "297 9th Ave N (WB)"
     },
     {
         "OBJECTID": 60504,
@@ -12287,8 +11060,7 @@ const transitStops: Stop[] = [
         "LAT": "50.478933",
         "LON": "-104.600077",
         "ONSTREET": "6th Ave N",
-        "ATSTREET": "Toronto St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Toronto St (WB)"
     },
     {
         "OBJECTID": 60505,
@@ -12297,8 +11069,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47893",
         "LON": "-104.60391",
         "ONSTREET": "6th Ave N",
-        "ATSTREET": "Halifax St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Halifax St (WB)"
     },
     {
         "OBJECTID": 60506,
@@ -12307,8 +11078,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47895",
         "LON": "-104.607069",
         "ONSTREET": "6th Ave N",
-        "ATSTREET": "Broad St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Broad St (WB)"
     },
     {
         "OBJECTID": 60507,
@@ -12317,8 +11087,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47896",
         "LON": "-104.609889",
         "ONSTREET": "6th Ave N",
-        "ATSTREET": "Hamilton St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Hamilton St (WB)"
     },
     {
         "OBJECTID": 60508,
@@ -12327,8 +11096,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47894",
         "LON": "-104.61282",
         "ONSTREET": "6th Ave N",
-        "ATSTREET": "Cornwall St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Cornwall St (WB)"
     },
     {
         "OBJECTID": 60509,
@@ -12337,8 +11105,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4505",
         "LON": "-104.52827",
         "ONSTREET": "Eastgate Dr",
-        "ATSTREET": "Neville Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Neville Dr (EB)"
     },
     {
         "OBJECTID": 60510,
@@ -12347,8 +11114,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44876",
         "LON": "-104.52787",
         "ONSTREET": "Eastgate Dr",
-        "ATSTREET": "Argan Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Argan Dr (SB)"
     },
     {
         "OBJECTID": 60511,
@@ -12357,8 +11123,7 @@ const transitStops: Stop[] = [
         "LAT": "50.478149",
         "LON": "-104.560878",
         "ONSTREET": "Turvey Rd",
-        "ATSTREET": "Henderson Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Henderson Dr (EB)"
     },
     {
         "OBJECTID": 60512,
@@ -12367,8 +11132,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4776",
         "LON": "-104.556816",
         "ONSTREET": "Solomon Dr",
-        "ATSTREET": "Turvey Rd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Turvey Rd (SB)"
     },
     {
         "OBJECTID": 60513,
@@ -12377,8 +11141,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47446",
         "LON": "-104.55677",
         "ONSTREET": "Solomon Dr",
-        "ATSTREET": "Stock Rd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Stock Rd (SB)"
     },
     {
         "OBJECTID": 60514,
@@ -12387,8 +11150,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4727",
         "LON": "-104.556079",
         "ONSTREET": "Emmett Hall Rd",
-        "ATSTREET": "Solomon Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Solomon Dr (EB)"
     },
     {
         "OBJECTID": 60515,
@@ -12397,8 +11159,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47454",
         "LON": "-104.552531",
         "ONSTREET": "Emmett Hall Rd",
-        "ATSTREET": "2215 Emmett Hall (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "2215 Emmett Hall (EB)"
     },
     {
         "OBJECTID": 60516,
@@ -12407,8 +11168,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47548",
         "LON": "-104.54971",
         "ONSTREET": "Emmett Hall Rd",
-        "ATSTREET": "Fleet St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Fleet St (EB)"
     },
     {
         "OBJECTID": 60517,
@@ -12417,8 +11177,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47317",
         "LON": "-104.549302",
         "ONSTREET": "Fleet St",
-        "ATSTREET": "SGI (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "SGI (SB)"
     },
     {
         "OBJECTID": 60518,
@@ -12427,8 +11186,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46498",
         "LON": "-104.5527",
         "ONSTREET": "Ross Ave",
-        "ATSTREET": "Macrae Bay (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Macrae Bay (WB)"
     },
     {
         "OBJECTID": 60519,
@@ -12437,8 +11195,7 @@ const transitStops: Stop[] = [
         "LAT": "50.465",
         "LON": "-104.55721",
         "ONSTREET": "Ross Ave",
-        "ATSTREET": "Macrae Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Macrae Dr (WB)"
     },
     {
         "OBJECTID": 60520,
@@ -12447,8 +11204,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46499",
         "LON": "-104.56122",
         "ONSTREET": "Ross Ave",
-        "ATSTREET": "Bower Cr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Bower Cr (WB)"
     },
     {
         "OBJECTID": 60521,
@@ -12457,8 +11213,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46547",
         "LON": "-104.56428",
         "ONSTREET": "Ross Ave",
-        "ATSTREET": "Bower Cr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Bower Cr (WB)"
     },
     {
         "OBJECTID": 60522,
@@ -12467,8 +11222,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47443",
         "LON": "-104.575131",
         "ONSTREET": "Henderson Dr",
-        "ATSTREET": "Leonard St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Leonard St (WB)"
     },
     {
         "OBJECTID": 60523,
@@ -12477,8 +11231,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46019",
         "LON": "-104.583551",
         "ONSTREET": "McDonald St",
-        "ATSTREET": "6th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "6th Ave (NB)"
     },
     {
         "OBJECTID": 60524,
@@ -12487,8 +11240,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46329",
         "LON": "-104.583521",
         "ONSTREET": "McDonald St",
-        "ATSTREET": "4th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "4th Ave (NB)"
     },
     {
         "OBJECTID": 60525,
@@ -12497,8 +11249,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46535",
         "LON": "-104.583529",
         "ONSTREET": "McDonald St",
-        "ATSTREET": "Ross Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Ross Ave (NB)"
     },
     {
         "OBJECTID": 60526,
@@ -12507,8 +11258,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46798",
         "LON": "-104.58354",
         "ONSTREET": "McDonald St",
-        "ATSTREET": "1st Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "1st Ave (NB)"
     },
     {
         "OBJECTID": 60527,
@@ -12517,8 +11267,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47215",
         "LON": "-104.58208",
         "ONSTREET": "McDonald St",
-        "ATSTREET": "Hoffer Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Hoffer Dr (NB)"
     },
     {
         "OBJECTID": 60528,
@@ -12527,8 +11276,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47355",
         "LON": "-104.58048",
         "ONSTREET": "McDonald St",
-        "ATSTREET": "Park St (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Park St (NB)"
     },
     {
         "OBJECTID": 60529,
@@ -12537,8 +11285,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4783",
         "LON": "-104.667689",
         "ONSTREET": "Sherwood Dr",
-        "ATSTREET": "Krivel Cr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Krivel Cr (WB)"
     },
     {
         "OBJECTID": 60530,
@@ -12547,8 +11294,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47434",
         "LON": "-104.67179",
         "ONSTREET": "1st Ave N",
-        "ATSTREET": "McSherry Cr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "McSherry Cr (EB)"
     },
     {
         "OBJECTID": 60531,
@@ -12557,8 +11303,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47264",
         "LON": "-104.669049",
         "ONSTREET": "1st Ave N",
-        "ATSTREET": "Bastedo Cr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Bastedo Cr (EB)"
     },
     {
         "OBJECTID": 60532,
@@ -12567,8 +11312,7 @@ const transitStops: Stop[] = [
         "LAT": "50.429709",
         "LON": "-104.526221",
         "ONSTREET": "Windsor Park Rd",
-        "ATSTREET": "Buckingham Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Buckingham Dr (NB)"
     },
     {
         "OBJECTID": 60533,
@@ -12577,8 +11321,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44015",
         "LON": "-104.52759",
         "ONSTREET": "Windsor Park Rd",
-        "ATSTREET": "Haughton Rd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Haughton Rd (SB)"
     },
     {
         "OBJECTID": 60534,
@@ -12587,8 +11330,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43693",
         "LON": "-104.526611",
         "ONSTREET": "Windsor Park Rd",
-        "ATSTREET": "Cumberland Rd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Cumberland Rd (SB)"
     },
     {
         "OBJECTID": 60535,
@@ -12597,8 +11339,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43328",
         "LON": "-104.52631",
         "ONSTREET": "Windsor Park Rd",
-        "ATSTREET": "Sunninghill Cr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Sunninghill Cr (SB)"
     },
     {
         "OBJECTID": 60536,
@@ -12607,8 +11348,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43221",
         "LON": "-104.526339",
         "ONSTREET": "Windsor Park Rd",
-        "ATSTREET": "Cranbourn Cr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Cranbourn Cr (SB)"
     },
     {
         "OBJECTID": 60537,
@@ -12617,8 +11357,7 @@ const transitStops: Stop[] = [
         "LAT": "50.425197",
         "LON": "-104.52674",
         "ONSTREET": "Woodhams Dr",
-        "ATSTREET": "Woodland Grove Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Woodland Grove Dr (EB)"
     },
     {
         "OBJECTID": 60538,
@@ -12627,8 +11366,7 @@ const transitStops: Stop[] = [
         "LAT": "50.422079",
         "LON": "-104.525984",
         "ONSTREET": "Green Ridge Gate",
-        "ATSTREET": "Woodland Grove Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Woodland Grove Dr (EB)"
     },
     {
         "OBJECTID": 60539,
@@ -12637,8 +11375,7 @@ const transitStops: Stop[] = [
         "LAT": "50.423873",
         "LON": "-104.52605",
         "ONSTREET": "Woodland Grove Dr",
-        "ATSTREET": "Green Pine Gate (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Green Pine Gate (NB)"
     },
     {
         "OBJECTID": 60540,
@@ -12647,8 +11384,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42661",
         "LON": "-104.532619",
         "ONSTREET": "Woodhams Dr",
-        "ATSTREET": "Gloucester Bay (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Gloucester Bay (WB)"
     },
     {
         "OBJECTID": 60541,
@@ -12657,8 +11393,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42772",
         "LON": "-104.53457",
         "ONSTREET": "Woodhams Dr",
-        "ATSTREET": "Buckingham Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Buckingham Dr (WB)"
     },
     {
         "OBJECTID": 60542,
@@ -12667,8 +11402,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42719",
         "LON": "-104.53404",
         "ONSTREET": "Woodhams Dr",
-        "ATSTREET": "Buckingham Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Buckingham Dr (EB)"
     },
     {
         "OBJECTID": 60543,
@@ -12677,8 +11411,7 @@ const transitStops: Stop[] = [
         "LAT": "50.425369",
         "LON": "-104.526986",
         "ONSTREET": "Woodhams Dr",
-        "ATSTREET": "Woodland Grove Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Woodland Grove Dr (WB)"
     },
     {
         "OBJECTID": 60544,
@@ -12687,8 +11420,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43292",
         "LON": "-104.52627",
         "ONSTREET": "Windsor Park Rd",
-        "ATSTREET": "Cranbourn Cr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Cranbourn Cr (NB)"
     },
     {
         "OBJECTID": 60545,
@@ -12697,8 +11429,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43444",
         "LON": "-104.52625",
         "ONSTREET": "Windsor Park Rd",
-        "ATSTREET": "Sunninghill Cr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Sunninghill Cr (NB)"
     },
     {
         "OBJECTID": 60546,
@@ -12707,8 +11438,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43769",
         "LON": "-104.52653",
         "ONSTREET": "Windsor Park Rd",
-        "ATSTREET": "Cumberland Rd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Cumberland Rd (NB)"
     },
     {
         "OBJECTID": 60547,
@@ -12717,8 +11447,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43914",
         "LON": "-104.52728",
         "ONSTREET": "Windsor Park Rd",
-        "ATSTREET": "Lepine Rd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Lepine Rd (NB)"
     },
     {
         "OBJECTID": 60548,
@@ -12727,8 +11456,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43641",
         "LON": "-104.595179",
         "ONSTREET": "Winnipeg St",
-        "ATSTREET": "18th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "18th Ave (NB)"
     },
     {
         "OBJECTID": 60549,
@@ -12737,8 +11465,7 @@ const transitStops: Stop[] = [
         "LAT": "50.50023",
         "LON": "-104.64564",
         "ONSTREET": "Stockton St",
-        "ATSTREET": "Nicurity Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Nicurity Dr (NB)"
     },
     {
         "OBJECTID": 60550,
@@ -12747,8 +11474,7 @@ const transitStops: Stop[] = [
         "LAT": "50.5024",
         "LON": "-104.6453",
         "ONSTREET": "Junor Dr",
-        "ATSTREET": "Stockton St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Stockton St (WB)"
     },
     {
         "OBJECTID": 60551,
@@ -12757,8 +11483,7 @@ const transitStops: Stop[] = [
         "LAT": "50.50297",
         "LON": "-104.648389",
         "ONSTREET": "Junor Dr",
-        "ATSTREET": "Sherlock Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Sherlock Dr (WB)"
     },
     {
         "OBJECTID": 60552,
@@ -12767,8 +11492,7 @@ const transitStops: Stop[] = [
         "LAT": "50.50268",
         "LON": "-104.650749",
         "ONSTREET": "McIntosh St",
-        "ATSTREET": "Junor Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Junor Dr (SB)"
     },
     {
         "OBJECTID": 60553,
@@ -12777,8 +11501,7 @@ const transitStops: Stop[] = [
         "LAT": "50.50045",
         "LON": "-104.65156",
         "ONSTREET": "McIntosh St",
-        "ATSTREET": "Taylor Cr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Taylor Cr (SB)"
     },
     {
         "OBJECTID": 60554,
@@ -12787,8 +11510,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49736",
         "LON": "-104.668449",
         "ONSTREET": "Radway St",
-        "ATSTREET": "Baird St (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Baird St (SB)"
     },
     {
         "OBJECTID": 60555,
@@ -12797,8 +11519,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47927",
         "LON": "-104.626409",
         "ONSTREET": "6th Ave N",
-        "ATSTREET": "Garnet St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Garnet St (EB)"
     },
     {
         "OBJECTID": 60556,
@@ -12807,8 +11528,7 @@ const transitStops: Stop[] = [
         "LAT": "50.450352",
         "LON": "-104.610852",
         "ONSTREET": "11th Ave",
-        "ATSTREET": "Scarth St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Scarth St (EB)"
     },
     {
         "OBJECTID": 60557,
@@ -12817,8 +11537,7 @@ const transitStops: Stop[] = [
         "LAT": "50.436341",
         "LON": "-104.595304",
         "ONSTREET": "Winnipeg St",
-        "ATSTREET": "Quinn Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Quinn Dr (SB)"
     },
     {
         "OBJECTID": 60558,
@@ -12827,8 +11546,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43384",
         "LON": "-104.59304",
         "ONSTREET": "Wascana Dr",
-        "ATSTREET": "Powerhouse Rd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Powerhouse Rd (SB)"
     },
     {
         "OBJECTID": 60559,
@@ -12837,8 +11555,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49981",
         "LON": "-104.645761",
         "ONSTREET": "Stockton St",
-        "ATSTREET": "Nicurity Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Nicurity Dr (SB)"
     },
     {
         "OBJECTID": 60560,
@@ -12847,8 +11564,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44855",
         "LON": "-104.61519",
         "ONSTREET": "Smith St",
-        "ATSTREET": "12th Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "12th Ave (SB)"
     },
     {
         "OBJECTID": 60561,
@@ -12857,8 +11573,7 @@ const transitStops: Stop[] = [
         "LAT": "50.450325",
         "LON": "-104.61239",
         "ONSTREET": "11th Ave",
-        "ATSTREET": "Cornwall St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Cornwall St (EB)"
     },
     {
         "OBJECTID": 60562,
@@ -12867,8 +11582,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45038",
         "LON": "-104.61347",
         "ONSTREET": "11th Ave",
-        "ATSTREET": "Lorne St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Lorne St (WB)"
     },
     {
         "OBJECTID": 60563,
@@ -12877,8 +11591,7 @@ const transitStops: Stop[] = [
         "LAT": "50.447218",
         "LON": "-104.610621",
         "ONSTREET": "Victoria Ave",
-        "ATSTREET": "Scarth St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Scarth St (WB)"
     },
     {
         "OBJECTID": 60564,
@@ -12887,8 +11600,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44318",
         "LON": "-104.53033",
         "ONSTREET": "Willow Rd",
-        "ATSTREET": "Quance St (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Quance St (SB)"
     },
     {
         "OBJECTID": 60565,
@@ -12897,8 +11609,7 @@ const transitStops: Stop[] = [
         "LAT": "50.475028",
         "LON": "-104.682331",
         "ONSTREET": "1st Ave N",
-        "ATSTREET": "Dorothy St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Dorothy St (EB)"
     },
     {
         "OBJECTID": 60566,
@@ -12907,8 +11618,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42437",
         "LON": "-104.59515",
         "ONSTREET": "Wascana Pkwy",
-        "ATSTREET": "Lakeshore Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Lakeshore Dr (NB)"
     },
     {
         "OBJECTID": 60567,
@@ -12917,8 +11627,7 @@ const transitStops: Stop[] = [
         "LAT": "50.48439",
         "LON": "-104.615009",
         "ONSTREET": "9th Ave N",
-        "ATSTREET": "Hesse Bay (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Hesse Bay (WB)"
     },
     {
         "OBJECTID": 60568,
@@ -12927,8 +11636,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41752",
         "LON": "-104.65464",
         "ONSTREET": "5200 Block Parliament Ave (WB)",
-        "ATSTREET": "",
-        "DIRECTION": "WB"
+        "ATSTREET": ""
     },
     {
         "OBJECTID": 60569,
@@ -12937,8 +11645,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41707",
         "LON": "-104.65928",
         "ONSTREET": "James Hill Rd",
-        "ATSTREET": "Parliament Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Parliament Ave (SB)"
     },
     {
         "OBJECTID": 60570,
@@ -12947,8 +11654,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41505",
         "LON": "-104.65958",
         "ONSTREET": "James Hill Rd",
-        "ATSTREET": "Tutor Way (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Tutor Way (SB)"
     },
     {
         "OBJECTID": 60571,
@@ -12957,8 +11663,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41134",
         "LON": "-104.659638",
         "ONSTREET": "James Hill Rd",
-        "ATSTREET": "Jim Cairns Blvd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Jim Cairns Blvd (SB)"
     },
     {
         "OBJECTID": 60572,
@@ -12967,8 +11672,7 @@ const transitStops: Stop[] = [
         "LAT": "50.408891",
         "LON": "-104.659659",
         "ONSTREET": "James Hill Rd",
-        "ATSTREET": "Campling Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Campling Ave (SB)"
     },
     {
         "OBJECTID": 60573,
@@ -12977,8 +11681,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40489",
         "LON": "-104.66033",
         "ONSTREET": "James Hill Rd",
-        "ATSTREET": "Gordon Rd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Gordon Rd (SB)"
     },
     {
         "OBJECTID": 60574,
@@ -12987,8 +11690,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40107",
         "LON": "-104.65999",
         "ONSTREET": "James Hill Rd",
-        "ATSTREET": "Pearsal Cr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Pearsal Cr (SB)"
     },
     {
         "OBJECTID": 60575,
@@ -12997,8 +11699,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40078",
         "LON": "-104.655771",
         "ONSTREET": "James Hill Rd",
-        "ATSTREET": "Cornell Gate (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Cornell Gate (EB)"
     },
     {
         "OBJECTID": 60576,
@@ -13007,8 +11708,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40096",
         "LON": "-104.65069",
         "ONSTREET": "James Hill Rd",
-        "ATSTREET": "Padwick Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Padwick Rd (EB)"
     },
     {
         "OBJECTID": 60577,
@@ -13017,8 +11717,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40717",
         "LON": "-104.66018",
         "ONSTREET": "James Hill Rd",
-        "ATSTREET": "Aerodrome Rd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Aerodrome Rd (SB)"
     },
     {
         "OBJECTID": 60578,
@@ -13027,8 +11726,7 @@ const transitStops: Stop[] = [
         "LAT": "50.50633",
         "LON": "-104.64346",
         "ONSTREET": "Diefenbaker Dr",
-        "ATSTREET": "Armour Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Armour Rd (EB)"
     },
     {
         "OBJECTID": 60579,
@@ -13037,8 +11735,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40727",
         "LON": "-104.648192",
         "ONSTREET": "Harvard Way",
-        "ATSTREET": "Grasslands Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Grasslands Dr (NB)"
     },
     {
         "OBJECTID": 60580,
@@ -13047,8 +11744,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40535",
         "LON": "-104.65143",
         "ONSTREET": "Gordon Rd",
-        "ATSTREET": "Harbour Landing Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Harbour Landing Dr (EB)"
     },
     {
         "OBJECTID": 60581,
@@ -13057,8 +11753,7 @@ const transitStops: Stop[] = [
         "LAT": "50.429077",
         "LON": "-104.602725",
         "ONSTREET": "Broad St",
-        "ATSTREET": "Lakeshore Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Lakeshore Dr (SB)"
     },
     {
         "OBJECTID": 60582,
@@ -13067,8 +11762,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49657",
         "LON": "-104.63699",
         "ONSTREET": "Rochdale Blvd",
-        "ATSTREET": "Vanstone St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Vanstone St (EB)"
     },
     {
         "OBJECTID": 60583,
@@ -13077,8 +11771,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4966",
         "LON": "-104.63039",
         "ONSTREET": "Rochdale Blvd",
-        "ATSTREET": "Argyle St N (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Argyle St N (EB)"
     },
     {
         "OBJECTID": 60584,
@@ -13087,8 +11780,7 @@ const transitStops: Stop[] = [
         "LAT": "50.496544",
         "LON": "-104.627658",
         "ONSTREET": "Rochdale Blvd",
-        "ATSTREET": "Elgaard Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Elgaard Dr (EB)"
     },
     {
         "OBJECTID": 60585,
@@ -13097,8 +11789,7 @@ const transitStops: Stop[] = [
         "LAT": "50.496627",
         "LON": "-104.625119",
         "ONSTREET": "Rochdale Blvd",
-        "ATSTREET": "Poley St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Poley St (EB)"
     },
     {
         "OBJECTID": 60586,
@@ -13107,8 +11798,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49803",
         "LON": "-104.62439",
         "ONSTREET": "McEachern Dr",
-        "ATSTREET": "Mazurak Cres (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Mazurak Cres (WB)"
     },
     {
         "OBJECTID": 60587,
@@ -13117,8 +11807,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49682",
         "LON": "-104.62473",
         "ONSTREET": "Rochdale Blvd",
-        "ATSTREET": "McEachern Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "McEachern Dr (WB)"
     },
     {
         "OBJECTID": 60588,
@@ -13127,8 +11816,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49674",
         "LON": "-104.62863",
         "ONSTREET": "Rochdale Blvd",
-        "ATSTREET": "Galloway St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Galloway St (WB)"
     },
     {
         "OBJECTID": 60589,
@@ -13137,8 +11825,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49672",
         "LON": "-104.63184",
         "ONSTREET": "Rochdale Blvd",
-        "ATSTREET": "Argyle St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Argyle St (WB)"
     },
     {
         "OBJECTID": 60590,
@@ -13147,8 +11834,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49666",
         "LON": "-104.63692",
         "ONSTREET": "Rochdale Blvd",
-        "ATSTREET": "Vanstone St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Vanstone St (WB)"
     },
     {
         "OBJECTID": 60591,
@@ -13157,8 +11843,7 @@ const transitStops: Stop[] = [
         "LAT": "50.455075",
         "LON": "-104.534051",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Dove Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Dove Rd (EB)"
     },
     {
         "OBJECTID": 60592,
@@ -13167,8 +11852,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45506",
         "LON": "-104.531302",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Bishop Cr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Bishop Cr (EB)"
     },
     {
         "OBJECTID": 60593,
@@ -13177,8 +11861,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45511",
         "LON": "-104.54",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Brown St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Brown St (EB)"
     },
     {
         "OBJECTID": 60594,
@@ -13187,8 +11870,7 @@ const transitStops: Stop[] = [
         "LAT": "50.46871",
         "LON": "-104.54928",
         "ONSTREET": "Fleet St",
-        "ATSTREET": "Redbear Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Redbear Ave (SB)"
     },
     {
         "OBJECTID": 60595,
@@ -13197,8 +11879,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41726",
         "LON": "-104.64569",
         "ONSTREET": "Parliament Ave",
-        "ATSTREET": "4545 Parliament Ave (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "4545 Parliament Ave (EB)"
     },
     {
         "OBJECTID": 60596,
@@ -13207,8 +11888,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41745",
         "LON": "-104.64616",
         "ONSTREET": "Parliament Ave",
-        "ATSTREET": "4546 Parliament Ave (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "4546 Parliament Ave (WB)"
     },
     {
         "OBJECTID": 60597,
@@ -13217,8 +11897,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41993",
         "LON": "-104.586431",
         "ONSTREET": "University Drive N",
-        "ATSTREET": "Adhum Building (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Adhum Building (EB)"
     },
     {
         "OBJECTID": 60598,
@@ -13227,8 +11906,7 @@ const transitStops: Stop[] = [
         "LAT": "50.43958",
         "LON": "-104.59519",
         "ONSTREET": "Winnipeg St",
-        "ATSTREET": "17th Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "17th Ave (NB)"
     },
     {
         "OBJECTID": 60599,
@@ -13237,8 +11915,7 @@ const transitStops: Stop[] = [
         "LAT": "50.49913",
         "LON": "-104.636281",
         "ONSTREET": "Vanstone St",
-        "ATSTREET": "Big Bear Blvd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Big Bear Blvd (SB)"
     },
     {
         "OBJECTID": 60600,
@@ -13247,8 +11924,7 @@ const transitStops: Stop[] = [
         "LAT": "50.44012",
         "LON": "-104.54939",
         "ONSTREET": "University Park Dr",
-        "ATSTREET": "Arens Rd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Arens Rd (SB)"
     },
     {
         "OBJECTID": 60601,
@@ -13257,8 +11933,7 @@ const transitStops: Stop[] = [
         "LAT": "50.40731",
         "LON": "-104.61065",
         "ONSTREET": "Grant Rd",
-        "ATSTREET": "Elgin Rd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Elgin Rd (SB)"
     },
     {
         "OBJECTID": 60602,
@@ -13267,8 +11942,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42612",
         "LON": "-104.53097",
         "ONSTREET": "Woodhams Dr",
-        "ATSTREET": "Olive Grove (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Olive Grove (EB)"
     },
     {
         "OBJECTID": 60603,
@@ -13277,8 +11951,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42096",
         "LON": "-104.52357",
         "ONSTREET": "Green Apple Dr",
-        "ATSTREET": "Green Bank Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Green Bank Rd (EB)"
     },
     {
         "OBJECTID": 60604,
@@ -13287,8 +11960,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42026",
         "LON": "-104.512575",
         "ONSTREET": "Chuka Blvd",
-        "ATSTREET": "Green Apple Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Green Apple Dr (SB)"
     },
     {
         "OBJECTID": 60605,
@@ -13297,8 +11969,7 @@ const transitStops: Stop[] = [
         "LAT": "50.4185",
         "LON": "-104.51356",
         "ONSTREET": "Chuka Blvd",
-        "ATSTREET": "Green Jewel Blvd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Green Jewel Blvd (SB)"
     },
     {
         "OBJECTID": 60606,
@@ -13307,8 +11978,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41667",
         "LON": "-104.51686",
         "ONSTREET": "Chuka Blvd",
-        "ATSTREET": "Green Falls Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Green Falls Dr (SB)"
     },
     {
         "OBJECTID": 60607,
@@ -13317,8 +11987,7 @@ const transitStops: Stop[] = [
         "LAT": "50.414342",
         "LON": "-104.519915",
         "ONSTREET": "Chuka Blvd",
-        "ATSTREET": "Goldfinch Way (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Goldfinch Way (SB)"
     },
     {
         "OBJECTID": 60608,
@@ -13327,8 +11996,7 @@ const transitStops: Stop[] = [
         "LAT": "50.415",
         "LON": "-104.526731",
         "ONSTREET": "Wascana Gate",
-        "ATSTREET": "Wascana View Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Wascana View Dr (WB)"
     },
     {
         "OBJECTID": 60609,
@@ -13337,8 +12005,7 @@ const transitStops: Stop[] = [
         "LAT": "50.415",
         "LON": "-104.529",
         "ONSTREET": "Wascana Gate",
-        "ATSTREET": "Wascana Gardens Dr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Wascana Gardens Dr (WB)"
     },
     {
         "OBJECTID": 60610,
@@ -13347,8 +12014,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41564",
         "LON": "-104.5311",
         "ONSTREET": "Wascana Circle",
-        "ATSTREET": "Wascana Cove Dr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Wascana Cove Dr (NB)"
     },
     {
         "OBJECTID": 60611,
@@ -13357,8 +12023,7 @@ const transitStops: Stop[] = [
         "LAT": "50.41852",
         "LON": "-104.53126",
         "ONSTREET": "Wascana Circle",
-        "ATSTREET": "Wascana Ridge (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Wascana Ridge (NB)"
     },
     {
         "OBJECTID": 60612,
@@ -13367,8 +12032,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42034",
         "LON": "-104.53269",
         "ONSTREET": "Wascana Circle",
-        "ATSTREET": "Wascana Ridge Pl (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Wascana Ridge Pl (WB)"
     },
     {
         "OBJECTID": 60613,
@@ -13377,8 +12041,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42175",
         "LON": "-104.53564",
         "ONSTREET": "Wascana Circle",
-        "ATSTREET": "Wascana Glen (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Wascana Glen (WB)"
     },
     {
         "OBJECTID": 60614,
@@ -13387,8 +12050,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42216",
         "LON": "-104.540439",
         "ONSTREET": "Wascana Circle",
-        "ATSTREET": "Wascana Highlands (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Wascana Highlands (SB)"
     },
     {
         "OBJECTID": 60615,
@@ -13397,8 +12059,7 @@ const transitStops: Stop[] = [
         "LAT": "50.420747",
         "LON": "-104.520564",
         "ONSTREET": "Green Apple Dr",
-        "ATSTREET": "Green Rose Cr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Green Rose Cr (EB)"
     },
     {
         "OBJECTID": 60616,
@@ -13407,8 +12068,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42066",
         "LON": "-104.516079",
         "ONSTREET": "Green Apple Dr",
-        "ATSTREET": "Green Water Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Green Water Dr (EB)"
     },
     {
         "OBJECTID": 60617,
@@ -13417,8 +12077,7 @@ const transitStops: Stop[] = [
         "LAT": "50.496153",
         "LON": "-104.631645",
         "ONSTREET": "Argyle St",
-        "ATSTREET": "Rochdale Blvd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Rochdale Blvd (SB)"
     },
     {
         "OBJECTID": 60618,
@@ -13427,8 +12086,7 @@ const transitStops: Stop[] = [
         "LAT": "50.491036",
         "LON": "-104.631729",
         "ONSTREET": "Argyle St",
-        "ATSTREET": "Sangster Blvd (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Sangster Blvd (SB)"
     },
     {
         "OBJECTID": 60619,
@@ -13437,8 +12095,7 @@ const transitStops: Stop[] = [
         "LAT": "50.488396",
         "LON": "-104.632099",
         "ONSTREET": "Argyle St",
-        "ATSTREET": "Davin Cr (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Davin Cr (NB)"
     },
     {
         "OBJECTID": 60620,
@@ -13447,8 +12104,7 @@ const transitStops: Stop[] = [
         "LAT": "50.491867",
         "LON": "-104.630632",
         "ONSTREET": "Argyle St",
-        "ATSTREET": "Sangster Blvd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Sangster Blvd (NB)"
     },
     {
         "OBJECTID": 60621,
@@ -13457,8 +12113,7 @@ const transitStops: Stop[] = [
         "LAT": "50.444889",
         "LON": "-104.555483",
         "ONSTREET": "Truesdale Dr",
-        "ATSTREET": "Quance St (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Quance St (NB)"
     },
     {
         "OBJECTID": 60622,
@@ -13467,8 +12122,7 @@ const transitStops: Stop[] = [
         "LAT": "50.423808",
         "LON": "-104.524057",
         "ONSTREET": "Green Bank Rd",
-        "ATSTREET": "Green Pine Gate (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Green Pine Gate (NB)"
     },
     {
         "OBJECTID": 60623,
@@ -13477,8 +12131,7 @@ const transitStops: Stop[] = [
         "LAT": "50.411964",
         "LON": "-104.654065",
         "ONSTREET": "Jim Cairns Blvd",
-        "ATSTREET": "Aviator Cr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Aviator Cr (WB)"
     },
     {
         "OBJECTID": 60624,
@@ -13487,8 +12140,7 @@ const transitStops: Stop[] = [
         "LAT": "50.405193",
         "LON": "-104.659772",
         "ONSTREET": "Gordon Rd",
-        "ATSTREET": "James Hill Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "James Hill Rd (EB)"
     },
     {
         "OBJECTID": 60625,
@@ -13497,8 +12149,7 @@ const transitStops: Stop[] = [
         "LAT": "50.405187",
         "LON": "-104.656363",
         "ONSTREET": "Gordon Rd",
-        "ATSTREET": "Universal Cr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Universal Cr (EB)"
     },
     {
         "OBJECTID": 60626,
@@ -13507,8 +12158,7 @@ const transitStops: Stop[] = [
         "LAT": "50.407561",
         "LON": "-104.651547",
         "ONSTREET": "Grasslands Dr",
-        "ATSTREET": "Harbour Landing Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Harbour Landing Dr (EB)"
     },
     {
         "OBJECTID": 60627,
@@ -13517,8 +12167,7 @@ const transitStops: Stop[] = [
         "LAT": "50.407265",
         "LON": "-104.6483",
         "ONSTREET": "Harvard Way",
-        "ATSTREET": "Grasslands Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Grasslands Dr (SB)"
     },
     {
         "OBJECTID": 60628,
@@ -13527,8 +12176,7 @@ const transitStops: Stop[] = [
         "LAT": "50.427591",
         "LON": "-104.533819",
         "ONSTREET": "Buckingham Dr",
-        "ATSTREET": "Woodhams Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Woodhams Dr (EB)"
     },
     {
         "OBJECTID": 60629,
@@ -13537,8 +12185,7 @@ const transitStops: Stop[] = [
         "LAT": "50.429003",
         "LON": "-104.530467",
         "ONSTREET": "Buckingham Dr",
-        "ATSTREET": "Essex Cr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Essex Cr (EB)"
     },
     {
         "OBJECTID": 60630,
@@ -13547,8 +12194,7 @@ const transitStops: Stop[] = [
         "LAT": "50.429377",
         "LON": "-104.526601",
         "ONSTREET": "Buckingham Dr",
-        "ATSTREET": "Windsor Park Rd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Windsor Park Rd (WB)"
     },
     {
         "OBJECTID": 60631,
@@ -13557,8 +12203,7 @@ const transitStops: Stop[] = [
         "LAT": "50.429237",
         "LON": "-104.530545",
         "ONSTREET": "Buckingham Dr",
-        "ATSTREET": "Essex Cr (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Essex Cr (WB)"
     },
     {
         "OBJECTID": 60632,
@@ -13567,8 +12212,7 @@ const transitStops: Stop[] = [
         "LAT": "50.481412",
         "LON": "-104.6957",
         "ONSTREET": "Doiron Rd",
-        "ATSTREET": "Sherwood Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Sherwood Dr (SB)"
     },
     {
         "OBJECTID": 60633,
@@ -13577,8 +12221,7 @@ const transitStops: Stop[] = [
         "LAT": "50.478105",
         "LON": "-104.696223",
         "ONSTREET": "Doiron Rd",
-        "ATSTREET": "Kestral Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Kestral Dr (SB)"
     },
     {
         "OBJECTID": 60634,
@@ -13587,8 +12230,7 @@ const transitStops: Stop[] = [
         "LAT": "50.474996",
         "LON": "-104.687503",
         "ONSTREET": "1st Ave N",
-        "ATSTREET": "Courtney St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Courtney St (EB)"
     },
     {
         "OBJECTID": 60635,
@@ -13597,8 +12239,7 @@ const transitStops: Stop[] = [
         "LAT": "50.475089",
         "LON": "-104.694657",
         "ONSTREET": "Gordon Staseson Blvd",
-        "ATSTREET": "Prairie View Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Prairie View Dr (EB)"
     },
     {
         "OBJECTID": 60636,
@@ -13607,8 +12248,7 @@ const transitStops: Stop[] = [
         "LAT": "50.47501",
         "LON": "-104.690672",
         "ONSTREET": "Gordon Staseson Blvd",
-        "ATSTREET": "Brookview Dr (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Brookview Dr (EB)"
     },
     {
         "OBJECTID": 60637,
@@ -13617,8 +12257,7 @@ const transitStops: Stop[] = [
         "LAT": "50.425938",
         "LON": "-104.523545",
         "ONSTREET": "Primrose Green Dr",
-        "ATSTREET": "Green Bank Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Green Bank Rd (EB)"
     },
     {
         "OBJECTID": 60638,
@@ -13627,8 +12266,7 @@ const transitStops: Stop[] = [
         "LAT": "50.425941",
         "LON": "-104.519871",
         "ONSTREET": "Primrose Green Dr",
-        "ATSTREET": "Green Brook Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Green Brook Rd (EB)"
     },
     {
         "OBJECTID": 60639,
@@ -13637,8 +12275,7 @@ const transitStops: Stop[] = [
         "LAT": "50.425867",
         "LON": "-104.51185",
         "ONSTREET": "Primrose Green Dr",
-        "ATSTREET": "Chuka Blvd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Chuka Blvd (EB)"
     },
     {
         "OBJECTID": 60640,
@@ -13647,8 +12284,7 @@ const transitStops: Stop[] = [
         "LAT": "50.454943",
         "LON": "-104.592224",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Atkinson St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Atkinson St (EB)"
     },
     {
         "OBJECTID": 60641,
@@ -13657,8 +12293,7 @@ const transitStops: Stop[] = [
         "LAT": "50.455049",
         "LON": "-104.587787",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Edgar St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Edgar St (EB)"
     },
     {
         "OBJECTID": 60642,
@@ -13667,8 +12302,7 @@ const transitStops: Stop[] = [
         "LAT": "50.455066",
         "LON": "-104.583236",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "McDonald St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "McDonald St (EB)"
     },
     {
         "OBJECTID": 60643,
@@ -13677,8 +12311,7 @@ const transitStops: Stop[] = [
         "LAT": "50.455071",
         "LON": "-104.577669",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Fleury St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Fleury St (EB)"
     },
     {
         "OBJECTID": 60644,
@@ -13687,8 +12320,7 @@ const transitStops: Stop[] = [
         "LAT": "50.455243",
         "LON": "-104.572725",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Park St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Park St (WB)"
     },
     {
         "OBJECTID": 60645,
@@ -13697,8 +12329,7 @@ const transitStops: Stop[] = [
         "LAT": "50.455244",
         "LON": "-104.577937",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Fleury St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Fleury St (WB)"
     },
     {
         "OBJECTID": 60646,
@@ -13707,8 +12338,7 @@ const transitStops: Stop[] = [
         "LAT": "50.455242",
         "LON": "-104.582429",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "McAra St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "McAra St (WB)"
     },
     {
         "OBJECTID": 60647,
@@ -13717,8 +12347,7 @@ const transitStops: Stop[] = [
         "LAT": "50.455259",
         "LON": "-104.588229",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Edgar St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Edgar St (WB)"
     },
     {
         "OBJECTID": 60648,
@@ -13727,8 +12356,7 @@ const transitStops: Stop[] = [
         "LAT": "50.405114",
         "LON": "-104.625315",
         "ONSTREET": "Gordon Rd",
-        "ATSTREET": "Lockwood Rd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Lockwood Rd (WB)"
     },
     {
         "OBJECTID": 60649,
@@ -13737,8 +12365,7 @@ const transitStops: Stop[] = [
         "LAT": "50.425881",
         "LON": "-104.507031",
         "ONSTREET": "Primrose Green Dr",
-        "ATSTREET": "Green Lily Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Green Lily Rd (EB)"
     },
     {
         "OBJECTID": 60650,
@@ -13747,8 +12374,7 @@ const transitStops: Stop[] = [
         "LAT": "50.425868",
         "LON": "-104.503779",
         "ONSTREET": "Primrose Green Dr",
-        "ATSTREET": "Green Turtle Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Green Turtle Rd (EB)"
     },
     {
         "OBJECTID": 60651,
@@ -13757,8 +12383,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42142",
         "LON": "-104.503773",
         "ONSTREET": "Green Apple Dr",
-        "ATSTREET": "Green Turtle Rd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Green Turtle Rd (WB)"
     },
     {
         "OBJECTID": 60652,
@@ -13767,8 +12392,7 @@ const transitStops: Stop[] = [
         "LAT": "50.42122",
         "LON": "-104.507274",
         "ONSTREET": "Green Apple Dr",
-        "ATSTREET": "Green Lily Rd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Green Lily Rd (WB)"
     },
     {
         "OBJECTID": 60653,
@@ -13777,8 +12401,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45259",
         "LON": "-104.698593",
         "ONSTREET": "Canola Ave",
-        "ATSTREET": "West Market St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "West Market St (WB)"
     },
     {
         "OBJECTID": 60654,
@@ -13787,8 +12410,7 @@ const transitStops: Stop[] = [
         "LAT": "50.452583",
         "LON": "-104.701261",
         "ONSTREET": "Canola Ave",
-        "ATSTREET": "Alfalfa St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Alfalfa St (WB)"
     },
     {
         "OBJECTID": 60655,
@@ -13797,8 +12419,7 @@ const transitStops: Stop[] = [
         "LAT": "50.454466",
         "LON": "-104.703659",
         "ONSTREET": "Horizons Way",
-        "ATSTREET": "Dewdney Ave (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Dewdney Ave (NB)"
     },
     {
         "OBJECTID": 60656,
@@ -13807,8 +12428,7 @@ const transitStops: Stop[] = [
         "LAT": "50.45509",
         "LON": "-104.686583",
         "ONSTREET": "Dewdney Ave",
-        "ATSTREET": "Courtney St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Courtney St (EB)"
     },
     {
         "OBJECTID": 60657,
@@ -13817,8 +12437,7 @@ const transitStops: Stop[] = [
         "LAT": "50.445554",
         "LON": "-104.645011",
         "ONSTREET": "13th Ave",
-        "ATSTREET": "York St (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "York St (WB)"
     },
     {
         "OBJECTID": 60658,
@@ -13827,8 +12446,7 @@ const transitStops: Stop[] = [
         "LAT": "50.445447",
         "LON": "-104.644113",
         "ONSTREET": "13th Ave",
-        "ATSTREET": "Alexandra St (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Alexandra St (EB)"
     },
     {
         "OBJECTID": 60659,
@@ -13837,8 +12455,7 @@ const transitStops: Stop[] = [
         "LAT": "50.442697",
         "LON": "-104.651977",
         "ONSTREET": "Sandra Schmirler Way (NB)",
-        "ATSTREET": "",
-        "DIRECTION": "NB"
+        "ATSTREET": ""
     },
     {
         "OBJECTID": 60660,
@@ -13847,8 +12464,7 @@ const transitStops: Stop[] = [
         "LAT": "50.442611",
         "LON": "-104.652091",
         "ONSTREET": "Sandra Schmirler Way (SB)",
-        "ATSTREET": "",
-        "DIRECTION": "SB"
+        "ATSTREET": ""
     },
     {
         "OBJECTID": 60661,
@@ -13857,8 +12473,7 @@ const transitStops: Stop[] = [
         "LAT": "50.440287",
         "LON": "-104.651852",
         "ONSTREET": "Chipmunk Dr",
-        "ATSTREET": "Tiger Moth Lane (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Tiger Moth Lane (SB)"
     },
     {
         "OBJECTID": 60662,
@@ -13867,8 +12482,7 @@ const transitStops: Stop[] = [
         "LAT": "50.439978",
         "LON": "-104.651718",
         "ONSTREET": "Chipmunk Dr",
-        "ATSTREET": "Tiger Moth Lane (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Tiger Moth Lane (NB)"
     },
     {
         "OBJECTID": 60663,
@@ -13877,8 +12491,7 @@ const transitStops: Stop[] = [
         "LAT": "50.438223",
         "LON": "-104.650466",
         "ONSTREET": "Airport Rd",
-        "ATSTREET": "Chipmunk Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Chipmunk Dr (SB)"
     },
     {
         "OBJECTID": 60664,
@@ -13887,8 +12500,7 @@ const transitStops: Stop[] = [
         "LAT": "50.438154",
         "LON": "-104.650324",
         "ONSTREET": "Chipmunk Dr",
-        "ATSTREET": "Airport Rd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Airport Rd (NB)"
     },
     {
         "OBJECTID": 60665,
@@ -13897,8 +12509,7 @@ const transitStops: Stop[] = [
         "LAT": "50.432908",
         "LON": "-104.654582",
         "ONSTREET": "Airport",
-        "ATSTREET": "",
-        "DIRECTION": null
+        "ATSTREET": ""
     },
     {
         "OBJECTID": 60666,
@@ -13907,8 +12518,7 @@ const transitStops: Stop[] = [
         "LAT": "50.435976",
         "LON": "-104.652584",
         "ONSTREET": "Airport Rd",
-        "ATSTREET": "Buffalo Trail (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Buffalo Trail (SB)"
     },
     {
         "OBJECTID": 60667,
@@ -13917,8 +12527,7 @@ const transitStops: Stop[] = [
         "LAT": "50.436046",
         "LON": "-104.65244",
         "ONSTREET": "Airport Rd",
-        "ATSTREET": "Buffalo Trail (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Buffalo Trail (NB)"
     },
     {
         "OBJECTID": 60668,
@@ -13927,8 +12536,7 @@ const transitStops: Stop[] = [
         "LAT": "50.415735",
         "LON": "-104.592141",
         "ONSTREET": "University Drive South",
-        "ATSTREET": "Buffaloberry Way (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Buffaloberry Way (WB)"
     },
     {
         "OBJECTID": 60669,
@@ -13937,8 +12545,7 @@ const transitStops: Stop[] = [
         "LAT": "50.416819",
         "LON": "-104.593787",
         "ONSTREET": "University Drive West",
-        "ATSTREET": "Buffaloberry Way (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Buffaloberry Way (NB)"
     },
     {
         "OBJECTID": 60670,
@@ -13947,8 +12554,7 @@ const transitStops: Stop[] = [
         "LAT": "50.446518",
         "LON": "-104.511393",
         "ONSTREET": "Aurora Blvd",
-        "ATSTREET": "Victoria Ave (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Victoria Ave (SB)"
     },
     {
         "OBJECTID": 60671,
@@ -13957,8 +12563,7 @@ const transitStops: Stop[] = [
         "LAT": "50.444897",
         "LON": "-104.508635",
         "ONSTREET": "Anaquod Rd",
-        "ATSTREET": "Aurora Blvd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Aurora Blvd (EB)"
     },
     {
         "OBJECTID": 60672,
@@ -13967,8 +12572,7 @@ const transitStops: Stop[] = [
         "LAT": "50.442874",
         "LON": "-104.508922",
         "ONSTREET": "Optimist Dr",
-        "ATSTREET": "Aurora Blvd (WB)",
-        "DIRECTION": "WB"
+        "ATSTREET": "Aurora Blvd (WB)"
     },
     {
         "OBJECTID": 60673,
@@ -13977,8 +12581,7 @@ const transitStops: Stop[] = [
         "LAT": "50.445183",
         "LON": "-104.511178",
         "ONSTREET": "Aurora Blvd",
-        "ATSTREET": "Anaquod Rd (NB)",
-        "DIRECTION": "NB"
+        "ATSTREET": "Anaquod Rd (NB)"
     },
     {
         "OBJECTID": 60674,
@@ -13987,8 +12590,7 @@ const transitStops: Stop[] = [
         "LAT": "50.443857",
         "LON": "-104.751495",
         "ONSTREET": "Fleming Rd",
-        "ATSTREET": "Loblaw's (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Loblaw's (EB)"
     },
     {
         "OBJECTID": 60675,
@@ -13997,8 +12599,7 @@ const transitStops: Stop[] = [
         "LAT": "50.429275",
         "LON": "-104.518187",
         "ONSTREET": "Buckingham Dr",
-        "ATSTREET": "Green Stone Rd (EB)",
-        "DIRECTION": "EB"
+        "ATSTREET": "Green Stone Rd (EB)"
     },
     {
         "OBJECTID": 60676,
@@ -14007,8 +12608,7 @@ const transitStops: Stop[] = [
         "LAT": "50.429152",
         "LON": "-104.512485",
         "ONSTREET": "Chuka Blvd",
-        "ATSTREET": "Buckingham Dr (SB)",
-        "DIRECTION": "SB"
+        "ATSTREET": "Buckingham Dr (SB)"
     }
 ];
 
