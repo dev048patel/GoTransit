@@ -572,9 +572,14 @@ export class RoutePlanningService {
      * Generate walkable shortcut options from transfer routes.
      *
      * When a transfer route's first bus segment is very short (≤5 min), the user
-     * can skip it entirely and walk directly to the second segment's boarding stop
-     * for a simpler, no-transfer trip.  This is the "optimized" suggestion when
-     * the boarding stop for the main bus is reachable on foot from the origin.
+     * can skip it entirely and walk to the second bus instead, for a simpler,
+     * no-transfer trip.  This is the "optimized" suggestion when the main bus is
+     * reachable on foot from the origin.
+     *
+     * The transfer's boarding stop is just where the first bus happens to meet the second,
+     * not necessarily the best place to walk to: the second bus often passes closer to the
+     * origin first. So every stop on that route within walking distance is considered, and
+     * the one with the shortest walk + ride to the same get-off stop wins.
      */
     private generateWalkableShortcuts(
         origin: Coordinates,
@@ -584,6 +589,7 @@ export class RoutePlanningService {
     ): TripOption[] {
         const shortcuts: TripOption[] = [];
         const seenRoutes = new Set<string>();
+        let walkableStops: NearbyStop[] | null = null; // computed on first use
 
         for (const opt of transferOptions) {
             if (opt.segments.length !== 2) continue;
@@ -603,6 +609,25 @@ export class RoutePlanningService {
             );
             if (walkToBoard > this.WALKING_DISTANCE_EXPANDED) continue; // too far
 
+            // Best stop on this route to walk to (includes the transfer's boarding stop itself)
+            const alightStop = transitStops.find(s => s.STOP_ID === seg2.toStopId);
+            if (alightStop) {
+                walkableStops ??= this.findNearbyStops(origin, this.WALKING_DISTANCE_EXPANDED, Infinity);
+                const routeStops = walkableStops.filter(s => getRoutesForStop(s.STOP_ID).has(seg2.routeNum));
+                const alight: NearbyStop = {
+                    ...alightStop,
+                    distance: this.calculateDistance({ lat: parseFloat(alightStop.LAT), lng: parseFloat(alightStop.LON) }, destination)
+                };
+                const best = this.findDirectRoutes(origin, destination, routeStops, [alight])
+                    .find(o => o.segments[0].routeNum === seg2.routeNum);
+                if (best) {
+                    seenRoutes.add(seg2.routeNum);
+                    shortcuts.push(best);
+                    continue;
+                }
+            }
+
+            // Fallback: walk to the transfer's boarding stop as-is
             const walkFromAlight = this.calculateDistance(
                 { lat: seg2.toStopLat, lng: seg2.toStopLng },
                 destination
