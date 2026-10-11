@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="840" height="228" viewBox="0 0 840 228" role="img" aria-label="Transit Regina — live buses for Regina, SK">
+<title>Transit Regina — live buses for Regina, SK</title>
+<style>
+text{font-family:ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace}
+.cap{font-size:9px;letter-spacing:1.4px;font-weight:700}
+.dim{fill:#7a818c}
+.blink{animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.pulse{animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.25}}
+.run{animation:run 7s linear infinite}
+@keyframes run{from{transform:translateX(0)}to{transform:translateX(var(--d,300px))}}
+.flow{animation:flow 2.6s linear infinite}
+@keyframes flow{0%{transform:translateX(0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateX(var(--d,60px));opacity:0}}
+.rise{transform-box:fill-box;transform-origin:left;animation:rise 3s cubic-bezier(.3,.7,.2,1) infinite}
+@keyframes rise{0%{transform:scaleX(.1)}45%,85%{transform:scaleX(1)}100%{transform:scaleX(.1)}}
+@media (prefers-reduced-motion: reduce){*{animation:none!important}}
+</style>
+<defs>
+  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6"/></filter>
+  <linearGradient id="sheen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".035"/><stop offset=".35" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+</defs>
+<rect width="840" height="228" rx="12" fill="#0b0c0e"/><rect x="1" y="1" width="838" height="226" rx="11" fill="#101215" stroke="#23272e"/><rect x="1" y="1" width="838" height="226" rx="11" fill="url(#sheen)"/><rect x="1" y="24" width="2" height="180" fill="#f5a524" opacity=".55"/>
+<text x="26" y="30" class="cap dim">STUDENT-BUILT · REAL-TIME TRANSIT · REGINA, SK</text><text x="26" y="68" font-size="26" font-weight="800" fill="#e8e8e8">Transit Regina <tspan fill="#7a818c">—</tspan> <tspan fill="#f5a524" filter="url(#glow)">live buses for Regina, SK</tspan></text><text x="26" y="96" font-size="11" class="dim">two University of Regina students took a step to change how this city rides the bus.</text><text x="26" y="112" font-size="11" class="dim">see where your bus really is, leave at the right minute, never guess at a transfer.</text><text x="26" y="128" font-size="11" fill="#e8e8e8" font-weight="700">transit, used to your advantage.</text><rect x="26" y="148" width="171.8" height="14" rx="3" fill="#7a818c" fill-opacity=".12" stroke="#7a818c" stroke-opacity=".8"/><text x="33" y="158" font-size="9.5" font-weight="700" fill="#7a818c" letter-spacing=".3">▸ transitregina.ca is live</text><rect x="205.79399999999998" y="148" width="171.8" height="14" rx="3" fill="#7a818c" fill-opacity=".12" stroke="#7a818c" stroke-opacity=".8"/><text x="212.79399999999998" y="158" font-size="9.5" font-weight="700" fill="#7a818c" letter-spacing=".3">▸ bus positions every 1.5s</text><rect x="385.58799999999997" y="148" width="165.7" height="14" rx="3" fill="#7a818c" fill-opacity=".12" stroke="#7a818c" stroke-opacity=".8"/><text x="392.58799999999997" y="158" font-size="9.5" font-weight="700" fill="#7a818c" letter-spacing=".3">▸ 22 routes · 1,400 stops</text><line x1="26" y1="200" x2="814" y2="200" stroke="#3a3f47" stroke-width="2" stroke-dasharray="2 6" stroke-linecap="round"/><circle cx="26" cy="200" r="4" fill="#101215" stroke="#f5a524" stroke-width="1.6"/><circle cx="190" cy="200" r="4" fill="#101215" stroke="#3a3f47" stroke-width="1.6"/><circle cx="360" cy="200" r="4" fill="#101215" stroke="#3a3f47" stroke-width="1.6"/><circle cx="540" cy="200" r="4" fill="#101215" stroke="#3a3f47" stroke-width="1.6"/><circle cx="700" cy="200" r="4" fill="#101215" stroke="#3a3f47" stroke-width="1.6"/><circle cx="814" cy="200" r="4" fill="#101215" stroke="#f5a524" stroke-width="1.6"/><g class="run" style="--d:760px"><rect x="20" y="192" width="26" height="14" rx="4" fill="#f5a524"/><rect x="24" y="195" width="5" height="4" rx="1" fill="#101215"/><rect x="31" y="195" width="5" height="4" rx="1" fill="#101215"/><rect x="38" y="195" width="5" height="4" rx="1" fill="#101215"/></g><rect x="800" y="166" width="7" height="13" fill="#f5a524" class="blink"/>
+</svg>
