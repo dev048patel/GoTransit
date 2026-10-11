@@ -17,4 +17,6 @@ export interface TransferCandidate {
     walkDist: number;   // meters to walk between get-off and board stops (0 = same stop)
     detour: number;     // penalty-weighted score used for ranking
     selectedOriginStop: NearbyStop; // which origin stop was valid for leg 1
+    leg1Distance: number; // metres the first bus travels (origin stop → get-off stop)
+    leg2Distance: number; // metres the second bus travels (board stop → destination stop)
 }

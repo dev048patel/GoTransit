@@ -4,16 +4,18 @@
  * - Dotted Polyline: walking from GPS origin → first bus stop
  * - Solid Polyline: bus route along ACTUAL road shape (only the relevant portion)
  * - Dotted Polyline: walking from last bus stop → destination
- * - Markers: user location (blue pulse), bus stops, destination
- * - Real-time GPS tracking via watchPosition
+ * - Markers: bus stops, destination (the user's location is drawn by UserLocationMarker)
+ * - Highlights the bus leg the rider is currently on (useTripProgressController)
  */
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { Marker, Polyline, Circle } from '@react-google-maps/api';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Marker, Polyline } from '@react-google-maps/api';
 import transitShapesData from '../../../models/data/transitShapes.json';
 import transitColors from '../../../models/data/transitColors';
 import { RouteTrackingOverlayProps } from '../../../models/transit/RouteTrackingOverlayProps';
 import { DetourService } from '../../../models/services/DetourService';
 import { ActiveDetour } from '../../../models/transit/Detour';
+import { useTripProgressController } from '../../../controllers/useTripProgressController';
+import { useGpsFixController } from '../../../controllers/useGpsFixController';
 
 /** Squared distance between two points (no need for sqrt for comparison). */
 function distSq(a: { lat: number; lng: number }, b: { lat: number; lng: number }): number {
@@ -159,11 +161,11 @@ function extractShapeSegment(
 }
 
 export default function RouteTrackingOverlay({ tripOption }: RouteTrackingOverlayProps) {
-    const [userPos, setUserPos] = useState<{ lat: number; lng: number }>({
-        lat: tripOption.originLat,
-        lng: tripOption.originLng
-    });
-    const watchIdRef = useRef<number | null>(null);
+    // Same GPS fix the character marker shows; this overlay draws no location dot of its own
+    const { fix } = useGpsFixController();
+    const userLocation = useMemo(() => fix && { lat: fix.lat, lng: fix.lng }, [fix]);
+    const userPos = userLocation ?? { lat: tripOption.originLat, lng: tripOption.originLng };
+    const { activeSegmentIndex } = useTripProgressController(tripOption, userLocation);
     const [activeDetours, setActiveDetours] = useState<ActiveDetour[]>([]);
 
     // Fetch detours for each unique route in this trip
@@ -176,25 +178,6 @@ export default function RouteTrackingOverlay({ tripOption }: RouteTrackingOverla
         });
         return () => { cancelled = true; };
     }, [tripOption]);
-
-    // Real-time GPS tracking
-    useEffect(() => {
-        if (!navigator.geolocation) return;
-
-        watchIdRef.current = navigator.geolocation.watchPosition(
-            (pos) => {
-                setUserPos({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-            },
-            (err) => console.error('[RouteTrackingOverlay] GPS error:', err),
-            { enableHighAccuracy: true, maximumAge: 3000, timeout: 10000 }
-        );
-
-        return () => {
-            if (watchIdRef.current !== null) {
-                navigator.geolocation.clearWatch(watchIdRef.current);
-            }
-        };
-    }, []);
 
     const firstSeg = tripOption.segments[0];
     const lastSeg = tripOption.segments[tripOption.segments.length - 1];
@@ -229,31 +212,6 @@ export default function RouteTrackingOverlay({ tripOption }: RouteTrackingOverla
 
     return (
         <>
-            {/* User location – blue pulsing dot */}
-            <Circle
-                center={userPos}
-                radius={12}
-                options={{
-                    fillColor: '#4285F4',
-                    fillOpacity: 1,
-                    strokeColor: '#ffffff',
-                    strokeWeight: 3,
-                    zIndex: 300
-                }}
-            />
-            <Circle
-                center={userPos}
-                radius={40}
-                options={{
-                    fillColor: '#4285F4',
-                    fillOpacity: 0.15,
-                    strokeColor: '#4285F4',
-                    strokeOpacity: 0.3,
-                    strokeWeight: 1,
-                    zIndex: 299
-                }}
-            />
-
             {/* Walking to first bus stop (dotted line) */}
             <Polyline
                 path={walkToStopPath}
@@ -276,19 +234,24 @@ export default function RouteTrackingOverlay({ tripOption }: RouteTrackingOverla
                 }}
             />
 
-            {/* Bus route segments — only the relevant portion following the road */}
-            {busSegmentPaths.map((path, i) => (
-                <Polyline
-                    key={`bus-seg-${i}`}
-                    path={path}
-                    options={{
-                        strokeColor: getRouteColor(tripOption.segments[i]?.routeNum),
-                        strokeOpacity: 0.9,
-                        strokeWeight: 6,
-                        zIndex: 201
-                    }}
-                />
-            ))}
+            {/* Bus route segments — only the relevant portion following the road.
+                The leg the rider is on now is drawn on top at full strength: legs often overlap
+                (e.g. out to a terminus and back), and the later leg would otherwise cover it. */}
+            {busSegmentPaths.map((path, i) => {
+                const isActive = i === activeSegmentIndex;
+                return (
+                    <Polyline
+                        key={`bus-seg-${i}`}
+                        path={path}
+                        options={{
+                            strokeColor: getRouteColor(tripOption.segments[i]?.routeNum),
+                            strokeOpacity: isActive ? 0.95 : 0.45,
+                            strokeWeight: isActive ? 7 : 5,
+                            zIndex: isActive ? 205 : 201
+                        }}
+                    />
+                );
+            })}
 
             {/* Active detour polylines — drawn on top of route segments so users see the
                 actual path the bus is taking when their route is detoured */}
