@@ -1,5 +1,5 @@
 /**
- * ConnectPage.tsx — GoTransit Regina
+ * ConnectPage.tsx — Transit Regina
  *
  * Developer showcase page accessible at /connect.
  * Shows each team member's name, role, photo, and LinkedIn link
@@ -108,7 +108,7 @@ export default function ConnectPage() {
                         Meet the <span style={{ color: '#003DA5' }}>Team</span>
                     </h1>
                     <p className="text-base sm:text-xl max-w-xl mx-auto" style={{ color: '#64748b' }}>
-                        We're students at the University of Regina who built GoTransit to make commuting less painful.
+                        We're students at the University of Regina who built Transit Regina to make commuting less painful.
                         Reach out — we'd love to connect.
                     </p>
                 </motion.div>
@@ -173,7 +173,7 @@ export default function ConnectPage() {
 
                 {/* Footer note */}
                 <p className="text-center text-sm mt-14" style={{ color: '#94a3b8' }}>
-                    © 2026 GoTransit Regina · Built at the University of Regina
+                    © 2026 Transit Regina · Built at the University of Regina
                 </p>
             </div>
         </div>

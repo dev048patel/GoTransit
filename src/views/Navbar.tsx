@@ -45,7 +45,7 @@ export default function Navbar({ onPlaceSelect, onClearPlace, routes, selectedRo
                 <Link to="/" style={{ textDecoration: 'none', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
                     <img
                         src={logo}
-                        alt="GoTransit Regina"
+                        alt="Transit Regina"
                         style={{
                             width: '36px',
                             height: '36px',

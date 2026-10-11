@@ -1,7 +1,7 @@
 /**
- * ComparisonTable.tsx — GoTransit Regina
+ * ComparisonTable.tsx — Transit Regina
  *
- * "Why GoTransit Regina?" section — bold VS battle card design.
+ * "Why Transit Regina?" section — bold VS battle card design.
  *
  * Layout: two large glass panels side-by-side with a glowing VS badge
  * in the centre. Each panel lists what you get (or don't get). No table,
@@ -17,7 +17,7 @@ interface Feature {
     icon: React.FC<{ size?: number; className?: string }>;
 }
 
-const goTransitFeatures: Feature[] = [
+const transitReginaFeatures: Feature[] = [
     { label: 'Live bus positions on your phone', icon: Navigation },
     { label: 'Real-time arrival estimates', icon: Wifi },
     { label: 'Click any stop for live arrivals', icon: MapPin },
@@ -49,7 +49,7 @@ export default function ComparisonTable() {
                     transition={{ duration: 0.6 }}
                 >
                     <h2 className="text-3xl sm:text-5xl font-bold mb-5" style={{ color: '#0f172a' }}>
-                        Why <span style={{ color: '#003DA5' }}>GoTransit</span> Regina?
+                        Why <span style={{ color: '#003DA5' }}>Transit</span> Regina?
                     </h2>
                     <p className="text-xl max-w-xl mx-auto" style={{ color: '#64748b' }}>
                         Purpose-built for Regina riders, not a generic transit clone
@@ -111,7 +111,7 @@ export default function ComparisonTable() {
                         </motion.div>
                     </div>
 
-                    {/* Right — GoTransit Regina (brand blue glow) */}
+                    {/* Right — Transit Regina (brand blue glow) */}
                     <motion.div
                         className="rounded-3xl p-8 md:p-10 flex flex-col relative overflow-hidden"
                         style={{
@@ -131,14 +131,14 @@ export default function ComparisonTable() {
                         <div className="mb-8 relative">
                             <span className="inline-block px-4 py-1.5 rounded-full text-sm font-semibold mb-4 text-white"
                                 style={{ background: '#003DA5' }}>
-                                ⭐ GoTransit Regina
+                                ⭐ Transit Regina
                             </span>
-                            <h3 className="text-3xl font-bold" style={{ color: '#003DA5' }}>GoTransit Regina</h3>
+                            <h3 className="text-3xl font-bold" style={{ color: '#003DA5' }}>Transit Regina</h3>
                             <p className="text-base mt-2" style={{ color: '#475569' }}>Designed for every Regina commuter</p>
                         </div>
 
                         <div className="space-y-4 flex-1 relative">
-                            {goTransitFeatures.map(({ label, icon: Icon }, i) => (
+                            {transitReginaFeatures.map(({ label, icon: Icon }, i) => (
                                 <motion.div
                                     key={label}
                                     className="flex items-center gap-3"
@@ -169,7 +169,7 @@ export default function ComparisonTable() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: 0.6 }}
                 >
-                    GoTransit Regina is built specifically for{' '}
+                    Transit Regina is built specifically for{' '}
                     <span className="font-medium" style={{ color: '#003DA5' }}>Regina's transit system and weather conditions</span>
                 </motion.p>
             </div>

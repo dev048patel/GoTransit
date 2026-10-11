@@ -1,5 +1,5 @@
 /**
- * useRouteManagerController.ts — GoTransit Regina  [MVC Controller]
+ * useRouteManagerController.ts — Transit Regina  [MVC Controller]
  *
  * Drives the Route Manager admin page.
  * Fetches route data from the backend API and persists changes

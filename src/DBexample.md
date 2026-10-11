@@ -1,5 +1,5 @@
 
-The PostgreSQL Database Schema for GoTransit Regina is in Supabase. But here is the code for it.
+The PostgreSQL Database Schema for Transit Regina is in Supabase. But here is the code for it.
 
 
 -- ============================================

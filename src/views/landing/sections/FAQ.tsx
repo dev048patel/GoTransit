@@ -32,7 +32,7 @@ export default function FAQ({ faqItems }: FAQProps) {
                         Frequently Asked Questions
                     </h2>
                     <p className="text-xl text-gray-600">
-                        Everything you need to know about GoTransit Regina
+                        Everything you need to know about Transit Regina
                     </p>
                 </motion.div>
 

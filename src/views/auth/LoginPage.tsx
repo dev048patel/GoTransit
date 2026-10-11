@@ -1,5 +1,5 @@
 /**
- * LoginPage.tsx — GoTransit Regina  [VIEW ONLY — MVC]
+ * LoginPage.tsx — Transit Regina  [VIEW ONLY — MVC]
  *
  * Pure View: renders UI only.
  * All logic (validation, auth, redirect) lives in useLoginController.
@@ -46,12 +46,12 @@ export default function LoginPage() {
                 {/* ── Brand ─────────────────────────────────── */}
                 <div className="text-center mb-10">
                     <Link to="/" className="inline-block mb-4">
-                        <img src={logo} alt="GoTransit Regina" className="w-16 h-16 mx-auto rounded-2xl object-cover shadow-[0_8px_24px_rgba(0,61,165,0.2)]" />
+                        <img src={logo} alt="Transit Regina" className="w-16 h-16 mx-auto rounded-2xl object-cover shadow-[0_8px_24px_rgba(0,61,165,0.2)]" />
                     </Link>
                     <h1 className="text-4xl font-bold bg-gradient-to-r from-[#003DA5] to-[#003DA5] bg-clip-text text-transparent mb-2">
                         Welcome Back
                     </h1>
-                    <p className="text-gray-500 text-sm">Sign in to your GoTransit Regina account</p>
+                    <p className="text-gray-500 text-sm">Sign in to your Transit Regina account</p>
                 </div>
 
                 {/* ── Card ─────────────────────────────────── */}

@@ -1,5 +1,5 @@
 /**
- * usePasswordResetController.ts — GoTransit Regina
+ * usePasswordResetController.ts — Transit Regina
  *
  * Controllers for the forgot-password flow (MVC).
  * - useForgotPasswordController: emails a reset link

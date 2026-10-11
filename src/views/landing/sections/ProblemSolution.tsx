@@ -1,5 +1,5 @@
 /**
- * ProblemSolution.tsx — GoTransit Regina
+ * ProblemSolution.tsx — Transit Regina
  *
  * "Built for Regina's Real Challenges" section.
  * Three white glass cards with brand-blue icon rings — one per challenge.

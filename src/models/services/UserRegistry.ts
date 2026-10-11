@@ -1,5 +1,5 @@
 /**
- * UserRegistry.ts — GoTransit Regina
+ * UserRegistry.ts — Transit Regina
  *
  * User data access via Supabase profiles table.
  * Note: email is stored in auth.users (not profiles). Run the SQL below in
@@ -102,7 +102,7 @@ export async function softDeleteUser(id: string): Promise<string | null> {
 /** Called on logout — logs event to the browser console. */
 export function recordLogout(email: string): void {
     console.log(
-        '%c[GoTransit] 🚪 LOGOUT',
+        '%c[TransitRegina] 🚪 LOGOUT',
         'background:#6B7280;color:#fff;padding:2px 6px;border-radius:4px;font-weight:bold',
         { email, at: new Date().toLocaleTimeString() }
     );

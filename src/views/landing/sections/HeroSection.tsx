@@ -1,5 +1,5 @@
 /**
- * HeroSection.tsx — GoTransit Regina
+ * HeroSection.tsx — Transit Regina
  *
  * Theme: CLEAN TRANSIT MAP — WHITE / OFF-WHITE
  *

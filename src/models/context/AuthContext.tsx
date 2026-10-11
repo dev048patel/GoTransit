@@ -1,5 +1,5 @@
 /**
- * AuthContext.tsx — GoTransit Regina
+ * AuthContext.tsx — Transit Regina
  *
  * React Context that wraps the entire app to provide auth state globally.
  * Session management is handled by Supabase Auth.

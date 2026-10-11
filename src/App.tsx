@@ -71,7 +71,7 @@ function AppRoutes() {
                 {/* Logo */}
                 <img
                     src={logo}
-                    alt="GoTransit Regina"
+                    alt="Transit Regina"
                     className="w-16 h-16 rounded-2xl object-cover mb-6"
                     style={{ boxShadow: '0 8px 24px rgba(0,61,165,0.2)' }}
                 />

@@ -1,4 +1,4 @@
-# 🚌 GoTransit Regina
+# 🚌 Transit Regina
 
 Real-time transit tracking and route planning application for Regina, Saskatchewan — featuring live bus tracking, smart trip planning, and a full admin analytics dashboard.
 

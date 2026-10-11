@@ -105,7 +105,7 @@ export const problemSolutions: ProblemSolution[] = [
 
 export const faqItems: FAQItem[] = [
     {
-        question: "Is GoTransit Regina free to use?",
+        question: "Is Transit Regina free to use?",
         answer: "Yes! All features including real-time tracking, stop arrivals, and route planning are completely free."
     },
     {

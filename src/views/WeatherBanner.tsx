@@ -1,5 +1,5 @@
 /**
- * WeatherBanner.tsx — GoTransit Regina
+ * WeatherBanner.tsx — Transit Regina
  *
  * Compact floating weather pill shown top-left on the map, just below the Navbar.
  */

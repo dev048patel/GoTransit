@@ -1,5 +1,5 @@
 /**
- * AuthService.ts — GoTransit Regina
+ * AuthService.ts — Transit Regina
  *
  * Service layer for authentication (MVC).
  * Pure functions — no React, no hooks.

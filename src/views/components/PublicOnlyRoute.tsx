@@ -1,5 +1,5 @@
 /**
- * PublicOnlyRoute.tsx — GoTransit Regina
+ * PublicOnlyRoute.tsx — Transit Regina
  *
  * Wraps Login and Signup so that already-logged-in users are redirected to /map.
  * - While auth is loading  → shows nothing (avoids flash of login page on refresh)

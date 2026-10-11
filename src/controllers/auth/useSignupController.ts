@@ -1,5 +1,5 @@
 /**
- * useSignupController.ts — GoTransit Regina
+ * useSignupController.ts — Transit Regina
  *
  * Controller layer for the Signup page (MVC).
  * - Owns all form state: fullName, email, password, mobile, errors, loading, success

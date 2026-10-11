@@ -1,5 +1,5 @@
 /**
- * useProfileController.ts — GoTransit Regina
+ * useProfileController.ts — Transit Regina
  *
  * Controller for the Profile page.
  * Loads data from Supabase (profiles, user_preferences, favourite_stops,

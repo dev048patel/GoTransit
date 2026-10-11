@@ -1,5 +1,5 @@
 /**
- * MapPage.tsx — GoTransit Regina
+ * MapPage.tsx — Transit Regina
  *
  * Extracted from App.tsx so it can be React.lazy()-loaded.
  * This keeps the heavy map bundle (Google Maps + transitShapes.json)
