@@ -2,6 +2,7 @@
 import React from 'react';
 import { StopDetailPanelProps } from '../../../models/components/StopDetailPanelProps';
 import { useStopDetailController, RouteGroup } from '../../../controllers/useStopDetailController';
+import { directionOfStop, STOP_DIRECTION_ARROW, STOP_DIRECTION_LABEL } from '../../../models/transit/StopDirection';
 
 export default function StopDetailPanel({ stop, onClose }: StopDetailPanelProps) {
     const {
@@ -12,6 +13,7 @@ export default function StopDetailPanel({ stop, onClose }: StopDetailPanelProps)
     const crossStreet = stop.ONSTREET && stop.ATSTREET
         ? `${stop.ONSTREET} @ ${stop.ATSTREET}`
         : '';
+    const direction = directionOfStop(stop);
 
     return (
         <div className="stop-detail-panel t-panel" style={panelStyle}>
@@ -38,6 +40,19 @@ export default function StopDetailPanel({ stop, onClose }: StopDetailPanelProps)
                     }}>
                         Stop #{stop.STOP_ID}
                     </div>
+                    {direction && (
+                        <div
+                            title={`Buses at this stop travel ${STOP_DIRECTION_LABEL[direction].toLowerCase()}`}
+                            style={{
+                                display: 'inline-block', marginTop: '6px', marginLeft: '6px',
+                                fontSize: '11px', fontWeight: 600, color: '#1a73e8',
+                                backgroundColor: '#e8f0fe', padding: '2px 8px',
+                                borderRadius: '6px'
+                            }}
+                        >
+                            {STOP_DIRECTION_ARROW[direction]} {STOP_DIRECTION_LABEL[direction]}
+                        </div>
+                    )}
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <button

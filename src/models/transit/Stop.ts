@@ -1,6 +1,7 @@
 /*
 Data definitions for Transit Stops.
  */
+import { StopDirection } from './StopDirection';
 
 export interface Stop {
     OBJECTID: number;
@@ -10,4 +11,5 @@ export interface Stop {
     LON: string; // Provided as string in JSON (e.g. "-104.54913")
     ONSTREET: string;
     ATSTREET: string;
+    DIRECTION: StopDirection | null; // Travel direction of buses at this stop (from the (NB)/(SB)/(EB)/(WB) name suffix)
 }
