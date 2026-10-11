@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="840" height="70" viewBox="0 0 840 70" role="img" aria-label="Students took the first step, so riders stay a step ahead of the bus">
-<title>Students took the first step, so riders stay a step ahead of the bus</title>
+<svg xmlns="http://www.w3.org/2000/svg" width="840" height="84" viewBox="0 0 840 84" role="img" aria-label="Students took the first step, so riders stay a step ahead of the bus. © 2026 Transit Regina, all rights reserved">
+<title>Students took the first step, so riders stay a step ahead of the bus. © 2026 Transit Regina, all rights reserved</title>
 <style>
 text{font-family:ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace}
 .cap{font-size:9px;letter-spacing:1.4px;font-weight:700}
@@ -21,6 +21,6 @@ text{font-family:ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,'Liberatio
   <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6"/></filter>
   <linearGradient id="sheen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".035"/><stop offset=".35" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
 </defs>
-<rect width="840" height="70" rx="12" fill="#0b0c0e"/><rect x="1" y="1" width="838" height="68" rx="11" fill="#101215" stroke="#23272e"/><rect x="1" y="1" width="838" height="68" rx="11" fill="url(#sheen)"/><rect x="1" y="24" width="2" height="22" fill="#f5a524" opacity=".55"/>
-<text x="420" y="34" text-anchor="middle" font-size="12" font-weight="700" fill="#e8e8e8">students took the first step <tspan fill="#7a818c">—</tspan> <tspan fill="#f5a524">so riders stay a step ahead of the bus</tspan></text><text x="420" y="52" text-anchor="middle" font-size="9" class="dim">the timetable says when the bus should come. this tells you when it will.</text>
+<rect width="840" height="84" rx="12" fill="#0b0c0e"/><rect x="1" y="1" width="838" height="82" rx="11" fill="#101215" stroke="#23272e"/><rect x="1" y="1" width="838" height="82" rx="11" fill="url(#sheen)"/><rect x="1" y="24" width="2" height="36" fill="#f5a524" opacity=".55"/>
+<text x="420" y="32" text-anchor="middle" font-size="12" font-weight="700" fill="#e8e8e8">students took the first step <tspan fill="#7a818c">—</tspan> <tspan fill="#f5a524">so riders stay a step ahead of the bus</tspan></text><text x="420" y="50" text-anchor="middle" font-size="9" class="dim">the timetable says when the bus should come. this tells you when it will.</text><text x="420" y="68" text-anchor="middle" font-size="8" class="dim" letter-spacing="1">© 2026 TRANSIT REGINA · ALL RIGHTS RESERVED</text>
 </svg>

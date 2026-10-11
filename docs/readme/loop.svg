@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="300" viewBox="0 0 420 300" role="img" aria-label="The live-tracking loop: poll, cache, render every 1.5 seconds">
+<title>The live-tracking loop: poll, cache, render every 1.5 seconds</title>
+<style>
+text{font-family:ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace}
+.cap{font-size:9px;letter-spacing:1.4px;font-weight:700}
+.dim{fill:#7a818c}
+.blink{animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.pulse{animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.25}}
+.run{animation:run 7s linear infinite}
+@keyframes run{from{transform:translateX(0)}to{transform:translateX(var(--d,300px))}}
+.flow{animation:flow 2.6s linear infinite}
+@keyframes flow{0%{transform:translateX(0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateX(var(--d,60px));opacity:0}}
+.rise{transform-box:fill-box;transform-origin:left;animation:rise 3s cubic-bezier(.3,.7,.2,1) infinite}
+@keyframes rise{0%{transform:scaleX(.1)}45%,85%{transform:scaleX(1)}100%{transform:scaleX(.1)}}
+@media (prefers-reduced-motion: reduce){*{animation:none!important}}
+</style>
+<defs>
+  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6"/></filter>
+  <linearGradient id="sheen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".035"/><stop offset=".35" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+</defs>
+<rect width="420" height="300" rx="12" fill="#0b0c0e"/><rect x="1" y="1" width="418" height="298" rx="11" fill="#101215" stroke="#23272e"/><rect x="1" y="1" width="418" height="298" rx="11" fill="url(#sheen)"/><rect x="1" y="24" width="2" height="252" fill="#f5a524" opacity=".55"/>
+<rect x="18" y="18" width="52.9" height="14" rx="3" fill="#f5a524" fill-opacity=".12" stroke="#f5a524" stroke-opacity=".8"/><text x="25" y="28" font-size="7.5" font-weight="700" fill="#f5a524" letter-spacing=".3">THE LOOP</text><text x="78.91999999999999" y="28" class="cap dim" font-size="7.5">THREE STATIONS TOUCH EVERY BUS</text><rect x="341.9" y="15" width="60.1" height="18" rx="4" fill="#f5a524" fill-opacity=".1" stroke="#f5a524"/><text x="372.0" y="28" text-anchor="middle" font-size="8.5" font-weight="700" fill="#f5a524">1.5s each</text><text x="18" y="58" font-size="14" font-weight="700" fill="#e8e8e8">Every bus rides the same loop, all day</text><text x="18" y="76" font-size="10" class="dim">poll the feed, merge what changed, redraw the map</text><rect x="18" y="106" width="118" height="62" rx="8" fill="#38bdf8" fill-opacity=".06" stroke="#38bdf8" stroke-opacity=".7"/><text x="77" y="132" text-anchor="middle" class="cap" fill="#38bdf8" font-size="10">POLL</text><text x="77" y="150" text-anchor="middle" font-size="9.5" class="dim">/api/live</text><line x1="138" y1="137" x2="149" y2="137" stroke="#3a3f47" stroke-width="1.4"/><circle cx="138" cy="137" r="2.6" fill="#38bdf8" class="flow" style="--d:11px;animation-delay:0.0s"/><rect x="151" y="106" width="118" height="62" rx="8" fill="#f5a524" fill-opacity=".06" stroke="#f5a524" stroke-opacity=".7"/><text x="210" y="132" text-anchor="middle" class="cap" fill="#f5a524" font-size="10">CACHE</text><text x="210" y="150" text-anchor="middle" font-size="9.5" class="dim">merge · diff</text><line x1="271" y1="137" x2="282" y2="137" stroke="#3a3f47" stroke-width="1.4"/><circle cx="271" cy="137" r="2.6" fill="#f5a524" class="flow" style="--d:11px;animation-delay:0.5s"/><rect x="284" y="106" width="118" height="62" rx="8" fill="#4ade80" fill-opacity=".06" stroke="#4ade80" stroke-opacity=".7"/><text x="343" y="132" text-anchor="middle" class="cap" fill="#4ade80" font-size="10">RENDER</text><text x="343" y="150" text-anchor="middle" font-size="9.5" class="dim">map markers</text><path d="M343 172 V192 H77 V172" fill="none" stroke="#3a3f47" stroke-width="1.4" stroke-dasharray="3 4"/><path d="M73 178 L77 172 L81 178" fill="none" stroke="#3a3f47" stroke-width="1.4"/><text x="210" y="207" text-anchor="middle" font-size="8.5" class="dim">and again, 1.5 seconds later</text><text x="77" y="246" text-anchor="middle" font-size="18" font-weight="800" fill="#e8e8e8">1.5s</text><text x="77" y="262" text-anchor="middle" font-size="8.5" class="dim">poll every</text><text x="210" y="246" text-anchor="middle" font-size="18" font-weight="800" fill="#e8e8e8">2,400</text><text x="210" y="262" text-anchor="middle" font-size="8.5" class="dim">polls an hour</text><text x="343" y="246" text-anchor="middle" font-size="18" font-weight="800" fill="#e8e8e8">dropped</text><text x="343" y="262" text-anchor="middle" font-size="8.5" class="dim">stale buses</text><text x="18" y="284" font-size="8.5" class="dim">the loop never stops while the buses run</text>
+</svg>
