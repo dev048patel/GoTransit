@@ -236,7 +236,7 @@ export const MapView: React.FC<MapViewProps> = ({
       >
         {/* Route Tracking Overlay (when tracking is active) */}
         {activeTracking && (
-          <RouteTrackingOverlay tripOption={activeTracking} userLocation={userLocation} />
+          <RouteTrackingOverlay tripOption={activeTracking} />
         )}
 
         {/* Render Stops — viewport-culled, hidden during tracking */}

@@ -12,51 +12,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { OverlayView, useGoogleMap } from '@react-google-maps/api';
 import { MARKER_CHARACTERS } from '../../../models/data/markerCharacters';
-import { haversineDistance } from '../../../models/services/StopToRouteIndex';
+import { useGpsFixController } from '../../../controllers/useGpsFixController';
 import { useMarkerCharacter } from '../../../controllers/useMarkerCharacter';
 
-interface Fix {
-    lat: number;
-    lng: number;
-    accuracy: number;        // metres
-    heading: number | null;  // degrees clockwise from north; null when not moving
-}
-
-const MIN_MOVE_METRES = 5;   // GPS jitter below this is ignored
 const GLIDE_MS = 800;
 const SIZE = 48;             // character size in px
-
-function useGpsFix() {
-    const [fix, setFix] = useState<Fix | null>(null);
-    const [lost, setLost] = useState(false);
-
-    useEffect(() => {
-        if (!navigator.geolocation) return;
-        const watchId = navigator.geolocation.watchPosition(
-            (pos) => {
-                setLost(false);
-                const { latitude: lat, longitude: lng, accuracy, heading, speed } = pos.coords;
-                const next: Fix = {
-                    lat, lng, accuracy,
-                    heading: heading != null && !Number.isNaN(heading) && (speed ?? 0) > 0.5 ? heading : null,
-                };
-                setFix(prev =>
-                    prev && haversineDistance(prev.lat, prev.lng, lat, lng) < MIN_MOVE_METRES && prev.heading === next.heading
-                        ? prev
-                        : next
-                );
-            },
-            (err) => {
-                console.warn('Geolocation watch error:', err.message);
-                setLost(true);
-            },
-            { enableHighAccuracy: true, maximumAge: 10000 }
-        );
-        return () => navigator.geolocation.clearWatch(watchId);
-    }, []);
-
-    return { fix, lost };
-}
 
 /** Animate from the previous position to the new one instead of jumping. */
 function useGlide(target: { lat: number; lng: number } | null) {
@@ -116,7 +76,7 @@ function useAccuracyHalo(pos: { lat: number; lng: number } | null, radius: numbe
 }
 
 export default function UserLocationMarker() {
-    const { fix, lost } = useGpsFix();
+    const { fix, lost } = useGpsFixController();
     const pos = useGlide(fix);
     const { character } = useMarkerCharacter();
     useAccuracyHalo(pos, fix?.accuracy ?? 0, lost);

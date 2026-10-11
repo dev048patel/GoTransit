@@ -32,7 +32,7 @@ const PROXIMITY_THRESHOLD_METERS = 65; // Stop must be within 65m of shape line 
 /**
  * Calculate distance in meters between two lat/lng points using Haversine formula.
  */
-function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number { // assuming lat and lon are in degree
+export function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number { // assuming lat and lon are in degree
     const earthRadius = 6371e3;
 
     // converting coordinates to radians 

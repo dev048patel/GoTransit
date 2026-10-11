@@ -4,7 +4,7 @@
  * - Dotted Polyline: walking from GPS origin → first bus stop
  * - Solid Polyline: bus route along ACTUAL road shape (only the relevant portion)
  * - Dotted Polyline: walking from last bus stop → destination
- * - Markers: bus stops, destination (the user dot is drawn by MapView)
+ * - Markers: bus stops, destination (the user's location is drawn by UserLocationMarker)
  * - Highlights the bus leg the rider is currently on (useTripProgressController)
  */
 import React, { useState, useEffect, useMemo } from 'react';
@@ -15,6 +15,7 @@ import { RouteTrackingOverlayProps } from '../../../models/transit/RouteTracking
 import { DetourService } from '../../../models/services/DetourService';
 import { ActiveDetour } from '../../../models/transit/Detour';
 import { useTripProgressController } from '../../../controllers/useTripProgressController';
+import { useGpsFixController } from '../../../controllers/useGpsFixController';
 
 /** Squared distance between two points (no need for sqrt for comparison). */
 function distSq(a: { lat: number; lng: number }, b: { lat: number; lng: number }): number {
@@ -159,7 +160,10 @@ function extractShapeSegment(
     return best.segment;
 }
 
-export default function RouteTrackingOverlay({ tripOption, userLocation }: RouteTrackingOverlayProps) {
+export default function RouteTrackingOverlay({ tripOption }: RouteTrackingOverlayProps) {
+    // Same GPS fix the character marker shows; this overlay draws no location dot of its own
+    const { fix } = useGpsFixController();
+    const userLocation = useMemo(() => fix && { lat: fix.lat, lng: fix.lng }, [fix]);
     const userPos = userLocation ?? { lat: tripOption.originLat, lng: tripOption.originLng };
     const { activeSegmentIndex } = useTripProgressController(tripOption, userLocation);
     const [activeDetours, setActiveDetours] = useState<ActiveDetour[]>([]);
