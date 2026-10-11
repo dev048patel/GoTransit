@@ -2,6 +2,7 @@
  * Route Planning Models
  * Interfaces for bus route suggestion and trip planning
  */
+import { StopDirection } from './StopDirection';
 
 export interface RouteSegment {
     routeNum: string;
@@ -15,6 +16,7 @@ export interface RouteSegment {
     toStopLat: number;
     toStopLng: number;
     estimatedTime: number; // minutes (bus ride time)
+    direction?: StopDirection; // Travel direction at the boarding stop (which side of the street to wait on)
     // Real-time fields (populated when live bus data is available)
     nextBusETA?: number;       // Minutes until next bus arrives at boarding stop
     busDistanceAway?: number;  // Meters between bus and boarding stop along route
