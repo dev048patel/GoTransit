@@ -24,6 +24,8 @@ export interface MapViewProps {
     routePaths: { lat: number; lng: number }[][];
     liveBuses: BusPosition[];
     handlePlaceSelect: (place: any) => void;
+    /** Select a place tapped on the map (POI or bare spot); resolves false if a newer tap superseded it. */
+    handleMapPlacePick: (location: Coordinates, placeId?: string) => Promise<boolean>;
     selectedPlaceMarker: { location: Coordinates; name: string } | null;
     setSelectedPlaceMarker: (marker: { location: Coordinates; name: string } | null) => void;
     currentZoom: number;

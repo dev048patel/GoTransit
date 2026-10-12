@@ -25,6 +25,11 @@ let stopById: Map<string, (typeof transitStops)[number]> | null = null;
 // Memoized checkStopDirection results: key = "routeNum|stopA|stopB" (inputs are static data)
 const directionCheckCache = new Map<string, { valid: boolean; shapeDistance: number } | null>();
 
+// A bus that reaches the end of the line turns round and comes back as the other direction's trip.
+// Riding through that turnaround is offered only when boarding this close to the end, so a rider
+// is never told to ride a whole route out and back (e.g. Route 3 looping round Sask Polytechnic).
+const TERMINUS_RIDE_THROUGH_MAX_METERS = 3000;
+
 const PROXIMITY_THRESHOLD_METERS = 65; // Stop must be within 65m of shape line for projection
 // (40m was too tight — directional shapes for NB/SB routes are on opposite sides of the road,
 // and stops offset from centerline can land 50-60m from the 'wrong' direction's shape)
@@ -396,6 +401,130 @@ export function getGtfsDirectionsForStop(stopId: string, routeNum: string): numb
 
 
 /**
+ * Ride from stop A (on one direction's trip) to stop B (on the other direction's trip) by staying on
+ * the bus as it turns round at the terminus where the first trip ends and the second begins.
+ * Returns the ride length and the stops passed in between, or null if no such ride is short enough.
+ */
+function rideThroughTerminus(
+    routeNum: string,
+    stopAId: string,
+    stopBId: string
+): { shapeDistance: number; stopIds: string[]; dirA: string; dirB: string } | null {
+    if (!gtfsSeqCache || !gtfsSeqDistCache) return null;
+    const dirsA = getGtfsDirectionsForStop(stopAId, routeNum);
+    const dirsB = getGtfsDirectionsForStop(stopBId, routeNum);
+
+    let best: { shapeDistance: number; stopIds: string[]; dirA: string; dirB: string } | null = null;
+    for (const dirA of dirsA) {
+        for (const dirB of dirsB) {
+            if (dirA === dirB) continue;
+            const seqA = gtfsSeqCache.get(`${routeNum}-${dirA}`);
+            const seqB = gtfsSeqCache.get(`${routeNum}-${dirB}`);
+            const cumA = gtfsSeqDistCache.get(`${routeNum}-${dirA}`);
+            const cumB = gtfsSeqDistCache.get(`${routeNum}-${dirB}`);
+            if (!seqA || !seqB || !cumA || !cumB) continue;
+            // Trip A must end where trip B starts
+            if (seqA[seqA.length - 1] !== seqB[0]) continue;
+
+            const posA = seqA.indexOf(stopAId);
+            const posB = seqB.indexOf(stopBId);
+            if (posA === -1 || posB <= 0) continue;
+
+            const toTerminus = cumA[cumA.length - 1] - cumA[posA];
+            if (toTerminus > TERMINUS_RIDE_THROUGH_MAX_METERS) continue;
+
+            const shapeDistance = toTerminus + cumB[posB];
+            if (!best || shapeDistance < best.shapeDistance) {
+                // seqA's last stop is seqB's first: list the terminus once
+                best = {
+                    shapeDistance,
+                    stopIds: [...seqA.slice(posA + 1), ...seqB.slice(1, posB)],
+                    dirA: String(dirA), dirB: String(dirB),
+                };
+            }
+        }
+    }
+    return best;
+}
+
+/**
+ * When riding from stop A to stop B means staying on as the bus turns round at the end of the line,
+ * the name of that terminus. Null for an ordinary ride in one direction.
+ */
+export function getTerminusTurnaround(routeNum: string, fromStopId: string, toStopId: string): string | null {
+    ensureIndex();
+    if (sharesGtfsDirection(routeNum, fromStopId, toStopId)) return null;
+    const through = rideThroughTerminus(routeNum, fromStopId, toStopId);
+    if (!through) return null;
+    const terminusId = gtfsSeqCache!.get(`${routeNum}-${through.dirB}`)![0];
+    return stopById!.get(terminusId)?.STOP_NAME ?? 'the end of the line';
+}
+
+/**
+ * Path of a ride along the GTFS direction shapes, which always run in travel order: the stretch of
+ * the direction both stops share, or for a ride through a terminus, the end of one direction's shape
+ * and the start of the other's. Null when the shapes don't cover the ride.
+ */
+export function getGtfsRidePath(routeNum: string, fromStopId: string, toStopId: string): { lat: number; lng: number }[] | null {
+    ensureIndex();
+    const from = stopById!.get(fromStopId);
+    const to = stopById!.get(toStopId);
+    if (!from || !to) return null;
+
+    // Points where the shape passes the stop. It can pass more than once, so every point within 25m
+    // of the closest counts; a stop over 150m from the shape isn't on it at all.
+    const nearIndexes = (line: number[][], stop: { LAT: string; LON: string }) => {
+        const lat = parseFloat(stop.LAT), lng = parseFloat(stop.LON);
+        const dists = line.map(([pLng, pLat]) => haversineDistance(lat, lng, pLat, pLng));
+        const closest = Math.min(...dists);
+        if (closest > 150) return [];
+        return dists.flatMap((d, i) => (d <= closest + 25 ? [i] : []));
+    };
+    const toLatLng = (coords: number[][]) => coords.map(([lng, lat]) => ({ lat, lng }));
+
+    if (!sharesGtfsDirection(routeNum, fromStopId, toStopId)) {
+        const through = rideThroughTerminus(routeNum, fromStopId, toStopId);
+        const lineA = through && gtfsDirCache!.get(`${routeNum}-${through.dirA}`);
+        const lineB = through && gtfsDirCache!.get(`${routeNum}-${through.dirB}`);
+        if (!lineA || !lineB) return null;
+        // Board on line A's last pass by the stop (nearest the terminus), alight on line B's first
+        const boardings = nearIndexes(lineA, from), alightings = nearIndexes(lineB, to);
+        if (boardings.length === 0 || alightings.length === 0) return null;
+        return toLatLng([
+            ...lineA.slice(boardings[boardings.length - 1]),
+            ...lineB.slice(1, alightings[0] + 1), // lineB[0] is lineA's last point
+        ]);
+    }
+
+    // Shortest forward stretch, over the directions both stops share
+    const dirsB = getGtfsDirectionsForStop(toStopId, routeNum);
+    let best: { coords: number[][]; length: number } | null = null;
+    for (const dir of getGtfsDirectionsForStop(fromStopId, routeNum).filter(d => dirsB.includes(d))) {
+        const line = gtfsDirCache!.get(`${routeNum}-${dir}`);
+        if (!line) continue;
+        const cumulative = [0];
+        for (let i = 1; i < line.length; i++) {
+            cumulative.push(cumulative[i - 1] + haversineDistance(line[i - 1][1], line[i - 1][0], line[i][1], line[i][0]));
+        }
+        const alightings = nearIndexes(line, to);
+        for (const a of nearIndexes(line, from)) {
+            const b = alightings.find(i => i > a);
+            if (b === undefined) continue;
+            const length = cumulative[b] - cumulative[a];
+            if (!best || length < best.length) best = { coords: line.slice(a, b + 1), length };
+        }
+    }
+    return best ? toLatLng(best.coords) : null;
+}
+
+/** True unless both stops have GTFS direction data for the route and no direction serves both. */
+function sharesGtfsDirection(routeNum: string, stopAId: string, stopBId: string): boolean {
+    const dirsA = getGtfsDirectionsForStop(stopAId, routeNum);
+    const dirsB = getGtfsDirectionsForStop(stopBId, routeNum);
+    return dirsA.length === 0 || dirsB.length === 0 || dirsA.some(d => dirsB.includes(d));
+}
+
+/**
  * Get ordered intermediate stop names between fromStopId and toStopId for a given route.
  * Uses per-line projection: finds the best single shape line containing both endpoints,
  * then projects all route stops onto that line to determine ordering.
@@ -410,6 +539,17 @@ export function getOrderedStopsForRoute(
 
     const stopIds = routeToStops!.get(routeNum);
     if (!stopIds) return [];
+
+    // Riding through the terminus: the stops come straight from the two trips' sequences
+    if (!sharesGtfsDirection(routeNum, fromStopId, toStopId)) {
+        const through = rideThroughTerminus(routeNum, fromStopId, toStopId);
+        if (through) {
+            return through.stopIds.flatMap(id => {
+                const stop = stopById!.get(id);
+                return stop ? [stop.STOP_NAME] : [];
+            });
+        }
+    }
 
     const shapes = routeShapesCache!.get(routeNum);
     if (!shapes) return [];
@@ -554,11 +694,15 @@ function computeStopDirection(
     const sharedDirs = dirsA.filter(d => dirsB.includes(d));
 
     // Both stops are known to GTFS but no single trip direction serves both (e.g. a SB-only stop
-    // and a NB-only stop): the rider would have to ride to the terminus and back. Without this,
-    // the geometric tiers below project the stop onto the opposite direction's shape (the two
-    // carriageways are well within tolerance) and report a short, "valid" ride the wrong way.
+    // and a NB-only stop): the rider has to stay on through the terminus. That's fine near the end
+    // of the line, where the bus just loops round; otherwise reject. Without this, the geometric
+    // tiers below project the stop onto the opposite direction's shape (the two carriageways are
+    // well within tolerance) and report a short, "valid" ride the wrong way.
     if (dirsA.length > 0 && dirsB.length > 0 && sharedDirs.length === 0) {
-        return { valid: false, shapeDistance: straightLine };
+        const through = rideThroughTerminus(routeNum, stopAId, stopBId);
+        return through
+            ? { valid: true, shapeDistance: Math.max(through.shapeDistance, straightLine) }
+            : { valid: false, shapeDistance: straightLine };
     }
 
     // Prioritize directions shared by both stops; fall back to all dirs either stop serves

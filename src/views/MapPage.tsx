@@ -16,7 +16,7 @@ export default function MapPage() {
     const {
         isLoaded, loadError, center, setCenter, options, containerStyle,
         zoom, setZoom, stops, routes, selectedRoute, setSelectedRoute,
-        routePaths, liveBuses, handlePlaceSelect, selectedPlaceMarker,
+        routePaths, liveBuses, handlePlaceSelect, handleMapPlacePick, selectedPlaceMarker,
         setSelectedPlaceMarker, currentZoom, onZoomChanged,
         activeDetours, weather,
     } = useMapController();
@@ -41,6 +41,7 @@ export default function MapPage() {
             routePaths={routePaths}
             liveBuses={liveBuses}
             handlePlaceSelect={handlePlaceSelect}
+            handleMapPlacePick={handleMapPlacePick}
             selectedPlaceMarker={selectedPlaceMarker}
             setSelectedPlaceMarker={setSelectedPlaceMarker}
             currentZoom={currentZoom}

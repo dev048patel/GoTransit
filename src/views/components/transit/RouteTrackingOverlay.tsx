@@ -16,6 +16,7 @@ import { DetourService } from '../../../models/services/DetourService';
 import { ActiveDetour } from '../../../models/transit/Detour';
 import { useTripProgressController } from '../../../controllers/useTripProgressController';
 import { useGpsFixController } from '../../../controllers/useGpsFixController';
+import { useRidePathsController } from '../../../controllers/useRidePathsController';
 
 /** Squared distance between two points (no need for sqrt for comparison). */
 function distSq(a: { lat: number; lng: number }, b: { lat: number; lng: number }): number {
@@ -194,16 +195,17 @@ export default function RouteTrackingOverlay({ tripOption }: RouteTrackingOverla
         { lat: tripOption.destLat, lng: tripOption.destLng }
     ];
 
-    // Bus route paths — extract only the relevant portion from transit shapes
+    // Bus route paths: each ride's road path, else the portion of the merged shapes between its stops
+    const ridePaths = useRidePathsController(tripOption);
     const busSegmentPaths = useMemo(() => {
-        return tripOption.segments.map(seg =>
-            extractShapeSegment(
+        return tripOption.segments.map((seg, i) =>
+            ridePaths[i] ?? extractShapeSegment(
                 { lat: seg.fromStopLat, lng: seg.fromStopLng },
                 { lat: seg.toStopLat, lng: seg.toStopLng },
                 seg.routeNum
             )
         );
-    }, [tripOption]);
+    }, [tripOption, ridePaths]);
 
     const getRouteColor = (routeNum: string): string => {
         const match = transitColors.find(c => c.route_id === parseInt(routeNum));

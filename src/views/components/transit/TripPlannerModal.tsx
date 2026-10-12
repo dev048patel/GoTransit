@@ -346,6 +346,13 @@ function RouteCard({ option, index }: { option: TripOption; index: number }) {
                             </div>
                         ) : null}
 
+                        {seg.turnaroundStop && (
+                            <div style={{ ...timelineStepStyle, paddingLeft: '12px', color: '#5f6368', fontSize: '12px' }}>
+                                <span style={timelineSmallDotStyle} />
+                                <span>Stay on as the bus turns round at {seg.turnaroundStop}</span>
+                            </div>
+                        )}
+
                         <div style={timelineStepStyle}>
                             <span style={timelineDotStyle('#ea4335')} />
                             <span>Get off at <strong>{seg.toStop}</strong></span>
