@@ -4,13 +4,10 @@
  */
 import { useEffect, useMemo, useState } from 'react';
 import { apiGet } from '../../models/lib/apiClient';
-import { Badge, Card, PageHeader, when } from '../components/admin/ui';
+import { Badge, Card, EVENT_LABEL, PageHeader, when } from '../components/admin/ui';
 
 interface Entry { type: string; severity: 'info' | 'warning' | 'critical'; message: string; admin: string; ip: string | null; created_at: string; }
-const LABEL: Record<string, string> = {
-    user_deleted: 'Account deleted', role_changed: 'Role changed', status_changed: 'Status changed', user_updated: 'Account edited',
-    feature_access_changed: 'Feature changed', route_changed: 'Route changed', sms_broadcast: 'Text broadcast', personal_data_viewed: 'Personal data viewed', events_handled: 'Events marked handled',
-};
+const ACTIONS = ['user_deleted', 'role_changed', 'status_changed', 'user_updated', 'feature_access_changed', 'route_changed', 'sms_broadcast', 'personal_data_viewed', 'events_handled'];
 
 export default function ActivityLog() {
     const [rows, setRows] = useState<Entry[] | null>(null);
@@ -26,11 +23,11 @@ export default function ActivityLog() {
             <PageHeader title="Activity log" subtitle="Every action taken by an admin. Kept for 90 days." />
             {error && <p role="alert" className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg px-4 py-3 mb-4">Could not load the log: {error}</p>}
             <div className="flex flex-wrap gap-3 mb-4">
-                <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search by admin, person id or text" aria-label="Search the activity log"
+                <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search by admin, email or text" aria-label="Search the activity log"
                     className="flex-1 min-w-[220px] px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#003DA5]/30" />
                 <select value={kind} onChange={e => setKind(e.target.value)} aria-label="Kind of action" className="px-3 py-2 rounded-lg border border-slate-200 text-sm bg-white">
                     <option value="all">All actions</option>
-                    {Object.entries(LABEL).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                    {ACTIONS.map(k => <option key={k} value={k}>{EVENT_LABEL[k]}</option>)}
                 </select>
             </div>
             <Card>
@@ -42,7 +39,7 @@ export default function ActivityLog() {
                                 <tr key={r.created_at + i}>
                                     <td className="px-5 py-3 whitespace-nowrap text-slate-600">{when(r.created_at)}</td>
                                     <td className="px-5 py-3 whitespace-nowrap font-medium text-slate-900">{r.admin}</td>
-                                    <td className="px-5 py-3 whitespace-nowrap"><Badge tone={r.severity === 'critical' ? 'bad' : r.severity === 'warning' ? 'warn' : 'neutral'}>{LABEL[r.type] ?? r.type}</Badge></td>
+                                    <td className="px-5 py-3 whitespace-nowrap"><Badge tone={r.severity === 'critical' ? 'bad' : r.severity === 'warning' ? 'warn' : 'neutral'}>{EVENT_LABEL[r.type] ?? r.type}</Badge></td>
                                     <td className="px-5 py-3 text-slate-700 break-words">{r.message}</td>
                                 </tr>
                             ))}

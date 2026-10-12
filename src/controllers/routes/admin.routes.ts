@@ -33,12 +33,28 @@ async function unhandledCriticalSince(since: string): Promise<number> {
     return r.error ? countOf(q()) : r.count ?? 0;
 }
 
-/** Adds each event's admin name, so the log reads "Dev Patel did X" rather than an id. */
-async function withAdminNames<T extends { user_id: string | null }>(rows: T[]) {
-    const ids = [...new Set(rows.map(r => r.user_id).filter((v): v is string => !!v))];
-    const { data } = ids.length ? await serviceDb().from('profiles').select('id, full_name, email').in('id', ids) : { data: [] };
-    const names = new Map((data ?? []).map(p => [p.id, p.full_name || p.email || 'Unknown']));
-    return rows.map(r => ({ ...r, admin: r.user_id ? names.get(r.user_id) ?? 'Unknown' : 'System' }));
+const UUID = /[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/gi;
+
+/**
+ * Makes events readable: every account id in a message becomes that person's email, and each
+ * event gets `admin` — the name of whoever did it. An id with no account left is shown as the
+ * email recorded when it was deleted, or "a deleted account".
+ */
+async function withPeople<T extends { user_id: string | null; message: string }>(rows: T[]) {
+    const ids = new Set<string>();
+    for (const r of rows) { if (r.user_id) ids.add(r.user_id); for (const id of r.message.match(UUID) ?? []) ids.add(id.toLowerCase()); }
+    const { data } = ids.size ? await serviceDb().from('profiles').select('id, full_name, email').in('id', [...ids]) : { data: [] };
+    const people = new Map((data ?? []).map(p => [p.id as string, p]));
+    return rows.map(r => {
+        const actor = r.user_id ? people.get(r.user_id) : null;
+        return {
+            ...r,
+            message: r.message.replace(new RegExp(`(${UUID.source})(?: \\(([^)\\s]+@[^)\\s]+)\\))?`, 'gi'),
+                (_m, id: string, kept?: string) => people.get(id.toLowerCase())?.email ?? kept ?? '(deleted account)'),
+            admin: r.user_id ? actor?.full_name || actor?.email || 'A deleted account' : 'System',
+            who: actor?.email ?? null,
+        };
+    });
 }
 
 // ── Home: is everything okay, and how big is the app right now? ──
@@ -83,7 +99,7 @@ router.get('/overview', async (_req: Request, res: Response) => {
         today: { visitors: visitorsToday, places: todayRow.places, directions: todayRow.directions, signups: signupsToday },
         totals: { users: totalUsers, signupsWeek },
         trend, attention,
-        recent: await withAdminNames(recent.data ?? []),
+        recent: await withPeople(recent.data ?? []),
     });
 });
 
@@ -93,7 +109,7 @@ router.get('/activity', async (req: Request, res: Response) => {
     const { data, error } = await serviceDb().from('security_events').select('type, severity, message, user_id, ip, created_at')
         .in('type', ADMIN_ACTIONS).order('created_at', { ascending: false }).limit(limit);
     if (error) { console.error('[Admin] Activity error:', error.message); res.status(500).json({ error: 'Could not load the activity log' }); return; }
-    res.json(await withAdminNames(data ?? []));
+    res.json(await withPeople(data ?? []));
 });
 
 // ── One person: everything about them in one answer ──
@@ -109,7 +125,7 @@ router.get('/users/:id', async (req: Request, res: Response) => {
         db.from('security_events').select('type, severity, message, user_id, created_at').in('type', ADMIN_ACTIONS).ilike('message', `%${id}%`).order('created_at', { ascending: false }).limit(30),
     ]);
     if (!profile.data) { res.status(404).json({ error: 'No such user' }); return; }
-    res.json({ profile: profile.data, features: features.data ?? [], sessions: sessions.data ?? [], history: await withAdminNames(history.data ?? []) });
+    res.json({ profile: profile.data, features: features.data ?? [], sessions: sessions.data ?? [], history: await withPeople(history.data ?? []) });
 });
 
 // Looking at personal data that is hidden by default (full IP addresses) is itself recorded
@@ -125,9 +141,11 @@ router.delete('/users/:id', requireFreshTwoStep, async (req: Request, res: Respo
     const { id } = req.params;
     if (!isUuid(id)) { reject(req, res, 'Invalid user id'); return; }
     if (id === req.user!.id) { reject(req, res, 'You cannot delete your own account from the admin panel'); return; }
+    // Note the email first: once the account is gone, the log could only show an id
+    const { data: gone } = await serviceDb().from('profiles').select('email').eq('id', id).maybeSingle();
     const { error } = await getSupabaseAdmin().auth.admin.deleteUser(id);
     if (error) { console.error('[Admin] Delete user error:', error.message); res.status(500).json({ error: 'Could not delete the user' }); return; }
-    await audit(req, 'user_deleted', `Admin deleted user ${id}.${reasonOf(req)}`, 'critical');
+    await audit(req, 'user_deleted', `Admin deleted user ${id}${gone?.email ? ` (${gone.email})` : ''}.${reasonOf(req)}`, 'critical');
     res.json({ ok: true });
 });
 
@@ -215,7 +233,7 @@ router.get('/security', async (req: Request, res: Response) => {
         if (error) ({ data, error } = await q(cols));   // the handled columns are added by script 003
         if (!error && data) {
             stored = true;
-            events = (data as any[]).map(r => ({ id: r.id, handledAt: r.handled_at ?? null, type: r.type, severity: r.severity, message: r.message, ip: r.ip, userId: r.user_id, path: r.path, at: r.created_at }));
+            events = (await withPeople(data as any[])).map(r => ({ id: r.id, handledAt: r.handled_at ?? null, type: r.type, severity: r.severity, message: r.message, ip: r.ip, who: r.who, path: r.path, at: r.created_at }));
         }
     }
     res.json({ events, stored, canHandle, health: HealthService.report() });

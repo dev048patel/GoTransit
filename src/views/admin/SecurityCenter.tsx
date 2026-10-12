@@ -2,112 +2,114 @@
  * SecurityCenter.tsx — Transit Regina  [VIEW — MVC]
  * Admin page: is everything the site depends on working, and has anything unusual happened?
  */
-import { AlertTriangle, CheckCircle2, RefreshCw, ShieldAlert, XCircle } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, RefreshCw, XCircle } from 'lucide-react';
 import { useSecurityController } from '../../controllers/admin/useSecurityController';
+import { Badge, Card, EVENT_LABEL, PageHeader, Stat, btn, when } from '../components/admin/ui';
 
-const SEVERITY: Record<string, string> = {
-    critical: 'bg-red-100 text-red-800',
-    warning: 'bg-amber-100 text-amber-800',
-    info: 'bg-gray-100 text-gray-700',
+/** What each kind of event usually means, so an admin can tell noise from a problem. */
+const ADVICE: Record<string, string> = {
+    auth_failed: 'Usually a bot or an expired login. Worth a look only if one address keeps doing it.',
+    admin_denied: 'A signed-in rider called an admin endpoint. Check who it was.',
+    admin_two_step_missing: 'An admin password was used without the authenticator code. If that was not you, change the password.',
+    rate_limited: 'One address sent far more requests than a rider would.',
+    validation_failed: 'A request did not look like one the app sends. Often a scanner.',
+    cors_blocked: 'Another website tried to use the backend and was refused.',
+    webhook_rejected: 'Something pretended to be the text-message provider and was refused.',
+    burst: 'The same thing was blocked ten times in ten minutes from one address. Someone is probing.',
+    dependency_down: 'Riders are affected until this recovers.',
+    server_error: 'The backend hit an unexpected error. Check the Railway logs.',
+    role_changed_db: 'A role was changed outside the admin panel. Confirm an admin did this.',
 };
-const when = (iso: string) => new Date(iso).toLocaleString('en-CA', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+const TONE = { critical: 'bad', warning: 'warn', info: 'neutral' } as const;
 
 export default function SecurityCenter() {
-    const { data, error, events, filter, setFilter, reload, counts, showHandled, setShowHandled, markHandled } = useSecurityController();
-    const open = events.filter(e => e.id && !e.handledAt).map(e => e.id!);
+    const { data, error, groups, filter, setFilter, reload, counts, showHandled, setShowHandled, markHandled } = useSecurityController();
+    const open = groups.filter(g => !g.handledAt).flatMap(g => g.ids);
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Security</h1>
-                    <p className="text-gray-500 mt-1">System health and anything unusual, refreshed every 30 seconds.</p>
-                </div>
-                <button onClick={reload} className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50">
-                    <RefreshCw size={16} /> Refresh
-                </button>
-            </div>
+        <div>
+            <PageHeader title="Security" subtitle="System health and anything unusual. Refreshed every 30 seconds."
+                actions={<button onClick={reload} className={btn.plain}><RefreshCw size={16} /> Refresh</button>} />
 
-            {error && <p role="alert" className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg px-4 py-3">Could not load security data: {error}</p>}
+            {error && <p role="alert" className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg px-4 py-3 mb-4">Could not load security data: {error}</p>}
 
             {/* Health */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                 {(data?.health.checks ?? []).map(c => (
-                    <div key={c.name} className="bg-white rounded-xl border border-gray-200 p-4">
-                        <div className="flex items-center gap-2 text-sm font-medium text-gray-500">
-                            {c.ok ? <CheckCircle2 size={16} className="text-green-600" /> : <XCircle size={16} className="text-red-600" />} {c.name}
-                        </div>
-                        <div className={'text-xl font-bold mt-1 ' + (c.ok ? 'text-gray-900' : 'text-red-700')}>{c.ok ? 'Working' : 'Down'}</div>
-                        <div className="text-xs text-gray-500 mt-1">{c.detail} · since {when(c.since)}</div>
-                    </div>
+                    <Stat key={c.name} label={c.name}
+                        value={<span className={'inline-flex items-center gap-2 text-xl ' + (c.ok ? 'text-emerald-700' : 'text-red-700')}>{c.ok ? <CheckCircle2 size={20} /> : <XCircle size={20} />}{c.ok ? 'Working' : 'Down'}</span>}
+                        sub={`${c.detail} · since ${when(c.since)}`} />
                 ))}
-                <div className="bg-white rounded-xl border border-gray-200 p-4">
-                    <div className="text-sm font-medium text-gray-500">Critical, last 24 h</div>
-                    <div className={'text-xl font-bold mt-1 ' + (counts.critical ? 'text-red-700' : 'text-gray-900')}>{counts.critical}</div>
-                </div>
-                <div className="bg-white rounded-xl border border-gray-200 p-4">
-                    <div className="text-sm font-medium text-gray-500">Warnings, last 24 h</div>
-                    <div className={'text-xl font-bold mt-1 ' + (counts.warning ? 'text-amber-700' : 'text-gray-900')}>{counts.warning}</div>
-                </div>
+                <Stat label="Critical, last 24 h" value={<span className={counts.critical ? 'text-red-700' : ''}>{counts.critical}</span>} sub="not yet handled" />
+                <Stat label="Warnings, last 24 h" value={<span className={counts.warning ? 'text-amber-700' : ''}>{counts.warning}</span>} sub="not yet handled" />
             </div>
 
             {/* Things that are set up wrong */}
             {(data?.health.config ?? []).map(msg => (
-                <p key={msg} className="flex items-start gap-2 text-sm text-amber-900 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3">
+                <p key={msg} className="flex items-start gap-2 text-sm text-amber-900 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 mb-4">
                     <AlertTriangle size={16} className="mt-0.5 flex-none" /> {msg}
                 </p>
             ))}
             {data && !data.stored && (
-                <p className="text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded-lg px-4 py-3">
+                <p className="text-sm text-slate-600 bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 mb-4">
                     Showing events since the backend last restarted. Run the database script in docs/security to keep the full history.
                 </p>
             )}
 
-            {/* Events */}
-            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-100">
-                    <ShieldAlert size={18} className="text-gray-500" />
-                    <h2 className="font-semibold text-gray-900 flex-1">Events</h2>
+            <Card title="Events" action={
+                <div className="flex flex-wrap items-center justify-end gap-2">
                     {data?.canHandle && <>
-                        <label className="flex items-center gap-1.5 text-xs text-gray-600 mr-2">
+                        <label className="flex items-center gap-1.5 text-xs text-slate-600">
                             <input type="checkbox" checked={showHandled} onChange={e => setShowHandled(e.target.checked)} /> Show handled
                         </label>
-                        <button onClick={() => markHandled(open)} disabled={!open.length}
-                            className="px-3 py-1 rounded-full text-xs font-semibold border border-gray-200 text-gray-700 hover:bg-gray-50 disabled:opacity-40 mr-2">
+                        <button onClick={() => markHandled(open)} disabled={!open.length} className="px-3 py-1 rounded-full text-xs font-semibold border border-slate-200 text-slate-700 hover:bg-slate-50 disabled:opacity-40">
                             Mark all shown as handled
                         </button>
                     </>}
-                    {(['all', 'warning', 'critical'] as const).map(f => (
+                    {(['warning', 'critical', 'all'] as const).map(f => (
                         <button key={f} onClick={() => setFilter(f)} aria-pressed={filter === f}
-                            className={'px-3 py-1 rounded-full text-xs font-semibold ' + (filter === f ? 'bg-slate-800 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200')}>
-                            {f === 'all' ? 'All' : f === 'warning' ? 'Warnings and above' : 'Critical only'}
+                            className={'px-3 py-1 rounded-full text-xs font-semibold ' + (filter === f ? 'bg-slate-800 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200')}>
+                            {f === 'all' ? 'Everything' : f === 'warning' ? 'Needs a look' : 'Critical only'}
                         </button>
                     ))}
                 </div>
+            }>
                 <div className="overflow-x-auto">
                     <table className="w-full text-sm">
-                        <thead className="text-left text-xs text-gray-500 uppercase bg-gray-50">
-                            <tr><th className="px-4 py-2">When</th><th className="px-4 py-2">Level</th><th className="px-4 py-2">What happened</th><th className="px-4 py-2">Address</th><th className="px-4 py-2">Path</th><th className="px-4 py-2" /></tr>
+                        <thead className="text-left text-xs text-slate-500 bg-slate-50">
+                            <tr><th className="px-5 py-2.5">Last seen</th><th className="px-5 py-2.5">What happened</th><th className="px-5 py-2.5">Who</th><th className="px-5 py-2.5">Where</th><th className="px-5 py-2.5" /></tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-100">
-                            {events.map((e, i) => (
-                                <tr key={e.at + i} className={e.handledAt ? 'opacity-50' : ''}>
-                                    <td className="px-4 py-2 whitespace-nowrap text-gray-600">{when(e.at)}</td>
-                                    <td className="px-4 py-2"><span className={'px-2 py-0.5 rounded-full text-xs font-semibold ' + SEVERITY[e.severity]}>{e.severity}</span></td>
-                                    <td className="px-4 py-2 text-gray-900">{e.message}<div className="text-xs text-gray-400">{e.type}</div></td>
-                                    <td className="px-4 py-2 text-gray-600 font-mono text-xs">{e.ip ?? '—'}</td>
-                                    <td className="px-4 py-2 text-gray-600 font-mono text-xs break-all">{e.path ?? '—'}</td>
-                                    <td className="px-4 py-2 text-right whitespace-nowrap text-xs">
-                                        {e.handledAt ? <span className="text-gray-500">Handled {when(e.handledAt)}</span>
-                                            : data?.canHandle && e.id ? <button onClick={() => markHandled([e.id!])} className="font-semibold text-[#003DA5] hover:underline">Mark handled</button> : null}
+                        <tbody className="divide-y divide-slate-100">
+                            {groups.map((g, i) => (
+                                <tr key={g.at + i} className={g.handledAt ? 'opacity-50' : ''}>
+                                    <td className="px-5 py-3 whitespace-nowrap text-slate-600 align-top">{when(g.at)}</td>
+                                    <td className="px-5 py-3 align-top">
+                                        <div className="flex flex-wrap items-center gap-2">
+                                            <Badge tone={TONE[g.severity]}>{EVENT_LABEL[g.type] ?? g.type}</Badge>
+                                            {g.count > 1 && <span className="text-xs font-semibold text-slate-500">{g.count} times</span>}
+                                        </div>
+                                        <div className="text-slate-900 mt-1 break-words">{g.message}</div>
+                                        {ADVICE[g.type] && <div className="text-xs text-slate-500 mt-0.5">{ADVICE[g.type]}</div>}
+                                    </td>
+                                    <td className="px-5 py-3 align-top">
+                                        <div className="text-slate-900">{g.who ?? 'Not signed in'}</div>
+                                        <div className="text-xs text-slate-500 font-mono">{g.ip ?? ''}</div>
+                                    </td>
+                                    <td className="px-5 py-3 align-top text-xs text-slate-600 font-mono break-all">
+                                        {g.paths.slice(0, 3).map(p => <div key={p}>{p}</div>)}
+                                        {g.paths.length > 3 && <div className="font-sans text-slate-500">and {g.paths.length - 3} more</div>}
+                                    </td>
+                                    <td className="px-5 py-3 align-top text-right whitespace-nowrap text-xs">
+                                        {g.handledAt ? <span className="text-slate-500">Handled {when(g.handledAt)}</span>
+                                            : data?.canHandle && g.ids.length && g.severity !== 'info' ? <button onClick={() => markHandled(g.ids)} className="font-semibold text-[#003DA5] hover:underline">Mark handled</button> : null}
                                     </td>
                                 </tr>
                             ))}
-                            {data && events.length === 0 && <tr><td colSpan={6} className="px-4 py-8 text-center text-gray-500">Nothing to show.</td></tr>}
+                            {data && groups.length === 0 && <tr><td colSpan={5} className="px-5 py-10 text-center text-slate-500">{filter === 'all' ? 'Nothing to show.' : 'Nothing needs a look.'}</td></tr>}
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </Card>
         </div>
     );
 }
