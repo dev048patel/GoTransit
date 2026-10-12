@@ -42,6 +42,7 @@ export const MapView: React.FC<MapViewProps> = ({
   routePaths,
   liveBuses,
   handlePlaceSelect,
+  handleMapPlacePick,
   selectedPlaceMarker,
   setSelectedPlaceMarker,
   currentZoom,
@@ -92,6 +93,23 @@ export const MapView: React.FC<MapViewProps> = ({
   // When a place is selected, also show the place bubble
   const handlePlaceSelectWithPopup = (place: any) => {
     handlePlaceSelect(place);
+    setShowInfoWindow(true);
+    setShowBusSuggestions(false);
+    setShowStopDetail(false);
+  };
+
+  // Tapping the map: a named place (shop, park, school…) or any bare spot becomes the destination,
+  // with the same character bubble a search result gets
+  const handleMapClick = async (e: google.maps.MapMouseEvent) => {
+    if (activeTracking || !e.latLng) return;
+    const placeId = (e as google.maps.IconMouseEvent).placeId;
+    // Swap Google's own place popup for the character bubble
+    if (placeId) e.stop();
+    // A tap on empty map while the bubble is open just dismisses it
+    else if (showInfoWindow) { setShowInfoWindow(false); return; }
+
+    const picked = await handleMapPlacePick({ lat: e.latLng.lat(), lng: e.latLng.lng() }, placeId || undefined);
+    if (!picked) return;
     setShowInfoWindow(true);
     setShowBusSuggestions(false);
     setShowStopDetail(false);
@@ -233,6 +251,7 @@ export const MapView: React.FC<MapViewProps> = ({
         onLoad={onMapLoad}
         onZoomChanged={handleZoomChanged}
         onIdle={updateBounds}
+        onClick={handleMapClick}
       >
         {/* Route Tracking Overlay (when tracking is active) */}
         {activeTracking && (

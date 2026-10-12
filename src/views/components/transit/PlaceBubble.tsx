@@ -7,7 +7,7 @@
  *  PlaceBubble     — the card anchored above a map position
  *  destinationPinFor — matching flag pin for the place
  */
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { OverlayView } from '@react-google-maps/api';
 import { Bus, X } from 'lucide-react';
 import { MARKER_CHARACTERS, type MarkerCharacterId } from '../../../models/data/markerCharacters';
@@ -184,17 +184,16 @@ interface BubbleProps extends CardProps {
 
 const PIN_HEIGHT = 50;
 
+// Clicks and drags on the bubble must not fall through to the map underneath (a map tap would pick a
+// new place). A callback ref, because OverlayView mounts the bubble's DOM only after the overlay is added.
+const blockMapHits = (el: HTMLDivElement | null) => {
+    if (el) google.maps.OverlayView.preventMapHitsAndGesturesFrom(el);
+};
+
 export default function PlaceBubble({ position, ...card }: BubbleProps) {
-    const ref = useRef<HTMLDivElement>(null);
-
-    // Clicks and drags on the bubble must not fall through to the map underneath
-    useEffect(() => {
-        if (ref.current) google.maps.OverlayView.preventMapHitsAndGesturesFrom(ref.current);
-    }, []);
-
     return (
         <OverlayView position={position} mapPaneName={OverlayView.FLOAT_PANE}>
-            <div ref={ref} style={{ transform: `translate(-50%, calc(-100% - ${PIN_HEIGHT + 12}px))`, width: 'max-content' }}>
+            <div ref={blockMapHits} style={{ transform: `translate(-50%, calc(-100% - ${PIN_HEIGHT + 12}px))`, width: 'max-content' }}>
                 <PlaceBubbleCard {...card} />
             </div>
         </OverlayView>
