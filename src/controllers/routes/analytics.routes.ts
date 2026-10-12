@@ -19,7 +19,8 @@ function cleanPage(v: unknown): string | undefined {
 }
 /** The signed-in user, taken from the login token if one was sent — never from the request body. */
 async function signedInUserId(req: Request): Promise<string | undefined> {
-    return (await verifyRequest(req))?.id;
+    const user = await verifyRequest(req);
+    return user && user !== 'unavailable' ? user.id : undefined;
 }
 
 /**

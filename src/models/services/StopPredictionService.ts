@@ -19,7 +19,7 @@ export class StopPredictionService {
     static async getPredictions(stopId: string): Promise<StopPrediction[]> {
         try {
             const url = `${API_BASE}?action=stop_times&stop=${encodeURIComponent(stopId)}&routes=all&lim=100&skip=0&ws=1`;
-            const response = await fetch(url);
+            const response = await fetch(url, { signal: AbortSignal.timeout(8000) });   // do not wait forever on a slow feed
 
             if (!response.ok) {
                 throw new Error(`Stop prediction API error: ${response.status}`);

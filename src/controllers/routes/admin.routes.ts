@@ -159,8 +159,10 @@ router.patch('/users/:id', async (req: Request, res: Response) => {
     if (role !== undefined && role !== 'user' && role !== 'admin') { reject(req, res, 'Invalid role'); return; }
     if (account_status !== undefined && !['active', 'suspended', 'deleted'].includes(account_status)) { reject(req, res, 'Invalid status'); return; }
     if (id === req.user!.id && (role === 'user' || (account_status && account_status !== 'active'))) { reject(req, res, 'You cannot demote or suspend yourself'); return; }
-    // Handing out admin power needs a freshly entered authenticator code
-    if (role === 'admin' && Date.now() / 1000 - req.user!.twoStepAt > 10 * 60) {
+    // Handing out admin power, or taking an admin out of action, needs a freshly entered authenticator code
+    const weakens = role === 'user' || (account_status !== undefined && account_status !== 'active');
+    const targetIsAdmin = weakens && (await serviceDb().from('profiles').select('role').eq('id', id).maybeSingle()).data?.role === 'admin';
+    if ((role === 'admin' || targetIsAdmin) && Date.now() / 1000 - req.user!.twoStepAt > 10 * 60) {
         res.status(403).json({ error: 'Enter your authenticator code again to do this', code: 'fresh_two_step_required' });
         return;
     }

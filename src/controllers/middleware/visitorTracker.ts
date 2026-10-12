@@ -73,8 +73,11 @@ export interface VisitorSession {
 // ─── Helpers ──────────────────────────────────────
 const SESSION_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
 
+// One record per address and kind of device. Built from the parsed browser/system/device, not the
+// raw text the caller sends, so nobody can create unlimited records by changing that text.
 function createFingerprint(ip: string, userAgent: string): string {
-    return `${ip}::${userAgent}`;
+    const { browser, os, device } = parseUserAgent(userAgent);
+    return `${ip}::${browser}/${os}/${device}`;
 }
 
 /** Map a DB row to the VisitorSession shape the frontend expects. */

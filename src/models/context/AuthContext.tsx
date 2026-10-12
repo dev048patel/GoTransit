@@ -121,21 +121,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const login = useCallback(async (identifier: string, password: string): Promise<string | null> => {
         let email = identifier.trim();
 
-        // If the identifier looks like a mobile number, ask the backend which email it belongs to.
-        // That lookup is rate limited; the database function behind it is not public.
+        // A mobile number is signed in by the backend, which hands back the session. The browser
+        // never learns which email the number belongs to, and every failure reads the same.
+        let signedIn;
         if (/^\+?\d/.test(email)) {
-            let resolvedEmail: string | null = null;
+            let tokens: { access_token: string; refresh_token: string };
             try {
-                resolvedEmail = (await (await apiPost('/api/auth/resolve-mobile', { mobile: formatMobile(email) })).json()).email;
-            } catch {
-                return 'Mobile login is not available right now. Please use your email.';
+                tokens = await (await apiPost('/api/auth/login-mobile', { mobile: formatMobile(email), password })).json();
+            } catch (e) {
+                return (e as { status?: number }).status === 401 ? 'Invalid credentials. Please try again.' : 'Mobile login is not available right now. Please use your email.';
             }
-            // Same message as a wrong password, so this does not confirm whether a number is registered
-            if (!resolvedEmail) return 'Invalid credentials. Please try again.';
-            email = resolvedEmail;
+            signedIn = await supabase.auth.setSession(tokens);
+        } else {
+            signedIn = await supabase.auth.signInWithPassword({ email, password });
         }
-
-        const { error, data } = await supabase.auth.signInWithPassword({ email, password });
+        const { error, data } = signedIn;
         if (error || !data.user) return 'Invalid credentials. Please try again.';
 
         // Block suspended or soft-deleted accounts from logging in

@@ -23,8 +23,11 @@ function twoStepInfo(token: string): { passed: boolean; at: number } {
     } catch { return { passed: false, at: 0 }; }
 }
 
-/** Reads and verifies the Bearer token. Returns the user, or null when there is none or it is not valid. */
-export async function verifyRequest(req: Request): Promise<Express.Request['user'] | null> {
+/**
+ * Reads and verifies the Bearer token. Returns the user, null when there is none or it is not valid,
+ * or 'unavailable' when the account's status could not be read (so it cannot be assumed active).
+ */
+export async function verifyRequest(req: Request): Promise<Express.Request['user'] | null | 'unavailable'> {
     const header = req.headers.authorization;
     if (!header?.startsWith('Bearer ')) return null;
     const token = header.slice(7);
@@ -32,7 +35,8 @@ export async function verifyRequest(req: Request): Promise<Express.Request['user
     if (error || !data.user) return null;
 
     // Role and status come from the user's own profile row, read with their own token
-    const { data: profile } = await userDb(token).from('profiles').select('role, account_status').eq('id', data.user.id).single();
+    const { data: profile, error: profileErr } = await userDb(token).from('profiles').select('role, account_status').eq('id', data.user.id).single();
+    if (profileErr && profileErr.code !== 'PGRST116') return 'unavailable';   // PGRST116 = no profile row
     if (profile?.account_status === 'suspended' || profile?.account_status === 'deleted') return null;
     const twoStep = twoStepInfo(token);
     return { id: data.user.id, email: data.user.email, role: profile?.role === 'admin' ? 'admin' : 'user', token, twoStep: twoStep.passed, twoStepAt: twoStep.at };
@@ -45,8 +49,9 @@ export async function verifyRequest(req: Request): Promise<Express.Request['user
  */
 export async function requireAuth(req: Request, res: Response, next: NextFunction): Promise<void> {
     const user = await verifyRequest(req);
+    if (user === 'unavailable') { res.status(503).json({ error: 'Please try again in a moment' }); return; }
     if (!user) {
-        void SecurityEventService.record({ type: 'auth_failed', severity: 'warning', ip: clientIp(req), path: req.originalUrl,
+        void SecurityEventService.record({ type: 'auth_failed', severity: 'warning', throttle: true, ip: clientIp(req), path: req.originalUrl,
             message: req.headers.authorization ? 'Invalid, expired or suspended login token' : 'No login token sent to a protected endpoint' });
         res.status(401).json({ error: 'Sign in required' });
         return;

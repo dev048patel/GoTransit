@@ -7,16 +7,33 @@
 import { BusPosition } from '../transit/BusPosition';
 
 //Handle interaction with the Transit Live Public API.
+const SHARE_MS = 500;             // how long one fetched copy is handed to everybody
+const UPSTREAM_TIMEOUT_MS = 5000;   // give up on a feed that does not answer
+
 export class RealTimeService {
     private static API_URL = process.env.TRANSIT_LIVE_API_URL;
 
     // getLiveBuses() is function which returns a promise to return an array of BusPosition objects.
-    static async getLiveBuses(): Promise<BusPosition[]> {
+    static getLiveBuses(): Promise<BusPosition[]> {
+        // One shared fetch for everybody. The feed changes about every 1.4 s and each map asks every
+        // 1.5 s, so a copy at most half a second old looks the same to riders, and TransitLive sees at
+        // most two requests a second from us however many riders have the map open.
+        if (this.latest && Date.now() - this.latestAt < SHARE_MS) return Promise.resolve(this.latest);
+        this.inFlight ??= this.fetchLiveBuses().then(buses => { this.latest = buses; this.latestAt = Date.now(); return buses; })
+            .finally(() => { this.inFlight = null; });
+        return this.inFlight;
+    }
+
+    private static latest: BusPosition[] | null = null;
+    private static latestAt = 0;
+    private static inFlight: Promise<BusPosition[]> | null = null;
+
+    private static async fetchLiveBuses(): Promise<BusPosition[]> {
         try {
             // Append timestamp to prevent caching.
             const urlWithTime = `${this.API_URL}?_=${Date.now()}`;
 
-            const response = await fetch(urlWithTime); // making HTTP GET req to API(External) and await for response.
+            const response = await fetch(urlWithTime, { signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS) }); // making HTTP GET req to API(External) and await for response.
 
             if (!response.ok) {
                 throw new Error(`External API Error: ${response.status} ${response.statusText}`);

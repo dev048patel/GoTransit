@@ -56,6 +56,22 @@ outside uptime monitor (UptimeRobot and Better Stack both have free plans) that 
   `https://www.transitregina.ca/*`, limit it to the Maps and Places APIs, and set a daily quota alert.
 - **GitHub → Settings → Code security:** enable Dependabot alerts and secret scanning.
 
+## October 2026 audit fixes
+
+A full audit found ten weaknesses; all ten are fixed in code.
+
+- **Railway setting (optional):** `TRUST_PROXY_HOPS`. Leave unset; the default of 2 matches Railway today.
+  **Check after every deploy:** `curl -X POST -H "Content-Type: application/json" -d '{"page":"/"}' https://gotransit-production.up.railway.app/api/analytics/beacon`
+  must answer with **your own** public address at the start of `sessionId`, and must give the same
+  answer when you add `-H "X-Forwarded-For: 1.2.3.4"`. If it shows a `152.233.…` address, every
+  visitor is sharing one rate limit: raise the setting by one.
+- **Run `004_audit_fixes.sql`** once the new backend is live.
+- **`005_enforce_feature_switches.sql`** is optional; read its header first.
+- **Text reminders** now go only to numbers marked verified, and nothing marks a number verified
+  yet. Build a code-by-text check before switching Twilio on.
+- **Phone sign-in** is now done by the backend (`/api/auth/login-mobile`). All phone sign-ins reach
+  Supabase from the backend's address, so Supabase's own sign-in limit applies to them together.
+
 ## Marking events as handled
 
 On Admin → Security, "Mark handled" (or "Mark all shown as handled") hides an event once you have
