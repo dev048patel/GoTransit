@@ -18,6 +18,7 @@ import { DetourService } from '../models/services/DetourService';
 import { ActiveDetour } from '../models/transit/Detour';
 import { RoutePolylineService } from '../models/services/RoutePolylineService';
 import type { WeatherSnapshot } from '../models/services/WeatherService';
+import { PlacesService } from '../models/services/PlacesService';
 
 export const useMapController = (): MapControllerOutput => {
   // 1. Fetch Configuration from Model and initialize state variables
@@ -217,6 +218,20 @@ export const useMapController = (): MapControllerOutput => {
     }
   };
 
+  // Place picked by tapping the map: a named place (POI) or a bare spot. The map stays where it is.
+  const pickRequestRef = useRef(0);
+  const handleMapPlacePick = useCallback(async (location: Coordinates, placeId?: string): Promise<boolean> => {
+    const request = ++pickRequestRef.current;
+    let name: string | null = null;
+    try {
+      name = placeId ? await PlacesService.getPlaceName(placeId) : await PlacesService.getAddressAt(location);
+    } catch { /* lookup failed — fall back to a generic label */ }
+    // A newer tap has superseded this one
+    if (request !== pickRequestRef.current) return false;
+    setSelectedPlaceMarker({ location, name: name || (placeId ? 'Selected place' : 'Dropped pin') });
+    return true;
+  }, []);
+
   // 3. Return prepared data for the View
   return {
     isLoaded,
@@ -236,6 +251,7 @@ export const useMapController = (): MapControllerOutput => {
       ? liveBuses.filter(b => String(b.route_num) === selectedRoute)
       : liveBuses,
     handlePlaceSelect,
+    handleMapPlacePick,
     selectedPlaceMarker,
     setSelectedPlaceMarker,
     currentZoom,

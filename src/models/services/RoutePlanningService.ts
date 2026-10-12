@@ -8,7 +8,7 @@
 import transitStops from '../data/transitStops';
 import transitRoutes from '../data/transitRoutes';
 import { TripOption, RouteSegment } from '../transit/RoutePlanning';
-import { getRoutesForStop, getStopsForRoute, getOrderedStopsForRoute, getStopPositionOnRoute, checkStopDirection, getGtfsDirectionsForStop } from './StopToRouteIndex';
+import { getRoutesForStop, getStopsForRoute, getOrderedStopsForRoute, getStopPositionOnRoute, checkStopDirection, getGtfsDirectionsForStop, getTerminusTurnaround } from './StopToRouteIndex';
 import { BusPosition } from '../transit/BusPosition';
 import { StopPrediction } from '../transit/StopPrediction';
 import { Coordinates } from '../MapModel';
@@ -208,10 +208,10 @@ export class RoutePlanningService {
             const routeInfo = transitRoutes.find(r => r.ROUTE_NUM === routeNum);
             if (!routeInfo) continue;
 
-            // Try all destination stop candidates for this route.
-            // For each dStop, filter origin stops by matching GTFS direction_id,
-            // then pick the first origin stop that also passes geometric direction check.
-            // Track the best overall pair by combined walking distance.
+            // Try all destination stop candidates for this route and keep the (origin, dest) pair
+            // with the shortest trip. checkStopDirection rules out pairs where the bus heads away
+            // from the destination, including stops whose GTFS directions don't match, unless the
+            // bus loops round a nearby terminus to reach it.
             let bestOStop: NearbyStop | null = null;
             let bestDStop: NearbyStop | null = null;
             let bestShapeDistance = 0;
@@ -220,24 +220,11 @@ export class RoutePlanningService {
             console.log(`[DEBUG] Route ${routeNum}: ${oCandidates.length} origin, ${dCandidates.length} dest candidates`);
 
             for (const dStop of dCandidates) {
-                // GTFS direction filter: origin must serve same direction_id as this dStop
-                const destDirs = getGtfsDirectionsForStop(dStop.STOP_ID, routeNum);
-                const dirFiltered = destDirs.length > 0
-                    ? oCandidates.filter(c => {
-                        const oDirs = getGtfsDirectionsForStop(c.STOP_ID, routeNum);
-                        return oDirs.length === 0 || oDirs.some(d => destDirs.includes(d));
-                    })
-                    : oCandidates;
-                // Only fall back to all candidates when we have NO direction data for the destination.
-                // When destDirs is non-empty and dirFiltered is empty, every origin stop serves the
-                // OPPOSITE direction — using them would suggest a bus going away from the destination.
-                const effectiveCandidates = destDirs.length > 0 ? dirFiltered : oCandidates;
-
-                for (const oStop of effectiveCandidates) {
+                for (const oStop of oCandidates) {
                     // Direction check: oStop must come BEFORE dStop on the route.
                     // Only hard-reject if the check explicitly says INVALID.
-                    // Null (inconclusive) is allowed — pre-filter already matched direction_id,
-                    // and rejecting null would hide valid routes for stops in GTFS coverage gaps.
+                    // Null (inconclusive) only happens when GTFS has no direction data to compare,
+                    // and rejecting it would hide valid routes for stops in GTFS coverage gaps.
                     const dirCheck = checkStopDirection(routeNum, oStop.STOP_ID, dStop.STOP_ID);
                     if (dirCheck && !dirCheck.valid) continue; // explicitly invalid — skip
 
@@ -296,7 +283,8 @@ export class RoutePlanningService {
                 toStopLng: parseFloat(bestDStop.LON),
                 estimatedTime: Math.round(busTime),
                 direction: getStopDirection(bestOStop.STOP_ID) ?? undefined,
-                intermediateStops: intermediateStops.length > 0 ? intermediateStops : undefined
+                intermediateStops: intermediateStops.length > 0 ? intermediateStops : undefined,
+                ...this.turnaroundFields(routeNum, bestOStop.STOP_ID, bestDStop.STOP_ID)
             };
 
             options.push({
@@ -524,7 +512,8 @@ export class RoutePlanningService {
                     toStopLng: bestTransfer.getOffLng,
                     estimatedTime: Math.round(seg1Time),
                     direction: getStopDirection(originStop.STOP_ID) ?? undefined,
-                    intermediateStops: seg1IntermediateStops.length > 0 ? seg1IntermediateStops : undefined
+                    intermediateStops: seg1IntermediateStops.length > 0 ? seg1IntermediateStops : undefined,
+                    ...this.turnaroundFields(oRouteNum, originStop.STOP_ID, bestTransfer.getOffId)
                 };
 
                 const seg2IntermediateStops = getOrderedStopsForRoute(dRouteNum, bestTransfer.boardId, dStop.STOP_ID);
@@ -542,7 +531,8 @@ export class RoutePlanningService {
                     toStopLng: parseFloat(dStop.LON),
                     estimatedTime: Math.round(seg2Time),
                     direction: getStopDirection(bestTransfer.boardId) ?? undefined,
-                    intermediateStops: seg2IntermediateStops.length > 0 ? seg2IntermediateStops : undefined
+                    intermediateStops: seg2IntermediateStops.length > 0 ? seg2IntermediateStops : undefined,
+                    ...this.turnaroundFields(dRouteNum, bestTransfer.boardId, dStop.STOP_ID)
                 };
 
                 options.push({
@@ -653,6 +643,12 @@ export class RoutePlanningService {
         }
 
         return shortcuts;
+    }
+
+    /** For a ride that stays on through the end of the line: where the bus turns round. */
+    private turnaroundFields(routeNum: string, fromStopId: string, toStopId: string): Pick<RouteSegment, 'turnaroundStop'> {
+        const turnaroundStop = getTerminusTurnaround(routeNum, fromStopId, toStopId);
+        return turnaroundStop ? { turnaroundStop } : {};
     }
 
     /** Minutes to walk a distance, slowed by winter weather. */

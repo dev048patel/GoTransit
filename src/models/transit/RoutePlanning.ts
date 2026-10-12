@@ -23,6 +23,7 @@ export interface RouteSegment {
     predTime?: string;         // Real predicted arrival time string from API (e.g. "01:18 PM")
     busId?: number;            // Bus vehicle number from predictions API (e.g. 2402)
     intermediateStops?: string[]; // Ordered list of stop names between fromStop and toStop
+    turnaroundStop?: string;      // End of the line the bus turns round at while the rider stays on
 }
 
 export interface TripOption {

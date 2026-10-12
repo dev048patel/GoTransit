@@ -118,6 +118,9 @@ export default function TrackingPanel({ tripOption, onStopTracking, onBack }: Tr
                                     }
                                 />
                                 <Step small color={segColor} line={segColor} thick title={`Ride ~${seg.estimatedTime} min`} />
+                                {seg.turnaroundStop && (
+                                    <Step small color={segColor} line={segColor} thick title={`Stay on as the bus turns round at ${seg.turnaroundStop}`} />
+                                )}
                                 <Step
                                     color={RED} line={isLast ? GREY : ORANGE} dashed
                                     title={seg.toStop}

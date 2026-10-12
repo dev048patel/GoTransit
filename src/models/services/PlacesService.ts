@@ -65,4 +65,18 @@ export class PlacesService {
         if (!place.location) throw new Error(`No location returned for place ${placeId}`);
         return { lat: place.location.lat(), lng: place.location.lng() };
     }
+
+    // Name of a place tapped on the map, as "Name, address" — the same shape search results use
+    static async getPlaceName(placeId: string): Promise<string> {
+        const { Place } = await PlacesService.load();
+        const place = new Place({ id: placeId });
+        await place.fetchFields({ fields: ['displayName', 'formattedAddress'] });
+        return [place.displayName, place.formattedAddress].filter(Boolean).join(', ');
+    }
+
+    // Street address nearest to a spot on the map with no place on it
+    static async getAddressAt(location: { lat: number; lng: number }): Promise<string | null> {
+        const { results } = await new google.maps.Geocoder().geocode({ location });
+        return results[0]?.formatted_address ?? null;
+    }
 }
