@@ -17,12 +17,13 @@ const USER = '22222222-2222-4222-8222-222222222222';
 const SUSPENDED = '33333333-3333-4333-8333-333333333333';
 const OTHER = '44444444-4444-4444-8444-444444444444';
 /** A token shaped like Supabase's: the middle part says whether the login passed the second step (aal2). */
-const jwt = (sub: string, aal: 'aal1' | 'aal2') =>
-    ['e30', Buffer.from(JSON.stringify({ sub, aal })).toString('base64url'), 'signature'].join('.');
-const T = { admin: jwt(ADMIN, 'aal2'), adminNoTwoStep: jwt(ADMIN, 'aal1'), user: jwt(USER, 'aal1'), suspended: jwt(SUSPENDED, 'aal1') };
+const jwt = (sub: string, aal: 'aal1' | 'aal2', codeAgeSeconds = 30) =>
+    ['e30', Buffer.from(JSON.stringify({ sub, aal, amr: aal === 'aal2' ? [{ method: 'password', timestamp: 1 }, { method: 'totp', timestamp: Math.floor(Date.now() / 1000) - codeAgeSeconds }] : [{ method: 'password', timestamp: 1 }] })).toString('base64url'), 'signature'].join('.');
+const T = { admin: jwt(ADMIN, 'aal2'), adminStaleCode: jwt(ADMIN, 'aal2', 3600), adminNoTwoStep: jwt(ADMIN, 'aal1'), user: jwt(USER, 'aal1'), suspended: jwt(SUSPENDED, 'aal1') };
 const TOKENS: Record<string, { id: string; role: string; status: string }> = {
     [T.admin]: { id: ADMIN, role: 'admin', status: 'active' },
     [T.adminNoTwoStep]: { id: ADMIN, role: 'admin', status: 'active' },
+    [T.adminStaleCode]: { id: ADMIN, role: 'admin', status: 'active' },
     [T.user]: { id: USER, role: 'user', status: 'active' },
     [T.suspended]: { id: SUSPENDED, role: 'user', status: 'suspended' },
 };
@@ -110,6 +111,11 @@ const ADMIN_ONLY: [string, string, unknown?][] = [
     ['DELETE', `/api/admin/fac/reset/${OTHER}`],
     ['POST', '/api/admin/fac/set-all', { feature: 'weekly_planner', enabled: true }],
     ['GET', '/api/admin/security'],
+    ['GET', '/api/admin/overview'],
+    ['GET', '/api/admin/activity'],
+    ['GET', `/api/admin/users/${OTHER}`],
+    ['POST', '/api/admin/reveal', { what: 'visitor addresses' }],
+    ['POST', '/api/admin/security/handled', { ids: [1] }],
     ['GET', '/api/admin/routes'],
     ['PATCH', '/api/admin/routes/4', { hidden: true }],
     ['GET', '/api/analytics/visitors'],
@@ -222,6 +228,47 @@ test('bad input to admin endpoints is rejected before reaching the database', as
         assert.equal(r.status, 400, `${method} ${p} ${JSON.stringify(body)}`);
         assert.equal(backendWrites().length, 0);
     }
+});
+
+test('deleting a user or granting admin needs a freshly entered authenticator code', async () => {
+    const del = await api('DELETE', `/api/admin/users/${OTHER}`, { token: T.adminStaleCode });
+    assert.equal(del.status, 403);
+    assert.equal(del.json.code, 'fresh_two_step_required');
+    const grant = await api('PATCH', `/api/admin/users/${OTHER}`, { token: T.adminStaleCode, body: { role: 'admin' } });
+    assert.equal(grant.json.code, 'fresh_two_step_required');
+    assert.equal(calls.filter(c => c.url.includes('/auth/v1/admin/')).length, 0);
+    // routine admin work is not interrupted by an older code
+    assert.equal((await api('GET', '/api/admin/activity', { token: T.adminStaleCode })).status, 200);
+    assert.equal((await api('PATCH', `/api/admin/users/${OTHER}`, { token: T.adminStaleCode, body: { account_status: 'suspended' } })).status, 200);
+});
+
+test('a reason given for an action is kept in the log', async () => {
+    await api('PATCH', `/api/admin/users/${OTHER}`, { token: T.admin, body: { account_status: 'suspended', reason: 'Abusive reports' } });
+    assert.ok(events.recent().some(e => e.type === 'status_changed' && /Reason: Abusive reports/.test(e.message)));
+});
+
+test('marking events as handled updates only those events, keeps them, and is recorded', async () => {
+    assert.equal((await api('POST', '/api/admin/security/handled', { token: T.admin, body: { ids: [7, 9] } })).status, 200);
+    const write = calls.find(c => c.method === 'PATCH' && c.url.startsWith('/rest/v1/security_events'));
+    assert.ok(write && /id=in\.(%28|\()7(%2C|,)9/.test(write.url), 'only the chosen events');
+    assert.equal(write.body.handled_by, ADMIN);
+    assert.ok(write.body.handled_at);
+    assert.equal(calls.filter(c => c.method === 'DELETE').length, 0, 'events are never deleted');
+    assert.ok(events.recent().some(e => e.type === 'events_handled' && e.userId === ADMIN));
+    for (const ids of [[], ['1'], [0], [1.5], 'all', Array(501).fill(1)])
+        assert.equal((await api('POST', '/api/admin/security/handled', { token: T.admin, body: { ids } })).status, 400, JSON.stringify(ids).slice(0, 20));
+});
+
+test('revealing hidden personal data is recorded against the admin', async () => {
+    assert.equal((await api('POST', '/api/admin/reveal', { token: T.admin, body: { what: 'visitor addresses' } })).status, 200);
+    assert.ok(events.recent().some(e => e.type === 'personal_data_viewed' && e.userId === ADMIN));
+});
+
+test('the overview reports live numbers, a seven-day trend and anything needing attention', async () => {
+    const r = await api('GET', '/api/admin/overview', { token: T.admin });
+    assert.equal(r.status, 200);
+    assert.equal(r.json.trend.length, 7);
+    for (const k of ['live', 'today', 'totals', 'attention', 'recent']) assert.ok(k in r.json, k);
 });
 
 /* ── public endpoints ── */
@@ -340,6 +387,24 @@ test('unknown paths answer 404 as JSON', async () => {
     const r = await api('GET', '/api/does-not-exist');
     assert.equal(r.status, 404);
     assert.deepEqual(r.json, { error: 'Not found' });
+});
+
+/* ── days are counted in Regina time, not the server's ── */
+
+test('a Sunday-evening search in Regina is counted on Sunday, not Monday', async () => {
+    const { reginaWeekday, reginaDateKey, startOfReginaDay, startOfReginaWeek } = await import('../src/models/services/ReginaTime');
+    // 9 p.m. Sunday 11 Oct 2026 in Regina is 3 a.m. Monday in UTC — the bug counted it as Monday
+    const sundayEvening = '2026-10-12T03:00:00Z';
+    assert.equal(reginaWeekday(sundayEvening), 'Sun');
+    assert.equal(reginaDateKey(sundayEvening), '2026-10-11');
+    assert.equal(reginaWeekday('2026-10-12T06:00:00Z'), 'Mon', 'midnight in Regina starts Monday');
+    assert.equal(reginaWeekday('2026-10-12T05:59:59Z'), 'Sun');
+    // day and week boundaries
+    const now = Date.parse(sundayEvening);
+    assert.equal(startOfReginaDay(0, now).toISOString(), '2026-10-11T06:00:00.000Z');
+    assert.equal(startOfReginaDay(-1, now).toISOString(), '2026-10-10T06:00:00.000Z');
+    assert.equal(startOfReginaWeek(now).toISOString(), '2026-10-05T06:00:00.000Z', 'the week began the previous Monday');
+    assert.equal(startOfReginaWeek(Date.parse('2026-10-12T06:00:00Z')).toISOString(), '2026-10-12T06:00:00.000Z');
 });
 
 /* ── alerting ── */

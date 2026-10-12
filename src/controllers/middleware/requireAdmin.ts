@@ -2,6 +2,21 @@ import { Request, Response, NextFunction } from 'express';
 import { SecurityEventService } from '../../models/services/SecurityEventService';
 import { clientIp } from './security';
 
+const FRESH_SECONDS = 10 * 60;
+
+/**
+ * For the few actions that cannot be undone or that hand out power: the authenticator code must
+ * have been entered in the last 10 minutes, so an unattended admin session cannot be used for them.
+ * Use after requireAuth and requireAdmin.
+ */
+export function requireFreshTwoStep(req: Request, res: Response, next: NextFunction): void {
+    if (Date.now() / 1000 - (req.user?.twoStepAt ?? 0) > FRESH_SECONDS) {
+        res.status(403).json({ error: 'Enter your authenticator code again to do this', code: 'fresh_two_step_required' });
+        return;
+    }
+    next();
+}
+
 /**
  * Must be used after requireAuth (relies on req.user being set, including its role).
  * Returns 403 if the user is signed in but not an admin, or is an admin who has not

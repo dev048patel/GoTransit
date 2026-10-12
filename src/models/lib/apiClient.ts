@@ -21,8 +21,9 @@ async function authHeaders(): Promise<Record<string, string>> {
 
 async function checkOk(res: Response): Promise<Response> {
     if (!res.ok) {
-        const body = await res.json().catch(() => ({})) as { error?: string };
-        throw new Error(body.error ?? `HTTP ${res.status}`);
+        const body = await res.json().catch(() => ({})) as { error?: string; code?: string };
+        // `code` lets callers react to specific refusals (e.g. "enter your authenticator code again")
+        throw Object.assign(new Error(body.error ?? `HTTP ${res.status}`), { code: body.code, status: res.status });
     }
     return res;
 }

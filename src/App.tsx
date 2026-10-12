@@ -43,10 +43,12 @@ const ForgotPasswordPage = React.lazy(() => import('./views/auth/ForgotPasswordP
 const ResetPasswordPage = React.lazy(() => import('./views/auth/ResetPasswordPage'));
 const ConnectPage = React.lazy(() => import('./views/ConnectPage'));
 const AdminLayout = React.lazy(() => import('./views/layouts/AdminLayout'));
-const Dashboard = React.lazy(() => import('./views/admin/Dashboard'));
+const AdminHome = React.lazy(() => import('./views/admin/AdminHome'));
+const People = React.lazy(() => import('./views/admin/People'));
+const PersonPage = React.lazy(() => import('./views/admin/PersonPage'));
+const Insights = React.lazy(() => import('./views/admin/Insights'));
+const ActivityLog = React.lazy(() => import('./views/admin/ActivityLog'));
 const RouteManager = React.lazy(() => import('./views/admin/RouteManager'));
-const UserManager = React.lazy(() => import('./views/admin/UserManager'));
-const VisitorAnalytics = React.lazy(() => import('./views/admin/VisitorAnalytics'));
 const FeatureAccessControl = React.lazy(() => import('./views/admin/FeatureAccessControl'));
 const SecurityCenter = React.lazy(() => import('./views/admin/SecurityCenter'));
 const TwoStepPage = React.lazy(() => import('./views/auth/TwoStepPage'));
@@ -161,12 +163,19 @@ function AppRoutes() {
                         </AdminRoute>
                     }
                 >
-                    <Route index element={<Dashboard />} />
-                    <Route path="routes" element={<RouteManager />} />
-                    <Route path="users" element={<UserManager />} />
-                    <Route path="analytics" element={<VisitorAnalytics />} />
-                    <Route path="fac" element={<FeatureAccessControl />} />
+                    <Route index element={<AdminHome />} />
+                    <Route path="people" element={<People />} />
+                    <Route path="people/features" element={<FeatureAccessControl />} />
+                    <Route path="people/:id" element={<PersonPage />} />
+                    <Route path="service" element={<RouteManager />} />
+                    <Route path="insights" element={<Insights />} />
                     <Route path="security" element={<SecurityCenter />} />
+                    <Route path="activity" element={<ActivityLog />} />
+                    {/* Old addresses still work */}
+                    <Route path="users" element={<Navigate to="/admin/people" replace />} />
+                    <Route path="fac" element={<Navigate to="/admin/people/features" replace />} />
+                    <Route path="routes" element={<Navigate to="/admin/service" replace />} />
+                    <Route path="analytics" element={<Navigate to="/admin/insights" replace />} />
                 </Route>
 
                 {/* ── Public: /connect — Meet the Team ─────────────────── */}
