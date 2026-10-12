@@ -6,6 +6,7 @@
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useVisitorAnalyticsController, DatePreset } from '../../controllers/admin/useVisitorAnalyticsController';
+import { apiPost } from '../../models/lib/apiClient';
 import {
     Globe, Monitor, Smartphone, Tablet, Chrome, Clock, Users, Eye,
     RefreshCw, Wifi, Activity, MapPin, Calendar, ChevronDown, ChevronRight, Search, Shield
@@ -22,7 +23,17 @@ const DeviceIcon = ({ device }: { device: string }) => {
     return <Monitor size={16} className="text-gray-500" />;
 };
 
+/** 142.165.12.34 → 142.165.•••.••• (enough to tell visitors apart, not enough to identify one) */
+function maskIp(ip: string): string {
+    const v4 = ip.match(/^(\d+\.\d+)\.\d+\.\d+$/);
+    return v4 ? `${v4[1]}.•••.•••` : ip.split(':').slice(0, 2).join(':') + ':••••';
+}
+
 export default function VisitorAnalytics() {
+    const [showIps, setShowIps] = useState(false);
+    const revealIps = async () => {
+        try { await apiPost('/api/admin/reveal', { what: 'full visitor IP addresses' }); setShowIps(true); } catch { /* stay hidden */ }
+    };
     const {
         visitors, summary, loading, error, lastRefreshed, refresh,
         activePreset, dateFrom, dateTo, applyPreset, setCustomRange
@@ -92,7 +103,7 @@ export default function VisitorAnalytics() {
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900">Visitor Analytics</h1>
+                    <h1 className="text-2xl font-bold text-slate-900">Visitors</h1>
                     <p className="text-gray-500 mt-1">Real-time visitor tracking and insights</p>
                 </div>
                 <div className="flex items-center gap-3">
@@ -336,6 +347,12 @@ export default function VisitorAnalytics() {
                             ({filteredVisitors.length}{searchQuery ? ` of ${visitors.length}` : ''} unique)
                         </span>
                     </h3>
+                    {!showIps && (
+                        <button onClick={revealIps} className="text-xs font-semibold text-[#003DA5] border border-slate-200 rounded-lg px-3 py-1.5 hover:bg-slate-50"
+                            title="Addresses are partly hidden. Showing them in full is recorded in the activity log.">
+                            Show full addresses
+                        </button>
+                    )}
                     <div className="relative">
                         <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                         <input
@@ -392,7 +409,7 @@ export default function VisitorAnalytics() {
                                                 </span>
                                             )}
                                             <div className="min-w-0">
-                                                <code className="bg-gray-100 px-2 py-0.5 rounded text-xs font-mono text-gray-700">{visitor.ip}</code>
+                                                <code className="bg-gray-100 px-2 py-0.5 rounded text-xs font-mono text-gray-700">{showIps ? visitor.ip : maskIp(visitor.ip)}</code>
                                                 {visitor.email && (
                                                     <p className="text-xs text-blue-600 font-medium truncate mt-0.5">{visitor.email}</p>
                                                 )}

@@ -15,7 +15,7 @@ Do these in order. Steps 1 and 2 can be done before the code is deployed.
    |---|---|---|
    | `SUPABASE_SERVICE_ROLE_KEY` | Supabase → Project Settings → API → `service_role` key | The backend's own database access. Never put this in Vercel or in any `VITE_` setting. |
    | `RESEND_API_KEY` | A Resend API key with sending access | Sends alert emails |
-   | `ALERT_EMAILS` | Admin addresses, comma-separated | Who receives alerts | dmarc.translate@gmail.com
+   | `ALERT_EMAILS` | Admin addresses, comma-separated | Who receives alerts | 
    | `ALERT_FROM` | `Transit Regina Alerts <alerts@transitregina.ca>` | Sender shown on alerts (optional) |
    | `BACKEND_URL` | The backend's public address, no trailing slash | Needed to verify Twilio's signature |
 
@@ -55,6 +55,13 @@ outside uptime monitor (UptimeRobot and Better Stack both have free plans) that 
 - **Google Cloud → Credentials → the Maps key:** restrict it to `https://transitregina.ca/*` and
   `https://www.transitregina.ca/*`, limit it to the Maps and Places APIs, and set a daily quota alert.
 - **GitHub → Settings → Code security:** enable Dependabot alerts and secret scanning.
+
+## Marking events as handled
+
+On Admin → Security, "Mark handled" (or "Mark all shown as handled") hides an event once you have
+dealt with it. It also clears it from the Home page's "needs attention" banner. Nothing is deleted:
+tick "Show handled" to see them again, and everything is removed automatically after 90 days.
+Needs `003_handled_events.sql` to be run once; until then the buttons do not appear.
 
 ## 4. Two-step sign-in for admins
 

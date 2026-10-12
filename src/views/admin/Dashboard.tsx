@@ -44,33 +44,8 @@ export default function Dashboard() {
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-                <p className="text-gray-500 mt-1">Transit Regina — Admin Overview</p>
-            </div>
-
-            {/* Metric Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <MetricCard
-                    title="Active Routes"
-                    value={activeRoutes}
-                    icon={Route}
-                    color="green"
-                    sub="From Regina Transit open data"
-                />
-                <MetricCard
-                    title="Registered Users"
-                    value={isLoading ? '…' : registeredUsers}
-                    icon={Users}
-                    color="blue"
-                    sub="From Supabase — live"
-                />
-                <MetricCard
-                    title="Total Interactions"
-                    value={isLoading ? '…' : totalInteractions.toLocaleString()}
-                    icon={TrendingUp}
-                    color="purple"
-                    sub="Places + Directions (all time)"
-                />
+                <h1 className="text-2xl font-bold text-slate-900">Insights</h1>
+                <p className="text-sm text-slate-500 mt-1">What riders use, by day. Days are counted in Regina time.</p>
             </div>
 
             {/* Charts Row */}

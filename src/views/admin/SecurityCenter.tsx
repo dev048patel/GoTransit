@@ -13,10 +13,11 @@ const SEVERITY: Record<string, string> = {
 const when = (iso: string) => new Date(iso).toLocaleString('en-CA', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
 export default function SecurityCenter() {
-    const { data, error, events, filter, setFilter, reload, counts } = useSecurityController();
+    const { data, error, events, filter, setFilter, reload, counts, showHandled, setShowHandled, markHandled } = useSecurityController();
+    const open = events.filter(e => e.id && !e.handledAt).map(e => e.id!);
 
     return (
-        <div className="p-6 space-y-6">
+        <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900">Security</h1>
@@ -67,6 +68,15 @@ export default function SecurityCenter() {
                 <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-100">
                     <ShieldAlert size={18} className="text-gray-500" />
                     <h2 className="font-semibold text-gray-900 flex-1">Events</h2>
+                    {data?.canHandle && <>
+                        <label className="flex items-center gap-1.5 text-xs text-gray-600 mr-2">
+                            <input type="checkbox" checked={showHandled} onChange={e => setShowHandled(e.target.checked)} /> Show handled
+                        </label>
+                        <button onClick={() => markHandled(open)} disabled={!open.length}
+                            className="px-3 py-1 rounded-full text-xs font-semibold border border-gray-200 text-gray-700 hover:bg-gray-50 disabled:opacity-40 mr-2">
+                            Mark all shown as handled
+                        </button>
+                    </>}
                     {(['all', 'warning', 'critical'] as const).map(f => (
                         <button key={f} onClick={() => setFilter(f)} aria-pressed={filter === f}
                             className={'px-3 py-1 rounded-full text-xs font-semibold ' + (filter === f ? 'bg-slate-800 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200')}>
@@ -77,19 +87,23 @@ export default function SecurityCenter() {
                 <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                         <thead className="text-left text-xs text-gray-500 uppercase bg-gray-50">
-                            <tr><th className="px-4 py-2">When</th><th className="px-4 py-2">Level</th><th className="px-4 py-2">What happened</th><th className="px-4 py-2">Address</th><th className="px-4 py-2">Path</th></tr>
+                            <tr><th className="px-4 py-2">When</th><th className="px-4 py-2">Level</th><th className="px-4 py-2">What happened</th><th className="px-4 py-2">Address</th><th className="px-4 py-2">Path</th><th className="px-4 py-2" /></tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
                             {events.map((e, i) => (
-                                <tr key={e.at + i}>
+                                <tr key={e.at + i} className={e.handledAt ? 'opacity-50' : ''}>
                                     <td className="px-4 py-2 whitespace-nowrap text-gray-600">{when(e.at)}</td>
                                     <td className="px-4 py-2"><span className={'px-2 py-0.5 rounded-full text-xs font-semibold ' + SEVERITY[e.severity]}>{e.severity}</span></td>
                                     <td className="px-4 py-2 text-gray-900">{e.message}<div className="text-xs text-gray-400">{e.type}</div></td>
                                     <td className="px-4 py-2 text-gray-600 font-mono text-xs">{e.ip ?? '—'}</td>
                                     <td className="px-4 py-2 text-gray-600 font-mono text-xs break-all">{e.path ?? '—'}</td>
+                                    <td className="px-4 py-2 text-right whitespace-nowrap text-xs">
+                                        {e.handledAt ? <span className="text-gray-500">Handled {when(e.handledAt)}</span>
+                                            : data?.canHandle && e.id ? <button onClick={() => markHandled([e.id!])} className="font-semibold text-[#003DA5] hover:underline">Mark handled</button> : null}
+                                    </td>
                                 </tr>
                             ))}
-                            {data && events.length === 0 && <tr><td colSpan={5} className="px-4 py-8 text-center text-gray-500">Nothing to show.</td></tr>}
+                            {data && events.length === 0 && <tr><td colSpan={6} className="px-4 py-8 text-center text-gray-500">Nothing to show.</td></tr>}
                         </tbody>
                     </table>
                 </div>

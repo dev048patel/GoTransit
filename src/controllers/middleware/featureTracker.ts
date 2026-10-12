@@ -8,11 +8,9 @@
 */
 
 import { serviceDb } from '../../models/lib/serverDb';
+import { reginaWeekday, startOfReginaWeek } from '../../models/services/ReginaTime';
 
 type FeatureType = 'places' | 'directions';
-
-// Day names in order (Mon–Sun)
-const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 /* ── Public API ──────────────────────────────────────────────────── */
 
@@ -28,13 +26,8 @@ export async function recordFeatureEvent(type: FeatureType): Promise<void> {
  * Week starts on Monday and ends on Sunday.
  */
 export async function getWeeklyFeatureData(): Promise<{ day: string; places: number; directions: number }[]> {
-    const now = new Date();
-    const dayOfWeek = now.getDay();
-    const diffToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-    const monday = new Date(now);
-    monday.setDate(monday.getDate() - diffToMonday);
-    monday.setHours(0, 0, 0, 0);
-
+    // The week and each day are Regina's, not the server's (which runs in UTC)
+    const monday = startOfReginaWeek();
     const sundayEnd = new Date(monday.getTime() + 7 * 24 * 60 * 60 * 1000);
 
     // Fetch this week's events from DB
@@ -50,7 +43,7 @@ export async function getWeeklyFeatureData(): Promise<{ day: string; places: num
     orderedDays.forEach(d => { buckets[d] = { places: 0, directions: 0 }; });
 
     for (const e of events ?? []) {
-        const dayName = DAY_NAMES[new Date(e.created_at).getDay()];
+        const dayName = reginaWeekday(e.created_at);
         if (buckets[dayName]) {
             buckets[dayName][e.type as FeatureType]++;
         }
@@ -76,7 +69,7 @@ export async function getDailyTrafficData(): Promise<{ name: string; value: numb
     orderedDays.forEach(d => { counts[d] = 0; });
 
     for (const e of events ?? []) {
-        const dayName = DAY_NAMES[new Date(e.created_at).getDay()];
+        const dayName = reginaWeekday(e.created_at);
         if (counts[dayName] !== undefined) {
             counts[dayName]++;
         }
