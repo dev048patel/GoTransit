@@ -6,67 +6,16 @@
 // Must stay the first import: loads .env.local before any module reads process.env
 import './env';
 
-import express from 'express';
-import cors from 'cors'; // Cross Origin Resource Sharing : Allow cross-origin requests (Frontend -> Backend) like React -> Node.js ( Port 3000 -> Port 3001)
-import transitRoutes from './controllers/routes/transit.routes';
-import analyticsRoutes from './controllers/routes/analytics.routes';
-import featureRoutes from './controllers/routes/feature.routes';
-import pushRoutes from './controllers/routes/push.routes';
-import adminRoutes from './controllers/routes/admin.routes';
-import smsRoutes from './controllers/routes/sms.routes';
-import weatherRoutes from './controllers/routes/weather.routes';
 import webpush from 'web-push';
 import cron from 'node-cron';
-import { supabaseServer } from './models/lib/supabaseServer';
+import { createApp } from './apiApp';
+import { serviceDb } from './models/lib/serverDb';
 import { TwilioService } from './models/services/TwilioService';
+import { HealthService } from './models/services/HealthService';
+import { SecurityEventService } from './models/services/SecurityEventService';
 
-const app = express();
+const app = createApp();
 const port = Number(process.env.PORT) || 3001; // Railway assigns PORT dynamically
-
-// Allow only specific origins to access the backend
-// Access-Control-Allow-Origin : Allow this domain to access our API
-const allowedOrigins = [
-    'https://www.transitregina.ca',
-    'https://transitregina.ca',
-    'http://localhost:3000', // Vite dev (npm run start)
-    'http://localhost:5173', // Vite dev (npm run dev)
-];
-
-// Vercel preview/branch deployments of this project (URL changes per deploy)
-const vercelPreviewOrigin = /^https:\/\/go-transit-[a-z0-9-]+-dev048patels-projects\.vercel\.app$/;
-
-app.use(cors({
-    origin: (origin, callback) => {
-        // Allow requests with no origin (curl, Postman, server-to-server)
-        if (!origin || allowedOrigins.includes(origin) || vercelPreviewOrigin.test(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error(`CORS: origin ${origin} not allowed`));
-        }
-    },
-    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
-}));
-
-
-// Middleware
-
-app.use(express.json()); // Parse incoming JSON request bodies
-
-// Mount Routes
-app.use('/api', transitRoutes);
-app.use('/api/analytics', analyticsRoutes);
-app.use('/api/features', featureRoutes);
-app.use('/api/push', pushRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/sms', smsRoutes);
-app.use('/api/weather', weatherRoutes);
-
-// Health Check Endpoint
-app.get('/api/status', (_req, res) => {
-    res.json({ message: 'Backend is running!', status: 'OK' });
-});
 
 // ── Web Push (VAPID) setup ──────────────────────────────────────────────────
 const vapidPublic = process.env.VITE_VAPID_PUBLIC_KEY ?? '';
@@ -101,7 +50,7 @@ cron.schedule('* * * * *', async () => {
     try {
         // Use .like() so "HH:MM" matches both text "HH:MM" and time "HH:MM:00"
         // regardless of how Supabase stores the column type.
-        const { data: schedules } = await supabaseServer
+        const { data: schedules } = await serviceDb()
             .from('weekly_schedules')
             .select('user_id, route_num, arrive_by, depart_by')
             .eq('day_of_week', day)
@@ -112,7 +61,7 @@ cron.schedule('* * * * *', async () => {
 
         // ── Collect user profiles for Twilio (single batch query) ──────────
         const userIds = schedules.map(s => s.user_id);
-        const { data: profiles } = await supabaseServer
+        const { data: profiles } = await serviceDb()
             .from('profiles')
             .select('id, mobile_number, sms_opted_in')
             .in('id', userIds);
@@ -139,7 +88,7 @@ cron.schedule('* * * * *', async () => {
         // ── Web Push (kept as secondary channel) ───────────────────────────
         if (vapidPublic && vapidPrivate) {
             for (const s of schedules) {
-                const { data: subs } = await supabaseServer
+                const { data: subs } = await serviceDb()
                     .from('push_subscriptions')
                     .select('endpoint, p256dh, auth_key')
                     .eq('user_id', s.user_id);
@@ -159,7 +108,7 @@ cron.schedule('* * * * *', async () => {
                         )
                         .catch(err => {
                             if (err.statusCode === 410) {
-                                supabaseServer
+                                serviceDb()
                                     .from('push_subscriptions')
                                     .delete()
                                     .eq('endpoint', sub.endpoint)
@@ -172,6 +121,28 @@ cron.schedule('* * * * *', async () => {
     } catch (err) {
         console.error('[Cron] Departure reminder error:', err);
     }
+});
+
+// ── Watching the site: health checks and data retention ──────────────────────
+// Every 5 minutes: is the database reachable, is the bus feed answering? Admins are emailed
+// when one stops for two checks in a row, and the Security page shows the current state.
+cron.schedule('*/5 * * * *', () => { HealthService.run().catch(err => console.error('[Health] Check failed:', err)); });
+HealthService.run().catch(() => { });
+
+// Once a day: delete visitor records (IP addresses) older than 90 days, and old security events.
+const RETENTION_DAYS = 90;
+cron.schedule('20 3 * * *', async () => {
+    const cutoff = new Date(Date.now() - RETENTION_DAYS * 86_400_000).toISOString();
+    const { error } = await serviceDb().from('visitor_sessions').delete().lt('last_seen', cutoff);
+    if (error) console.error('[Retention] Visitor cleanup failed:', error.message);
+    const { error: evErr } = await serviceDb().from('security_events').delete().lt('created_at', cutoff);
+    if (evErr) console.error('[Retention] Event cleanup failed:', evErr.message);
+});
+
+// A crash should reach the admins, not just the log
+process.on('unhandledRejection', (reason) => {
+    console.error('[Server] Unhandled rejection:', reason);
+    void SecurityEventService.record({ type: 'server_error', severity: 'critical', message: 'The backend hit an unexpected error outside a request' });
 });
 
 // Start Server

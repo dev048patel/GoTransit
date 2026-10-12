@@ -1,23 +1,26 @@
 import { Router, Request, Response } from 'express';
-import { supabaseServer } from '../../models/lib/supabaseServer';
+import { userDb } from '../../models/lib/serverDb';
+import { requireAuth } from '../middleware/requireAuth';
+import { isText, reject } from '../middleware/security';
 
 const router = Router();
 
+// Every route needs a signed-in user. Whose subscription it is comes from the login token,
+// and the database is called as that user, so row-level security applies too.
+router.use(requireAuth);
+
 /* POST /api/push/subscribe
-   Body: { userId, endpoint, p256dh, auth }
-   Stores the browser push subscription for the authenticated user.
+   Body: { endpoint, p256dh, auth }
 */
 router.post('/subscribe', async (req: Request, res: Response) => {
-    const { userId, endpoint, p256dh, auth } = req.body as {
-        userId?: string; endpoint?: string; p256dh?: string; auth?: string;
-    };
-
-    if (!userId || !endpoint || !p256dh || !auth) {
-        res.status(400).json({ error: 'Missing required fields' });
+    const { endpoint, p256dh, auth } = req.body ?? {};
+    const userId = req.user!.id;
+    if (!isText(endpoint, 1000) || !/^https:\/\//.test(endpoint) || !isText(p256dh, 300) || !isText(auth, 300)) {
+        reject(req, res, 'Invalid push subscription');
         return;
     }
 
-    const { error } = await supabaseServer
+    const { error } = await userDb(req.user!.token)
         .from('push_subscriptions')
         .upsert(
             { user_id: userId, endpoint, p256dh, auth_key: auth },
@@ -25,20 +28,22 @@ router.post('/subscribe', async (req: Request, res: Response) => {
         );
 
     if (error) {
-        res.status(500).json({ error: error.message });
+        console.error('[Push] Subscribe error:', error.message);
+        res.status(500).json({ error: 'Could not save the subscription' });
         return;
     }
     res.json({ ok: true });
 });
 
 /* DELETE /api/push/unsubscribe
-   Body: { userId, endpoint }
+   Body: { endpoint }
 */
 router.delete('/unsubscribe', async (req: Request, res: Response) => {
-    const { userId, endpoint } = req.body as { userId?: string; endpoint?: string };
-    if (!userId || !endpoint) { res.status(400).json({ error: 'Missing fields' }); return; }
+    const { endpoint } = req.body ?? {};
+    const userId = req.user!.id;
+    if (!isText(endpoint, 1000)) { reject(req, res, 'Invalid push subscription'); return; }
 
-    await supabaseServer
+    await userDb(req.user!.token)
         .from('push_subscriptions')
         .delete()
         .eq('user_id', userId)

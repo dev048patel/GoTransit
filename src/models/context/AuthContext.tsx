@@ -18,11 +18,16 @@ import { supabase } from '../lib/supabase';
 import type { User } from '../auth/AuthModel';
 import { recordLogout } from '../services/UserRegistry';
 import { formatMobile } from '../services/AuthService';
+import { apiPost } from '../lib/apiClient';
 
 interface AuthContextValue {
     isAuthenticated: boolean;
     /** True only when the authenticated user has role = 'admin' in profiles. */
     isAdmin: boolean;
+    /** False until the role has been read from the database; admin pages wait for it. */
+    roleLoaded: boolean;
+    /** True when this login has passed two-step sign-in (the authenticator-app code). */
+    twoStepPassed: boolean;
     /** Null while session is loading; populated once auth state is known. */
     user: User | null;
     /** True until the initial session + role fetch completes — prevents flash redirects. */
@@ -33,6 +38,12 @@ interface AuthContextValue {
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
+
+/** Supabase marks a login that passed the second step with aal2 inside the session token. */
+function tokenPassedTwoStep(token: string): boolean {
+    try { return JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))).aal === 'aal2'; }
+    catch { return false; }
+}
 
 async function fetchRole(userId: string): Promise<'user' | 'admin'> {
     const { data } = await supabase
@@ -62,6 +73,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [session, setSession] = useState<Session | null>(null);
     const [role, setRole] = useState<'user' | 'admin'>('user');
     const [isLoading, setIsLoading] = useState(true);
+    const [roleLoaded, setRoleLoaded] = useState(false);
     const initializedRef = useRef(false);
 
     // Listen for auth changes — ONLY synchronous state updates here.
@@ -93,27 +105,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Fetch role in a separate effect — safe to call Supabase here.
     useEffect(() => {
         if (session) {
+            setRoleLoaded(false);
             fetchRole(session.user.id)
                 .then(r => setRole(r))
-                .catch(() => setRole('user'));
+                .catch(() => setRole('user'))
+                .finally(() => setRoleLoaded(true));
         } else {
             setRole('user');
+            setRoleLoaded(true);
         }
     }, [session?.user?.id]);
 
     const login = useCallback(async (identifier: string, password: string): Promise<string | null> => {
         let email = identifier.trim();
 
-        // If the identifier looks like a mobile number, format it and resolve email via RPC
-        // (RPC uses SECURITY DEFINER to bypass RLS for unauthenticated users)
+        // If the identifier looks like a mobile number, ask the backend which email it belongs to.
+        // That lookup is rate limited; the database function behind it is not public.
         if (/^\+?\d/.test(email)) {
-            const formatted = formatMobile(email);
-            const { data: resolvedEmail, error: rpcError } = await supabase.rpc('get_email_by_mobile', { mobile: formatted });
-            if (rpcError) {
-                console.error('[Auth] Mobile lookup RPC failed:', rpcError.message);
-                return 'Mobile login is not available. Please use your email.';
+            let resolvedEmail: string | null = null;
+            try {
+                resolvedEmail = (await (await apiPost('/api/auth/resolve-mobile', { mobile: formatMobile(email) })).json()).email;
+            } catch {
+                return 'Mobile login is not available right now. Please use your email.';
             }
-            if (!resolvedEmail) return 'No account found with this mobile number.';
+            // Same message as a wrong password, so this does not confirm whether a number is registered
+            if (!resolvedEmail) return 'Invalid credentials. Please try again.';
             email = resolvedEmail;
         }
 
@@ -149,6 +165,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         <AuthContext.Provider value={{
             isAuthenticated: !!session,
             isAdmin: role === 'admin',
+            roleLoaded,
+            twoStepPassed: !!session && tokenPassedTwoStep(session.access_token),
             user,
             isLoading,
             login,

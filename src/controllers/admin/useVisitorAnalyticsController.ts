@@ -5,6 +5,7 @@
 */
 
 import { useState, useEffect, useCallback } from 'react';
+import { apiGet } from '../../models/lib/apiClient';
 
 interface VisitorRecord {
     ip: string;
@@ -78,8 +79,8 @@ export function useVisitorAnalyticsController() {
             const qs = params.toString() ? `?${params.toString()}` : '';
 
             const [visitorsRes, summaryRes] = await Promise.all([
-                fetch(`${baseUrl}/api/analytics/visitors${qs}`),
-                fetch(`${baseUrl}/api/analytics/summary${qs}`)
+                apiGet(`/api/analytics/visitors${qs}`),
+                apiGet(`/api/analytics/summary${qs}`)
             ]);
 
             if (!visitorsRes.ok || !summaryRes.ok) {

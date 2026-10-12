@@ -5,6 +5,9 @@
 */
 import { Router } from 'express';
 import * as TransitController from '../TransitController';
+import { requireAuth } from '../middleware/requireAuth';
+import { requireAdmin } from '../middleware/requireAdmin';
+import { rateLimit } from '../middleware/security';
 
 const router = Router();
 
@@ -47,19 +50,19 @@ router.get('/live', TransitController.getLiveBuses);
  route = GET /api/stop-predictions/:stopId
  Fetch real-time predicted bus arrivals for a specific stop
  */
-router.get('/stop-predictions/:stopId', TransitController.getStopPredictions);
+router.get('/stop-predictions/:stopId', rateLimit('stop-predictions', 600), TransitController.getStopPredictions);
 
 /*
  route = GET /api/admin/routes
  Fetch all routes for the admin panel (includes hidden routes + status)
  */
-router.get('/admin/routes', TransitController.getAdminRoutes);
+router.get('/admin/routes', requireAuth, requireAdmin, TransitController.getAdminRoutes);
 
 /*
  route = PATCH /api/admin/routes/:id
  Update a route's name or visibility (admin only)
  */
-router.patch('/admin/routes/:id', TransitController.updateRoute);
+router.patch('/admin/routes/:id', requireAuth, requireAdmin, TransitController.updateRoute);
 
 
 export default router;

@@ -48,6 +48,8 @@ const RouteManager = React.lazy(() => import('./views/admin/RouteManager'));
 const UserManager = React.lazy(() => import('./views/admin/UserManager'));
 const VisitorAnalytics = React.lazy(() => import('./views/admin/VisitorAnalytics'));
 const FeatureAccessControl = React.lazy(() => import('./views/admin/FeatureAccessControl'));
+const SecurityCenter = React.lazy(() => import('./views/admin/SecurityCenter'));
+const TwoStepPage = React.lazy(() => import('./views/auth/TwoStepPage'));
 
 /**
  * AppRoutes — renders all routes ONLY after auth state has been resolved.
@@ -140,6 +142,15 @@ function AppRoutes() {
                         </ProtectedRoute>
                     }
                 />
+                {/* Two-step sign-in for admins: set up the authenticator app, or enter its code */}
+                <Route
+                    path="/two-step"
+                    element={
+                        <ProtectedRoute>
+                            <TwoStepPage />
+                        </ProtectedRoute>
+                    }
+                />
 
                 {/* ── Admin Routes (admin role only) ─────────────────────── */}
                 <Route
@@ -155,6 +166,7 @@ function AppRoutes() {
                     <Route path="users" element={<UserManager />} />
                     <Route path="analytics" element={<VisitorAnalytics />} />
                     <Route path="fac" element={<FeatureAccessControl />} />
+                    <Route path="security" element={<SecurityCenter />} />
                 </Route>
 
                 {/* ── Public: /connect — Meet the Team ─────────────────── */}

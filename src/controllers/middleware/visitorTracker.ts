@@ -9,7 +9,7 @@
   Data persists in the `visitor_sessions` Supabase table.
 */
 
-import { supabaseServer } from '../../models/lib/supabaseServer';
+import { serviceDb } from '../../models/lib/serverDb';
 
 // ─── UA Lookup Tables ──────────────────────────────
 const BROWSER_CODES: [string, string][] = [
@@ -108,7 +108,7 @@ export async function registerSession(ip: string, userAgent: string, page?: stri
     const now = new Date().toISOString();
 
     // Check if session already exists
-    const { data: existing } = await supabaseServer
+    const { data: existing } = await serviceDb()
         .from('visitor_sessions')
         .select('*')
         .eq('session_id', sessionId)
@@ -117,7 +117,7 @@ export async function registerSession(ip: string, userAgent: string, page?: stri
     if (existing) {
         // User returned — reactivate session
         const pages: string[] = existing.pages_visited ?? [];
-        if (page && !pages.includes(page)) pages.push(page);
+        if (page && !pages.includes(page) && pages.length < 50) pages.push(page);
 
         const updateData: any = {
             last_seen: now,
@@ -128,13 +128,13 @@ export async function registerSession(ip: string, userAgent: string, page?: stri
         // Link user_id if authenticated and not yet linked
         if (userId && !existing.user_id) updateData.user_id = userId;
 
-        await supabaseServer
+        await serviceDb()
             .from('visitor_sessions')
             .update(updateData)
             .eq('session_id', sessionId);
     } else {
         // Brand new visitor
-        await supabaseServer
+        await serviceDb()
             .from('visitor_sessions')
             .insert({
                 session_id: sessionId,
@@ -161,7 +161,7 @@ export async function registerSession(ip: string, userAgent: string, page?: stri
 export async function heartbeat(ip: string, userAgent: string, page?: string, userId?: string): Promise<boolean> {
     const sessionId = createFingerprint(ip, userAgent);
 
-    const { data: session } = await supabaseServer
+    const { data: session } = await serviceDb()
         .from('visitor_sessions')
         .select('*')
         .eq('session_id', sessionId)
@@ -174,7 +174,7 @@ export async function heartbeat(ip: string, userAgent: string, page?: string, us
     }
 
     const pages: string[] = session.pages_visited ?? [];
-    if (page && !pages.includes(page)) pages.push(page);
+    if (page && !pages.includes(page) && pages.length < 50) pages.push(page);
 
     const updateData: any = {
         last_seen: new Date().toISOString(),
@@ -184,7 +184,7 @@ export async function heartbeat(ip: string, userAgent: string, page?: string, us
     // Link user_id if authenticated and not yet linked
     if (userId && !session.user_id) updateData.user_id = userId;
 
-    await supabaseServer
+    await serviceDb()
         .from('visitor_sessions')
         .update(updateData)
         .eq('session_id', sessionId);
@@ -198,7 +198,7 @@ export async function heartbeat(ip: string, userAgent: string, page?: string, us
 async function expireStaleSessions(): Promise<void> {
     const cutoff = new Date(Date.now() - SESSION_TIMEOUT_MS).toISOString();
 
-    await supabaseServer
+    await serviceDb()
         .from('visitor_sessions')
         .update({ status: 'inactive' })
         .eq('status', 'active')
@@ -212,7 +212,7 @@ export async function getVisitorRecords(from?: string, to?: string): Promise<Vis
     await expireStaleSessions();
 
     // Join with profiles to get email and full_name for authenticated visitors
-    let query = supabaseServer
+    let query = serviceDb()
         .from('visitor_sessions')
         .select('*, profiles:user_id(email, full_name)')
         .order('last_seen', { ascending: false });
@@ -249,18 +249,18 @@ export async function getAnalyticsSummary(from?: string, to?: string) {
     await expireStaleSessions();
 
     // Total visitors (all time)
-    const { count: totalVisitors } = await supabaseServer
+    const { count: totalVisitors } = await serviceDb()
         .from('visitor_sessions')
         .select('*', { count: 'exact', head: true });
 
     // Active now
-    const { count: activeNow } = await supabaseServer
+    const { count: activeNow } = await serviceDb()
         .from('visitor_sessions')
         .select('*', { count: 'exact', head: true })
         .eq('status', 'active');
 
     // Build filtered query for date range
-    let filteredQuery = supabaseServer.from('visitor_sessions').select('*');
+    let filteredQuery = serviceDb().from('visitor_sessions').select('*');
 
     if (from || to) {
         if (from) filteredQuery = filteredQuery.gte('first_seen', new Date(from).toISOString());
