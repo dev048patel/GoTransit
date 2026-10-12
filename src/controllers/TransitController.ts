@@ -9,6 +9,8 @@ import { TransitService } from '../models/services/TransitService';
 import { RealTimeService } from '../models/services/RealTimeService';
 import { StopPredictionService } from '../models/services/StopPredictionService';
 import { setOverride } from '../models/services/routeOverrides';
+import { SecurityEventService } from '../models/services/SecurityEventService';
+import { clientIp, isText, reject } from './middleware/security';
 
 // Initialize the Service
 const transitService = new TransitService();
@@ -84,6 +86,7 @@ export const getAdminRoutes = async (req: Request, res: Response) => {
 // Single call to TransitLive with routes=all&lim=100 to get full day schedule.
 export const getStopPredictions = async (req: Request, res: Response) => {
     try {
+        if (!/^\d{1,6}$/.test(req.params.stopId)) { reject(req, res, 'Invalid stop number'); return; }
         const predictions = await StopPredictionService.getPredictions(req.params.stopId);
         res.json(predictions);
     } catch (error) {
@@ -95,13 +98,18 @@ export const getStopPredictions = async (req: Request, res: Response) => {
 export const updateRoute = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { route_name, hidden } = req.body;
+        const { route_name, hidden } = req.body ?? {};
+        if (!/^[A-Za-z0-9_-]{1,20}$/.test(id)) { reject(req, res, 'Invalid route'); return; }
+        if (route_name !== undefined && !isText(route_name, 80)) { reject(req, res, 'Invalid route name'); return; }
+        if (hidden !== undefined && typeof hidden !== 'boolean') { reject(req, res, 'Invalid visibility'); return; }
 
         const data: Record<string, any> = {};
         if (route_name !== undefined) data.route_name = route_name;
         if (hidden !== undefined) data.hidden = hidden;
 
         setOverride(id, data);
+        void SecurityEventService.record({ type: 'route_changed', severity: 'info', ip: clientIp(req), userId: req.user?.id, path: req.originalUrl,
+            message: `Admin changed route ${id}: ${JSON.stringify(data)}` });
         res.json({ success: true });
     } catch (error) {
         res.status(500).json({ error: 'Failed to update route' });

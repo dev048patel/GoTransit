@@ -1,0 +1,8 @@
+# Weekly pull requests for dependency updates, so known vulnerabilities get patched promptly.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5

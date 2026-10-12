@@ -17,19 +17,12 @@
  *   END;
  *   $$ LANGUAGE plpgsql SECURITY DEFINER;
  *
- * Admin RLS (run once to allow admins to read/update ALL profiles):
- *
- *   DROP POLICY IF EXISTS "Own profile" ON public.profiles;
- *   CREATE POLICY "Own or admin profile" ON public.profiles FOR ALL USING (
- *     auth.uid() = id
- *     OR EXISTS (SELECT 1 FROM public.profiles p WHERE p.id = auth.uid() AND p.role = 'admin')
- *   );
+ * Database access rules for profiles live in docs/security/001_hardening.sql.
  */
 
 import { supabase } from '../lib/supabase';
 import type { User } from '../admin/AdminTypes';
-
-const BASE_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001';
+import { apiPatch, apiDelete } from '../lib/apiClient';
 
 function formatDate(iso: string): string {
     return new Date(iso).toLocaleString('en-CA', {
@@ -73,37 +66,23 @@ export async function getRealUserCount(): Promise<number> {
     return error ? 0 : (count ?? 0);
 }
 
-/** Update a user's name, role, or status in the profiles table. */
+/** Update a user's name, role, or status. Goes through the backend, which checks the caller is an admin and records the change. */
 export async function updateUserProfile(
     id: string,
     fields: { full_name?: string; role?: string; account_status?: string }
 ): Promise<string | null> {
-    const { error } = await supabase
-        .from('profiles')
-        .update({ ...fields, updated_at: new Date().toISOString() })
-        .eq('id', id);
-    return error ? error.message : null;
+    try { await apiPatch(`/api/admin/users/${id}`, fields); return null; }
+    catch (e) { return (e as Error).message; }
 }
 
 /** Delete user via backend (uses service-role to hard-delete from auth + profiles). */
 export async function softDeleteUser(id: string): Promise<string | null> {
-    try {
-        const resp = await fetch(`${BASE_URL}/api/admin/users/${id}`, { method: 'DELETE' });
-        if (!resp.ok) {
-            const data = await resp.json().catch(() => ({}));
-            return data.error ?? `HTTP ${resp.status}`;
-        }
-        return null;
-    } catch (e) {
-        return (e as Error).message;
-    }
+    try { await apiDelete(`/api/admin/users/${id}`); return null; }
+    catch (e) { return (e as Error).message; }
 }
 
 /** Called on logout — logs event to the browser console. */
 export function recordLogout(email: string): void {
-    console.log(
-        '%c[TransitRegina] 🚪 LOGOUT',
-        'background:#6B7280;color:#fff;padding:2px 6px;border-radius:4px;font-weight:bold',
-        { email, at: new Date().toLocaleTimeString() }
-    );
+    // No personal details in the browser console
+    void email;
 }

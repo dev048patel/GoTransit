@@ -15,7 +15,7 @@ export interface RouteOverride {
 
 export type OverridesMap = Record<string, RouteOverride>;
 
-const OVERRIDES_FILE = path.resolve(__dirname, '../../route-overrides.json');
+const OVERRIDES_FILE = process.env.ROUTE_OVERRIDES_FILE || path.resolve(__dirname, '../../route-overrides.json');
 
 /** Read all overrides from disk */
 export function getOverrides(): OverridesMap {

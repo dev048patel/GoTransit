@@ -34,6 +34,7 @@
   "scripts": {
     "start": "vite",
     "start:server": "tsx src/server.ts",
+    "test": "tsx --test test/*.test.ts",
     "all": "concurrently -k -n server,client -c blue,green \"npm:start:server\" \"npm:start\"",
     "build": "vite build",
     "serve": "vite preview",

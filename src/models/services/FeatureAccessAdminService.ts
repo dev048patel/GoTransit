@@ -1,8 +1,8 @@
 import { supabase } from '../lib/supabase';
+import { apiPost, apiDelete } from '../lib/apiClient';
 import { FeatureKey, UserAccessRecord, FEATURES } from '../admin/FeatureAccessTypes';
 
 const FEATURE_KEYS = FEATURES.map(f => f.key);
-const BASE_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001';
 
 /** Admin: get all users with their access flags merged (read-only, RLS allows this) */
 export async function getAllUsersWithAccess(): Promise<UserAccessRecord[]> {
@@ -30,47 +30,17 @@ export async function getAllUsersWithAccess(): Promise<UserAccessRecord[]> {
     });
 }
 
-/** Admin: set a single feature flag for a user (routes through backend to bypass RLS) */
-export async function setFeatureAccess(
-    userId: string,
-    feature: FeatureKey,
-    enabled: boolean,
-    adminId: string,
-): Promise<void> {
-    const resp = await fetch(`${BASE_URL}/api/admin/fac/set`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, feature, enabled, adminId }),
-    });
-    if (!resp.ok) {
-        const data = await resp.json().catch(() => ({}));
-        throw new Error(data.error ?? `HTTP ${resp.status}`);
-    }
+/** Admin: set a single feature flag for a user (the backend checks the caller is an admin and records who did it) */
+export async function setFeatureAccess(userId: string, feature: FeatureKey, enabled: boolean, _adminId?: string): Promise<void> {
+    await apiPost('/api/admin/fac/set', { userId, feature, enabled });
 }
 
 /** Admin: delete all restriction rows for a user (resets to full access) */
 export async function resetUserAccess(userId: string): Promise<void> {
-    const resp = await fetch(`${BASE_URL}/api/admin/fac/reset/${userId}`, { method: 'DELETE' });
-    if (!resp.ok) {
-        const data = await resp.json().catch(() => ({}));
-        throw new Error(data.error ?? `HTTP ${resp.status}`);
-    }
+    await apiDelete(`/api/admin/fac/reset/${userId}`);
 }
 
 /** Admin: toggle a feature for ALL users at once */
-export async function setFeatureForAll(
-    feature: FeatureKey,
-    enabled: boolean,
-    adminId: string,
-    allUserIds: string[],
-): Promise<void> {
-    const resp = await fetch(`${BASE_URL}/api/admin/fac/set-all`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ feature, enabled, adminId, userIds: allUserIds }),
-    });
-    if (!resp.ok) {
-        const data = await resp.json().catch(() => ({}));
-        throw new Error(data.error ?? `HTTP ${resp.status}`);
-    }
+export async function setFeatureForAll(feature: FeatureKey, enabled: boolean, _adminId: string | undefined, allUserIds: string[]): Promise<void> {
+    await apiPost('/api/admin/fac/set-all', { feature, enabled, userIds: allUserIds });
 }

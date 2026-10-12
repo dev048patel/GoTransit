@@ -10,6 +10,9 @@ import {
     getDailyTrafficData,
     getTotalInteractions,
 } from '../middleware/featureTracker';
+import { requireAuth } from '../middleware/requireAuth';
+import { requireAdmin } from '../middleware/requireAdmin';
+import { rateLimit } from '../middleware/security';
 
 const router = Router();
 
@@ -18,7 +21,7 @@ const router = Router();
  * Body: { type: 'places' | 'directions' }
  * Called by the frontend whenever a user searches a place or requests directions.
  */
-router.post('/track', async (req: Request, res: Response) => {
+router.post('/track', rateLimit('feature-track', 120), async (req: Request, res: Response) => {
     try {
         const { type } = req.body;
         if (type !== 'places' && type !== 'directions') {
@@ -37,7 +40,7 @@ router.post('/track', async (req: Request, res: Response) => {
  * GET /api/features/weekly
  * Returns bar-chart data: [{ day, places, directions }, ...] for the current week.
  */
-router.get('/weekly', async (_req: Request, res: Response) => {
+router.get('/weekly', requireAuth, requireAdmin, async (_req: Request, res: Response) => {
     try {
         res.json(await getWeeklyFeatureData());
     } catch (error) {
@@ -50,7 +53,7 @@ router.get('/weekly', async (_req: Request, res: Response) => {
  * GET /api/features/daily
  * Returns pie-chart data: [{ name, value }, ...] for traffic distribution by weekday.
  */
-router.get('/daily', async (_req: Request, res: Response) => {
+router.get('/daily', requireAuth, requireAdmin, async (_req: Request, res: Response) => {
     try {
         res.json(await getDailyTrafficData());
     } catch (error) {
@@ -63,7 +66,7 @@ router.get('/daily', async (_req: Request, res: Response) => {
  * GET /api/features/total
  * Returns the total number of recorded interactions.
  */
-router.get('/total', async (_req: Request, res: Response) => {
+router.get('/total', requireAuth, requireAdmin, async (_req: Request, res: Response) => {
     try {
         res.json({ total: await getTotalInteractions() });
     } catch (error) {

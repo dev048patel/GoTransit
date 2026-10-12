@@ -1,6 +1,9 @@
 import { Router, Request, Response } from 'express';
 import twilio from 'twilio';
-import { supabaseServer } from '../../models/lib/supabaseServer';
+import express from 'express';
+import { serviceDb, userDb } from '../../models/lib/serverDb';
+import { SecurityEventService } from '../../models/services/SecurityEventService';
+import { clientIp, rateLimit } from '../middleware/security';
 import { requireAuth } from '../middleware/requireAuth';
 import { requireAdmin } from '../middleware/requireAdmin';
 import { TwilioService } from '../../models/services/TwilioService';
@@ -27,7 +30,7 @@ router.post('/opt-in', requireAuth, async (req: Request, res: Response) => {
     const userId = req.user!.id;
 
     // Fetch current phone on file — opt-in is meaningless without one
-    const { data: profile, error: fetchErr } = await supabaseServer
+    const { data: profile, error: fetchErr } = await userDb(req.user!.token)
         .from('profiles')
         .select('mobile_number')
         .eq('id', userId)
@@ -39,23 +42,23 @@ router.post('/opt-in', requireAuth, async (req: Request, res: Response) => {
         return;
     }
 
-    const { error } = await supabaseServer
+    const { error } = await userDb(req.user!.token)
         .from('profiles')
         .update({ sms_opted_in: true, sms_consent_at: new Date().toISOString() })
         .eq('id', userId);
 
-    if (error) { res.status(500).json({ error: error.message }); return; }
+    if (error) { res.status(500).json({ error: 'Could not save the change' }); return; }
     res.json({ ok: true });
 });
 
 // ── POST /api/sms/opt-out ───────────────────────────────────────────────────
 router.post('/opt-out', requireAuth, async (req: Request, res: Response) => {
-    const { error } = await supabaseServer
+    const { error } = await userDb(req.user!.token)
         .from('profiles')
         .update({ sms_opted_in: false })
         .eq('id', req.user!.id);
 
-    if (error) { res.status(500).json({ error: error.message }); return; }
+    if (error) { res.status(500).json({ error: 'Could not save the change' }); return; }
     res.json({ ok: true });
 });
 
@@ -70,31 +73,33 @@ router.patch('/phone', requireAuth, async (req: Request, res: Response) => {
         return;
     }
 
-    const { error } = await supabaseServer
+    const { error } = await userDb(req.user!.token)
         .from('profiles')
         .update({ mobile_number: normalisePhone(phone), sms_opted_in: false })
         .eq('id', req.user!.id);
 
-    if (error) { res.status(500).json({ error: error.message }); return; }
+    if (error) { res.status(500).json({ error: 'Could not save the change' }); return; }
     res.json({ ok: true });
 });
 
 // ── POST /api/sms/webhook ───────────────────────────────────────────────────
 // Twilio calls this when a user texts back (STOP / START / HELP).
 // Validated using Twilio's request signature so only Twilio can POST here.
-router.post('/webhook', async (req: Request, res: Response) => {
+// Twilio posts form-encoded data, so this route parses that (the app only parses JSON by default).
+router.post('/webhook', rateLimit('sms-webhook', 120), express.urlencoded({ extended: false, limit: '10kb' }), async (req: Request, res: Response) => {
     const authToken  = process.env.TWILIO_AUTH_TOKEN ?? '';
     const backendUrl = process.env.BACKEND_URL ?? '';
 
-    // In production, reject requests that don't carry a valid Twilio signature
-    if (process.env.NODE_ENV === 'production' && authToken && backendUrl) {
-        const signature = req.headers['x-twilio-signature'] as string ?? '';
-        const webhookUrl = `${backendUrl}/api/sms/webhook`;
-        const valid = twilio.validateRequest(authToken, signature, webhookUrl, req.body as Record<string, string>);
-        if (!valid) {
-            res.status(403).send('Forbidden');
-            return;
-        }
+    // Always require a valid Twilio signature. Without the settings needed to check one, refuse:
+    // an unchecked webhook would let anyone opt any phone number in or out.
+    const signature = (req.headers['x-twilio-signature'] as string) ?? '';
+    const valid = !!authToken && !!backendUrl
+        && twilio.validateRequest(authToken, signature, `${backendUrl}/api/sms/webhook`, (req.body ?? {}) as Record<string, string>);
+    if (!valid) {
+        void SecurityEventService.record({ type: 'webhook_rejected', severity: 'warning', ip: clientIp(req), path: req.originalUrl,
+            message: authToken && backendUrl ? 'Text-message webhook called without a valid Twilio signature' : 'Text-message webhook refused: TWILIO_AUTH_TOKEN or BACKEND_URL is not set' });
+        res.status(403).send('Forbidden');
+        return;
     }
 
     const body: string = (req.body?.Body ?? '').trim().toUpperCase();
@@ -104,12 +109,12 @@ router.post('/webhook', async (req: Request, res: Response) => {
 
     // Mirror Twilio's suppression list into our DB so the cron stays in sync
     if (body === 'STOP' || body === 'STOPALL' || body === 'UNSUBSCRIBE' || body === 'CANCEL' || body === 'END' || body === 'QUIT') {
-        await supabaseServer
+        await serviceDb()
             .from('profiles')
             .update({ sms_opted_in: false })
             .eq('mobile_number', from);
     } else if (body === 'START' || body === 'UNSTOP' || body === 'YES') {
-        await supabaseServer
+        await serviceDb()
             .from('profiles')
             .update({ sms_opted_in: true, sms_consent_at: new Date().toISOString() })
             .eq('mobile_number', from);
@@ -128,8 +133,8 @@ router.post('/broadcast', requireAuth, requireAdmin, async (req: Request, res: R
         return;
     }
 
-    const { routeNum, message } = req.body as { routeNum?: string; message?: string };
-    if (!routeNum || !message) {
+    const { routeNum, message } = (req.body ?? {}) as { routeNum?: string; message?: string };
+    if (typeof routeNum !== 'string' || typeof message !== 'string' || !/^[A-Za-z0-9]{1,6}$/.test(routeNum) || !message.trim()) {
         res.status(400).json({ error: 'routeNum and message are required' });
         return;
     }
@@ -139,7 +144,7 @@ router.post('/broadcast', requireAuth, requireAdmin, async (req: Request, res: R
     }
 
     // Find users who have this route in their weekly schedule and are opted in
-    const { data: schedules } = await supabaseServer
+    const { data: schedules } = await serviceDb()
         .from('weekly_schedules')
         .select('user_id')
         .eq('route_num', routeNum)
@@ -152,7 +157,7 @@ router.post('/broadcast', requireAuth, requireAdmin, async (req: Request, res: R
 
     const userIds = [...new Set(schedules.map(s => s.user_id))];
 
-    const { data: profiles } = await supabaseServer
+    const { data: profiles } = await serviceDb()
         .from('profiles')
         .select('mobile_number')
         .in('id', userIds)
@@ -162,6 +167,8 @@ router.post('/broadcast', requireAuth, requireAdmin, async (req: Request, res: R
     const recipients = (profiles ?? [])
         .filter(p => p.mobile_number)
         .map(p => ({ phone: p.mobile_number as string, body: message }));
+    void SecurityEventService.record({ type: 'sms_broadcast', severity: 'warning', ip: clientIp(req), userId: req.user!.id, path: req.originalUrl,
+        message: `Admin sent a text broadcast for route ${routeNum} to ${recipients.length} people` });
 
     // Fire and forget — batch is rate-limited internally (100ms per message)
     TwilioService.sendBatch(recipients).catch(err =>

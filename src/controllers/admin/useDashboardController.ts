@@ -10,10 +10,10 @@
  */
 
 import { useState, useEffect } from 'react';
+import { apiGet } from '../../models/lib/apiClient';
 import { getRealUserCount } from '../../models/services/UserRegistry';
 import transitRoutes from '../../models/data/transitRoutes';
 
-const baseUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001';
 
 export function useDashboardController() {
     const [registeredUsers, setRegisteredUsers] = useState(0);
@@ -30,9 +30,9 @@ export function useDashboardController() {
                 // Fetch all data in parallel
                 const [userCount, weeklyRes, dailyRes, totalRes] = await Promise.all([
                     getRealUserCount(),
-                    fetch(`${baseUrl}/api/features/weekly`).then(r => r.ok ? r.json() : []),
-                    fetch(`${baseUrl}/api/features/daily`).then(r => r.ok ? r.json() : []),
-                    fetch(`${baseUrl}/api/features/total`).then(r => r.ok ? r.json() : { total: 0 }),
+                    apiGet('/api/features/weekly').then(r => r.json()).catch(() => []),
+                    apiGet('/api/features/daily').then(r => r.json()).catch(() => []),
+                    apiGet('/api/features/total').then(r => r.json()).catch(() => ({ total: 0 })),
                 ]);
 
                 setRegisteredUsers(userCount);

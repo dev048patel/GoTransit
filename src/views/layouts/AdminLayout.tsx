@@ -1,6 +1,6 @@
 /* Admin layout shell — sidebar navigation with links to dashboard, routes, users, analytics, and FAC */
 import { Outlet, Link } from 'react-router-dom';
-import { LayoutDashboard, Map, Users, Eye, ArrowLeft, Shield } from 'lucide-react';
+import { LayoutDashboard, Map, Users, Eye, ArrowLeft, Shield, ShieldAlert } from 'lucide-react';
 
 const SidebarItem = ({ icon: Icon, label, to }: { icon: any, label: string, to: string }) => (
     <Link to={to} className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-slate-700 hover:text-white transition-colors rounded-lg mb-1">
@@ -26,6 +26,7 @@ export default function AdminLayout() {
                     <SidebarItem icon={Users} label="User Management" to="/admin/users" />
                     <SidebarItem icon={Eye} label="Visitor Analytics" to="/admin/analytics" />
                     <SidebarItem icon={Shield} label="Feature Access" to="/admin/fac" />
+                    <SidebarItem icon={ShieldAlert} label="Security" to="/admin/security" />
                 </nav>
 
                 <div className="p-4 border-t border-slate-700">

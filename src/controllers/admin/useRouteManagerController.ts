@@ -7,9 +7,9 @@
  */
 
 import { useState, useMemo, useEffect, useCallback } from 'react';
+import { apiGet, apiPatch } from '../../models/lib/apiClient';
 import { Route } from '../../models/admin/AdminTypes';
 
-const baseUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001';
 
 export function useRouteManagerController() {
     const [routes, setRoutes] = useState<Route[]>([]);
@@ -24,7 +24,7 @@ export function useRouteManagerController() {
     // Fetch routes from backend on mount
     const fetchRoutes = useCallback(async () => {
         try {
-            const res = await fetch(`${baseUrl}/api/admin/routes`);
+            const res = await apiGet('/api/admin/routes');
             if (!res.ok) throw new Error('Failed to fetch');
             const data: Route[] = await res.json();
             setRoutes(data.sort((a, b) => a.route_num - b.route_num));
@@ -67,11 +67,7 @@ export function useRouteManagerController() {
 
         // 2. Persist to backend
         try {
-            const res = await fetch(`${baseUrl}/api/admin/routes/${selectedRoute.id}`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ route_name: newName }),
-            });
+            const res = await apiPatch(`/api/admin/routes/${selectedRoute.id}`, { route_name: newName });
             if (!res.ok) throw new Error('Failed to save');
         } catch (err) {
             // Rollback on failure
@@ -101,11 +97,7 @@ export function useRouteManagerController() {
 
         // 2. Persist to backend
         try {
-            const res = await fetch(`${baseUrl}/api/admin/routes/${id}`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ hidden: newStatus === 'Hidden' }),
-            });
+            const res = await apiPatch(`/api/admin/routes/${id}`, { hidden: newStatus === 'Hidden' });
             if (!res.ok) throw new Error('Failed to save');
         } catch (err) {
             // Rollback on failure

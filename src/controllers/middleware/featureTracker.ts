@@ -7,7 +7,7 @@
   - Aggregation helpers return weekly bar-chart and daily pie-chart data
 */
 
-import { supabaseServer } from '../../models/lib/supabaseServer';
+import { serviceDb } from '../../models/lib/serverDb';
 
 type FeatureType = 'places' | 'directions';
 
@@ -18,7 +18,7 @@ const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 /** Record a single feature event. */
 export async function recordFeatureEvent(type: FeatureType): Promise<void> {
-    await supabaseServer
+    await serviceDb()
         .from('feature_events')
         .insert({ type });
 }
@@ -38,7 +38,7 @@ export async function getWeeklyFeatureData(): Promise<{ day: string; places: num
     const sundayEnd = new Date(monday.getTime() + 7 * 24 * 60 * 60 * 1000);
 
     // Fetch this week's events from DB
-    const { data: events } = await supabaseServer
+    const { data: events } = await serviceDb()
         .from('feature_events')
         .select('type, created_at')
         .gte('created_at', monday.toISOString())
@@ -67,7 +67,7 @@ export async function getWeeklyFeatureData(): Promise<{ day: string; places: num
  * Daily pie-chart data: total interactions per weekday across ALL recorded history.
  */
 export async function getDailyTrafficData(): Promise<{ name: string; value: number }[]> {
-    const { data: events } = await supabaseServer
+    const { data: events } = await serviceDb()
         .from('feature_events')
         .select('created_at');
 
@@ -87,7 +87,7 @@ export async function getDailyTrafficData(): Promise<{ name: string; value: numb
 
 /** Total event count (for the "Avg Daily Interactions" metric card). */
 export async function getTotalInteractions(): Promise<number> {
-    const { count } = await supabaseServer
+    const { count } = await serviceDb()
         .from('feature_events')
         .select('*', { count: 'exact', head: true });
 
