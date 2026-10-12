@@ -17,7 +17,7 @@
     "embla-carousel-react": "^8.6.0",
     "express": "^5.2.1",
     "framer-motion": "^12.33.0",
-    "lucide-react": "^0.563.0",
+    "lucide-react": "^1.54.0",
     "node-cron": "^4.2.1",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
