@@ -31,7 +31,10 @@ class OriginNotAllowed extends Error { }
 export function createApp() {
     const app = express();
     app.disable('x-powered-by');
-    app.set('trust proxy', 1);            // one proxy (Railway) in front: req.ip is the real client
+    // Railway puts two hops in front of the app (its CDN, then its edge), and replaces any
+    // X-Forwarded-For the caller sent. Trusting two hops makes req.ip the visitor; trusting one
+    // gave Railway's own address, so every visitor shared the same rate limits.
+    app.set('trust proxy', Number(process.env.TRUST_PROXY_HOPS) || 2);
     app.use(securityHeaders);
     // A flood cap only. Many riders share one address (campus or mobile-carrier networks) and the map
     // polls every 1.5 s, so this is generous; the sensitive endpoints have their own much lower limits.
@@ -68,7 +71,7 @@ export function createApp() {
     // Last stop for every error: log the detail on the server, tell the caller nothing about internals
     app.use((err: Error & { status?: number; type?: string }, req: Request, res: Response, _next: NextFunction) => {
         if (err instanceof OriginNotAllowed) {
-            void SecurityEventService.record({ type: 'cors_blocked', severity: 'info', ip: clientIp(req), path: req.originalUrl, message: `Request from a website that is not allowed: ${err.message.slice(0, 80)}` });
+            void SecurityEventService.record({ type: 'cors_blocked', severity: 'info', throttle: true, ip: clientIp(req), path: req.originalUrl, message: `Request from a website that is not allowed: ${err.message.slice(0, 80)}` });
             res.status(403).json({ error: 'Origin not allowed' });
             return;
         }

@@ -23,7 +23,7 @@ const router = Router();
  */
 router.post('/track', rateLimit('feature-track', 120), async (req: Request, res: Response) => {
     try {
-        const { type } = req.body;
+        const type = req.body?.type;
         if (type !== 'places' && type !== 'directions') {
             res.status(400).json({ error: 'type must be "places" or "directions"' });
             return;

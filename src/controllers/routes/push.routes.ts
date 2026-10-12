@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { userDb } from '../../models/lib/serverDb';
 import { requireAuth } from '../middleware/requireAuth';
-import { isText, reject } from '../middleware/security';
+import { isText, isPushEndpoint, reject } from '../middleware/security';
 
 const router = Router();
 
@@ -15,7 +15,7 @@ router.use(requireAuth);
 router.post('/subscribe', async (req: Request, res: Response) => {
     const { endpoint, p256dh, auth } = req.body ?? {};
     const userId = req.user!.id;
-    if (!isText(endpoint, 1000) || !/^https:\/\//.test(endpoint) || !isText(p256dh, 300) || !isText(auth, 300)) {
+    if (!isPushEndpoint(endpoint) || !isText(p256dh, 300) || !isText(auth, 300)) {
         reject(req, res, 'Invalid push subscription');
         return;
     }

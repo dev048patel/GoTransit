@@ -5,7 +5,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { SecurityEventService } from '../../models/services/SecurityEventService';
 
-/** The caller's address. `trust proxy` is set in apiApp.ts, so this is the real client behind Railway. */
+/** The caller's address. `trust proxy` is set in apiApp.ts so that this is the visitor, not Railway. */
 export function clientIp(req: Request): string {
     return req.ip || req.socket.remoteAddress || 'unknown';
 }
@@ -45,6 +45,14 @@ export function rateLimit(name: string, max: number, windowMs = 60_000) {
     };
 }
 
+/** Browser push services. The backend only ever sends a push to one of these. */
+const PUSH_HOSTS = /^(fcm\.googleapis\.com|([a-z0-9-]+\.)*push\.services\.mozilla\.com|([a-z0-9-]+\.)*notify\.windows\.com|([a-z0-9-]+\.)*push\.apple\.com)$/;
+export function isPushEndpoint(v: unknown): v is string {
+    if (typeof v !== 'string' || v.length > 1000) return false;
+    try { const u = new URL(v); return u.protocol === 'https:' && !u.port && !u.username && PUSH_HOSTS.test(u.hostname); }
+    catch { return false; }
+}
+
 /* ── input checks ── */
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 export const isUuid = (v: unknown): v is string => typeof v === 'string' && UUID.test(v);
@@ -53,7 +61,7 @@ export const isDateOnly = (v: unknown): v is string => typeof v === 'string' && 
 
 /** Reject the request with 400 and note it; returns true when it did. */
 export function reject(req: Request, res: Response, message: string): true {
-    void SecurityEventService.record({ type: 'validation_failed', severity: 'info', ip: clientIp(req), path: req.originalUrl, message });
+    void SecurityEventService.record({ type: 'validation_failed', severity: 'info', throttle: true, ip: clientIp(req), path: req.originalUrl, message });
     res.status(400).json({ error: message });
     return true;
 }

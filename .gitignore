@@ -24,3 +24,14 @@ yarn-error.log*
 
 # Local dev data store (user sessions — not for git)
 data/users.json
+
+# local settings, in every form
+.env
+.env.*
+
+# generated videos and their working files
+/brag-output
+/explainer-video
+
+# admin route renames saved by the backend
+route-overrides.json

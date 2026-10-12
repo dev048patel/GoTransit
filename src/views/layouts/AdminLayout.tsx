@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { Outlet, NavLink, Link, useLocation, useNavigate } from 'react-router-dom';
 import { Home, Users, Bus, BarChart3, ShieldAlert, ScrollText, ArrowLeft, Menu, ShieldCheck, X } from 'lucide-react';
 import { useAuth } from '../../models/context/AuthContext';
+import { supabase } from '../../models/lib/supabase';
 
 const NAV = [
     { to: '/admin', label: 'Home', icon: Home, end: true },
@@ -17,6 +18,7 @@ const NAV = [
     { to: '/admin/activity', label: 'Activity log', icon: ScrollText },
 ];
 const IDLE_MINUTES = 30;
+const LAST_ACTIVE_KEY = 'admin-last-active';
 
 export default function AdminLayout() {
     const { user, logout } = useAuth();
@@ -28,7 +30,24 @@ export default function AdminLayout() {
     // Sign out of an unattended admin panel
     useEffect(() => {
         let timer: ReturnType<typeof setTimeout>;
-        const reset = () => { clearTimeout(timer); timer = setTimeout(async () => { await logout(); navigate('/login', { replace: true }); }, IDLE_MINUTES * 60_000); };
+        const signOut = async () => { try { localStorage.removeItem(LAST_ACTIVE_KEY); } catch { /* storage blocked */ } await logout(); navigate('/login', { replace: true }); };
+        // The time of the last activity is kept in the browser, so closing the tab does not stop the clock.
+        // A login newer than that activity is a fresh start and is left alone.
+        let last = 0;
+        try { last = Number(localStorage.getItem(LAST_ACTIVE_KEY)) || 0; } catch { /* storage blocked */ }
+        const idleFor = Date.now() - last;
+        if (last && idleFor > IDLE_MINUTES * 60_000) {
+            void supabase.auth.getSession().then(({ data }) => {
+                const signedInAt = Date.parse(data.session?.user.last_sign_in_at ?? '') || 0;
+                if (signedInAt < last) void signOut();
+            });
+        }
+        let written = 0;
+        const reset = () => {
+            clearTimeout(timer);
+            timer = setTimeout(signOut, IDLE_MINUTES * 60_000);
+            if (Date.now() - written > 15_000) { written = Date.now(); try { localStorage.setItem(LAST_ACTIVE_KEY, String(written)); } catch { /* storage blocked */ } }
+        };
         const events = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
         events.forEach(e => window.addEventListener(e, reset, { passive: true }));
         reset();

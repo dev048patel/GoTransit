@@ -31,6 +31,18 @@ const EMAIL_COOLDOWN_MS = 15 * 60 * 1000;
 let events: SecurityEvent[] = [];
 let bursts = new Map<string, { count: number; start: number; raised: boolean }>();
 let lastEmail = new Map<string, number>();
+let lastStored = new Map<string, number>();
+const STORE_EVERY_MS = 60 * 1000, MAX_TRACKED = 5000;
+
+function storedRecently(key: string): boolean {
+    const now = Date.now();
+    // Bounded memory: forget everything rather than grow without limit
+    if (lastStored.size > MAX_TRACKED) lastStored.clear();
+    if (bursts.size > MAX_TRACKED) bursts.clear();
+    if (now - (lastStored.get(key) ?? 0) < STORE_EVERY_MS) return true;
+    lastStored.set(key, now);
+    return false;
+}
 
 /** Sends through Resend's HTTP API. Needs RESEND_API_KEY and ALERT_EMAILS (comma-separated). */
 const resendMailer: Mailer = async (subject, text) => {
@@ -56,16 +68,24 @@ async function alertAdmins(e: SecurityEvent): Promise<void> {
 }
 
 export const SecurityEventService = {
-    async record(input: Omit<SecurityEvent, 'at'>): Promise<void> {
-        const e: SecurityEvent = { ...input, message: input.message.slice(0, 300), path: input.path?.slice(0, 200), at: new Date().toISOString() };
-        events.push(e);
-        if (events.length > MAX_KEPT) events = events.slice(-MAX_KEPT);
-        if (e.severity !== 'info') console.warn(`[Security] ${e.severity} ${e.type}: ${e.message}`);
+    /**
+     * `throttle`: for events anyone can cause at will (a request with no login, a malformed request).
+     * They are stored at most once a minute per kind and address, so they cannot flood the log or
+     * push real events out of view. Every one still counts towards the "repeated probing" alert.
+     */
+    async record(input: Omit<SecurityEvent, 'at'> & { throttle?: boolean }): Promise<void> {
+        const { throttle, ...fields } = input;
+        const e: SecurityEvent = { ...fields, message: fields.message.slice(0, 300), path: fields.path?.slice(0, 200), at: new Date().toISOString() };
+        if (!(throttle && storedRecently(`${e.type}|${e.ip ?? ''}`))) {
+            events.push(e);
+            if (events.length > MAX_KEPT) events = events.slice(-MAX_KEPT);
+            if (e.severity !== 'info') console.warn(`[Security] ${e.severity} ${e.type}: ${e.message}`);
 
-        if (hasServiceKey()) {
-            serviceDb().from('security_events')
-                .insert({ type: e.type, severity: e.severity, message: e.message, ip: e.ip ?? null, user_id: e.userId ?? null, path: e.path ?? null })
-                .then(({ error }) => { if (error) console.error('[Security] Could not store event:', error.message); });
+            if (hasServiceKey()) {
+                serviceDb().from('security_events')
+                    .insert({ type: e.type, severity: e.severity, message: e.message, ip: e.ip ?? null, user_id: e.userId ?? null, path: e.path ?? null })
+                    .then(({ error }) => { if (error) console.error('[Security] Could not store event:', error.message); });
+            }
         }
 
         if (e.severity === 'critical') { await alertAdmins(e); return; }
@@ -87,5 +107,5 @@ export const SecurityEventService = {
 
     /** Test hooks. */
     _setMailer(fn: Mailer | null) { mailer = fn ?? resendMailer; },
-    _reset() { events = []; bursts = new Map(); lastEmail = new Map(); },
+    _reset() { events = []; bursts = new Map(); lastEmail = new Map(); lastStored = new Map(); },
 };

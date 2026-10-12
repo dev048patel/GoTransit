@@ -96,7 +96,7 @@ router.post('/webhook', rateLimit('sms-webhook', 120), express.urlencoded({ exte
     const valid = !!authToken && !!backendUrl
         && twilio.validateRequest(authToken, signature, `${backendUrl}/api/sms/webhook`, (req.body ?? {}) as Record<string, string>);
     if (!valid) {
-        void SecurityEventService.record({ type: 'webhook_rejected', severity: 'warning', ip: clientIp(req), path: req.originalUrl,
+        void SecurityEventService.record({ type: 'webhook_rejected', severity: 'warning', throttle: true, ip: clientIp(req), path: req.originalUrl,
             message: authToken && backendUrl ? 'Text-message webhook called without a valid Twilio signature' : 'Text-message webhook refused: TWILIO_AUTH_TOKEN or BACKEND_URL is not set' });
         res.status(403).send('Forbidden');
         return;
@@ -162,6 +162,7 @@ router.post('/broadcast', requireAuth, requireAdmin, async (req: Request, res: R
         .select('mobile_number')
         .in('id', userIds)
         .eq('sms_opted_in', true)
+        .eq('mobile_verified', true)
         .not('mobile_number', 'is', null);
 
     const recipients = (profiles ?? [])

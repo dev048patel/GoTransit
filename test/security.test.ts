@@ -32,6 +32,11 @@ const TOKENS: Record<string, { id: string; role: string; status: string }> = {
 const calls: { method: string; url: string; auth: string; body: any }[] = [];
 /** Rows the stand-in returns for the stored event log (empty unless a test fills it). */
 let storedEvents: any[] = [];
+/** Switches for single tests: the profile lookup failing; the role of the account being changed. */
+let profilesDown = false;
+let targetRole: string | null = null;
+/** Stand-in live bus feed: counts how often it is asked, and moves the bus each time. */
+let feedHits = 0;
 const fake = http.createServer((req, res) => {
     let raw = '';
     req.on('data', c => { raw += c; });
@@ -42,11 +47,22 @@ const fake = http.createServer((req, res) => {
         const send = (code: number, data: unknown) => { res.writeHead(code, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(data)); };
         const single = (req.headers.accept ?? '').includes('vnd.pgrst.object');
 
+        if (url.startsWith('/feed')) {
+            feedHits++;
+            return send(200, [{ properties: { b: 'bus-1', dir: 0, speed: 10, r: '7', line: 'x' }, geometry: { coordinates: [-104.6, 50.4 + feedHits / 1000] } }]);
+        }
         if (url.startsWith('/auth/v1/user')) {
             const u = TOKENS[auth];
             return u ? send(200, { id: u.id, aud: 'authenticated', role: 'authenticated', email: `${u.role}@example.com` }) : send(401, { msg: 'invalid token' });
         }
         if (url.startsWith('/auth/v1/admin/users/')) return send(200, { id: url.split('/').pop() });
+        if (url.startsWith('/auth/v1/token')) {
+            return body?.email === 'rider@example.com' && body?.password === 'correct-password'
+                ? send(200, { access_token: T.user, refresh_token: 'refresh-token', token_type: 'bearer', expires_in: 3600, user: { id: USER, aud: 'authenticated', email: body.email } })
+                : send(400, { error: 'invalid_grant', error_description: 'Invalid login credentials' });
+        }
+        if (url.startsWith('/rest/v1/profiles') && req.method === 'GET' && profilesDown) return send(500, { message: 'database unavailable' });
+        if (url.startsWith('/rest/v1/profiles') && req.method === 'GET' && targetRole && url.includes(OTHER) && url.includes('select=role') && !url.includes('account_status')) return send(200, [{ role: targetRole }]);
         if (url.startsWith('/rest/v1/profiles') && req.method === 'GET' && single) {
             const id = /id=eq\.([0-9a-f-]+)/.exec(url)?.[1];
             const u = Object.values(TOKENS).find(t => t.id === id);
@@ -95,6 +111,7 @@ before(async () => {
     process.env.VITE_SUPABASE_URL = `http://127.0.0.1:${(fake.address() as AddressInfo).port}`;
     process.env.VITE_SUPABASE_ANON_KEY = 'anon-key';
     process.env.SUPABASE_SERVICE_ROLE_KEY = 'service-key';
+    process.env.TRANSIT_LIVE_API_URL = `http://127.0.0.1:${(fake.address() as AddressInfo).port}/feed`;
     process.env.TWILIO_AUTH_TOKEN = 'twilio-test-token';
     process.env.BACKEND_URL = 'https://api.example.test';
     process.env.ROUTE_OVERRIDES_FILE = path.join(os.tmpdir(), `route-overrides-test-${process.pid}.json`);
@@ -330,7 +347,7 @@ test('a page value that is not a path is not stored', async () => {
 });
 
 test('push subscriptions need a login and are stored for the token owner only', async () => {
-    const sub = { endpoint: 'https://push.example/abc', p256dh: 'key', auth: 'secret', userId: OTHER };
+    const sub = { endpoint: 'https://fcm.googleapis.com/fcm/send/abc', p256dh: 'key', auth: 'secret', userId: OTHER };
     assert.equal((await api('POST', '/api/push/subscribe', { body: sub })).status, 401);
     assert.equal((await api('POST', '/api/push/subscribe', { body: sub, token: T.user })).status, 200);
     const write = calls.find(c => c.method === 'POST' && c.url.startsWith('/rest/v1/push_subscriptions'));
@@ -358,23 +375,111 @@ test('the text-message webhook accepts a correctly signed call', async () => {
 
 /* ── rate limits ── */
 
-test('phone sign-in lookup is limited to a few tries a minute', async () => {
+test('phone sign-in is done by the backend and never reveals the email', async () => {
+    const ok = await api('POST', '/api/auth/login-mobile', { body: { mobile: '+1 306-555-0199', password: 'correct-password' } });
+    assert.equal(ok.status, 200);
+    assert.deepEqual(Object.keys(ok.json).sort(), ['access_token', 'refresh_token']);
+    assert.ok(!JSON.stringify(ok.json).includes('rider@example.com'));
+    // wrong password, unknown number and nonsense all get the same answer
+    const answers = [
+        await api('POST', '/api/auth/login-mobile', { body: { mobile: '+1 306-555-0199', password: 'wrong' } }),
+        await api('POST', '/api/auth/login-mobile', { body: { mobile: '+1 306-555-0100', password: 'correct-password' } }),
+        await api('POST', '/api/auth/login-mobile', { body: { mobile: "+1' OR 1=1 --", password: 'x' } }),
+        await api('POST', '/api/auth/login-mobile', { body: {} }),
+    ];
+    for (const r of answers) { assert.equal(r.status, 401); assert.deepEqual(r.json, { error: 'Invalid credentials' }); }
+    assert.equal((await api('POST', '/api/auth/resolve-mobile', { body: { mobile: '+1 306-555-0199' } })).status, 404, 'the old lookup is gone');
+});
+
+test('phone sign-in is limited to a few tries a minute per address', async () => {
     const ip = freshIp();
-    const first = await api('POST', '/api/auth/resolve-mobile', { ip, body: { mobile: '+1 306-555-0199' } });
-    assert.deepEqual(first.json, { email: 'rider@example.com' });
-    for (let i = 0; i < 4; i++) await api('POST', '/api/auth/resolve-mobile', { ip, body: { mobile: '+1 306-555-0100' } });
-    const sixth = await api('POST', '/api/auth/resolve-mobile', { ip, body: { mobile: '+1 306-555-0199' } });
+    for (let i = 0; i < 5; i++) await api('POST', '/api/auth/login-mobile', { ip, body: { mobile: '+1 306-555-0199', password: 'wrong' } });
+    const sixth = await api('POST', '/api/auth/login-mobile', { ip, body: { mobile: '+1 306-555-0199', password: 'correct-password' } });
     assert.equal(sixth.status, 429);
     assert.ok(sixth.headers.get('retry-after'));
-    assert.equal((await api('POST', '/api/auth/resolve-mobile', { body: { mobile: '+1 306-555-0199' } })).status, 200, 'another address is unaffected');
+    assert.equal((await api('POST', '/api/auth/login-mobile', { body: { mobile: '+1 306-555-0199', password: 'correct-password' } })).status, 200, 'another address is unaffected');
     await settle();
     assert.equal(events.recent().filter(e => e.type === 'rate_limited' && e.ip === ip).length, 1, 'one event per window, not one per request');
 });
 
-test('a malformed phone number never reaches the database', async () => {
-    const r = await api('POST', '/api/auth/resolve-mobile', { body: { mobile: "+1' OR 1=1 --" } });
-    assert.deepEqual(r.json, { email: null });
-    assert.equal(calls.filter(c => c.url.includes('/rpc/')).length, 0);
+/* ── findings from the October 2026 audit ── */
+
+test('the visitor is identified by their own address, not the proxy in front of the backend', async () => {
+    const seen = async (chain: string) => (await api('POST', '/api/analytics/beacon', { ip: chain, body: { page: '/' } })).json.sessionId.split('::')[0];
+    assert.equal(await seen('203.0.113.7, 152.233.40.1'), '203.0.113.7', 'visitor, then Railway');
+    assert.equal(await seen('6.6.6.6, 203.0.113.8, 152.233.40.1'), '203.0.113.8', 'an address the caller invented in front is ignored');
+    assert.equal(await seen('203.0.113.9'), '203.0.113.9');
+});
+
+test('two visitors behind the same proxy have separate rate limits', async () => {
+    for (let i = 0; i < 6; i++) await api('POST', '/api/auth/login-mobile', { ip: '203.0.113.20, 152.233.40.1', body: {} });
+    assert.equal((await api('POST', '/api/auth/login-mobile', { ip: '203.0.113.20, 152.233.40.1', body: {} })).status, 429);
+    assert.equal((await api('POST', '/api/auth/login-mobile', { ip: '203.0.113.21, 152.233.40.1', body: {} })).status, 401);
+});
+
+test('a stream of requests without a login cannot flood the event log', async () => {
+    const ip = freshIp();
+    calls.length = 0;
+    for (let i = 0; i < 40; i++) await api('GET', `/api/admin/overview?n=${i}`, { ip });
+    await settle();
+    const stored = calls.filter(c => c.method === 'POST' && c.url.startsWith('/rest/v1/security_events')).map(c => c.body.type);
+    assert.deepEqual(stored.sort(), ['auth_failed', 'burst'], 'one row for the kind of event, one for the alert');
+    assert.equal(mails.length, 1, 'the repeated-probing alert still fires');
+});
+
+test('changing the browser name does not create extra visitor records', async () => {
+    const ip = freshIp();
+    const ids = new Set<string>();
+    for (let i = 0; i < 10; i++) ids.add((await api('POST', '/api/analytics/beacon', { ip, headers: { 'User-Agent': `Made-up/${i}` }, body: { page: '/' } })).json.sessionId);
+    assert.equal(ids.size, 1);
+});
+
+test('push notifications can only be registered for real push services', async () => {
+    const keys = { p256dh: 'k', auth: 'a' };
+    for (const endpoint of ['https://127.0.0.1:8443/x', 'https://10.0.0.5/admin', 'https://backend.railway.internal/', 'https://victim.example/receive', 'http://fcm.googleapis.com/x', 'https://fcm.googleapis.com.evil.example/x', 'https://fcm.googleapis.com:8443/x'])
+        assert.equal((await api('POST', '/api/push/subscribe', { token: T.user, body: { endpoint, ...keys } })).status, 400, endpoint);
+    for (const endpoint of ['https://fcm.googleapis.com/fcm/send/abc', 'https://updates.push.services.mozilla.com/wpush/v2/abc', 'https://web.push.apple.com/abc', 'https://wns2-by3p.notify.windows.com/w/?token=abc'])
+        assert.equal((await api('POST', '/api/push/subscribe', { token: T.user, body: { endpoint, ...keys } })).status, 200, endpoint);
+});
+
+test('if an account\'s status cannot be read, the request is refused rather than allowed', async () => {
+    profilesDown = true;
+    try {
+        const r = await api('POST', '/api/sms/opt-out', { token: T.suspended });
+        assert.equal(r.status, 503);
+        assert.equal((await api('GET', '/api/admin/overview', { token: T.admin })).status, 503);
+    } finally { profilesDown = false; }
+});
+
+test('demoting or suspending another admin needs a freshly entered code', async () => {
+    targetRole = 'admin';
+    try {
+        for (const body of [{ role: 'user' }, { account_status: 'suspended' }]) {
+            const r = await api('PATCH', `/api/admin/users/${OTHER}`, { token: T.adminStaleCode, body });
+            assert.equal(r.json.code, 'fresh_two_step_required', JSON.stringify(body));
+        }
+        assert.equal((await api('PATCH', `/api/admin/users/${OTHER}`, { token: T.admin, body: { role: 'user' } })).status, 200);
+    } finally { targetRole = null; }
+});
+
+test('the live bus feed is fetched once and shared, and is never more than half a second old', async () => {
+    await new Promise(r => setTimeout(r, 600));   // let any earlier copy expire
+    feedHits = 0;
+    const answers = await Promise.all(Array.from({ length: 30 }, () => api('GET', '/api/live')));
+    assert.equal(feedHits, 1, '30 riders asking at once cause one request to the feed');
+    assert.ok(answers.every(a => a.status === 200 && a.json.length === 1 && a.json[0].bus_id === 'bus-1'));
+    const first = answers[0].json[0].lat;
+    for (let i = 0; i < 5; i++) await api('GET', '/api/live');
+    assert.equal(feedHits, 1, 'asks inside the same half second share the copy');
+    await new Promise(r => setTimeout(r, 600));
+    const later = await api('GET', '/api/live');
+    assert.equal(feedHits, 2, 'after half a second the feed is asked again');
+    assert.notEqual(later.json[0].lat, first, 'and the bus has moved: riders never keep seeing an old position');
+});
+
+test('usage tracking with no body is a bad request, not a server error', async () => {
+    const r = await fetch(base + '/api/features/track', { method: 'POST', headers: { 'X-Forwarded-For': freshIp() } });
+    assert.equal(r.status, 400);
 });
 
 test('analytics tracking is rate limited', async () => {
