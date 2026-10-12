@@ -40,6 +40,8 @@ const STOP_TO_LINE_MAX_M = 40;
 const HEADING_TOLERANCE_DEG = 60;
 // A ride over more of the round trip than this is no real suggestion: the stops were matched wrongly
 const MAX_RIDE_SHARE_OF_LOOP = 0.6;
+// A live bus's drive between two reports may bend round corners, but not much further than the gap
+const MAX_DRIVE_DETOUR_RATIO = 2, DRIVE_DETOUR_SLACK_M = 60;
 // Roads curve, so a drawn ride runs longer than the stop-to-stop distance (typically 1.0–1.4×). Far
 // outside that, the loop doesn't follow the route there (a detour or variant in the snapshot).
 const MAX_RIDE_LENGTH_RATIO = 1.6, MIN_RIDE_LENGTH_RATIO = 0.7, RIDE_LENGTH_SLACK_M = 400;
@@ -150,6 +152,48 @@ function getRouteLoop(routeNum: string): RouteLoop | null {
     return loop;
 }
 
+/** Shortest way forward along the loop from a pass by point A to a pass by point B. */
+function shortestForwardRide(
+    loop: RouteLoop, from: LatLng, fromHeading: number | null, to: LatLng, toHeading: number | null
+): { board: Pass; alight: Pass; length: number } | null {
+    const { points, cumulative, closed } = loop;
+    const loopLength = cumulative[cumulative.length - 1];
+    const boardings = findPasses(points, cumulative, from, fromHeading);
+    const alightings = findPasses(points, cumulative, to, toHeading);
+
+    let best: { board: Pass; alight: Pass; length: number } | null = null;
+    for (const board of boardings) {
+        for (const alight of alightings) {
+            let length = alight.position - board.position;
+            if (length <= 0) {
+                if (!closed) continue;
+                length += loopLength; // round past the end of the file to the start
+            }
+            if (!best || length < best.length) best = { board, alight, length };
+        }
+    }
+    return best;
+}
+
+/** The loop's points from one pass to another, starting and ending exactly on the line. */
+function pathOf(loop: RouteLoop, { board, alight }: { board: Pass; alight: Pass }): LatLng[] {
+    const { points, closed } = loop;
+    const pointAt = ({ segment, t }: Pass): LatLng => ({
+        lat: points[segment].lat + t * (points[segment + 1].lat - points[segment].lat),
+        lng: points[segment].lng + t * (points[segment + 1].lng - points[segment].lng),
+    });
+
+    // A closed loop's last point repeats its first, so it has one point fewer to walk round
+    const ring = closed ? points.length - 1 : points.length;
+    const wraps = alight.position <= board.position;
+    const steps = wraps ? ring - board.segment + alight.segment : alight.segment - board.segment;
+
+    const path = [pointAt(board)];
+    for (let s = 1; s <= steps; s++) path.push(points[(board.segment + s) % ring]);
+    path.push(pointAt(alight));
+    return path;
+}
+
 export class RoutePolylineService {
     /**
      * Returns the polyline as a single path (array of {lat,lng}) wrapped in an array
@@ -173,45 +217,32 @@ export class RoutePolylineService {
         const to = stopLocationAndHeading(toStopId);
         if (!loop || !from || !to) return null;
 
-        const { points, cumulative, closed } = loop;
-        const loopLength = cumulative[cumulative.length - 1];
-        const boardings = findPasses(points, cumulative, from.location, from.heading);
-        const alightings = findPasses(points, cumulative, to.location, to.heading);
-
-        // Shortest ride forward along the loop from a boarding pass to an alighting pass
-        let best: { board: Pass; alight: Pass; length: number } | null = null;
-        for (const board of boardings) {
-            for (const alight of alightings) {
-                let length = alight.position - board.position;
-                if (length <= 0) {
-                    if (!closed) continue;
-                    length += loopLength; // round past the end of the file to the start
-                }
-                if (!best || length < best.length) best = { board, alight, length };
-            }
-        }
-        if (!best || best.length > loopLength * MAX_RIDE_SHARE_OF_LOOP) return null;
+        const ride = shortestForwardRide(loop, from.location, from.heading, to.location, to.heading);
+        const loopLength = loop.cumulative[loop.cumulative.length - 1];
+        if (!ride || ride.length > loopLength * MAX_RIDE_SHARE_OF_LOOP) return null;
 
         // Cross-check against the bus's stop-by-stop distance for this ride
         const expected = checkStopDirection(routeNum, fromStopId, toStopId);
         if (expected?.valid && (
-            best.length > expected.shapeDistance * MAX_RIDE_LENGTH_RATIO + RIDE_LENGTH_SLACK_M ||
-            best.length < expected.shapeDistance * MIN_RIDE_LENGTH_RATIO - RIDE_LENGTH_SLACK_M
+            ride.length > expected.shapeDistance * MAX_RIDE_LENGTH_RATIO + RIDE_LENGTH_SLACK_M ||
+            ride.length < expected.shapeDistance * MIN_RIDE_LENGTH_RATIO - RIDE_LENGTH_SLACK_M
         )) return null;
 
-        const pointAt = ({ segment, t }: Pass): LatLng => ({
-            lat: points[segment].lat + t * (points[segment + 1].lat - points[segment].lat),
-            lng: points[segment].lng + t * (points[segment + 1].lng - points[segment].lng),
-        });
+        return pathOf(loop, ride);
+    }
 
-        // A closed loop's last point repeats its first, so it has one point fewer to walk round
-        const ring = closed ? points.length - 1 : points.length;
-        const wraps = best.alight.position <= best.board.position;
-        const steps = wraps ? ring - best.board.segment + best.alight.segment : best.alight.segment - best.board.segment;
-
-        const path = [pointAt(best.board)];
-        for (let s = 1; s <= steps; s++) path.push(points[(best.board.segment + s) % ring]);
-        path.push(pointAt(best.alight));
-        return path;
+    /**
+     * The road a live bus drove between two of its reported positions, so it can be animated along
+     * the street rather than cutting across corners. Each position is matched to the stretch of the
+     * route's loop heading the way the bus was. Null when that isn't a short, plausible drive along
+     * the route (bus off-route, on a detour, or GPS noise): the caller then moves it in a straight line.
+     */
+    static getDrivePath(routeNum: string, from: LatLng, fromHeading: number, to: LatLng, toHeading: number): LatLng[] | null {
+        const loop = getRouteLoop(routeNum);
+        if (!loop) return null;
+        const drive = shortestForwardRide(loop, from, fromHeading, to, toHeading);
+        if (!drive || drive.length > distanceMeters(from, to) * MAX_DRIVE_DETOUR_RATIO + DRIVE_DETOUR_SLACK_M) return null;
+        // Start and end exactly at the reported positions, which sit a few metres off the line
+        return [from, ...pathOf(loop, drive), to];
     }
 }
