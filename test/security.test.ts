@@ -30,6 +30,8 @@ const TOKENS: Record<string, { id: string; role: string; status: string }> = {
 
 /* ── stand-in Supabase: just enough of the auth and REST API, and a log of what was asked ── */
 const calls: { method: string; url: string; auth: string; body: any }[] = [];
+/** Rows the stand-in returns for the stored event log (empty unless a test fills it). */
+let storedEvents: any[] = [];
 const fake = http.createServer((req, res) => {
     let raw = '';
     req.on('data', c => { raw += c; });
@@ -50,6 +52,11 @@ const fake = http.createServer((req, res) => {
             const u = Object.values(TOKENS).find(t => t.id === id);
             return u ? send(200, { role: u.role, account_status: u.status }) : send(406, { message: 'no rows' });
         }
+        if (url.startsWith('/rest/v1/profiles') && req.method === 'GET' && url.includes('id=in.')) {
+            const known = new Map(Object.values(TOKENS).map(t => [t.id, { id: t.id, full_name: null, email: `${t.role}-${t.id.slice(0, 4)}@example.com` }]));
+            return send(200, [...known.values()].filter(k => url.includes(k.id)));
+        }
+        if (url.startsWith('/rest/v1/security_events') && req.method === 'GET') return send(200, storedEvents);
         if (url.startsWith('/rest/v1/rpc/get_email_by_mobile')) return send(200, body?.mobile === '+1 306-555-0199' ? 'rider@example.com' : null);
         if (req.method === 'GET' || req.method === 'HEAD') return single ? send(406, { message: 'no rows' }) : send(200, []);
         return send(req.method === 'POST' ? 201 : 200, []);
@@ -257,6 +264,26 @@ test('marking events as handled updates only those events, keeps them, and is re
     assert.ok(events.recent().some(e => e.type === 'events_handled' && e.userId === ADMIN));
     for (const ids of [[], ['1'], [0], [1.5], 'all', Array(501).fill(1)])
         assert.equal((await api('POST', '/api/admin/security/handled', { token: T.admin, body: { ids } })).status, 400, JSON.stringify(ids).slice(0, 20));
+});
+
+test('events name people by email, never by account id', async () => {
+    const row = (message: string, user_id: string | null) => ({ id: 1, handled_at: null, type: 'role_changed', severity: 'critical', message, user_id, ip: null, path: null, created_at: new Date().toISOString() });
+    storedEvents = [
+        row(`Admin set user ${USER} to role "admin".`, ADMIN),
+        row(`Admin deleted user ${OTHER} (gone@example.com). Reason: spam`, ADMIN),
+        row(`Admin deleted user ${OTHER}.`, null),
+    ];
+    try {
+        const { json } = await api('GET', '/api/admin/security', { token: T.admin });
+        assert.equal(json.events[0].message, 'Admin set user user-2222@example.com to role "admin".');
+        assert.equal(json.events[0].who, 'admin-1111@example.com');
+        assert.equal(json.events[1].message, 'Admin deleted user gone@example.com. Reason: spam', 'a deleted account keeps the email noted at deletion');
+        assert.equal(json.events[2].message, 'Admin deleted user (deleted account).');
+        assert.equal(json.events[2].who, null);
+        assert.ok(!/[0-9a-f]{8}-[0-9a-f]{4}-/.test(JSON.stringify(json.events)), 'no account ids are sent to the page');
+        const activity = await api('GET', '/api/admin/activity', { token: T.admin });
+        assert.equal(activity.json[0].admin, 'admin-1111@example.com');
+    } finally { storedEvents = []; }
 });
 
 test('revealing hidden personal data is recorded against the admin', async () => {

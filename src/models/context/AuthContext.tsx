@@ -73,7 +73,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [session, setSession] = useState<Session | null>(null);
     const [role, setRole] = useState<'user' | 'admin'>('user');
     const [isLoading, setIsLoading] = useState(true);
-    const [roleLoaded, setRoleLoaded] = useState(false);
+    // Which user the loaded role belongs to. Comparing it with the session means a role left over
+    // from "nobody signed in" is never mistaken for the role of the person who just appeared.
+    const [roleFor, setRoleFor] = useState<string | null>(null);
     const initializedRef = useRef(false);
 
     // Listen for auth changes — ONLY synchronous state updates here.
@@ -105,14 +107,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Fetch role in a separate effect — safe to call Supabase here.
     useEffect(() => {
         if (session) {
-            setRoleLoaded(false);
-            fetchRole(session.user.id)
+            const uid = session.user.id;
+            fetchRole(uid)
                 .then(r => setRole(r))
                 .catch(() => setRole('user'))
-                .finally(() => setRoleLoaded(true));
+                .finally(() => setRoleFor(uid));
         } else {
             setRole('user');
-            setRoleLoaded(true);
+            setRoleFor(null);
         }
     }, [session?.user?.id]);
 
@@ -165,7 +167,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         <AuthContext.Provider value={{
             isAuthenticated: !!session,
             isAdmin: role === 'admin',
-            roleLoaded,
+            roleLoaded: !session || roleFor === session.user.id,
             twoStepPassed: !!session && tokenPassedTwoStep(session.access_token),
             user,
             isLoading,
