@@ -23,8 +23,8 @@ Route Map:
 
 import './App.css';
 
-import React, { Suspense } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import React, { Suspense, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAnalyticsBeacon } from './controllers/hooks/useAnalyticsBeacon';
 import { AuthProvider, useAuth } from './models/context/AuthContext';
 import { FeatureAccessProvider } from './models/context/FeatureAccessContext';
@@ -42,6 +42,7 @@ const SignupPage = React.lazy(() => import('./views/auth/SignupPage'));
 const ForgotPasswordPage = React.lazy(() => import('./views/auth/ForgotPasswordPage'));
 const ResetPasswordPage = React.lazy(() => import('./views/auth/ResetPasswordPage'));
 const ConnectPage = React.lazy(() => import('./views/ConnectPage'));
+const TeamMemberPage = React.lazy(() => import('./views/TeamMemberPage'));
 const AdminLayout = React.lazy(() => import('./views/layouts/AdminLayout'));
 const AdminHome = React.lazy(() => import('./views/admin/AdminHome'));
 const People = React.lazy(() => import('./views/admin/People'));
@@ -59,6 +60,10 @@ const TwoStepPage = React.lazy(() => import('./views/auth/TwoStepPage'));
  * full-screen loader is shown instead. This prevents blank screens on refresh.
  */
 function AppRoutes() {
+    /* Start every page at the top; without this a new page opens at the old page's scroll position */
+    const { pathname } = useLocation();
+    useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+
     const { isLoading } = useAuth();
     useAnalyticsBeacon();
 
@@ -180,6 +185,8 @@ function AppRoutes() {
 
                 {/* ── Public: /connect — Meet the Team ─────────────────── */}
                 <Route path="/connect" element={<ConnectPage />} />
+                {/* Each person's own portfolio page */}
+                <Route path="/connect/:slug" element={<TeamMemberPage />} />
 
                 {/* ── Legacy redirect: /landing still works ─────────────── */}
                 <Route path="/landing" element={<LandingPage />} />

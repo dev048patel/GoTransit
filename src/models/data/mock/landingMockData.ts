@@ -58,6 +58,13 @@ export const features: Feature[] = [
         description: "Enter your destination and we'll find the fastest route—whether it's one bus or three transfers. Works with your current GPS location or any address.",
         visual: "route-planner-mockup.png",
         icon: "Map"
+    },
+    {
+        id: "characters",
+        title: "Pick Your Character",
+        description: "Be a robot, fox, penguin, astronaut or hero on the map. The map screens take on your character's colours and its way of talking.",
+        visual: "characters-mockup.png",
+        icon: "Smile"
     }
 ];
 
@@ -114,7 +121,7 @@ export const faqItems: FAQItem[] = [
     },
     {
         question: "Can I use this without creating an account?",
-        answer: "Yes! No account is needed. Just open the app and start tracking buses and checking stop arrivals right away."
+        answer: "You need a free account to open the live map. Signing up is free, and so is every feature."
     },
     {
         question: "What happens if my bus is delayed?",

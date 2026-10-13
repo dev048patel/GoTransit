@@ -1,127 +1,92 @@
-/**
- * ProblemSolution.tsx — Transit Regina
- *
- * "Built for Regina's Real Challenges" section.
- * Three white glass cards with brand-blue icon rings — one per challenge.
- * Consistent with the landing page white / #003DA5 palette.
- */
-
+/* Problem/solution section for the landing page — each rider complaint answered by a map character */
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Snowflake, Construction, Clock } from 'lucide-react';
+import { motion, MotionConfig } from 'framer-motion';
+import { MARKER_CHARACTERS, type MarkerCharacterId } from '../../../models/data/markerCharacters';
+import { CHARACTER_THEMES } from '../../../models/data/characterThemes';
 
 interface ProblemSolutionProps {
     problemSolutions: Array<{
-        title: string;
         problem: string;
         solution: string;
         icon: string;
+        title: string;
     }>;
 }
 
-const iconMap: { [key: string]: React.FC<{ size?: number, className?: string }> } = {
-    Snowflake,
-    Construction,
-    Clock
-};
-
-/* Accent per card — all in the blue family */
-const ACCENTS = [
-    { bg: 'rgba(0,61,165,0.07)', border: 'rgba(0,61,165,0.14)' },
-    { bg: 'rgba(0,61,165,0.05)', border: 'rgba(0,61,165,0.10)' },
-    { bg: 'rgba(0,61,165,0.09)', border: 'rgba(0,61,165,0.18)' },
-];
+/* Who answers each complaint, in order (the penguin takes the cold one) */
+const GUIDES: MarkerCharacterId[] = ['penguin', 'robot', 'astronaut'];
 
 export default function ProblemSolution({ problemSolutions }: ProblemSolutionProps) {
     return (
         <section className="py-24 relative">
-            <div className="max-w-7xl mx-auto px-6">
+            <MotionConfig reducedMotion="user">
+                <div className="max-w-4xl mx-auto px-6">
+                    {/* Section Header */}
+                    <motion.div
+                        className="text-center mb-16"
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6 }}
+                    >
+                        <h2 className="text-3xl sm:text-5xl font-bold mb-5" style={{ color: '#0f172a' }}>
+                            Built for Regina's{' '}
+                            <span style={{ color: '#003DA5' }}>Real Challenges</span>
+                        </h2>
+                        <p className="text-xl max-w-2xl mx-auto" style={{ color: '#64748b' }}>
+                            We understand the unique difficulties of commuting in Regina
+                        </p>
+                    </motion.div>
 
-                {/* Section Header */}
-                <motion.div
-                    className="text-center mb-16"
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
-                >
-                    <h2 className="text-3xl sm:text-5xl font-bold mb-5" style={{ color: '#0f172a' }}>
-                        Built for Regina's{' '}
-                        <span style={{ color: '#003DA5' }}>Real Challenges</span>
-                    </h2>
-                    <p className="text-xl max-w-2xl mx-auto" style={{ color: '#64748b' }}>
-                        We understand the unique difficulties of commuting in Regina
-                    </p>
-                </motion.div>
+                    {/* One short conversation per problem, stepping left and right down the page */}
+                    <div className="space-y-14">
+                        {problemSolutions.map((item, index) => {
+                            const id = GUIDES[index % GUIDES.length];
+                            const guide = MARKER_CHARACTERS.find(c => c.id === id)!;
+                            const theme = CHARACTER_THEMES[id];
 
-                {/* Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {problemSolutions.map((item, index) => {
-                        const Icon = iconMap[item.icon] || Clock;
-                        const accent = ACCENTS[index % ACCENTS.length];
-
-                        return (
-                            <motion.div
-                                key={item.title}
-                                className="group relative rounded-3xl p-10 overflow-hidden transition-all duration-500 hover:-translate-y-3"
-                                style={{
-                                    background: 'rgba(255,255,255,0.88)',
-                                    backdropFilter: 'blur(20px)',
-                                    border: `1px solid ${accent.border}`,
-                                    boxShadow: '0 6px 40px rgba(0,0,0,0.07)',
-                                }}
-                                initial={{ opacity: 0, y: 50 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.6, delay: index * 0.15 }}
-                                whileHover={{
-                                    boxShadow: '0 24px 80px rgba(0,61,165,0.15)',
-                                }}
-                            >
-                                {/* Blue glow on hover */}
-                                <div
-                                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"
-                                    style={{ background: accent.bg }}
-                                />
-
-                                {/* Icon ring */}
+                            return (
                                 <motion.div
-                                    className="relative w-24 h-24 mx-auto mb-8 rounded-full flex items-center justify-center"
-                                    style={{
-                                        background: 'rgba(0,61,165,0.08)',
-                                        border: '2px solid rgba(0,61,165,0.16)',
-                                    }}
-                                    animate={{ y: [0, -8, 0] }}
-                                    transition={{ duration: 3 + index * 0.4, repeat: Infinity, ease: 'easeInOut' }}
+                                    key={item.title}
+                                    className={`max-w-2xl ${index % 2 === 1 ? 'md:ml-auto' : ''}`}
+                                    initial={{ opacity: 0, x: index % 2 === 1 ? 40 : -40 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
+                                    viewport={{ once: true, margin: '-80px' }}
+                                    transition={{ duration: 0.6 }}
                                 >
-                                    <Icon size={44} className="text-[#003DA5]" />
+                                    <p className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-3">
+                                        {item.title}
+                                    </p>
+
+                                    {/* The rider */}
+                                    <div className="flex justify-end mb-3">
+                                        <p className="max-w-md rounded-2xl rounded-br-sm bg-white border border-gray-200 px-5 py-3 text-gray-600 italic shadow-sm">
+                                            {item.problem}
+                                        </p>
+                                    </div>
+
+                                    {/* The character's answer, in its own colours */}
+                                    <div className="flex items-end gap-3">
+                                        <motion.img
+                                            src={guide.src}
+                                            alt={guide.label}
+                                            className="w-20 h-20 shrink-0 drop-shadow-lg"
+                                            animate={{ y: [0, -6, 0] }}
+                                            transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut', delay: index * 0.4 }}
+                                        />
+                                        <p
+                                            className="max-w-md rounded-2xl rounded-bl-sm border px-5 py-4 text-lg font-semibold shadow-md"
+                                            style={{ background: theme.primarySoft, color: theme.primaryDark, borderColor: theme.border }}
+                                        >
+                                            {item.solution}
+                                        </p>
+                                    </div>
                                 </motion.div>
-
-                                {/* Title */}
-                                <h3 className="text-2xl font-bold mb-6 text-center" style={{ color: '#0f172a' }}>
-                                    {item.title}
-                                </h3>
-
-                                {/* Problem */}
-                                <div className="mb-5 rounded-2xl p-4" style={{ background: 'rgba(239,68,68,0.05)', border: '1px solid rgba(239,68,68,0.12)' }}>
-                                    <p className="text-sm font-semibold mb-1" style={{ color: '#ef4444' }}>❌ The Problem</p>
-                                    <p className="text-sm leading-relaxed italic" style={{ color: '#64748b' }}>
-                                        "{item.problem}"
-                                    </p>
-                                </div>
-
-                                {/* Solution */}
-                                <div className="rounded-2xl p-4" style={{ background: 'rgba(0,61,165,0.05)', border: '1px solid rgba(0,61,165,0.14)' }}>
-                                    <p className="text-sm font-semibold mb-1" style={{ color: '#003DA5' }}>✅ Our Solution</p>
-                                    <p className="text-sm font-medium leading-relaxed" style={{ color: '#0f172a' }}>
-                                        "{item.solution}"
-                                    </p>
-                                </div>
-                            </motion.div>
-                        );
-                    })}
+                            );
+                        })}
+                    </div>
                 </div>
-            </div>
+            </MotionConfig>
         </section>
     );
 }

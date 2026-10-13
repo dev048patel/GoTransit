@@ -63,48 +63,29 @@ function AnimatedCounter({ targetValue }: { targetValue: string }) {
 
 export default function StatsSection({ stats }: StatsSectionProps) {
     return (
-        <section className="relative py-24 overflow-hidden">
-            <div className="relative z-10 max-w-7xl mx-auto px-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
+        <section className="py-16 relative">
+            <div className="max-w-5xl mx-auto px-6">
+                {/* One open strip, so the map behind stays in view */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[#003DA5]/15">
                     {stats.map((stat, index) => {
-                        const Icon = iconMap[stat.icon] || MapPin;
+                        const Icon = iconMap[stat.icon] || Route;
 
                         return (
                             <motion.div
                                 key={stat.label}
-                                className="group relative rounded-3xl p-10 border transition-all duration-500 hover:-translate-y-3 text-center"
-                                style={{
-                                    background: 'rgba(255,255,255,0.82)',
-                                    backdropFilter: 'blur(20px)',
-                                    borderColor: 'rgba(0,61,165,0.12)',
-                                    boxShadow: '0 4px 30px rgba(0,0,0,0.06)',
-                                }}
-                                initial={{ opacity: 0, y: 50 }}
+                                className="flex flex-col items-center text-center px-6 py-6"
+                                initial={{ opacity: 0, y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ duration: 0.6, delay: index * 0.15 }}
-                                whileHover={{ boxShadow: index % 2 === 0 ? '0 20px 60px rgba(59,130,246,0.25)' : '0 20px 60px rgba(255,107,53,0.25)' }}
+                                transition={{ duration: 0.5, delay: index * 0.12 }}
                             >
-                                {/* Icon */}
-                                <div
-                                    className="w-20 h-20 mx-auto mb-6 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
-                                    style={{ background: 'rgba(0,61,165,0.08)', border: '1px solid rgba(0,61,165,0.12)' }}
-                                >
-                                    <Icon size={40} className="text-[#003DA5]" />
+                                <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-[#003DA5]/70 mb-2">
+                                    <Icon size={16} />
+                                    {stat.label}
                                 </div>
-
-                                {/* Animated Number */}
-                                <div className="text-4xl sm:text-6xl font-bold mb-3" style={{ color: '#003DA5' }}>
+                                <div className="text-6xl md:text-7xl font-black text-[#003DA5] tabular-nums">
                                     <AnimatedCounter targetValue={stat.value} />
                                 </div>
-
-                                {/* Label */}
-                                <p className="text-xl font-medium" style={{ color: '#475569' }}>
-                                    {stat.label}
-                                </p>
-
-                                {/* Subtle glow effect on hover */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-xl" />
                             </motion.div>
                         );
                     })}

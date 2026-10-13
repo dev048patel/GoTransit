@@ -1,15 +1,12 @@
 /* Features carousel section for the landing page — animated cards showcasing app capabilities */
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Navigation, Bell, Heart, AlertTriangle, Calendar, Map } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence, useIsPresent, useReducedMotion } from 'framer-motion';
+import { Navigation, Bell, Heart, AlertTriangle, Calendar, Map, Clock, MapPin, Smile } from 'lucide-react';
+import { MARKER_CHARACTERS, type MarkerCharacterId } from '../../../models/data/markerCharacters';
+import { CHARACTER_THEMES } from '../../../models/data/characterThemes';
+import { CHARACTER_VOICE } from '../../../models/data/characterVoice';
 
-/* ── App screenshots for each feature ── */
-import ssRealTime from '../../images/SS01.png';
-import ssRouteSelect from '../../images/SS02.png';
-import ssRouteTrack from '../../images/SS03.png';
-import ssRoutePlanner from '../../images/SS04.png';
-import ssStopDetail from '../../images/SS05.png';
-import ssSavedStops from '../../images/SS06.png';
+import { MapDemo, ArrivalsDemo, StopTapDemo, PlannerDemo } from './FeatureDemos';
 
 interface FeaturesCarouselProps {
     features: Array<{
@@ -27,22 +24,147 @@ const iconMap: { [key: string]: React.FC<{ size?: number, className?: string }> 
     Heart,
     AlertTriangle,
     Calendar,
-    Map
+    Map,
+    Clock,
+    MapPin,
+    Smile
 };
 
-/* Map feature IDs to their screenshot + mockup type */
-const screenshotMap: { [key: string]: { src: string; mockup: 'laptop' | 'phone' } } = {
-    'real-time': { src: ssRealTime, mockup: 'laptop' },
-    'live-arrival': { src: ssRealTime, mockup: 'laptop' },
-    'stop-arrivals': { src: ssStopDetail, mockup: 'phone' },
-    'saved-stops': { src: ssSavedStops, mockup: 'phone' },
-    'route-planner': { src: ssRoutePlanner, mockup: 'phone' },
+/* What each feature shows, and in which frame.
+   To play a recorded clip instead of the drawn demo, import the file and add `video: clip` to the entry. */
+interface Showcase { Demo: React.FC; mockup: 'laptop' | 'phone'; video?: string }
+
+const showcaseMap: { [key: string]: Showcase } = {
+    'real-time': { Demo: MapDemo, mockup: 'laptop' },
+    'live-arrival': { Demo: ArrivalsDemo, mockup: 'phone' },
+    'stop-arrivals': { Demo: StopTapDemo, mockup: 'phone' },
+    'route-planner': { Demo: PlannerDemo, mockup: 'phone' },
 };
 
-const defaultScreenshot = { src: ssRealTime, mockup: 'laptop' as const };
+const defaultShowcase: Showcase = { Demo: MapDemo, mockup: 'laptop' };
+
+/* How long a demo stays up before the next feature starts (a clip runs for its own length) */
+const STILL_MS = 6000;
+
+interface ClipProps {
+    video: string;
+    alt: string;
+    paused: boolean;
+    onProgress: (fraction: number) => void;
+}
+
+/* ── A recorded clip inside a mockup ── */
+function Clip({ video, alt, paused, onProgress }: ClipProps) {
+    const ref = useRef<HTMLVideoElement>(null);
+    /* False while this feature is fading out, so its clip stops reporting progress */
+    const isPresent = useIsPresent();
+
+    useEffect(() => {
+        if (paused || !isPresent) ref.current?.pause();
+        else ref.current?.play().catch(() => { /* autoplay refused: the photo stays up */ });
+    }, [paused, isPresent]);
+
+    return (
+        <video
+            ref={ref}
+            src={video}
+            aria-label={alt}
+            className="w-full h-full object-cover object-top"
+            muted
+            playsInline
+            preload="metadata"
+            onTimeUpdate={e => onProgress(e.currentTarget.currentTime / (e.currentTarget.duration || 1))}
+            onEnded={() => onProgress(1)}
+        />
+    );
+}
+
+/* The characters a rider can pick (everything except the plain blue dot) */
+const CHARACTERS = MARKER_CHARACTERS.filter(c => c.id !== 'default');
+const CHARACTERS_FEATURE = 'characters';
+
+/* ── Character picker: the same colours and words the map screens use for each character ── */
+function CharacterPreview({ selected, onPick }: { selected: MarkerCharacterId; onPick: (id: MarkerCharacterId) => void }) {
+    const character = CHARACTERS.find(c => c.id === selected) ?? CHARACTERS[0];
+    const theme = CHARACTER_THEMES[character.id];
+    const voice = CHARACTER_VOICE[character.id];
+
+    return (
+        <div className="relative mx-auto" style={{ maxWidth: '420px' }}>
+            <div
+                className="rounded-3xl border p-6 shadow-[0_30px_80px_rgba(0,0,0,0.18)] transition-colors duration-500"
+                style={{ background: theme.surface, borderColor: theme.border }}
+            >
+                {/* The picked character and what it says while it works */}
+                <div className="flex items-center gap-4 mb-5">
+                    <AnimatePresence mode="wait">
+                        <motion.img
+                            key={character.id}
+                            src={character.src}
+                            alt={character.label}
+                            className="w-24 h-24 drop-shadow-lg"
+                            initial={{ opacity: 0, scale: 0.6, rotate: -10 }}
+                            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                            exit={{ opacity: 0, scale: 0.6 }}
+                            transition={{ duration: 0.25 }}
+                        />
+                    </AnimatePresence>
+                    <div
+                        className="flex-1 rounded-2xl rounded-bl-sm px-4 py-3 text-sm font-medium transition-colors duration-500"
+                        style={{ background: theme.primarySoft, color: theme.primaryDark }}
+                    >
+                        {voice.searching}
+                    </div>
+                </div>
+
+                {/* A sample route card in this character's colours */}
+                <div
+                    className="rounded-2xl border p-4 mb-5 transition-colors duration-500"
+                    style={{ background: theme.surface2, borderColor: theme.borderSoft }}
+                >
+                    <span
+                        className="inline-block rounded-full border px-3 py-1 text-xs font-bold mb-3 transition-colors duration-500"
+                        style={{ background: theme.accentSoft, color: theme.accentDark, borderColor: theme.accentBorder }}
+                    >
+                        ★ {voice.recommended}
+                    </span>
+                    <div className="flex items-center justify-between">
+                        <span
+                            className="rounded-full px-4 py-1.5 text-sm font-bold text-white transition-colors duration-500"
+                            style={{ background: theme.primary }}
+                        >
+                            Route 3
+                        </span>
+                        <span className="text-lg font-bold" style={{ color: theme.primaryDark }}>~12 min</span>
+                    </div>
+                </div>
+
+                {/* The choices */}
+                <div className="flex justify-between">
+                    {CHARACTERS.map(c => (
+                        <button
+                            key={c.id}
+                            onClick={() => onPick(c.id)}
+                            aria-label={c.label}
+                            aria-pressed={c.id === character.id}
+                            className="rounded-2xl p-2 border-2 transition-all duration-300 hover:scale-110"
+                            style={c.id === character.id
+                                ? { background: theme.chip, borderColor: theme.primary }
+                                : { background: 'transparent', borderColor: 'transparent' }}
+                        >
+                            <img src={c.src} alt="" className="w-11 h-11" />
+                        </button>
+                    ))}
+                </div>
+            </div>
+            {/* Glowing Shadow */}
+            <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-48 h-16 bg-blue-500/20 blur-3xl rounded-full" />
+        </div>
+    );
+}
 
 /* ── Phone Mockup ── */
-function PhoneMockup({ src, alt }: { src: string; alt: string }) {
+function PhoneMockup({ children }: { children: React.ReactNode }) {
     return (
         <div className="relative mx-auto" style={{ maxWidth: '320px' }}>
             <div className="relative bg-gradient-to-br from-gray-800 to-gray-900 rounded-[2.5rem] p-2.5 shadow-[0_30px_80px_rgba(0,0,0,0.3)]">
@@ -50,11 +172,7 @@ function PhoneMockup({ src, alt }: { src: string; alt: string }) {
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-6 bg-gray-900 rounded-b-2xl z-10" />
                 {/* Screen */}
                 <div className="relative rounded-[2rem] overflow-hidden bg-white" style={{ aspectRatio: '9 / 17' }}>
-                    <img
-                        src={src}
-                        alt={alt}
-                        className="w-full h-full object-contain object-top"
-                    />
+                    {children}
                 </div>
             </div>
             {/* Glowing Shadow */}
@@ -64,7 +182,7 @@ function PhoneMockup({ src, alt }: { src: string; alt: string }) {
 }
 
 /* ── Laptop Mockup ── */
-function LaptopMockup({ src, alt }: { src: string; alt: string }) {
+function LaptopMockup({ children }: { children: React.ReactNode }) {
     return (
         <div className="relative mx-auto" style={{ maxWidth: '680px' }}>
             <div className="relative bg-gradient-to-b from-gray-700 to-gray-800 rounded-xl shadow-[0_30px_80px_rgba(0,0,0,0.25)] overflow-hidden">
@@ -86,11 +204,7 @@ function LaptopMockup({ src, alt }: { src: string; alt: string }) {
                 </div>
                 {/* Screen */}
                 <div className="relative" style={{ aspectRatio: '16 / 9.5' }}>
-                    <img
-                        src={src}
-                        alt={alt}
-                        className="w-full h-full object-cover object-center"
-                    />
+                    {children}
                 </div>
             </div>
             {/* Laptop Base */}
@@ -106,9 +220,36 @@ function LaptopMockup({ src, alt }: { src: string; alt: string }) {
 
 export default function FeaturesCarousel({ features }: FeaturesCarouselProps) {
     const [activeFeature, setActiveFeature] = useState(0);
+    /* How far through the active feature we are, 0 to 1 */
+    const [progress, setProgress] = useState(0);
+    const [hovered, setHovered] = useState(false);
+    /* The character a visitor clicked; until they click, the characters take turns */
+    const [pickedCharacter, setPickedCharacter] = useState<MarkerCharacterId | null>(null);
+    /* People who have asked for less motion choose the feature themselves */
+    const reducedMotion = useReducedMotion();
+    const paused = hovered || !!reducedMotion || pickedCharacter !== null;
+
+    const current = showcaseMap[features[activeFeature].id] || defaultShowcase;
+
+    const showFeature = (index: number) => {
+        setActiveFeature(index);
+        setProgress(0);
+        setPickedCharacter(null);
+    };
+
+    /* A demo is timed here; a clip reports its own progress */
+    useEffect(() => {
+        if (paused || current.video) return;
+        const timer = setInterval(() => setProgress(p => p + 100 / STILL_MS), 100);
+        return () => clearInterval(timer);
+    }, [paused, current.video, activeFeature]);
+
+    useEffect(() => {
+        if (progress >= 1) showFeature((activeFeature + 1) % features.length);
+    });
 
     return (
-        <section className="py-24 relative">
+        <section id="features" className="py-24 relative scroll-mt-8">
             <div className="max-w-7xl mx-auto px-6">
                 {/* Section Header */}
                 <motion.div
@@ -127,7 +268,11 @@ export default function FeaturesCarousel({ features }: FeaturesCarouselProps) {
                 </motion.div>
 
                 {/* Features Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div
+                    className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center"
+                    onMouseEnter={() => setHovered(true)}
+                    onMouseLeave={() => setHovered(false)}
+                >
                     {/* Tab Navigation (30%) */}
                     <div className="lg:col-span-4 space-y-4">
                         {features.map((feature, index) => {
@@ -137,11 +282,11 @@ export default function FeaturesCarousel({ features }: FeaturesCarouselProps) {
                             return (
                                 <motion.button
                                     key={feature.id}
-                                    className={`w-full text-left p-6 rounded-2xl transition-all duration-300 border-l-4 ${isActive
+                                    className={`relative overflow-hidden w-full text-left p-6 rounded-2xl transition-all duration-300 border-l-4 ${isActive
                                         ? 'bg-white border-[#003DA5] shadow-lg shadow-blue-100'
                                         : 'bg-white/70 border-transparent hover:bg-white hover:border-gray-200 hover:shadow-md'
                                         }`}
-                                    onClick={() => setActiveFeature(index)}
+                                    onClick={() => showFeature(index)}
                                     whileHover={{ x: 8 }}
                                     initial={{ opacity: 0, x: -20 }}
                                     whileInView={{ opacity: 1, x: 0 }}
@@ -166,13 +311,19 @@ export default function FeaturesCarousel({ features }: FeaturesCarouselProps) {
                                             </p>
                                         </div>
                                     </div>
+                                    {isActive && (
+                                        <div
+                                            className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-[#003DA5] to-[#0066FF] transition-[width] duration-100 ease-linear"
+                                            style={{ width: `${Math.min(progress, 1) * 100}%` }}
+                                        />
+                                    )}
                                 </motion.button>
                             );
                         })}
                     </div>
 
                     {/* Content Area (70%) */}
-                    <div className="lg:col-span-8 flex items-center justify-center min-h-[500px]">
+                    <div className="order-first lg:order-none lg:col-span-8 flex items-center justify-center min-h-[500px]">
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={activeFeature}
@@ -183,12 +334,20 @@ export default function FeaturesCarousel({ features }: FeaturesCarouselProps) {
                                 transition={{ duration: 0.5 }}
                             >
                                 {(() => {
-                                    const current = screenshotMap[features[activeFeature].id] || defaultScreenshot;
-                                    const alt = features[activeFeature].title;
+                                    if (features[activeFeature].id === CHARACTERS_FEATURE) {
+                                        const turn = CHARACTERS[Math.min(CHARACTERS.length - 1, Math.floor(progress * CHARACTERS.length))].id;
+                                        return <CharacterPreview selected={pickedCharacter ?? turn} onPick={setPickedCharacter} />;
+                                    }
 
-                                    return current.mockup === 'phone'
-                                        ? <PhoneMockup src={current.src} alt={alt} />
-                                        : <LaptopMockup src={current.src} alt={alt} />;
+                                    const Frame = current.mockup === 'phone' ? PhoneMockup : LaptopMockup;
+
+                                    return (
+                                        <Frame>
+                                            {current.video
+                                                ? <Clip video={current.video} alt={features[activeFeature].title} paused={paused} onProgress={setProgress} />
+                                                : <current.Demo />}
+                                        </Frame>
+                                    );
                                 })()}
                             </motion.div>
                         </AnimatePresence>
