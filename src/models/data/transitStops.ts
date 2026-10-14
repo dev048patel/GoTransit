@@ -14009,6 +14009,66 @@ const transitStops: Stop[] = [
         "ONSTREET": "Chuka Blvd",
         "ATSTREET": "Buckingham Dr (SB)",
         "DIRECTION": "SB"
+    },
+    {
+        "OBJECTID": 60681,
+        "STOP_ID": "3998",
+        "STOP_NAME": "Victoria Ave @ Lorne St (EB)",
+        "LAT": "50.447119",
+        "LON": "-104.613089",
+        "ONSTREET": "Victoria Ave",
+        "ATSTREET": "Lorne St (EB)",
+        "DIRECTION": "EB"
+    },
+    {
+        "OBJECTID": 60682,
+        "STOP_ID": "3999",
+        "STOP_NAME": "Cornwall Centre @ Sask Dr (EB)",
+        "LAT": "50.452114",
+        "LON": "-104.610633",
+        "ONSTREET": "Cornwall Centre",
+        "ATSTREET": "Sask Dr (EB)",
+        "DIRECTION": "EB"
+    },
+    {
+        "OBJECTID": 60683,
+        "STOP_ID": "4000",
+        "STOP_NAME": "12th Ave @ Lorne St (WB)",
+        "LAT": "50.448857",
+        "LON": "-104.614881",
+        "ONSTREET": "12th Ave",
+        "ATSTREET": "Lorne St (WB)",
+        "DIRECTION": "WB"
+    },
+    {
+        "OBJECTID": 60684,
+        "STOP_ID": "4001",
+        "STOP_NAME": "Lorne St @ 12th Ave (NB)",
+        "LAT": "50.448553",
+        "LON": "-104.613566",
+        "ONSTREET": "Lorne St",
+        "ATSTREET": "12th Ave (NB)",
+        "DIRECTION": "NB"
+    },
+    {
+        "OBJECTID": 60685,
+        "STOP_ID": "4002",
+        "STOP_NAME": "Victoria Ave @ Lorne St (WB)",
+        "LAT": "50.447227",
+        "LON": "-104.613379",
+        "ONSTREET": "Victoria Ave",
+        "ATSTREET": "Lorne St (WB)",
+        "DIRECTION": "WB"
+    },
+    {
+        "OBJECTID": 60686,
+        "STOP_ID": "4004",
+        "STOP_NAME": "Lorne St @ Victoria Ave (NB)",
+        "LAT": "50.447818",
+        "LON": "-104.613567",
+        "ONSTREET": "Lorne St",
+        "ATSTREET": "Victoria Ave (NB)",
+        "DIRECTION": "NB"
     }
 ];
 
