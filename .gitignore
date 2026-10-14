@@ -35,3 +35,6 @@ data/users.json
 
 # admin route renames saved by the backend
 route-overrides.json
+
+# GTFS feed from Open Regina, input to scripts/build-transit-data.mjs (download it again, not for git)
+/data/google_transit/
