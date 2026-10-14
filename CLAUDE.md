@@ -10,6 +10,7 @@ npm run start:server   # Backend Express server (port 3001 or Railway PORT)
 npm run dev:server     # Backend with nodemon hot-reload
 npm run build          # Production build → /build
 npm run serve          # Preview production build locally
+npm run build:transit-data  # Regenerate src/models/data/ stops, routes and shapes from the GTFS feed in data/google_transit/
 ```
 
 No test runner or lint scripts are configured.
