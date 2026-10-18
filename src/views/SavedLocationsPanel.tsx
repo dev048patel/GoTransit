@@ -428,6 +428,7 @@ export default function SavedLocationsPanel({ ctrl, onGoNow }: SavedLocationsPan
                                         {ctrl.searchValue && (
                                             <button
                                                 onClick={ctrl.handleReset}
+                                                aria-label="Clear search"
                                                 style={{ border: 'none', background: 'none', cursor: 'pointer', padding: 0, color: '#9e9e9e', display: 'flex', alignItems: 'center' }}
                                             >
                                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">

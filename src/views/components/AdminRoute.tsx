@@ -17,17 +17,19 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../models/context/AuthContext';
+import { useTermsAcceptance } from '../../controllers/auth/useTermsAcceptance';
 
 interface AdminRouteProps {
     children: React.ReactElement;
 }
 
 export default function AdminRoute({ children }: AdminRouteProps) {
-    const { isAuthenticated, isAdmin, isLoading, roleLoaded, twoStepPassed } = useAuth();
+    const { isAuthenticated, isAdmin, isLoading, roleLoaded, twoStepPassed, signedOutOnPurpose } = useAuth();
     const location = useLocation();
+    const terms = useTermsAcceptance();
 
     // Wait for session + role to load before making a redirect decision
-    if (isLoading || (isAuthenticated && !roleLoaded)) {
+    if (isLoading || terms.checking || (isAuthenticated && !roleLoaded)) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
                 <div className="w-8 h-8 border-4 border-[#003DA5] border-t-transparent rounded-full animate-spin" />
@@ -35,8 +37,9 @@ export default function AdminRoute({ children }: AdminRouteProps) {
         );
     }
 
-    if (!isAuthenticated) {
-        return <Navigate to="/login" state={{ from: location }} replace />;
+    if (!isAuthenticated || terms.needed) {
+        // Remember this page only if they were sent away from it, not if they just signed out of it
+        return <Navigate to="/login" state={signedOutOnPurpose && !isAuthenticated ? undefined : { from: location }} replace />;
     }
 
     if (!isAdmin) {

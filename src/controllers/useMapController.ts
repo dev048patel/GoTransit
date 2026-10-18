@@ -42,6 +42,9 @@ export const useMapController = (): MapControllerOutput => {
   const [apiRoutes, setApiRoutes] = useState<Route[]>(transitRoutes); // start with static data, API overrides
   const [activeDetours, setActiveDetours] = useState<ActiveDetour[]>([]);
   const [weather, setWeather] = useState<WeatherSnapshot | null>(null);
+  /* When live positions last arrived, and whether they have stopped (three failed polls in a row) */
+  const [liveDown, setLiveDown] = useState(false);
+  const failedPolls = useRef(0);
 
   // Fetch weather from backend every 5 minutes — backend caches EC DataMart for us
   useEffect(() => {
@@ -153,9 +156,16 @@ export const useMapController = (): MapControllerOutput => {
 
           // Update React state from the cache
           setLiveBuses(Array.from(cache.values()).map(e => e.bus));
+          failedPolls.current = 0;
+          setLiveDown(false);
+        } else {
+          failedPolls.current++;
+          if (failedPolls.current >= 3) setLiveDown(true);
         }
       } catch (error) {
         console.error("Error fetching live buses", error);
+        failedPolls.current++;
+        if (failedPolls.current >= 3) setLiveDown(true);
       }
     };
 
@@ -234,6 +244,7 @@ export const useMapController = (): MapControllerOutput => {
 
   // 3. Return prepared data for the View
   return {
+    liveDown,
     isLoaded,
     loadError,
     center,

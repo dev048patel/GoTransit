@@ -13,6 +13,8 @@ import { Eye, EyeOff, ArrowRight, LogIn } from 'lucide-react';
 import { motion } from 'framer-motion';
 import logo from '../../New-Image.jpeg';
 import { useLoginController } from '../../controllers/auth/useLoginController';
+import { useTermsAcceptance } from '../../controllers/auth/useTermsAcceptance';
+import TermsAtAGlance from '../components/TermsAtAGlance';
 
 /* ── Shared input class helper ──────────────────────────────────── */
 const inputCls = (hasError: boolean) =>
@@ -21,6 +23,41 @@ const inputCls = (hasError: boolean) =>
     (hasError ? 'border-red-400 bg-red-50' : 'border-gray-200 bg-white');
 
 /* ── View ───────────────────────────────────────────────────────── */
+/* Existing accounts agree to the current Terms here, as part of signing in. Nothing in the app opens until they do. */
+function TermsStep({ terms }: { terms: ReturnType<typeof useTermsAcceptance> }) {
+    const [agreed, setAgreed] = React.useState(false);
+    return (
+        <div className="space-y-5">
+            <div>
+                <h2 className="text-xl font-bold text-gray-900 mb-1">Our Terms and Privacy Policy</h2>
+                <p className="text-sm text-gray-600 leading-relaxed">Please read the key points, then agree to continue.</p>
+            </div>
+            <TermsAtAGlance />
+            <label className="flex items-start gap-3 text-sm text-gray-600 cursor-pointer">
+                <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)} className="mt-0.5 h-4 w-4 shrink-0 accent-[#003DA5]" />
+                <span>
+                    I agree to the{' '}
+                    <Link to="/terms" target="_blank" className="font-semibold text-[#003DA5] underline">Terms of Use</Link>
+                    {' '}and have read the{' '}
+                    <Link to="/privacy" target="_blank" className="font-semibold text-[#003DA5] underline">Privacy Policy</Link>.
+                </span>
+            </label>
+            {terms.error && <p className="text-sm text-red-600">{terms.error}</p>}
+            <button
+                type="button"
+                onClick={terms.agree}
+                disabled={!agreed || terms.saving}
+                className="w-full flex items-center justify-center gap-2 px-8 py-3.5 bg-gradient-to-r from-[#003DA5] to-[#1a56db] text-white rounded-xl font-bold text-base disabled:opacity-50"
+            >
+                {terms.saving ? 'Saving…' : 'Continue'} <ArrowRight className="w-4 h-4" />
+            </button>
+            <button type="button" onClick={terms.signOut} className="w-full text-sm font-semibold text-gray-500 hover:text-gray-700">
+                Sign out instead
+            </button>
+        </div>
+    );
+}
+
 export default function LoginPage() {
     const {
         identifier, setIdentifier,
@@ -30,6 +67,8 @@ export default function LoginPage() {
         isMobileDetected,
         handleLogin,
     } = useLoginController();
+    /* Signed in, but this account hasn't agreed to the current Terms yet: that step replaces the form */
+    const terms = useTermsAcceptance();
 
     return (
         <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4 py-12 font-sans">
@@ -49,13 +88,14 @@ export default function LoginPage() {
                         <img src={logo} alt="Transit Regina" className="w-16 h-16 mx-auto rounded-2xl object-cover shadow-[0_8px_24px_rgba(0,61,165,0.2)]" />
                     </Link>
                     <h1 className="text-4xl font-bold bg-gradient-to-r from-[#003DA5] to-[#003DA5] bg-clip-text text-transparent mb-2">
-                        Welcome Back
+                        {terms.needed ? 'Almost there' : 'Welcome Back'}
                     </h1>
-                    <p className="text-gray-500 text-sm">Sign in to your Transit Regina account</p>
+                    <p className="text-gray-500 text-sm">{terms.needed ? 'You are signed in. Review and agree to continue.' : 'Sign in to your Transit Regina account'}</p>
                 </div>
 
                 {/* ── Card ─────────────────────────────────── */}
                 <div className="bg-white rounded-3xl shadow-[0_20px_80px_rgba(0,0,0,0.08)] border border-gray-100 px-8 py-8">
+                    {terms.needed ? <TermsStep terms={terms} /> : (
                     <form onSubmit={handleLogin} className="space-y-5" noValidate>
 
                         {/* Form-level error */}
@@ -136,8 +176,18 @@ export default function LoginPage() {
                                 </>
                             )}
                         </button>
+                        <p className="text-xs text-center text-slate-500">
+                            By signing in you agree to the{' '}
+                            <Link to="/terms" className="font-semibold text-[#003DA5] underline">Terms of Use</Link>
+                            {' '}and{' '}
+                            <Link to="/privacy" className="font-semibold text-[#003DA5] underline">Privacy Policy</Link>.
+                            {' '}If you haven't agreed to the current version yet, you'll be asked to right after signing in.
+                        </p>
                     </form>
+                    )}
 
+                    {!terms.needed && (
+                    <>
                     {/* Divider */}
                     <div className="flex items-center gap-3 my-6">
                         <div className="flex-1 h-px bg-gray-100" />
@@ -151,6 +201,8 @@ export default function LoginPage() {
                             Sign Up Free
                         </Link>
                     </p>
+                    </>
+                    )}
                 </div>
 
                 {/* Trust line */}

@@ -63,7 +63,7 @@ export default function FinalCTA() {
                     </div>
 
                     <p className="mt-8 text-gray-500">
-                        Free to use · Built for Regina Transit riders · Real-time tracking
+                        Free to use · Built for Regina bus riders · Independent, not run by the City
                     </p>
                 </motion.div>
             </MotionConfig>

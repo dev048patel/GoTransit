@@ -9,7 +9,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../../models/lib/supabase';
 import { useAuth } from '../../models/context/AuthContext';
-import { formatMobile } from '../../models/services/AuthService';
+import { formatMobile, deleteAccount, changePassword } from '../../models/services/AuthService';
 import { SmsService } from '../../models/services/SmsService';
 
 /* ── Types ──────────────────────────────────────────────────────── */
@@ -46,7 +46,7 @@ export interface FavRoute {
 
 /* ── Controller ─────────────────────────────────────────────────── */
 export function useProfileController() {
-    const { user, logout } = useAuth();
+    const { user, logout, logoutEverywhere } = useAuth();
 
     const [profile, setProfile] = useState<ProfileData | null>(null);
     const [prefs, setPrefs] = useState<Preferences>({
@@ -68,6 +68,7 @@ export function useProfileController() {
 
     // Change password modal
     const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [passwordSuccess, setPasswordSuccess] = useState(false);
@@ -86,6 +87,7 @@ export function useProfileController() {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(false);
     const [deleteError, setDeleteError] = useState('');
+    const [deletePassword, setDeletePassword] = useState('');
 
     // SMS notifications
     const [smsLoading, setSmsLoading] = useState(false);
@@ -146,6 +148,10 @@ export function useProfileController() {
     const handleLogout = useCallback(async () => {
         await logout();
     }, [logout]);
+    /* Ends the session on every device this account is signed in on */
+    const handleLogoutEverywhere = useCallback(async () => {
+        await logoutEverywhere();
+    }, [logoutEverywhere]);
 
     /* ── Preferences ────────────────────────────────────────────── */
     const updatePref = useCallback(async <K extends keyof Preferences>(
@@ -165,23 +171,30 @@ export function useProfileController() {
             setPasswordError('Minimum 8 characters required');
             return;
         }
+        if (!currentPassword) {
+            setPasswordError('Enter your current password');
+            return;
+        }
         setPasswordLoading(true);
-        const { error } = await supabase.auth.updateUser({ password: newPassword });
+        // Re-checks the current password, sets the new one, and signs out every other device
+        const error = await changePassword(currentPassword, newPassword);
         setPasswordLoading(false);
         if (error) {
-            setPasswordError(error.message);
+            setPasswordError(error);
         } else {
             setPasswordSuccess(true);
+            setCurrentPassword('');
             setNewPassword('');
             setTimeout(() => {
                 setShowPasswordModal(false);
                 setPasswordSuccess(false);
             }, 4000);
         }
-    }, [newPassword]);
+    }, [currentPassword, newPassword]);
 
     const closePasswordModal = useCallback(() => {
         setShowPasswordModal(false);
+        setCurrentPassword('');
         setNewPassword('');
         setPasswordError('');
         setPasswordSuccess(false);
@@ -290,13 +303,16 @@ export function useProfileController() {
         try {
             if (!user) return;
 
-            // Soft-delete: mark as deleted, then sign out
-            const { error } = await supabase.from('profiles')
-                .update({ account_status: 'deleted', updated_at: new Date().toISOString() })
-                .eq('id', user.id);
+            if (!deletePassword) {
+                setDeleteError('Enter your password to confirm');
+                setDeleteLoading(false);
+                return;
+            }
+            // Re-checks the password, deletes the account and all saved data on the server, then signs out
+            const error = await deleteAccount(deletePassword);
 
             if (error) {
-                setDeleteError(error.message);
+                setDeleteError(error);
                 setDeleteLoading(false);
                 return;
             }
@@ -307,7 +323,7 @@ export function useProfileController() {
             setDeleteError(err?.message ?? 'Failed to delete account. Please try again.');
             setDeleteLoading(false);
         }
-    }, [user, logout]);
+    }, [user, logout, deletePassword]);
 
     return {
         user,
@@ -321,6 +337,7 @@ export function useProfileController() {
         routesLoading,
         // Password modal
         showPasswordModal, setShowPasswordModal,
+        currentPassword, setCurrentPassword,
         newPassword, setNewPassword,
         passwordError,
         passwordSuccess,
@@ -337,11 +354,13 @@ export function useProfileController() {
         // Delete confirm
         showDeleteConfirm, setShowDeleteConfirm,
         deleteLoading, deleteError,
+        deletePassword, setDeletePassword,
         handleDeleteAccount,
         // SMS notifications
         smsLoading, smsError, handleSmsToggle,
         // Actions
         handleLogout,
+        handleLogoutEverywhere,
         updatePref,
         removeFavStop,
         removeFavRoute,

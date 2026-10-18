@@ -16,17 +16,24 @@ const ADMIN = '11111111-1111-4111-8111-111111111111';
 const USER = '22222222-2222-4222-8222-222222222222';
 const SUSPENDED = '33333333-3333-4333-8333-333333333333';
 const OTHER = '44444444-4444-4444-8444-444444444444';
+const NEWCOMER = '55555555-5555-4555-8555-555555555555';
+/** Must match SITE.TERMS_VERSION in src/models/data/legal.ts */
+const TERMS = '2026-10-17.2';
 /** A token shaped like Supabase's: the middle part says whether the login passed the second step (aal2). */
 const jwt = (sub: string, aal: 'aal1' | 'aal2', codeAgeSeconds = 30) =>
     ['e30', Buffer.from(JSON.stringify({ sub, aal, amr: aal === 'aal2' ? [{ method: 'password', timestamp: 1 }, { method: 'totp', timestamp: Math.floor(Date.now() / 1000) - codeAgeSeconds }] : [{ method: 'password', timestamp: 1 }] })).toString('base64url'), 'signature'].join('.');
-const T = { admin: jwt(ADMIN, 'aal2'), adminStaleCode: jwt(ADMIN, 'aal2', 3600), adminNoTwoStep: jwt(ADMIN, 'aal1'), user: jwt(USER, 'aal1'), suspended: jwt(SUSPENDED, 'aal1') };
-const TOKENS: Record<string, { id: string; role: string; status: string }> = {
+const T = { admin: jwt(ADMIN, 'aal2'), adminStaleCode: jwt(ADMIN, 'aal2', 3600), adminNoTwoStep: jwt(ADMIN, 'aal1'), user: jwt(USER, 'aal1'), suspended: jwt(SUSPENDED, 'aal1'), newcomer: jwt(NEWCOMER, 'aal1') };
+/** `terms`: the Terms version on the account's profile (everyone has agreed except the newcomer) */
+const TOKENS: Record<string, { id: string; role: string; status: string; terms?: string | null }> = {
     [T.admin]: { id: ADMIN, role: 'admin', status: 'active' },
     [T.adminNoTwoStep]: { id: ADMIN, role: 'admin', status: 'active' },
     [T.adminStaleCode]: { id: ADMIN, role: 'admin', status: 'active' },
     [T.user]: { id: USER, role: 'user', status: 'active' },
     [T.suspended]: { id: SUSPENDED, role: 'user', status: 'suspended' },
+    [T.newcomer]: { id: NEWCOMER, role: 'user', status: 'active', terms: null },
 };
+/** Switch for one test: the terms columns have not been added to the database yet */
+let termsColumnMissing = false;
 
 /* ── stand-in Supabase: just enough of the auth and REST API, and a log of what was asked ── */
 const calls: { method: string; url: string; auth: string; body: any }[] = [];
@@ -66,6 +73,10 @@ const fake = http.createServer((req, res) => {
         if (url.startsWith('/rest/v1/profiles') && req.method === 'GET' && single) {
             const id = /id=eq\.([0-9a-f-]+)/.exec(url)?.[1];
             const u = Object.values(TOKENS).find(t => t.id === id);
+            if (u && url.includes('select=terms_version')) {
+                return termsColumnMissing ? send(400, { code: '42703', message: 'column profiles.terms_version does not exist' })
+                    : send(200, { terms_version: u.terms === undefined ? TERMS : u.terms });
+            }
             return u ? send(200, { role: u.role, account_status: u.status }) : send(406, { message: 'no rows' });
         }
         if (url.startsWith('/rest/v1/profiles') && req.method === 'GET' && url.includes('id=in.')) {
@@ -580,4 +591,38 @@ test('a dependency going down alerts after two failed checks and reports recover
     process.env.TRANSIT_LIVE_API_URL = `${base}/api/routes`;         // any URL answering 200 with a JSON list
     await HealthService.run();
     assert.ok(events.recent().some(e => e.type === 'dependency_recovered'));
+});
+
+test('an account that has not agreed to the current Terms can only agree or delete itself', async () => {
+    const sub = { endpoint: 'https://fcm.googleapis.com/fcm/send/abc', p256dh: 'key', auth: 'secret' };
+    const blocked = await api('POST', '/api/push/subscribe', { body: sub, token: T.newcomer });
+    assert.equal(blocked.status, 403);
+    assert.equal(blocked.json.error, 'terms_required');
+    assert.ok(!calls.some(c => c.url.startsWith('/rest/v1/push_subscriptions') && c.auth === T.newcomer), 'nothing written before agreeing');
+
+    const agreed = await api('POST', '/api/auth/accept-terms', { token: T.newcomer });
+    assert.equal(agreed.status, 200);
+    const write = calls.find(c => c.method === 'PATCH' && c.url.startsWith('/rest/v1/profiles') && c.url.includes(NEWCOMER));
+    assert.equal(write?.body.terms_version, TERMS, 'the current version is recorded');
+    assert.ok(Math.abs(Date.parse(write?.body.terms_accepted_at) - Date.now()) < 60_000, "stamped with the server's clock");
+    assert.notEqual(write?.auth, T.newcomer, "written by the server, not with the rider's own token");
+
+    assert.notEqual((await api('DELETE', '/api/auth/account', { token: T.newcomer })).status, 403, 'deleting the account is always allowed');
+    assert.equal((await api('POST', '/api/auth/accept-terms')).status, 401, 'agreeing needs a login');
+});
+
+test('the Terms check is skipped, not fatal, before its database columns exist', async () => {
+    termsColumnMissing = true;
+    try {
+        const sub = { endpoint: 'https://fcm.googleapis.com/fcm/send/abc', p256dh: 'key', auth: 'secret' };
+        assert.equal((await api('POST', '/api/push/subscribe', { body: sub, token: T.newcomer })).status, 200);
+    } finally { termsColumnMissing = false; }
+});
+
+test('deleting an account or changing a password needs the current password again', async () => {
+    assert.equal((await api('DELETE', '/api/auth/account', { token: T.user })).status, 401, 'no password');
+    assert.equal((await api('DELETE', '/api/auth/account', { token: T.user, body: { password: 'wrong-password' } })).status, 401, 'wrong password');
+    assert.ok(!calls.some(c => c.method === 'DELETE' && c.url.startsWith('/rest/v1/profiles')), 'nothing deleted');
+    assert.equal((await api('POST', '/api/auth/confirm-password', { token: T.user, body: { password: 'wrong-password' } })).status, 401);
+    assert.equal((await api('POST', '/api/auth/confirm-password', { body: { password: 'x' } })).status, 401, 'needs a login');
 });

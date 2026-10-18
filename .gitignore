@@ -38,3 +38,8 @@ route-overrides.json
 
 # GTFS feed from Open Regina, input to scripts/build-transit-data.mjs (download it again, not for git)
 /data/google_transit/
+
+# Private notes and database scripts: kept on this computer only, never published.
+# (docs/security holds the Supabase SQL scripts and setup notes; docs/owner-actions holds the to-do list.)
+/docs/security/
+/docs/owner-actions/

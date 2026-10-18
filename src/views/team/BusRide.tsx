@@ -1,8 +1,8 @@
 /* The bus ride: a person's work shown as one continuous shot through a real 3D scene.
 
-   The scene (busScene.ts, three.js) stays pinned while the reader scrolls a tall section. The camera
-   starts outside a bus driving through the city at night, comes round to the front door, steps in
-   beside the driver, then turns and walks down the aisle to the back. Each seat carries a lit display
+   The scene (busScene.ts, three.js) stays pinned while the reader scrolls a tall section. A rider
+   waits at a snowy stop, the bus pulls in, they board and the driver waves, then the camera becomes
+   the rider's eyes and walks down the aisle to the back. Each seat carries a lit display
    for one thing the person built or one place they worked; the cards under the scene describe the
    row the camera has reached. The driver is the person, and links to their LinkedIn.
 
@@ -10,15 +10,20 @@
    the same content is shown as a plain list. */
 import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion';
-import { ArrowUpRight, ChevronsDown, LinkedinIcon } from 'lucide-react';
+import { ArrowUpRight, ChevronsDown, Gamepad2, LinkedinIcon, List, X } from 'lucide-react';
 import type { CharacterTheme } from '../../models/data/characterThemes';
 import type { TeamMember } from '../../models/data/team';
 import type { createBusScene } from './busScene';
+import BusGame, { type Passenger } from './BusGame';
 
 export interface RideItem {
     title: string;
     sub?: string;
     detail?: string;
+    /** For hiring managers: the problem, what the person did, how it works */
+    problem?: string;
+    did?: string;
+    how?: string;
     tags?: string[];
     stat?: { value: string; label: string };
     link?: string;
@@ -35,32 +40,64 @@ export interface RideZone {
 /* How much scrolling each part gets, in screen heights */
 const APPROACH = 3.6, PER_ROW = 0.75;
 
-/* What one seat's display stands for */
-function SeatCard({ item, kicker, theme }: { item: RideItem; kicker: string; theme: CharacterTheme }) {
+/* What one passenger says: a manga speech bubble (thick ink border, offset shadow, a tail pointing up
+   at the passenger). Laid out in the order people skim a project: what it is, the result, what it is
+   built with, then where to see it. */
+function SeatCard({ item, kicker, seat, theme, tail }: { item: RideItem; kicker: string; seat?: string; theme: CharacterTheme; tail?: 'left' | 'right' }) {
+    const label = 'block text-[10px] font-black uppercase tracking-[0.18em] text-slate-400 mb-1';
     return (
-        <div className="rounded-2xl bg-white/95 backdrop-blur border px-5 py-4 sm:px-6 sm:py-5 shadow-[0_18px_50px_rgba(0,0,0,0.45)] text-left" style={{ borderColor: theme.border }}>
-            <p className="text-[10.5px] font-bold uppercase tracking-[0.18em] mb-1" style={{ color: theme.primary }}>{kicker}</p>
-            <div className="flex items-start justify-between gap-4">
-                <div className="min-w-0">
-                    <h3 className="text-lg sm:text-xl font-black text-slate-900 leading-tight">{item.title}</h3>
-                    {item.sub && <p className="text-sm font-semibold text-slate-500">{item.sub}</p>}
+        <div className="relative rounded-[26px] bg-white border-[3px] border-slate-900 shadow-[5px_5px_0_#0f172a] px-5 py-4 sm:px-6 text-left">
+            {tail && <span className={`absolute -top-[15px] ${tail === 'left' ? 'left-12' : 'right-12'} w-6 h-6 bg-white border-t-[3px] border-l-[3px] border-slate-900 rotate-45`} />}
+            <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                {seat && <span className="rounded-full px-2.5 py-0.5 text-[10px] font-black tracking-wider text-white" style={{ background: theme.primary }}>SEAT {seat}</span>}
+                <span className="text-[10.5px] font-black uppercase tracking-[0.16em]" style={{ color: theme.primary }}>{kicker}</span>
+            </div>
+            <h3 className="text-lg sm:text-xl font-black text-slate-900 leading-tight">{item.title}</h3>
+            {item.sub && <p className="text-sm font-bold text-slate-500">{item.sub}</p>}
+            <div className="mt-2.5 grid gap-3 sm:grid-cols-[1fr_auto]">
+                <div className="space-y-2.5">
+                    {item.problem && (
+                        <div>
+                            <span className={label}>The problem</span>
+                            <p className="text-sm sm:text-[15px] text-slate-700 leading-relaxed">{item.problem}</p>
+                        </div>
+                    )}
+                    {(item.did || item.detail) && (
+                        <div>
+                            <span className={label}>{item.did ? 'What was done' : 'What it is'}</span>
+                            <p className="text-sm sm:text-[15px] text-slate-700 leading-relaxed">{item.did ?? item.detail}</p>
+                        </div>
+                    )}
+                    {item.how && (
+                        <div>
+                            <span className={label}>How it works</span>
+                            <p className="text-sm sm:text-[15px] text-slate-700 leading-relaxed">{item.how}</p>
+                        </div>
+                    )}
                 </div>
                 {item.stat && (
-                    <div className="shrink-0 text-right max-w-[42%]">
-                        <div className="text-3xl font-black leading-none" style={{ color: theme.primary }}>{item.stat.value}</div>
-                        <div className="text-[11px] font-semibold text-slate-500 mt-1 leading-tight">{item.stat.label}</div>
+                    <div className="sm:w-32 rounded-2xl border-2 border-slate-900 px-3 py-2 self-start" style={{ background: theme.primarySoft }}>
+                        <span className={label}>Result</span>
+                        <div className="text-2xl font-black leading-none" style={{ color: theme.primaryDark }}>{item.stat.value}</div>
+                        <div className="text-[11px] font-bold text-slate-600 mt-1 leading-tight">{item.stat.label}</div>
                     </div>
                 )}
             </div>
-            {item.detail && <p className="text-sm sm:text-base text-slate-600 leading-relaxed mt-2">{item.detail}</p>}
             {(item.tags || item.link) && (
-                <div className="flex flex-wrap items-center gap-1.5 mt-3">
-                    {item.tags?.map(tag => (
-                        <span key={tag} className="rounded-md px-2 py-0.5 text-[11px] font-semibold" style={{ background: theme.primarySoft, color: theme.primaryDark }}>{tag}</span>
-                    ))}
+                <div className="mt-3 flex flex-wrap items-end justify-between gap-3">
+                    {item.tags && (
+                        <div>
+                            <span className={label}>Built with</span>
+                            <div className="flex flex-wrap gap-1.5">
+                                {item.tags.map(tag => (
+                                    <span key={tag} className="rounded-full border-2 border-slate-900 bg-white px-2 py-0.5 text-[11px] font-bold text-slate-800">{tag}</span>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                     {item.link && (
-                        <a href={item.link} target="_blank" rel="noopener noreferrer" className="ml-auto inline-flex items-center gap-1 text-sm font-bold no-underline hover:underline" style={{ color: theme.primary }}>
-                            {item.linkLabel || 'View on GitHub'} <ArrowUpRight size={16} />
+                        <a href={item.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-full border-2 border-slate-900 px-3 py-1 text-sm font-black text-white no-underline shadow-[2px_2px_0_#0f172a] hover:translate-y-px" style={{ background: theme.primary }}>
+                            {item.linkLabel || 'View on GitHub'} <ArrowUpRight size={15} />
                         </a>
                     )}
                 </div>
@@ -88,6 +125,11 @@ export default function BusRide({ person, theme, zones }: { person: TeamMember; 
     const [stage, setStage] = useState<'outside' | 'driver' | 'aisle'>('outside');
     const [row, setRow] = useState(0);
     const [started, setStarted] = useState(false);
+    /* Game mode (walk the bus yourself) and the plain list, for anyone short on time */
+    const [playing, setPlaying] = useState(false);
+    const [listOpen, setListOpen] = useState(false);
+    /* Everyone on board, in seat order: the same order the scene seats them */
+    const people: Passenger[] = rows.flatMap((r, ri) => r.pair.flatMap((item, k) => (item ? [{ item, zone: r.zone.label, seat: ri * 2 + k + 1 }] : [])));
 
     useEffect(() => {
         let cancelled = false;
@@ -159,19 +201,32 @@ export default function BusRide({ person, theme, zones }: { person: TeamMember; 
 
     return (
         <section ref={sectionRef} className="relative" style={{ height: `${(1 + total) * 100}vh` }}>
-            <div className="sticky top-0 h-screen overflow-hidden bg-[#060a15]">
+            <div className={`${playing ? 'fixed inset-0 z-[80] h-[100dvh]' : 'sticky top-0 h-screen'} overflow-hidden bg-[#060a15]`} style={playing ? { overscrollBehavior: 'none' } : undefined}>
                 <canvas ref={canvasRef} onClick={onCanvasClick} className={`absolute inset-0 w-full h-full transition-opacity duration-700 ${ready ? 'opacity-100' : 'opacity-0'}`} />
                 {/* Darker edges, like a lens */}
                 <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.55) 100%)' }} />
 
+                {playing && scene.current && (
+                    <BusGame scene={scene.current} people={people} person={person} theme={theme} onExit={() => setPlaying(false)} onList={() => setListOpen(true)} />
+                )}
+
                 {/* Opening title, gone once the reader starts scrolling */}
                 <AnimatePresence>
-                    {!started && (
-                        <motion.div className="absolute inset-x-0 top-[12%] px-6 text-center pointer-events-none" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}>
+                    {!started && !playing && (
+                        <motion.div className="absolute inset-x-0 bottom-[7%] px-6 text-center pointer-events-none" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}>
                             <p className="text-sm font-bold uppercase tracking-[0.3em] text-amber-400 mb-3">{firstName}'s route</p>
-                            <h2 className="text-3xl sm:text-5xl font-black text-white mb-4 drop-shadow-lg">Everything I've built is on this bus</h2>
+                            <h2 className="text-3xl sm:text-5xl font-black text-white mb-2 drop-shadow-[0_4px_18px_rgba(0,0,0,0.8)]">Everything I've built is on this bus</h2>
+                            <p className="text-base sm:text-lg text-white/80 mb-4 drop-shadow">It's 4 minutes away and {firstName} is driving. Every passenger is something we built: say hi.</p>
+                            <div className="flex flex-wrap items-center justify-center gap-3 mb-4 pointer-events-auto">
+                                <button onClick={() => setPlaying(true)} disabled={!ready} className="inline-flex items-center gap-2 rounded-full border-[3px] border-slate-900 bg-amber-400 px-5 py-2.5 text-base font-black text-slate-900 shadow-[4px_4px_0_#0f172a] hover:-translate-y-0.5 transition-transform disabled:opacity-60">
+                                    <Gamepad2 size={20} /> Play: meet everyone on board
+                                </button>
+                                <button onClick={() => setListOpen(true)} className="inline-flex items-center gap-2 rounded-full border-2 border-white/40 bg-black/40 px-4 py-2 text-sm font-bold text-white backdrop-blur hover:bg-black/60">
+                                    <List size={16} /> Short on time? See it all as a list
+                                </button>
+                            </div>
                             <p className="flex items-center justify-center gap-2 text-lg text-white/75">
-                                Scroll to get on <ChevronsDown size={20} className="animate-bounce text-amber-400" />
+                                or scroll to ride along <ChevronsDown size={20} className="animate-bounce text-amber-400" />
                             </p>
                         </motion.div>
                     )}
@@ -179,13 +234,13 @@ export default function BusRide({ person, theme, zones }: { person: TeamMember; 
 
                 {/* In the cab: who is driving */}
                 <AnimatePresence>
-                    {stage === 'driver' && (
+                    {stage === 'driver' && !playing && (
                         <motion.a
                             href={person.linkedin}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="absolute left-1/2 bottom-[9%] w-[min(92vw,460px)] rounded-2xl bg-white/95 backdrop-blur px-6 py-5 no-underline shadow-[0_18px_50px_rgba(0,0,0,0.5)] border"
-                            style={{ x: '-50%', borderColor: theme.border }}
+                            className="absolute left-1/2 sm:left-[4%] bottom-[9%] sm:bottom-[13%] w-[min(92vw,460px)] rounded-[26px] bg-white px-6 py-5 no-underline border-[3px] border-slate-900 shadow-[5px_5px_0_#0f172a]"
+                            style={{ x: typeof window !== 'undefined' && window.innerWidth >= 640 ? 0 : '-50%' }}
                             initial={{ opacity: 0, y: 24 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: 24 }}
@@ -203,9 +258,13 @@ export default function BusRide({ person, theme, zones }: { person: TeamMember; 
 
                 {/* In the aisle: where we are, and the two seats in front of the camera */}
                 <AnimatePresence>
-                    {stage === 'aisle' && (
+                    {stage === 'aisle' && !playing && (
                         <motion.div className="absolute inset-0 flex flex-col justify-between pointer-events-none" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }}>
-                            <div className="flex flex-wrap items-center justify-center gap-2 px-3 pt-4 pointer-events-auto">
+                            <div className="flex flex-col items-center gap-2.5 px-3 pt-4 pointer-events-auto">
+                            <div className="flex flex-wrap items-center justify-center gap-2">
+                                <button onClick={() => setPlaying(true)} className={pill} style={{ background: '#fbbf24', borderColor: '#0f172a', color: '#0f172a' }}>
+                                    <Gamepad2 size={14} /> Explore it yourself
+                                </button>
                                 <button onClick={() => scrollToShare(aisleStart * 0.8)} className={pill} style={{ background: 'rgba(255,255,255,0.12)', borderColor: 'rgba(255,255,255,0.25)', color: 'white' }}>
                                     The driver
                                 </button>
@@ -220,6 +279,21 @@ export default function BusRide({ person, theme, zones }: { person: TeamMember; 
                                     </button>
                                 ))}
                             </div>
+                            {/* The route so far: one stop per row of seats */}
+                            <div className="flex items-center w-full max-w-md" aria-label={`Stop ${row + 1} of ${rows.length}`}>
+                                {rows.map((_, i) => (
+                                    <React.Fragment key={i}>
+                                        {i > 0 && <span className={`h-0.5 flex-1 ${i <= row ? 'bg-amber-400' : 'bg-white/20'}`} />}
+                                        <button
+                                            onClick={() => walkTo(i)}
+                                            aria-label={`Go to stop ${i + 1}`}
+                                            className={`shrink-0 rounded-full transition-all ${i === row ? 'w-3.5 h-3.5 bg-amber-400 ring-4 ring-amber-400/30' : i < row ? 'w-2 h-2 bg-amber-400' : 'w-2 h-2 border border-white/50 bg-black/30'}`}
+                                        />
+                                    </React.Fragment>
+                                ))}
+                            </div>
+                            <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/60">Stop {row + 1} of {rows.length}</span>
+                            </div>
 
                             <div className="px-3 sm:px-6 pb-4 sm:pb-6 max-h-[46%] overflow-y-auto pointer-events-auto">
                                 <AnimatePresence mode="wait">
@@ -232,7 +306,7 @@ export default function BusRide({ person, theme, zones }: { person: TeamMember; 
                                         transition={{ duration: 0.22 }}
                                     >
                                         {here.pair.map((item, k) => item
-                                            ? <SeatCard key={item.title} item={item} kicker={`${here.zone.label} · seat ${String(row * 2 + k + 1).padStart(2, '0')}`} theme={theme} />
+                                            ? <SeatCard key={item.title} item={item} kicker={here.zone.label} seat={String(row * 2 + k + 1).padStart(2, '0')} theme={theme} tail={k ? 'right' : 'left'} />
                                             : <div key={k} className="hidden md:block" />)}
                                     </motion.div>
                                 </AnimatePresence>
@@ -241,6 +315,28 @@ export default function BusRide({ person, theme, zones }: { person: TeamMember; 
                     )}
                 </AnimatePresence>
             </div>
+
+            {/* Everything on the bus as a plain list */}
+            <AnimatePresence>
+                {listOpen && (
+                    <motion.div className="fixed inset-0 z-[90] overflow-y-auto bg-slate-950/80 backdrop-blur-sm p-3 sm:p-8" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setListOpen(false)}>
+                        <div className="mx-auto max-w-5xl" onClick={e => e.stopPropagation()}>
+                            <div className="flex items-center justify-between mb-5">
+                                <h2 className="text-2xl sm:text-4xl font-black text-white">Everything on {firstName}'s bus</h2>
+                                <button onClick={() => setListOpen(false)} aria-label="Close the list" className="rounded-full bg-white p-2 text-slate-900"><X size={20} /></button>
+                            </div>
+                            {zones.map(zone => (
+                                <div key={zone.label} className="mb-8">
+                                    <h3 className="text-sm font-black uppercase tracking-[0.2em] text-amber-400 mb-3">{zone.label}</h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {zone.items.map(item => <SeatCard key={item.title} item={item} kicker={zone.label} theme={theme} />)}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </section>
     );
 }

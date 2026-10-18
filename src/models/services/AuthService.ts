@@ -12,6 +12,8 @@
  */
 
 import { supabase } from '../lib/supabase';
+import { apiDelete, apiPost } from '../lib/apiClient';
+import { SITE } from '../data/legal';
 import type {
     LoginFormData,
     SignupFormData,
@@ -68,6 +70,8 @@ export function validateSignup(data: SignupFormData): Record<string, string> {
     if (data.mobile && !MOBILE_REGEX.test(data.mobile)) {
         errs.mobile = 'Enter a valid Canadian number (+1 XXX-XXX-XXXX)';
     }
+
+    if (!data.agreedToTerms) errs.terms = 'Please agree to the Terms of Use and Privacy Policy to create an account';
 
     return errs;
 }
@@ -133,6 +137,9 @@ export async function signUpUser(data: SignupFormData): Promise<SignupResult> {
             data: {
                 full_name: data.fullName.trim(),
                 mobile_number: data.mobile || null,
+                /* Record of what they agreed to, and when */
+                terms_version: SITE.TERMS_VERSION,
+                terms_accepted_at: new Date().toISOString(),
             },
         },
     });
@@ -146,4 +153,62 @@ export async function signUpUser(data: SignupFormData): Promise<SignupResult> {
     }
 
     return { success: true };
+}
+
+/** Permanently deletes the signed-in account and everything stored about it, after re-checking the password. Returns an error message, or null. */
+export async function deleteAccount(password: string): Promise<string | null> {
+    try {
+        await apiDelete('/api/auth/account', { password });
+        return null;
+    } catch (err) {
+        if ((err as { status?: number }).status === 401) return 'That password is not right.';
+        return err instanceof Error ? err.message : 'Your account could not be deleted. Please try again.';
+    }
+}
+
+/**
+ * Changes the password: re-checks the current one on the server, sets the new one, then signs out
+ * every other device, so anyone using an old session is locked out. Returns an error message, or null.
+ */
+export async function changePassword(currentPassword: string, newPassword: string): Promise<string | null> {
+    try {
+        await apiPost('/api/auth/confirm-password', { password: currentPassword });
+    } catch (err) {
+        return (err as { status?: number }).status === 401 ? 'Your current password is not right.' : 'Please try again in a moment.';
+    }
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    if (error) return error.message;
+    await signOutOtherDevices();
+    return null;
+}
+
+/** Ends every session except this one (other browsers, phones, old logins) */
+export async function signOutOtherDevices(): Promise<void> {
+    await supabase.auth.signOut({ scope: 'others' });
+}
+
+/** Records, through the server, that the signed-in account agrees to the current Terms and Privacy policy. Returns an error message, or null. */
+export async function acceptTerms(): Promise<string | null> {
+    try {
+        await apiPost('/api/auth/accept-terms');
+        await supabase.auth.refreshSession();   // picks up the copy on the sign-in record
+        return null;
+    } catch {
+        return 'Your agreement could not be saved. Please try again.';
+    }
+}
+
+/**
+ * Which Terms version this account has agreed to. Reads the server-written profile column; if
+ * that column is not set up yet, falls back to the copy on the sign-in record.
+ */
+export async function fetchAgreedTermsVersion(userId: string): Promise<string | null> {
+    const { data, error } = await supabase.from('profiles').select('terms_version').eq('id', userId).single();
+    if (error?.code === '42703') {
+        /* Columns not set up yet: read the copy on the sign-in record, fresh from the server */
+        const { data: fresh } = await supabase.auth.getUser();
+        return fresh.user?.user_metadata?.terms_version ?? null;
+    }
+    if (error) return null;
+    return data?.terms_version ?? null;
 }

@@ -14,6 +14,8 @@ export interface User {
     email: string;
     mobile?: string;
     role: 'user' | 'admin';
+    /** Version of the Terms and Privacy policy this account last agreed to, if any */
+    termsVersion?: string;
 }
 
 /* ── Login form data ─────────────────────────────────────────────── */
@@ -30,6 +32,7 @@ export interface SignupFormData {
     email: string;
     password: string;
     mobile: string;       // optional — may be empty string
+    agreedToTerms: boolean;
 }
 
 /* ── Password strength indicator ─────────────────────────────────── */

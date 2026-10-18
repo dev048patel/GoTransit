@@ -140,7 +140,15 @@ export default function TripPlannerModal({ isOpen, onClose, onSelectRoute, liveB
                             </div>
                         ) : (
                             ctrl.routeResults.map((option, idx) => (
-                                <div key={idx} onClick={() => onSelectRoute?.(option)} style={{ cursor: 'pointer' }}>
+                                <div
+                                    key={idx}
+                                    role="button"
+                                    tabIndex={0}
+                                    aria-label={`Trip option ${idx + 1}`}
+                                    onClick={() => onSelectRoute?.(option)}
+                                    onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelectRoute?.(option); } }}
+                                    style={{ cursor: 'pointer' }}
+                                >
                                     <RouteCard option={option} index={idx} />
                                 </div>
                             ))

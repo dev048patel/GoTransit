@@ -16,6 +16,14 @@ import { SecurityEventService } from './models/services/SecurityEventService';
 import { isPushEndpoint } from './controllers/middleware/security';
 
 const app = createApp();
+
+/* Scheduled jobs (departure reminders, health checks, nightly clean-up) run only on the live server.
+   A copy of the backend on a developer's computer uses the same database, so it would run every job a
+   second time: duplicate texts and notifications, and double the database requests.
+   Set RUN_SCHEDULED_JOBS=false in .env.local to switch them off locally; the live server leaves it unset. */
+const RUN_JOBS = process.env.RUN_SCHEDULED_JOBS !== 'false';
+const schedule = (when: string, task: () => unknown) => { if (RUN_JOBS) cron.schedule(when, task); };
+if (!RUN_JOBS) console.log('[Jobs] Scheduled jobs are off here (RUN_SCHEDULED_JOBS=false)');
 const port = Number(process.env.PORT) || 3001; // Railway assigns PORT dynamically
 
 // ── Web Push (VAPID) setup ──────────────────────────────────────────────────
@@ -45,7 +53,7 @@ function addMins(h: number, m: number, delta: number): string {
     return `${padded(Math.floor(total / 60) % 24)}:${padded(total % 60)}`;
 }
 
-cron.schedule('* * * * *', async () => {
+schedule('* * * * *', async () => {
     const { h, m, day } = cstNow();
     // Target departure time is exactly 15 minutes from now (CST, "HH:MM")
     const target = addMins(h, m, 15);
@@ -130,12 +138,12 @@ cron.schedule('* * * * *', async () => {
 // ── Watching the site: health checks and data retention ──────────────────────
 // Every 5 minutes: is the database reachable, is the bus feed answering? Admins are emailed
 // when one stops for two checks in a row, and the Security page shows the current state.
-cron.schedule('*/5 * * * *', () => { HealthService.run().catch(err => console.error('[Health] Check failed:', err)); });
-HealthService.run().catch(() => { });
+schedule('*/5 * * * *', () => { HealthService.run().catch(err => console.error('[Health] Check failed:', err)); });
+if (RUN_JOBS) HealthService.run().catch(() => { });
 
 // Once a day: delete visitor records (IP addresses) older than 90 days, and old security events.
 const RETENTION_DAYS = 90;
-cron.schedule('20 3 * * *', async () => {
+schedule('20 3 * * *', async () => {
     const cutoff = new Date(Date.now() - RETENTION_DAYS * 86_400_000).toISOString();
     const { error } = await serviceDb().from('visitor_sessions').delete().lt('last_seen', cutoff);
     if (error) console.error('[Retention] Visitor cleanup failed:', error.message);
