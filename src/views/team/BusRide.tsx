@@ -20,6 +20,10 @@ export interface RideItem {
     title: string;
     sub?: string;
     detail?: string;
+    /** For hiring managers: the problem, what the person did, how it works */
+    problem?: string;
+    did?: string;
+    how?: string;
     tags?: string[];
     stat?: { value: string; label: string };
     link?: string;
@@ -51,12 +55,26 @@ function SeatCard({ item, kicker, seat, theme, tail }: { item: RideItem; kicker:
             <h3 className="text-lg sm:text-xl font-black text-slate-900 leading-tight">{item.title}</h3>
             {item.sub && <p className="text-sm font-bold text-slate-500">{item.sub}</p>}
             <div className="mt-2.5 grid gap-3 sm:grid-cols-[1fr_auto]">
-                {item.detail && (
-                    <div>
-                        <span className={label}>What it is</span>
-                        <p className="text-sm sm:text-[15px] text-slate-700 leading-relaxed">{item.detail}</p>
-                    </div>
-                )}
+                <div className="space-y-2.5">
+                    {item.problem && (
+                        <div>
+                            <span className={label}>The problem</span>
+                            <p className="text-sm sm:text-[15px] text-slate-700 leading-relaxed">{item.problem}</p>
+                        </div>
+                    )}
+                    {(item.did || item.detail) && (
+                        <div>
+                            <span className={label}>{item.did ? 'What was done' : 'What it is'}</span>
+                            <p className="text-sm sm:text-[15px] text-slate-700 leading-relaxed">{item.did ?? item.detail}</p>
+                        </div>
+                    )}
+                    {item.how && (
+                        <div>
+                            <span className={label}>How it works</span>
+                            <p className="text-sm sm:text-[15px] text-slate-700 leading-relaxed">{item.how}</p>
+                        </div>
+                    )}
+                </div>
                 {item.stat && (
                     <div className="sm:w-32 rounded-2xl border-2 border-slate-900 px-3 py-2 self-start" style={{ background: theme.primarySoft }}>
                         <span className={label}>Result</span>
