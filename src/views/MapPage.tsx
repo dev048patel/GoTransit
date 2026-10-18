@@ -11,6 +11,8 @@ import { MapView } from './MapView';
 import { useMapController } from '../controllers/useMapController';
 import DepartureReminderBanner from './DepartureReminderBanner';
 import WeatherBanner from './WeatherBanner';
+import LiveStatus from './components/transit/LiveStatus';
+import LocationPrompt from './components/transit/LocationPrompt';
 
 export default function MapPage() {
     const {
@@ -18,13 +20,15 @@ export default function MapPage() {
         zoom, setZoom, stops, routes, selectedRoute, setSelectedRoute,
         routePaths, liveBuses, handlePlaceSelect, handleMapPlacePick, selectedPlaceMarker,
         setSelectedPlaceMarker, currentZoom, onZoomChanged,
-        activeDetours, weather,
+        activeDetours, weather, liveDown,
     } = useMapController();
 
     return (
         <>
         <WeatherBanner weather={weather} />
         <DepartureReminderBanner />
+        <LiveStatus liveDown={liveDown} />
+        <LocationPrompt />
         <MapView
             isLoaded={isLoaded}
             loadError={loadError}

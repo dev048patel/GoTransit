@@ -1,12 +1,12 @@
 // Mock Data for Landing Page
-import { HeroContent, Stat, Feature, Step, ProblemSolution, FAQItem, Technology, Testimonial } from '../../landing/LandingTypes';
+import { HeroContent, Stat, Feature, Step, ProblemSolution, FAQItem, Technology } from '../../landing/LandingTypes';
 
 export const heroContent: HeroContent = {
     headline: "Never Miss Your Bus Again",
     subheadline: "Real-time bus tracking, live stop arrivals, and smart route planning—all designed for Regina's unpredictable weather and transit schedules.",
     primaryCTA: "Get Started Free",
     trustIndicators: [
-        "Built for Regina Transit riders",
+        "Built for Regina bus riders",
         "Free to use",
         "Real-time tracking"
     ]
@@ -117,7 +117,7 @@ export const faqItems: FAQItem[] = [
     },
     {
         question: "How accurate is the real-time tracking?",
-        answer: "We use official GTFS-Realtime data from Regina Transit combined with GPS tracking for the most accurate locations."
+        answer: "Bus positions come from the live vehicle locations Regina Transit publishes for riders, and schedules from the City of Regina's open data. They are estimates and can be late or wrong, so check regina.ca for official service changes. Transit Regina is independent and not run by the City."
     },
     {
         question: "Can I use this without creating an account?",
@@ -140,9 +140,9 @@ export const technologies: Technology[] = [
         description: "Accurate mapping and route data"
     },
     {
-        name: "Regina Transit",
+        name: "City of Regina Open Data",
         logo: "regina-transit-logo.svg",
-        description: "Official GTFS real-time data"
+        description: "Schedules and stops, Open Government Licence"
     },
     {
         name: "PostgreSQL",
@@ -151,20 +151,3 @@ export const technologies: Technology[] = [
     }
 ];
 
-export const testimonials: Testimonial[] = [
-    {
-        quote: "I used to show up 10 minutes early just to be safe. Now I get there exactly on time every single day.",
-        author: "Sarah",
-        role: "University Student"
-    },
-    {
-        quote: "The live tracking is a game-changer in winter. I check my phone and leave at the perfect moment.",
-        author: "Mike",
-        role: "Downtown Commuter"
-    },
-    {
-        quote: "Finally, an app that actually understands how Regina Transit works.",
-        author: "Priya",
-        role: "Daily Rider"
-    }
-];

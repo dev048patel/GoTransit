@@ -13,7 +13,7 @@ interface TechnologyTrustProps {
 
 const iconMap: { [name: string]: React.FC<{ size?: number }> } = {
     'Google Maps': Map,
-    'Regina Transit': Bus,
+    'City of Regina Open Data': Bus,
     'PostgreSQL': Database,
 };
 

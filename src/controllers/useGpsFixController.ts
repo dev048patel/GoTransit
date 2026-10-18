@@ -1,6 +1,7 @@
 // useGpsFixController — live GPS fix for map overlays that follow the user
 import { useEffect, useState } from 'react';
 import { haversineDistance } from '../models/services/StopToRouteIndex';
+import { useLocationConsent } from './useLocationConsent';
 
 export interface GpsFix {
     lat: number;
@@ -18,9 +19,11 @@ const MIN_MOVE_METRES = 5;   // GPS jitter below this is ignored
 export function useGpsFixController() {
     const [fix, setFix] = useState<GpsFix | null>(null);
     const [lost, setLost] = useState(false);
+    /* Nothing is watched until the rider taps "Use my location" (see LocationPrompt) */
+    const { choice } = useLocationConsent();
 
     useEffect(() => {
-        if (!navigator.geolocation) return;
+        if (choice !== 'allowed' || !navigator.geolocation) return;
         const watchId = navigator.geolocation.watchPosition(
             (pos) => {
                 setLost(false);
@@ -42,7 +45,7 @@ export function useGpsFixController() {
             { enableHighAccuracy: true, maximumAge: 10000 }
         );
         return () => navigator.geolocation.clearWatch(watchId);
-    }, []);
+    }, [choice]);
 
     return { fix, lost };
 }

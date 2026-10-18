@@ -9,7 +9,6 @@
  */
 
 import { useState, useCallback } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../models/context/AuthContext';
 import { validateLogin, isMobileNumber } from '../../models/services/AuthService';
 
@@ -28,8 +27,6 @@ interface LoginControllerOutput {
 
 export function useLoginController(): LoginControllerOutput {
     const { login } = useAuth();
-    const navigate = useNavigate();
-    const location = useLocation();
 
     const [identifier, setIdentifier] = useState('');
     const [password, setPassword] = useState('');
@@ -54,14 +51,10 @@ export function useLoginController(): LoginControllerOutput {
         const loginError = await login(identifier, password);
         setIsLoading(false);
 
-        if (!loginError) {
-            // Redirect back to the page the user originally tried to visit (if any)
-            const from = (location.state as any)?.from?.pathname ?? '/map';
-            navigate(from, { replace: true });
-        } else {
-            setErrors({ form: loginError });
-        }
-    }, [identifier, password, login, navigate, location]);
+        // On success the sign-in page itself moves on: straight to where they were going, or first to
+        // the Terms step if this account hasn't agreed to the current version (see PublicOnlyRoute)
+        if (loginError) setErrors({ form: loginError });
+    }, [identifier, password, login]);
 
     return {
         identifier, setIdentifier,

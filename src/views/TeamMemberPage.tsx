@@ -11,8 +11,9 @@
 import React from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { motion, MotionConfig } from 'framer-motion';
-import { ArrowLeft, ArrowRight, ArrowUpRight, Briefcase, FileText, GithubIcon, GraduationCap, LinkedinIcon, Mail, Rocket, Wrench } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpRight, Award, BadgeCheck, Briefcase, FileText, GithubIcon, GraduationCap, LinkedinIcon, Mail, Rocket, Wrench } from 'lucide-react';
 import TransitBackground from './landing/TransitBackground';
+import IndependenceNotice from './components/IndependenceNotice';
 import TransitPass from './team/TransitPass';
 import BusRide, { type RideZone } from './team/BusRide';
 import { MARKER_CHARACTERS } from '../models/data/markerCharacters';
@@ -60,7 +61,7 @@ export default function TeamMemberPage() {
     /* Who is on the bus: one passenger for each thing built, each job and each other project */
     const zones: RideZone[] = [
         { label: 'Built on Transit Regina', icon: Wrench, items: person.built },
-        { label: "Where I've worked", icon: Briefcase, items: person.experience.map(job => ({ title: job.role, sub: `${job.org} · ${job.kind} · ${job.from} to ${job.to}`, detail: job.detail })) },
+        { label: "Where I've worked", icon: Briefcase, items: person.experience.map(job => ({ title: job.role, sub: `${job.org} · ${job.kind} · ${job.from} to ${job.to}`, detail: job.detail, tags: job.tags, stat: job.stat })) },
         { label: 'More things I built', icon: Rocket, items: person.projects.map(project => ({ title: project.name, sub: project.status, detail: project.blurb, tags: project.tags, stat: project.stat, link: project.link, linkLabel: project.linkLabel })) },
     ].filter(zone => zone.items.length > 0);
 
@@ -163,6 +164,22 @@ export default function TeamMemberPage() {
                         </div>
                     </Section>
 
+                    <Section title="Certifications and honours" show={person.certifications.length + person.honours.length > 0}>
+                        <div className="grid gap-3 sm:grid-cols-2">
+                            {[...person.honours.map(h => ({ ...h, kind: 'Honour' })), ...person.certifications.map(c => ({ ...c, kind: 'Certificate' }))].map(entry => (
+                                <div key={entry.name + entry.date} className="flex items-start gap-3 rounded-2xl border bg-white px-4 py-3" style={{ borderColor: theme.border }}>
+                                    <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl" style={{ background: theme.primarySoft, color: theme.primary }}>
+                                        {entry.kind === 'Honour' ? <Award size={18} /> : <BadgeCheck size={18} />}
+                                    </span>
+                                    <span className="min-w-0">
+                                        <span className="block font-bold text-slate-900 leading-snug">{entry.name}</span>
+                                        <span className="block text-sm text-slate-500">{entry.issuer} · {entry.date}</span>
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </Section>
+
                     </div>
                 </div>
 
@@ -200,10 +217,7 @@ export default function TeamMemberPage() {
                     ))}
 
                     </div>
-
-                    <p className="text-center text-sm text-slate-400 mt-10">
-                        © 2026 Transit Regina · Built at the University of Regina
-                    </p>
+                    <IndependenceNotice className="mt-14 max-w-3xl mx-auto text-center" />
                 </div>
             </MotionConfig>
         </div>

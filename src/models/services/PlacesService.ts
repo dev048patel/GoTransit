@@ -67,6 +67,15 @@ export class PlacesService {
     }
 
     // Name of a place tapped on the map, as "Name, address" — the same shape search results use
+    /** Current coordinates and address for a saved place, used to refresh the copy kept for it */
+    static async getLocationAndAddress(placeId: string): Promise<{ lat: number; lng: number; address: string }> {
+        const { Place } = await PlacesService.load();
+        const place = new Place({ id: placeId });
+        await place.fetchFields({ fields: ['location', 'formattedAddress'] });
+        if (!place.location) throw new Error(`No location returned for place ${placeId}`);
+        return { lat: place.location.lat(), lng: place.location.lng(), address: place.formattedAddress ?? '' };
+    }
+
     static async getPlaceName(placeId: string): Promise<string> {
         const { Place } = await PlacesService.load();
         const place = new Place({ id: placeId });

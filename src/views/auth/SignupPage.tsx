@@ -9,6 +9,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
+import TermsAtAGlance from '../components/TermsAtAGlance';
 import { Eye, EyeOff, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import logo from '../../New-Image.jpeg';
@@ -32,6 +33,8 @@ export default function SignupPage() {
         strength,
         handleMobileChange,
         handleSubmit,
+        agreedToTerms,
+        setAgreedToTerms,
     } = useSignupController();
 
     /* ── Success State ──────────────────────────── */
@@ -180,6 +183,28 @@ export default function SignupPage() {
                                 autoComplete="tel"
                             />
                             {errors.mobile && <p className="text-red-500 text-xs mt-1">{errors.mobile}</p>}
+                        </div>
+
+                        {/* Agreement: required, unticked by default, key points shown, both documents one click away */}
+                        <TermsAtAGlance />
+                        <div>
+                            <label className="flex items-start gap-3 text-sm text-slate-600 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={agreedToTerms}
+                                    onChange={e => setAgreedToTerms(e.target.checked)}
+                                    className="mt-0.5 h-4 w-4 shrink-0 accent-[#003DA5]"
+                                    aria-describedby={errors.terms ? 'terms-error' : undefined}
+                                />
+                                <span>
+                                    I agree to the{' '}
+                                    <Link to="/terms" target="_blank" className="font-semibold text-[#003DA5] underline">Terms of Use</Link>
+                                    {' '}and have read the{' '}
+                                    <Link to="/privacy" target="_blank" className="font-semibold text-[#003DA5] underline">Privacy Policy</Link>.
+                                    {' '}Transit Regina is unofficial and bus times are estimates.
+                                </span>
+                            </label>
+                            {errors.terms && <p id="terms-error" className="text-red-500 text-xs mt-1">{errors.terms}</p>}
                         </div>
 
                         {/* Submit */}

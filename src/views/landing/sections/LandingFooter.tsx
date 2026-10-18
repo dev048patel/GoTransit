@@ -12,6 +12,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Users, Github } from 'lucide-react';
+import IndependenceNotice from '../../components/IndependenceNotice';
 
 export default function LandingFooter() {
     return (
@@ -28,7 +29,7 @@ export default function LandingFooter() {
                             Transit Regina
                         </h3>
                         <p className="text-sm" style={{ color: '#64748b' }}>
-                            Built by students of University of Regina for Regina commuters.
+                            An unofficial bus tracker for Regina, built by Dev Patel and Nirjar Patel.
                         </p>
                     </div>
 
@@ -48,13 +49,7 @@ export default function LandingFooter() {
                 </div>
 
                 {/* Bottom bar */}
-                <div
-                    className="mt-10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs"
-                    style={{ borderTop: '1px solid rgba(0,0,0,0.06)', color: '#94a3b8' }}
-                >
-                    <p>© 2026 Transit Regina. Built for Regina Commuters 🤟.</p>
-                    <p>Powered by Regina Transit · Google Maps · PostgreSQL</p>
-                </div>
+                <IndependenceNotice className="mt-10 pt-6 border-t border-black/5 text-center md:text-left" />
             </div>
         </footer>
     );

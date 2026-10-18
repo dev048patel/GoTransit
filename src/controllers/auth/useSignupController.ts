@@ -23,6 +23,7 @@ interface SignupControllerOutput {
     password: string; setPassword: (v: string) => void;
     showPw: boolean; toggleShowPw: () => void;
     mobile: string; setMobile: (v: string) => void;
+    agreedToTerms: boolean; setAgreedToTerms: (v: boolean) => void;
     errors: Record<string, string>;
     isLoading: boolean;
     success: boolean;
@@ -38,6 +39,7 @@ export function useSignupController(): SignupControllerOutput {
     const [password, setPassword] = useState('');
     const [showPw, setShowPw] = useState(false);
     const [mobile, setMobile] = useState('');
+    const [agreedToTerms, setAgreedToTerms] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [isLoading, setIsLoading] = useState(false);
     const [success, setSuccess] = useState(false);
@@ -56,14 +58,14 @@ export function useSignupController(): SignupControllerOutput {
         e.preventDefault();
 
         // Validate via AuthService
-        const errs = validateSignup({ fullName, email, password, mobile });
+        const errs = validateSignup({ fullName, email, password, mobile, agreedToTerms });
         setErrors(errs);
         if (Object.keys(errs).length) return;
 
         setIsLoading(true);
 
         // Sign up via AuthService (wraps Supabase call)
-        const result = await signUpUser({ fullName, email, password, mobile });
+        const result = await signUpUser({ fullName, email, password, mobile, agreedToTerms });
 
         setIsLoading(false);
 
@@ -73,7 +75,7 @@ export function useSignupController(): SignupControllerOutput {
         }
 
         setSuccess(true);
-    }, [fullName, email, password, mobile]);
+    }, [fullName, email, password, mobile, agreedToTerms]);
 
     return {
         fullName, setFullName,
@@ -81,6 +83,7 @@ export function useSignupController(): SignupControllerOutput {
         password, setPassword,
         showPw, toggleShowPw,
         mobile, setMobile,
+        agreedToTerms, setAgreedToTerms,
         errors, isLoading, success,
         strength,
         handleMobileChange,

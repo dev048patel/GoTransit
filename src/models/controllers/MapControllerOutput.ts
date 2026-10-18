@@ -8,6 +8,8 @@ import { ActiveDetour } from '../transit/Detour';
 import { WeatherSnapshot } from '../services/WeatherService';
 
 export interface MapControllerOutput {
+    /** True after three failed polls in a row */
+    liveDown: boolean;
     isLoaded: boolean;
     loadError: Error | undefined;
     center: Coordinates;

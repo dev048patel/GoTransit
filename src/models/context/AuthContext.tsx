@@ -16,6 +16,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback, use
 import type { Session } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 import type { User } from '../auth/AuthModel';
+import { fetchAgreedTermsVersion } from '../services/AuthService';
 import { recordLogout } from '../services/UserRegistry';
 import { formatMobile } from '../services/AuthService';
 import { apiPost } from '../lib/apiClient';
@@ -30,6 +31,14 @@ interface AuthContextValue {
     twoStepPassed: boolean;
     /** Null while session is loading; populated once auth state is known. */
     user: User | null;
+    /** Signs out on every device */
+    logoutEverywhere: () => Promise<void>;
+    /** The rider signed out themselves (rather than the session expiring) */
+    signedOutOnPurpose: boolean;
+    /** False while the account's Terms agreement is still being read */
+    termsLoaded: boolean;
+    /** Re-reads the account's Terms agreement, after it has been recorded */
+    refreshTerms: () => Promise<void>;
     /** True until the initial session + role fetch completes — prevents flash redirects. */
     isLoading: boolean;
     /** Returns null on success, or an error message string on failure. */
@@ -59,13 +68,14 @@ async function fetchRole(userId: string): Promise<'user' | 'admin'> {
     return (data?.role === 'admin') ? 'admin' : 'user';
 }
 
-function sessionToUser(session: Session, role: 'user' | 'admin'): User {
+function sessionToUser(session: Session, role: 'user' | 'admin', termsVersion: string | null): User {
     return {
         id: session.user.id,
         fullName: session.user.user_metadata?.full_name ?? session.user.email ?? 'User',
         email: session.user.email ?? '',
         mobile: session.user.user_metadata?.mobile_number ?? undefined,
         role,
+        termsVersion: termsVersion ?? undefined,
     };
 }
 
@@ -104,6 +114,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         };
     }, []);
 
+    /* Which Terms version the account has agreed to (undefined while it is being read) */
+    const [termsVersion, setTermsVersion] = useState<string | null | undefined>(undefined);
+    const refreshTerms = useCallback(async () => {
+        if (!session) { setTermsVersion(undefined); return; }
+        setTermsVersion(await fetchAgreedTermsVersion(session.user.id));
+    }, [session]);
+    useEffect(() => {
+        setTermsVersion(undefined);
+        if (session) void refreshTerms();
+        // Re-read when a different account signs in
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [session?.user?.id]);
+
     // Fetch role in a separate effect — safe to call Supabase here.
     useEffect(() => {
         if (session) {
@@ -137,6 +160,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
         const { error, data } = signedIn;
         if (error || !data.user) return 'Invalid credentials. Please try again.';
+        setSignedOutOnPurpose(false);
 
         // Block suspended or soft-deleted accounts from logging in
         const { data: profile } = await supabase
@@ -153,14 +177,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return null;
     }, []);
 
+    /* True after the rider signs out on purpose, so the next sign-in starts fresh at the map instead of
+       returning to the page they signed out from. A session that simply expires keeps that page. */
+    const [signedOutOnPurpose, setSignedOutOnPurpose] = useState(false);
+
     const logout = useCallback(async () => {
         const email = session?.user?.email ?? 'unknown';
-        await supabase.auth.signOut();
+        setSignedOutOnPurpose(true);
+        // This device only. (Supabase's default ends every session the account has, on every device.)
+        await supabase.auth.signOut({ scope: 'local' });
         setRole('user');
         recordLogout(email);
     }, [session]);
 
-    const user = session ? sessionToUser(session, role) : null;
+    /** Signs out on every device: phones, other browsers, forgotten logins */
+    const logoutEverywhere = useCallback(async () => {
+        setSignedOutOnPurpose(true);
+        await supabase.auth.signOut({ scope: 'global' });
+        setRole('user');
+    }, []);
+
+    const user = session ? sessionToUser(session, role, termsVersion ?? null) : null;
 
 
     return (
@@ -170,6 +207,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             roleLoaded: !session || roleFor === session.user.id,
             twoStepPassed: !!session && tokenPassedTwoStep(session.access_token),
             user,
+            signedOutOnPurpose,
+            logoutEverywhere,
+            termsLoaded: !session || termsVersion !== undefined,
+            refreshTerms,
             isLoading,
             login,
             logout,

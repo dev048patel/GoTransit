@@ -28,7 +28,7 @@ import FinalCTA from './sections/FinalCTA';
 import LandingFooter from './sections/LandingFooter';
 
 export default function LandingPage() {
-    const { hero, stats, features, steps, problemSolutions, faqItems, technologies, testimonials } = useLandingController();
+    const { hero, stats, features, steps, problemSolutions, faqItems, technologies } = useLandingController();
 
     return (
         <div className="relative min-h-screen" style={{ background: '#F7F8FA' }}>

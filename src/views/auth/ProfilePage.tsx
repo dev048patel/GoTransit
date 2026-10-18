@@ -98,10 +98,12 @@ function InfoRow({ label, value, verified, loading }: { label: string; value: st
 
 /* ── Change Password Modal ──────────────────────────────────────── */
 function PasswordModal({
+    currentPassword, setCurrentPassword,
     newPassword, setNewPassword,
     error, success, loading,
     onSubmit, onClose,
 }: {
+    currentPassword: string; setCurrentPassword: (v: string) => void;
     newPassword: string; setNewPassword: (v: string) => void;
     error: string; success: boolean; loading: boolean;
     onSubmit: () => void; onClose: () => void;
@@ -126,19 +128,29 @@ function PasswordModal({
                     <div className="bg-green-50 border border-green-200 rounded-xl px-4 py-4 text-center">
                         <CheckCircle2 className="w-10 h-10 text-green-500 mx-auto mb-2" />
                         <p className="text-green-700 font-semibold text-base">Hey, your password has been changed!</p>
-                        <p className="text-green-600 text-xs mt-1">You can now use your new password to log in.</p>
+                        <p className="text-green-600 text-xs mt-1">You can now use your new password to log in. Every other device has been signed out.</p>
                     </div>
                 ) : (
                     <>
                         <input
                             type="password"
+                            placeholder="Current password"
+                            value={currentPassword}
+                            onChange={e => setCurrentPassword(e.target.value)}
+                            autoComplete="current-password"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#003DA5]/30 focus:border-[#003DA5] mb-3"
+                            autoFocus
+                        />
+                        <input
+                            type="password"
+                            autoComplete="new-password"
                             placeholder="New password (min. 8 characters)"
                             value={newPassword}
                             onChange={e => setNewPassword(e.target.value)}
                             onKeyDown={e => e.key === 'Enter' && onSubmit()}
                             className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#003DA5]/30 focus:border-[#003DA5] mb-3"
-                            autoFocus
                         />
+                        <p className="text-gray-400 text-xs mb-3">Changing your password signs out every other device.</p>
                         {error && <p className="text-red-500 text-xs mb-3">{error}</p>}
                         <div className="flex gap-3">
                             <button
@@ -163,7 +175,7 @@ function PasswordModal({
 }
 
 /* ── Delete Confirmation ────────────────────────────────────────── */
-function DeleteConfirm({ onConfirm, onCancel, loading, error }: { onConfirm: () => void; onCancel: () => void; loading: boolean; error?: string }) {
+function DeleteConfirm({ onConfirm, onCancel, loading, error, password, setPassword }: { onConfirm: () => void; onCancel: () => void; loading: boolean; error?: string; password: string; setPassword: (v: string) => void }) {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
             <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={loading ? undefined : onCancel} />
@@ -177,9 +189,17 @@ function DeleteConfirm({ onConfirm, onCancel, loading, error }: { onConfirm: () 
                     <Trash2 className="w-6 h-6 text-red-500" />
                 </div>
                 <h3 className="text-lg font-bold text-gray-900 text-center mb-2">Delete Account?</h3>
-                <p className="text-sm text-gray-500 text-center mb-6">
+                <p className="text-sm text-gray-500 text-center mb-4">
                     This will permanently remove your account and all saved data. This cannot be undone.
                 </p>
+                <input
+                    type="password"
+                    placeholder="Enter your password to confirm"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    autoComplete="current-password"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-red-300 focus:border-red-400 mb-4"
+                />
                 {error && (
                     <p className="text-sm text-red-500 text-center mb-4 bg-red-50 rounded-lg px-3 py-2">{error}</p>
                 )}
@@ -226,6 +246,9 @@ export default function ProfilePage() {
         handleDeleteAccount,
         smsLoading, smsError, handleSmsToggle,
         handleLogout,
+        handleLogoutEverywhere,
+        deletePassword, setDeletePassword,
+        currentPassword, setCurrentPassword,
     } = useProfileController();
 
     const fullName = profile?.full_name ?? user?.fullName ?? '—';
@@ -239,6 +262,7 @@ export default function ProfilePage() {
             <AnimatePresence>
                 {showPasswordModal && (
                     <PasswordModal
+                        currentPassword={currentPassword} setCurrentPassword={setCurrentPassword}
                         newPassword={newPassword} setNewPassword={setNewPassword}
                         error={passwordError} success={passwordSuccess} loading={passwordLoading}
                         onSubmit={handleChangePassword} onClose={closePasswordModal}
@@ -247,9 +271,11 @@ export default function ProfilePage() {
                 {showDeleteConfirm && (
                     <DeleteConfirm
                         onConfirm={handleDeleteAccount}
-                        onCancel={() => setShowDeleteConfirm(false)}
+                        onCancel={() => { setShowDeleteConfirm(false); setDeletePassword(''); }}
                         error={deleteError}
                         loading={deleteLoading}
+                        password={deletePassword}
+                        setPassword={setDeletePassword}
                     />
                 )}
             </AnimatePresence>
@@ -461,6 +487,12 @@ export default function ProfilePage() {
                         className="w-full flex items-center justify-center gap-2 text-red-600 border border-red-200 hover:bg-red-50 py-2.5 rounded-xl font-medium text-sm transition"
                     >
                         <LogOut className="w-4 h-4" /> Logout
+                    </button>
+                    <button
+                        onClick={handleLogoutEverywhere}
+                        className="w-full text-center text-sm text-gray-500 hover:text-gray-700 transition font-medium"
+                    >
+                        Sign out of all devices
                     </button>
                     <button
                         onClick={() => setShowDeleteConfirm(true)}

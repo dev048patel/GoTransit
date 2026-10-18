@@ -8,6 +8,7 @@
 
 import { useState, useCallback } from 'react';
 import { supabase } from '../../models/lib/supabase';
+import { signOutOtherDevices } from '../../models/services/AuthService';
 import { useAuth } from '../../models/context/AuthContext';
 import { requestPasswordReset } from '../../models/services/AuthService';
 
@@ -52,6 +53,8 @@ export function useResetPasswordController() {
         }
         setIsLoading(true);
         const { error } = await supabase.auth.updateUser({ password });
+        // A reset usually means the old password can't be trusted: end every other session too
+        if (!error) await signOutOtherDevices();
         setIsLoading(false);
         if (error) setError(error.message);
         else setDone(true);

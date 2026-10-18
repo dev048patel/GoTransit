@@ -29,6 +29,7 @@ import { useAnalyticsBeacon } from './controllers/hooks/useAnalyticsBeacon';
 import { AuthProvider, useAuth } from './models/context/AuthContext';
 import { FeatureAccessProvider } from './models/context/FeatureAccessContext';
 import ProtectedRoute from './views/components/ProtectedRoute';
+import { useTermsSessionGuard } from './controllers/auth/useTermsSessionGuard';
 import PublicOnlyRoute from './views/components/PublicOnlyRoute';
 import AdminRoute from './views/components/AdminRoute';
 import ProfilePage from './views/auth/ProfilePage';
@@ -43,6 +44,7 @@ const ForgotPasswordPage = React.lazy(() => import('./views/auth/ForgotPasswordP
 const ResetPasswordPage = React.lazy(() => import('./views/auth/ResetPasswordPage'));
 const ConnectPage = React.lazy(() => import('./views/ConnectPage'));
 const TeamMemberPage = React.lazy(() => import('./views/TeamMemberPage'));
+const LegalPage = React.lazy(() => import('./views/LegalPage'));
 const AdminLayout = React.lazy(() => import('./views/layouts/AdminLayout'));
 const AdminHome = React.lazy(() => import('./views/admin/AdminHome'));
 const People = React.lazy(() => import('./views/admin/People'));
@@ -60,6 +62,8 @@ const TwoStepPage = React.lazy(() => import('./views/auth/TwoStepPage'));
  * full-screen loader is shown instead. This prevents blank screens on refresh.
  */
 function AppRoutes() {
+    /* Not agreed to the Terms and left the agreement step: signed out (see useTermsSessionGuard) */
+    useTermsSessionGuard();
     /* Start every page at the top; without this a new page opens at the old page's scroll position */
     const { pathname } = useLocation();
     useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
@@ -187,6 +191,11 @@ function AppRoutes() {
                 <Route path="/connect" element={<ConnectPage />} />
                 {/* Each person's own portfolio page */}
                 <Route path="/connect/:slug" element={<TeamMemberPage />} />
+
+                {/* ── Public: who runs the site, privacy and terms ─────── */}
+                <Route path="/about" element={<LegalPage page="about" />} />
+                <Route path="/privacy" element={<LegalPage page="privacy" />} />
+                <Route path="/terms" element={<LegalPage page="terms" />} />
 
                 {/* ── Legacy redirect: /landing still works ─────────────── */}
                 <Route path="/landing" element={<LandingPage />} />

@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom';
 import { motion, MotionConfig, useScroll } from 'framer-motion';
 import { ArrowLeft, ArrowRight, ArrowUpRight, Bus, Database, Monitor, Navigation, Map, Clock, Route, Server, Smile, Heart } from 'lucide-react';
 import TransitBackground from './landing/TransitBackground';
+import IndependenceNotice from './components/IndependenceNotice';
 import { MapDemo } from './landing/sections/FeatureDemos';
 import TransitPass from './team/TransitPass';
 import TeamBus, { RidingBus, Road } from './team/TeamBus';
@@ -328,10 +329,7 @@ export default function ConnectPage() {
                             })}
                         </div>
                     </section>
-
-                    <p className="text-center text-sm text-slate-400">
-                        © 2026 Transit Regina · Built at the University of Regina
-                    </p>
+                    <IndependenceNotice className="mt-14 max-w-3xl mx-auto text-center" />
                 </div>
             </MotionConfig>
         </div>
