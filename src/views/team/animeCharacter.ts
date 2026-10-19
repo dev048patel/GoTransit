@@ -30,6 +30,7 @@ export interface Look {
 }
 
 export type Face = 'smile' | 'talk' | 'blink' | 'sleep';
+export type Emote = 'think' | 'explain' | 'cheer' | 'point';
 
 interface Limb { upper: THREE.Group; lower: THREE.Group }
 
@@ -307,6 +308,9 @@ export interface Pose {
     /** Talking with one hand (left 0 / right 1), 0…1 */
     gesture?: number;
     gestureArm?: 0 | 1;
+    /** A body-language moment while answering: hand to chin, both hands explaining, or a cheer */
+    emote?: Emote | null;
+    emoteAmount?: number;
     time: number;
 }
 
@@ -340,6 +344,22 @@ export function pose(c: Character, p: Pose) {
             arm.lower.rotation.set(0, 0, mix(0, side * (0.25 + Math.sin(p.time * 10) * 0.45), p.wave));
         }
     });
+    /* Emotes override the arms (and nudge the head) while they last */
+    const k = p.emote ? (p.emoteAmount ?? 1) : 0;
+    if (k > 0) {
+        const t = p.time;
+        c.arms.forEach((arm, i) => {
+            const side = i ? 1 : -1;
+            let ux = arm.upper.rotation.x, uz = arm.upper.rotation.z, lx = arm.lower.rotation.x, lz = arm.lower.rotation.z;
+            if (p.emote === 'think' && i === 1) { ux = -1.05; uz = -0.42; lx = -2.25; lz = 0; }
+            if (p.emote === 'explain') { ux = -0.6 + Math.sin(t * 3 + i * Math.PI) * 0.18; uz = side * 0.2; lx = -1.2 + Math.sin(t * 4.2 + i) * 0.25; lz = 0; }
+            if (p.emote === 'cheer') { ux = -0.25; uz = side * (2.55 + Math.sin(t * 9 + i) * 0.12); lx = 0; lz = side * 0.3; }
+            if (p.emote === 'point' && i === 1) { ux = -1.35; uz = 0.15; lx = -0.05; lz = 0; }
+            arm.upper.rotation.set(mix(arm.upper.rotation.x, ux, k), 0, mix(arm.upper.rotation.z, uz, k));
+            arm.lower.rotation.set(mix(arm.lower.rotation.x, lx, k), 0, mix(arm.lower.rotation.z, lz, k));
+        });
+    }
+
     /* A little life: breathing, a sway of the shoulders, and a bounce in each step */
     c.body.scale.y = 1 + Math.sin(p.time * 2.2) * 0.01;
     c.body.rotation.y = Math.sin(walk) * 0.06 * stride;

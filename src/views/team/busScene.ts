@@ -22,7 +22,7 @@
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
-import { inkMaterial, makeCharacter, pose, toon, toonRamp, type Character, type Look } from './animeCharacter';
+import { inkMaterial, makeCharacter, pose, toon, toonRamp, type Character, type Emote, type Look } from './animeCharacter';
 
 export interface SceneRow {
     /** Titles shown on the two displays in this row (left and right of the aisle) */
@@ -1133,7 +1133,7 @@ export function createBusScene(canvas: HTMLCanvasElement, options: BusSceneOptio
         camera.updateProjectionMatrix();
     };
     /* Draw nothing while the ride is scrolled off screen */
-    let onScreen = true;
+    let onScreen = true, offscreenFrames = 0;
     const seen = new IntersectionObserver(([entry]) => { onScreen = entry.isIntersecting; });
     seen.observe(canvas);
     const observer = new ResizeObserver(resize);
@@ -1162,6 +1162,7 @@ export function createBusScene(canvas: HTMLCanvasElement, options: BusSceneOptio
     };
     const lastSpot = new THREE.Vector2(3.9, 6.5), scratch = new THREE.Vector3();
     /* ── Game mode: the player walks the bus freely ── */
+    let emote: Emote | null = null, emoteAmount = 0;
     let exploring = false, talkingTo: Talker | null = null, mouth = false, near: Talker | null = null, driverMet = false;
     const player = new THREE.Vector2(0, aisleZ(0)), input = new THREE.Vector2(), met = new Set<number>();
     let walkTarget: THREE.Vector2 | null = null;
@@ -1189,7 +1190,7 @@ export function createBusScene(canvas: HTMLCanvasElement, options: BusSceneOptio
     const DRIVER_SPOT = new THREE.Vector2(DX, DZ - 0.04 - DOORZ);
     const spotFor = (t: Talker) => t === 'driver' ? DRIVER_SPOT : seatOf(t);
     /* Where to stand to talk to someone: in the aisle level with their knees, or beside the driver */
-    const standFor = (t: Talker) => t === 'driver' ? new THREE.Vector2(0.25, DRIVER_SPOT.y - 0.05) : walkable(new THREE.Vector2(0, seatOf(t).y + 0.42));
+    const standFor = (t: Talker) => t === 'driver' ? new THREE.Vector2(0.25, DRIVER_SPOT.y - 0.05) : walkable(new THREE.Vector2(passengers[t].side * 0.14, seatOf(t).y + 0.42));
     const puffs = Array.from({ length: 8 }, () => {
         const puff = new THREE.Sprite(new THREE.SpriteMaterial({ map: halo, color: '#eef4ff', transparent: true, depthWrite: false, opacity: 0 }));
         puff.visible = false;
@@ -1206,7 +1207,16 @@ export function createBusScene(canvas: HTMLCanvasElement, options: BusSceneOptio
     const tick = () => {
         frame = requestAnimationFrame(tick);
         const dt = Math.min(clock.getDelta(), 0.05);
-        if (!onScreen) return;
+        /* The observer is only a hint: browsers can deliver it late (or not at all in a tab that was
+           opened in the background), which once left the scene black. So check the real position
+           every few frames too, and always draw while the game is open. */
+        if (!onScreen && !exploring) {
+            if (++offscreenFrames % 15 === 0) {
+                const r = canvas.getBoundingClientRect();
+                onScreen = r.bottom > 0 && r.top < window.innerHeight;
+            }
+            if (!onScreen) return;
+        }
         time += dt;
 
         /* The story: where the stop is, and so how far the street moves past the bus this frame.
@@ -1292,7 +1302,7 @@ export function createBusScene(canvas: HTMLCanvasElement, options: BusSceneOptio
         /* The driver turns and waves as the rider steps on, and says hello */
         driverGreet += ((exploring && talkingTo === 'driver' ? 1 : 0) - driverGreet) * (1 - Math.exp(-dt * 6));
         const greet = exploring ? driverGreet : cruising ? 0 : span(story, 0.6, 0.66) * (1 - span(story, 0.8, 0.86));
-        pose(driverChar, { sit: 1, drive: 1, wave: greet, waveArm: 1, time });
+        pose(driverChar, { sit: 1, drive: 1, wave: greet * (exploring && emote ? 0.2 : 1), waveArm: 1, emote: exploring && talkingTo === 'driver' ? emote : null, emoteAmount, time });
         driverChar.setFace(greet > 0.5 && (!exploring || mouth) ? (Math.sin(time * 14) > 0 ? 'talk' : 'smile') : (time % 4.1) < 0.13 ? 'blink' : 'smile');
         hello.visible = greet > 0.05 && !exploring;
         driverMarker.visible = exploring && talkingTo !== 'driver';
@@ -1328,7 +1338,8 @@ export function createBusScene(canvas: HTMLCanvasElement, options: BusSceneOptio
             const asleep = p.idle === 3 && p.act < 0.5;
             const hi = p.act * THREE.MathUtils.clamp(1 - (time - p.since - 0.8) / 0.6, 0, 1);   // a wave first…
             const aisleArm = p.side > 0 ? 0 : 1;
-            pose(p.c, { sit: 1, phone: p.idle === 0 ? 1 - p.act : 0, wave: hi, waveArm: aisleArm, gesture: talking ? p.act * (1 - hi) : 0, gestureArm: aisleArm, time: time + p.offset });
+            const emoting = exploring && talkingTo === index ? emoteAmount : 0;
+            pose(p.c, { sit: 1, phone: p.idle === 0 ? 1 - p.act : 0, wave: hi, waveArm: aisleArm, gesture: talking ? p.act * (1 - hi) : 0, gestureArm: aisleArm, emote, emoteAmount: emoting, time: time + p.offset });
             const idleYaw = p.idle === 1 ? p.side * 0.75 : 0;
             const idlePitch = p.idle === 0 ? 0.35 : p.idle === 3 ? 0.3 : 0;
             p.c.head.rotation.set(
@@ -1433,6 +1444,7 @@ export function createBusScene(canvas: HTMLCanvasElement, options: BusSceneOptio
         cabinLights.forEach((light, i) => { light.intensity = 1.5 + Math.sin(time * 13 + i * 2.1) * 0.03; });
         /* One continuous camera move: ease toward where the scroll says it should be */
         camYaw += (camYawTarget - camYaw) * (1 - Math.exp(-dt * 8));
+        emoteAmount += ((emote ? 1 : 0) - emoteAmount) * (1 - Math.exp(-dt * 7));
         aim(progress);
         pos.lerp(wantPos, ease);
         look.lerp(wantLook, ease);
@@ -1469,8 +1481,10 @@ export function createBusScene(canvas: HTMLCanvasElement, options: BusSceneOptio
         walkTo(target: Talker) { walkTarget = standFor(target); },
         walkToFloor(x: number, z: number) { walkTarget = walkable(new THREE.Vector2(x, z)); },
         /** Turn to someone and talk; they face the player and talk while `setMouth(true)` */
-        setTalking(target: Talker | null) { talkingTo = target; if (target === 'driver') driverMet = true; else if (target !== null) met.add(target); },
+        setTalking(target: Talker | null) { talkingTo = target; if (target === null) emote = null; if (target !== null) walkTarget = null; if (target === 'driver') driverMet = true; else if (target !== null) met.add(target); },
         setMouth(on: boolean) { mouth = on; },
+        /** Body language for whoever is talking: set with each answer, cleared when the talk ends */
+        setEmote(e: Emote | null) { emote = e; },
         setMet(indices: number[], driver: boolean) { met.clear(); indices.forEach(i => met.add(i)); driverMet = driver; },
         isNearTarget() { return walkTarget === null; },
         state(): GameState {
