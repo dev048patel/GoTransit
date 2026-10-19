@@ -5,9 +5,10 @@
      exploring on phones better than a bolted-on joystick; a small d-pad is there too).
    - Everyone you have not met carries a "!" marker you can see from a distance; walking close shows
      their name and an "E" prompt. Every prompt works by key and by click.
-   - Conversations use a bottom-of-screen dialogue box with high contrast. Text types out at about
-     30 ms a letter with short pauses at punctuation; the first press finishes the line, the next
-     moves on, and a marker shows when there is more.
+   - Conversations never make you wait. Each person opens with a one-line hook; the questions sit in
+     the same place the whole time, so nothing jumps; answers fade in word by word in well under a
+     second and then stay put until you choose. Nothing ever moves on by itself, so slow readers
+     read at their own pace.
    - A "Found X of N" counter, a journal of everyone on board (with "take me there" for anyone not
      yet met), and a minimap keep progress visible at a glance.
    - Recruiters spend minutes, not hours: "See it all as a list" is always one click away.
@@ -19,9 +20,10 @@
      and offers a summary to copy for later. */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, ArrowUpRight, BookOpen, Check, ClipboardCopy, Compass, GithubIcon, LinkedinIcon, List, Mail, MessageCircle, Sparkles, Trophy, X } from 'lucide-react';
+import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, ArrowUpRight, BookOpen, Check, ClipboardCopy, Compass, Play, GithubIcon, LinkedinIcon, List, Mail, MessageCircle, Sparkles, Trophy, X } from 'lucide-react';
 import type { CharacterTheme } from '../../models/data/characterThemes';
-import type { TeamMember } from '../../models/data/team';
+import { SKILL_AREAS, type TeamMember } from '../../models/data/team';
+import type { Emote } from './animeCharacter';
 import { useRideDiscoveries } from '../../controllers/useRideDiscoveries';
 import type { createBusScene, GameState, Talker } from './busScene';
 import type { RideItem } from './BusRide';
@@ -29,12 +31,79 @@ import type { RideItem } from './BusRide';
 export interface Passenger { item: RideItem; zone: string; seat: number }
 type Scene = ReturnType<typeof createBusScene>;
 /** One thing you can ask someone; `card` answers also show the result, tools and links */
-type Question = { key: string; label: string; text: string; card?: boolean };
+type Question = { key: string; icon: string; label: string; text: string; card?: boolean; diagram?: boolean; emote?: Emote };
 type Toast = { kind: 'met' | 'badge'; text: string };
 
 const DRIVER_ID = '__driver';
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
-const CHAR_MS = 30, PAUSE_MS = 220;
+
+/* A result such as "1,400+" or "1.5 s" counts up from zero the first time you see it */
+function CountUp({ value }: { value: string }) {
+    const match = value.match(/\d[\d,]*(\.\d+)?/);
+    const [n, setN] = useState(0);
+    const target = match ? Number(match[0].replace(/,/g, '')) : 0;
+    useEffect(() => {
+        if (!match) return;
+        let raf = 0;
+        const start = performance.now();
+        const step = (now: number) => {
+            const k = Math.min(1, (now - start) / 700);
+            setN(target * (1 - (1 - k) ** 3));
+            if (k < 1) raf = requestAnimationFrame(step);
+        };
+        raf = requestAnimationFrame(step);
+        return () => cancelAnimationFrame(raf);
+    }, [value]);   // eslint-disable-line react-hooks/exhaustive-deps
+    if (!match) return <>{value}</>;
+    const decimals = match[1] ? match[1].length - 1 : 0;
+    const shown = n.toLocaleString('en-CA', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+    return <>{value.replace(match[0], shown)}</>;
+}
+
+/* How Transit Regina fits together, with requests flowing along the lines */
+function SystemDiagram({ color }: { color: string }) {
+    const box = (x: number, y: number, w: number, title: string, sub: string, fill = '#ffffff') => (
+        <g>
+            <rect x={x} y={y} width={w} height={46} rx={12} fill={fill} stroke="#0f172a" strokeWidth={2.5} />
+            <text x={x + w / 2} y={y + 20} textAnchor="middle" fontSize={13} fontWeight={900} fill="#0f172a">{title}</text>
+            <text x={x + w / 2} y={y + 36} textAnchor="middle" fontSize={10} fontWeight={700} fill="#475569">{sub}</text>
+        </g>
+    );
+    const flow = (d: string, dur: number, fill: string) => (
+        <>
+            <path d={d} fill="none" stroke="#94a3b8" strokeWidth={2} strokeDasharray="5 5" />
+            <circle r={5} fill={fill}><animateMotion dur={`${dur}s`} repeatCount="indefinite" path={d} /></circle>
+        </>
+    );
+    return (
+        <svg viewBox="0 0 600 200" className="mt-2 w-full max-w-[600px]" role="img" aria-label="Diagram: the rider's phone talks to our Express API, which uses Supabase, the TransitLive feed, Twilio and web push">
+            {flow('M120 100 L240 100', 1.4, color)}
+            {flow('M360 100 L470 40', 1.8, '#f59e0b')}
+            {flow('M360 100 L470 100', 1.6, '#10b981')}
+            {flow('M360 100 L470 160', 2.2, '#ef4444')}
+            {box(10, 77, 110, "Rider's phone", 'React 19 · Google Maps', '#fef3c7')}
+            {box(240, 77, 120, 'Our API', 'Express 5 · auth · rate limits')}
+            {box(470, 17, 125, 'TransitLive feed', 'live buses every 1.5 s')}
+            {box(470, 77, 125, 'Supabase', 'Postgres · row-level security')}
+            {box(470, 137, 125, 'Twilio · Web Push', 'reminders')}
+        </svg>
+    );
+}
+
+/* An answer, fading in a word at a time (fast: the whole line is there in about half a second) */
+function Reveal({ text }: { text: string }) {
+    const words = text.split(' ');
+    const step = Math.min(0.03, 0.45 / words.length);
+    return (
+        <>
+            {words.map((w, i) => (
+                <motion.span key={i} className="inline-block" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * step, duration: 0.18 }}>
+                    {w}&nbsp;
+                </motion.span>
+            ))}
+        </>
+    );
+}
 const key = (label: string) => <kbd className="inline-flex min-w-[1.6rem] justify-center rounded-md border-2 border-slate-900 bg-white px-1.5 text-xs font-black text-slate-900 shadow-[0_2px_0_#0f172a]">{label}</kbd>;
 
 export default function BusGame({ scene, people, person, theme, onExit, onList }: {
@@ -46,7 +115,8 @@ export default function BusGame({ scene, people, person, theme, onExit, onList }
     const [talk, setTalk] = useState<Talker | null>(null);
     /* null while they greet you; then the key of the question being answered */
     const [view, setView] = useState<string | null>(null);
-    const [shown, setShown] = useState(0);
+    /* The quick tour: a short guided walk through the highlights, advanced only by the visitor */
+    const [tour, setTour] = useState<number | null>(null);
     const [journal, setJournal] = useState(false);
     const [help, setHelp] = useState(() => { try { return !localStorage.getItem('ride-help-seen'); } catch { return true; } });
     const pending = useRef<Talker | null>(null);
@@ -64,36 +134,40 @@ export default function BusGame({ scene, people, person, theme, onExit, onList }
     /* What you can ask each person, and how they greet you */
     const questionsFor = useCallback((t: Talker): Question[] => {
         if (t === 'driver') {
-            const study = [person.education && `I'm studying for a ${person.education.replace(' · ', ', ')}.`, person.honours.length && `${person.honours.map(h => h.name).join(' and ')}.`, person.certifications.length && `Certificates: ${person.certifications.map(c => `${c.name} (${c.issuer})`).join('; ')}.`].filter(Boolean).join(' ');
+            const study = [person.education, ...person.honours.map(h => h.name), ...person.certifications.map(c => `${c.name} (${c.issuer})`)].filter(Boolean).join(' · ');
             return [
-                { key: 'who', label: 'Who are you?', text: person.pitch },
-                ...(person.about[0] ? [{ key: 'why', label: 'Why build Transit Regina?', text: person.about[0] }] : []),
-                ...(study ? [{ key: 'study', label: 'What do you study?', text: study }] : []),
-                { key: 'contact', label: 'How can I reach you?', text: `Find me on LinkedIn or GitHub${person.email ? ', or email me' : ''}. I would love to talk about any of this.`, card: true },
+                { key: 'who', icon: '👋', label: 'Who are you?', text: person.pitch, emote: 'point' as Emote },
+                ...(person.about[0] ? [{ key: 'why', icon: '🚌', label: 'Why this app?', text: person.about[0], emote: 'think' as Emote }] : []),
+                { key: 'system', icon: '🧩', label: 'How it all fits together', text: 'Your phone talks only to our API. The API checks who you are, then fetches live buses, saved data and reminders on your behalf, so no secret ever reaches the browser.', diagram: true, emote: 'explain' as Emote },
+                ...(study ? [{ key: 'study', icon: '🎓', label: 'Studies & awards', text: study, emote: 'cheer' as Emote }] : []),
+                { key: 'contact', icon: '✉️', label: "Let's talk", text: `I would love to hear from you. Pick whichever is easiest.`, card: true, emote: 'point' as Emote },
             ];
         }
         const { item } = people[t];
         const list: Question[] = [];
-        if (item.problem) list.push({ key: 'problem', label: 'What problem did it solve?', text: item.problem });
-        if (item.did) list.push({ key: 'did', label: `What did ${firstName} do?`, text: item.did });
-        else if (item.detail) list.push({ key: 'about', label: 'Tell me about it', text: item.detail });
-        if (item.how) list.push({ key: 'how', label: 'How does it work?', text: item.how });
+        if (item.problem) list.push({ key: 'problem', icon: '💡', label: 'The problem', text: item.problem, emote: 'think' });
+        if (item.did) list.push({ key: 'did', icon: '🛠️', label: `What ${firstName} did`, text: item.did, emote: 'point' });
+        else if (item.detail) list.push({ key: 'about', icon: '📖', label: 'Tell me more', text: item.detail, emote: 'explain' });
+        if (item.how) list.push({ key: 'how', icon: '⚙️', label: 'How it works', text: item.how, emote: 'explain' });
+        if (item.challenge) list.push({ key: 'challenge', icon: '🧗', label: 'The hard part', text: item.challenge, emote: 'think' });
         if (item.stat || item.tags?.length || item.link) {
-            list.push({
-                key: 'result', label: item.stat ? 'What came of it?' : 'What was it built with?', card: true,
-                text: item.did && item.detail ? item.detail : item.stat ? `${item.stat.value}: ${item.stat.label}.` : 'Here is what it was built with.',
-            });
+            list.push({ key: 'result', icon: '🏆', label: item.stat ? 'The result' : 'Built with', card: true, text: '', emote: item.stat ? 'cheer' : 'point' });
         }
         return list;
     }, [people, person, firstName]);
-    const greetingFor = (t: Talker) => t === 'driver'
-        ? `Hey, welcome aboard! I'm ${firstName}, ${person.title.toLowerCase()} of Transit Regina. Ask me anything.`
-        : `Hi! I'm "${people[t].item.title}"${people[t].item.sub ? ` (${people[t].item.sub})` : ''}. What would you like to know?`;
+    /* What they say the moment you walk up: their hook */
+    const hookFor = (t: Talker) => t === 'driver' ? `Welcome aboard! I'm ${firstName}, and I drive this bus.` : people[t].item.hook || people[t].item.sub || people[t].item.detail || '';
     const questions = useMemo(() => (talk === null ? [] : questionsFor(talk)), [talk, questionsFor]);
     const answering = questions.find(q => q.key === view) ?? null;
-    const text = talk === null ? '' : answering ? answering.text : greetingFor(talk);
-    const typing = talk !== null && shown < text.length;
     const wasAsked = (t: Talker, key: string) => asked.has(`${idOf(t)}::${key}`);
+
+    /* Their mouth moves for a moment each time they answer, roughly as long as the answer takes to say */
+    const talkTimer = useRef(0);
+    const speak = useCallback((text: string) => {
+        scene.setMouth(true);
+        clearTimeout(talkTimer.current);
+        talkTimer.current = window.setTimeout(() => scene.setMouth(false), Math.min(2600, 400 + text.split(' ').length * 110));
+    }, [scene]);
 
     /* Into game mode, and back out */
     useEffect(() => {
@@ -110,14 +184,16 @@ export default function BusGame({ scene, people, person, theme, onExit, onList }
     const startTalk = useCallback((t: Talker) => {
         pending.current = null;
         scene.setTalking(t);
-        setTalk(t); setView(null); setShown(0); setJournal(false);
+        setTalk(t); setView(null); setJournal(false);
+        speak(hookFor(t));
         const id = idOf(t);
         if (!met.has(id)) {
             setToasts(q => [...q, { kind: 'met', text: t === 'driver' ? `${firstName}, the driver` : people[t].item.title }]);
             try { navigator.vibrate?.(18); } catch { /* not supported */ }
         }
         meet(id);
-    }, [scene, meet, people, met, firstName, idOf]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [scene, meet, people, met, firstName, idOf, speak]);
     /* Toasts show one at a time */
     useEffect(() => { if (!toasts.length) return; const id = setTimeout(() => setToasts(q => q.slice(1)), 2600); return () => clearTimeout(id); }, [toasts]);
 
@@ -130,38 +206,56 @@ export default function BusGame({ scene, people, person, theme, onExit, onList }
     const choose = useCallback((key: string) => {
         if (talk === null) return;
         ask(`${idOf(talk)}::${key}`);
-        setView(key); setShown(0);
-    }, [talk, ask, idOf]);
-    /* First press finishes the line; the next asks the next question you have not asked yet; when
-       there is nothing left, the talk ends */
+        setView(key);
+        const q = questions.find(x => x.key === key);
+        speak(q?.text ?? '');
+        scene.setEmote(q?.emote ?? null);
+    }, [talk, ask, idOf, questions, speak, scene]);
+    /* E asks the next question you have not asked yet; when there is nothing left, you say goodbye */
     const advance = useCallback(() => {
         if (talk === null) return;
-        if (typing) { setShown(text.length); return; }
         const next = questions.find(q => !asked.has(`${idOf(talk)}::${q.key}`) && q.key !== view);
         if (next) choose(next.key); else endTalk();
-    }, [talk, typing, text.length, questions, asked, idOf, view, choose, endTalk]);
-
-    /* Typewriter, with the speaker's mouth moving while it types */
-    useEffect(() => {
-        scene.setMouth(typing);
-        if (!typing) return;
-        const ch = text[shown - 1];
-        const id = setTimeout(() => setShown(n => n + 1), ch && '.!?,:'.includes(ch) ? PAUSE_MS : CHAR_MS);
-        return () => clearTimeout(id);
-    }, [scene, typing, shown, text]);
+    }, [talk, questions, asked, idOf, view, choose, endTalk]);
 
     /* Read the scene ten times a second: position for the minimap, who is in reach, arrivals */
     useEffect(() => {
         const id = setInterval(() => {
             const s = scene.state();
             setGame(s);
-            if (pending.current !== null && s.near === pending.current && scene.isNearTarget()) startTalk(pending.current);
+            /* Walking to someone: start talking once they are within reach (not "the nearest person":
+               two people sitting across the aisle from each other are the same distance away) */
+            const t = pending.current;
+            if (t !== null) {
+                const p = t === 'driver' ? s.driver : s.passengers[t];
+                if (Math.hypot(p.x - s.x, p.z - s.z) < 1.05) startTalk(t);
+            }
         }, 100);
         return () => clearInterval(id);
     }, [scene, startTalk]);
 
     const goTo = useCallback((t: Talker) => { pending.current = t; scene.walkTo(t); setJournal(false); }, [scene]);
 
+    /* The quick tour: the driver, then up to two highlights from each part of the bus (ones with a
+       result first). It moves on only when the visitor presses "Next stop". */
+    const tourStops = useMemo<Talker[]>(() => {
+        const zoneNames = Array.from(new Set(people.map(p => p.zone)));
+        const picks = zoneNames.flatMap(z => people.map((p, i) => ({ p, i })).filter(({ p }) => p.zone === z)
+            .sort((a, b) => Number(!!b.p.item.stat) - Number(!!a.p.item.stat)).slice(0, 2).map(({ i }) => i as Talker));
+        return ['driver', ...picks];
+    }, [people]);
+    const startTour = () => { setTour(0); goTo(tourStops[0]); };
+    const endTour = () => setTour(null);
+    const nextStop = () => {
+        if (tour === null) return;
+        scene.setTalking(null); setTalk(null);
+        const n = tour + 1;
+        if (n >= tourStops.length) { setTour(null); setToasts(q => [...q, { kind: 'badge', text: 'Quick tour complete' }]); return; }
+        setTour(n); goTo(tourStops[n]);
+    };
+
+    const nextStopRef = useRef(nextStop);
+    nextStopRef.current = nextStop;
     /* Keyboard: arrows/WASD to walk, E/Enter/Space to talk or continue, J for the journal, Esc to back out */
     const held = useRef(new Set<string>());
     useEffect(() => {
@@ -182,10 +276,11 @@ export default function BusGame({ scene, people, person, theme, onExit, onList }
                 if (talk !== null) advance();
                 else if (game?.near != null && e.code !== 'Space') startTalk(game.near);
                 else if (e.code === 'Space') { if (game?.near != null) startTalk(game.near); else scene.jump(); }
-            } else if (talk !== null && !typing && /^Digit[1-9]$/.test(e.code)) {
+            } else if (talk !== null && /^Digit[1-9]$/.test(e.code)) {
                 const n = Number(e.code.slice(5)) - 1;
                 if (n < questions.length) choose(questions[n].key); else if (n === questions.length) endTalk();
-            } else if (e.code === 'KeyC') scene.resetCamera();
+            } else if (e.code === 'KeyN' && tour !== null) nextStopRef.current();
+            else if (e.code === 'KeyC') scene.resetCamera();
             else if (e.code === 'KeyJ') setJournal(j => !j);
             else if (e.code === 'Escape') {
                 if (talk !== null) endTalk(); else if (journal) setJournal(false); else onExit();
@@ -198,7 +293,7 @@ export default function BusGame({ scene, people, person, theme, onExit, onList }
         window.addEventListener('keydown', down);
         window.addEventListener('keyup', up);
         return () => { window.removeEventListener('keydown', down); window.removeEventListener('keyup', up); };
-    }, [scene, talk, game?.near, advance, startTalk, endTalk, journal, onExit, help, typing, questions, choose]);
+    }, [scene, talk, game?.near, advance, startTalk, endTalk, journal, onExit, help, questions, choose, tour]);
     /* Stop walking when the game closes (not each time the key handler is refreshed) */
     useEffect(() => () => { held.current.clear(); scene.setInput(0, 0); }, [scene]);
 
@@ -226,7 +321,7 @@ export default function BusGame({ scene, people, person, theme, onExit, onList }
         if (!d) return;
         const quick = performance.now() - d.at < 220 && Math.hypot(e.clientX - d.startX, e.clientY - d.startY) < 40;
         if (d.turning && !quick) return;   // that was looking around, not a click
-        if (talk !== null) { advance(); return; }
+        if (talk !== null) return;   // reading: a stray click should not move anything on
         const box = e.currentTarget.getBoundingClientRect();
         const hit = scene.pickGame(e.clientX - box.left, e.clientY - box.top);
         if (!hit) return;
@@ -236,11 +331,19 @@ export default function BusGame({ scene, people, person, theme, onExit, onList }
     /* Achievements: earned once, shown as a toast, listed in the journal */
     const zones = useMemo(() => Array.from(new Set(people.map(p => p.zone))), [people]);
     const everythingAsked = (t: Talker) => questionsFor(t).every(q => wasAsked(t, q.key));
+    const challengeTotal = people.filter(p => p.item.challenge).length;
+    const challengesHeard = people.filter(p => p.item.challenge && asked.has(`${p.item.title}::challenge`)).length;
+    /* The skills map: for each area, how much of it you have discovered so far */
+    const skillMap = SKILL_AREAS.map(area => {
+        const inArea = people.filter(p => p.item.areas?.includes(area));
+        return { area, total: inArea.length, found: inArea.filter(p => met.has(p.item.title)).length };
+    }).filter(a => a.total > 0);
     const achievements = [
         { id: 'hello', name: 'First hello', got: found >= 1 },
         { id: 'driver', name: `Met ${firstName} at the wheel`, got: met.has(DRIVER_ID) },
         ...zones.map(z => ({ id: `zone:${z}`, name: `${z}: all met`, got: people.filter(p => p.zone === z).every(p => met.has(p.item.title)) })),
         { id: 'detective', name: 'Detective: asked someone everything', got: ['driver' as Talker, ...people.map((_, i) => i as Talker)].some(t => met.has(idOf(t)) && everythingAsked(t)) },
+        { id: 'engineer', name: 'Engineer at heart: heard 5 hard-part stories', got: challengesHeard >= 5 },
         { id: 'all', name: 'Full ride: met everyone', got: found === total },
     ];
     const newlyEarned = achievements.filter(a => a.got && !badges.has(a.id)).map(a => a.id).join('|');
@@ -265,7 +368,10 @@ export default function BusGame({ scene, people, person, theme, onExit, onList }
         const lines = [
             `${person.name}: ${person.title}, Transit Regina (${person.focus})`,
             person.education, '',
-            ...zones.flatMap(z => [z.toUpperCase(), ...people.filter(p => p.zone === z).map(p => `- ${p.item.title}${p.item.stat ? ` (${p.item.stat.value} ${p.item.stat.label})` : ''}${p.item.did || p.item.detail ? `: ${p.item.did ?? p.item.detail}` : ''}`), '']),
+            ...zones.flatMap(z => [z.toUpperCase(), ...people.filter(p => p.zone === z).flatMap(p => [
+                `- ${p.item.title}${p.item.stat ? ` (${p.item.stat.value} ${p.item.stat.label})` : ''}${p.item.did || p.item.detail ? `: ${p.item.did ?? p.item.detail}` : ''}`,
+                ...(p.item.challenge ? [`  Hardest part: ${p.item.challenge}`] : []),
+            ]), '']),
             `Skills: ${person.skills.join(', ')}`,
             `LinkedIn: ${person.linkedin}`, `GitHub: ${person.github}`, ...(person.email ? [`Email: ${person.email}`] : []),
             `Portfolio: ${window.location.origin}/connect/${person.slug}`,
@@ -347,6 +453,11 @@ export default function BusGame({ scene, people, person, theme, onExit, onList }
 
             {/* Journal, list, exit */}
             <div className="absolute right-3 top-3 sm:right-5 sm:top-5 flex gap-2">
+                {tour === null && (
+                    <button onClick={startTour} className={`flex items-center gap-1.5 px-3 py-2 text-sm font-black text-slate-900 ${hud} !bg-amber-300`}>
+                        <Play size={15} /> <span className="hidden sm:inline">Quick tour</span><span className="sm:hidden">Tour</span>
+                    </button>
+                )}
                 <button onClick={() => setJournal(j => !j)} aria-label="Journal" className={`flex items-center gap-1.5 px-3 py-2 text-sm font-black text-slate-900 ${hud}`}><BookOpen size={16} /> <span className="hidden sm:inline">Journal</span> {!touch && key('J')}</button>
                 <button onClick={onList} className={`hidden sm:flex items-center gap-1.5 px-3 py-2 text-sm font-black text-slate-900 ${hud}`}><List size={16} /> List</button>
                 <button onClick={onExit} aria-label="Leave game mode" className={`flex items-center gap-1.5 px-3 py-2 text-sm font-black text-slate-900 ${hud}`}><X size={16} /> {!touch && key('Esc')}</button>
@@ -400,76 +511,104 @@ export default function BusGame({ scene, people, person, theme, onExit, onList }
                             <div className="absolute -top-4 left-5 z-10 flex items-center gap-2 rounded-full border-[3px] border-slate-900 px-3 py-0.5 text-sm font-black text-white" style={{ background: theme.primary }}>
                                 {talk === 'driver' ? `${person.name} · driving` : `Seat ${String(people[talk].seat).padStart(2, '0')} · ${people[talk].zone}`}
                             </div>
-                            <div className="max-h-[62dvh] overflow-y-auto px-5 pt-6 pb-4 sm:px-7">
-                            <div onClick={() => typing && setShown(text.length)} className={typing ? 'cursor-pointer' : ''}>
-                                <h3 className="text-xl sm:text-2xl font-black text-slate-900 leading-tight">{talk === 'driver' ? `${person.title} of Transit Regina` : people[talk].item.title}</h3>
-                                {answering && <p className="text-[11px] font-black uppercase tracking-[0.16em] mt-1" style={{ color: theme.primary }}>{answering.label}</p>}
-                                <p className="mt-1.5 min-h-[3.5rem] text-[15px] sm:text-lg leading-relaxed text-slate-800" aria-live="polite">
-                                    {text.slice(0, shown)}<span className="invisible">{text.slice(shown)}</span>
-                                </p>
-                            </div>
-
-                            {/* Results, tools and links, under answers that have them */}
-                            {!typing && answering?.card && (talk === 'driver' ? (
-                                <div className="mt-2 flex flex-wrap gap-2">
-                                    <a href={person.linkedin} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full border-2 border-slate-900 px-4 py-2 font-black text-white no-underline shadow-[2px_2px_0_#0f172a]" style={{ background: theme.primary }}><LinkedinIcon size={16} /> Connect on LinkedIn</a>
-                                    <a href={person.github} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full border-2 border-slate-900 bg-white px-4 py-2 font-black text-slate-900 no-underline shadow-[2px_2px_0_#0f172a]"><GithubIcon size={16} /> GitHub</a>
-                                    {person.email && <a href={`mailto:${person.email}`} className="inline-flex items-center gap-2 rounded-full border-2 border-slate-900 bg-white px-4 py-2 font-black text-slate-900 no-underline shadow-[2px_2px_0_#0f172a]"><Mail size={16} /> Email</a>}
-                                </div>
-                            ) : (() => {
-                                const { item } = people[talk];
-                                return (
-                                    <div className="mt-2 flex flex-wrap items-end gap-4">
-                                        {item.stat && (
-                                            <div className="rounded-2xl border-2 border-slate-900 px-3 py-2" style={{ background: theme.primarySoft }}>
-                                                <span className="block text-[10px] font-black uppercase tracking-[0.18em] text-slate-500">Result</span>
-                                                <span className="block text-2xl font-black leading-none" style={{ color: theme.primaryDark }}>{item.stat.value}</span>
-                                                <span className="block text-xs font-bold text-slate-600">{item.stat.label}</span>
-                                            </div>
-                                        )}
-                                        {item.tags && (
-                                            <div className="min-w-0 flex-1">
-                                                <span className="block text-[10px] font-black uppercase tracking-[0.18em] text-slate-500 mb-1">Built with</span>
-                                                <div className="flex flex-wrap gap-1.5">{item.tags.map(t => <span key={t} className="rounded-full border-2 border-slate-900 bg-white px-2 py-0.5 text-xs font-bold text-slate-800">{t}</span>)}</div>
-                                            </div>
-                                        )}
-                                        {item.link && (
-                                            <a href={item.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-full border-2 border-slate-900 px-3 py-1.5 text-sm font-black text-white no-underline shadow-[2px_2px_0_#0f172a]" style={{ background: theme.primary }}>
-                                                {item.linkLabel || 'View on GitHub'} <ArrowUpRight size={15} />
-                                            </a>
-                                        )}
+                            <div className="max-h-[66dvh] overflow-y-auto px-5 pt-6 pb-4 sm:px-7">
+                                <div className="flex items-start justify-between gap-3">
+                                    <div className="min-w-0">
+                                        <h3 className="text-lg sm:text-xl font-black text-slate-900 leading-tight">{talk === 'driver' ? `${person.title} of Transit Regina` : people[talk].item.title}</h3>
+                                        {talk !== 'driver' && people[talk].item.sub && <p className="text-xs sm:text-sm font-bold text-slate-500">{people[talk].item.sub}</p>}
                                     </div>
-                                );
-                            })())}
+                                    {tour !== null && (
+                                        <div className="shrink-0 text-right">
+                                            <span className="block text-[10px] font-black uppercase tracking-[0.16em] text-slate-400">Tour · {tour + 1} of {tourStops.length}</span>
+                                            <button onClick={nextStop} className="mt-1 inline-flex items-center gap-1 rounded-full border-2 border-slate-900 bg-amber-300 px-3 py-1 text-sm font-black text-slate-900 shadow-[2px_2px_0_#0f172a]">
+                                                {tour + 1 < tourStops.length ? 'Next stop' : 'Finish'} <ArrowRight size={15} />
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
 
-                            {/* What to ask next */}
-                            {!typing && (
-                                <div className="mt-3 grid gap-1.5 sm:grid-cols-2">
+                                {/* Their hook: there the moment you say hi */}
+                                <p className="mt-2 text-lg sm:text-2xl font-black leading-snug" style={{ color: theme.primaryDark }}>“{hookFor(talk)}”</p>
+
+                                {/* The answer: fades in fast, then stays until you choose something else */}
+                                <div className="mt-3 min-h-[6.5rem] rounded-2xl border-2 border-slate-200 bg-slate-50 px-4 py-3">
+                                    <AnimatePresence mode="wait">
+                                        {answering ? (
+                                            <motion.div key={answering.key} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.12 }}>
+                                                <p className="text-[11px] font-black uppercase tracking-[0.16em] mb-1" style={{ color: theme.primary }}>{answering.icon} {answering.label}</p>
+                                                {answering.text && <p className="text-[15px] sm:text-lg leading-relaxed text-slate-800" aria-live="polite"><Reveal text={answering.text} /></p>}
+                                                {answering.diagram && <SystemDiagram color={theme.primary} />}
+                                                {answering.card && (talk === 'driver' ? (
+                                                    <div className="mt-2 flex flex-wrap gap-2">
+                                                        <a href={person.linkedin} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full border-2 border-slate-900 px-4 py-2 font-black text-white no-underline shadow-[2px_2px_0_#0f172a]" style={{ background: theme.primary }}><LinkedinIcon size={16} /> LinkedIn</a>
+                                                        <a href={person.github} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full border-2 border-slate-900 bg-white px-4 py-2 font-black text-slate-900 no-underline shadow-[2px_2px_0_#0f172a]"><GithubIcon size={16} /> GitHub</a>
+                                                        {person.email && <a href={`mailto:${person.email}`} className="inline-flex items-center gap-2 rounded-full border-2 border-slate-900 bg-white px-4 py-2 font-black text-slate-900 no-underline shadow-[2px_2px_0_#0f172a]"><Mail size={16} /> {person.email}</a>}
+                                                    </div>
+                                                ) : (() => {
+                                                    const { item } = people[talk];
+                                                    return (
+                                                        <div className="mt-2 flex flex-wrap items-center gap-3">
+                                                            {item.stat && (
+                                                                <motion.span initial={{ scale: 0.6, rotate: -4 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: 'spring', stiffness: 320, damping: 14 }}
+                                                                    className="rounded-2xl border-2 border-slate-900 px-3 py-1 text-3xl font-black leading-tight shadow-[3px_3px_0_#0f172a]" style={{ background: theme.primarySoft, color: theme.primaryDark }}>
+                                                                    <CountUp value={item.stat.value} />
+                                                                </motion.span>
+                                                            )}
+                                                            {item.stat && <span className="max-w-[16rem] text-base sm:text-lg font-black leading-snug text-slate-800">{item.stat.label}</span>}
+                                                            {item.stat && (item.tags || item.link) && <span className="basis-full" />}
+                                                            {item.tags && <div className="flex flex-wrap gap-1.5">{item.tags.map(t => <span key={t} className="rounded-full border-2 border-slate-900 bg-white px-2 py-0.5 text-xs font-bold text-slate-800">{t}</span>)}</div>}
+                                                            {item.link && (
+                                                                <a href={item.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-full border-2 border-slate-900 px-3 py-1.5 text-sm font-black text-white no-underline shadow-[2px_2px_0_#0f172a]" style={{ background: theme.primary }}>
+                                                                    {item.linkLabel || 'View on GitHub'} <ArrowUpRight size={15} />
+                                                                </a>
+                                                            )}
+                                                        </div>
+                                                    );
+                                                })())}
+                                            </motion.div>
+                                        ) : (
+                                            <motion.p key="pick" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm font-bold text-slate-400 pt-1">
+                                                Ask {talk === 'driver' ? firstName : 'them'} something below. Take your time: nothing moves on until you choose.
+                                            </motion.p>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+
+                                {/* Questions: always here, always in the same place */}
+                                <div className="mt-3 flex flex-wrap gap-2">
                                     {questions.map((q, i) => {
                                         const done = wasAsked(talk, q.key);
                                         return (
-                                            <button key={q.key} onClick={() => choose(q.key)} className={`flex items-center gap-2 rounded-xl border-2 px-3 py-2 text-left text-sm font-black transition-colors ${q.key === view ? 'border-slate-900 bg-slate-900 text-white' : done ? 'border-slate-200 bg-slate-50 text-slate-500 hover:border-slate-400' : 'border-slate-900 bg-white text-slate-900 hover:bg-amber-100'}`}>
-                                                {!touch && <span className="text-xs opacity-60">{i + 1}</span>}
-                                                {done ? <Check size={15} className="shrink-0" /> : <MessageCircle size={15} className="shrink-0" />}
-                                                <span className="min-w-0">{q.label}</span>
+                                            <button key={q.key} onClick={() => choose(q.key)} className={`inline-flex items-center gap-1.5 rounded-full border-2 px-3 py-1.5 text-sm font-black transition-all active:scale-95 ${q.key === view ? 'border-slate-900 bg-slate-900 text-white' : done ? 'border-slate-300 bg-white text-slate-500 hover:border-slate-900' : 'border-slate-900 bg-white text-slate-900 shadow-[2px_2px_0_#0f172a] hover:-translate-y-0.5'}`}>
+                                                {!touch && <span className="text-[10px] opacity-50">{i + 1}</span>}
+                                                <span>{q.icon}</span> {q.label} {done && q.key !== view && <Check size={13} />}{q.key === 'challenge' && !done && <span className="ml-0.5 rounded-full bg-rose-500 px-1.5 text-[9px] font-black text-white">HARD</span>}
                                             </button>
                                         );
                                     })}
-                                    <button onClick={endTalk} className="flex items-center gap-2 rounded-xl border-2 border-slate-200 px-3 py-2 text-left text-sm font-black text-slate-500 hover:border-slate-400">
-                                        {!touch && <span className="text-xs opacity-60">{questions.length + 1}</span>} Thanks, bye!
+                                    <button onClick={endTalk} className="inline-flex items-center gap-1.5 rounded-full border-2 border-slate-200 px-3 py-1.5 text-sm font-black text-slate-500 hover:border-slate-400">
+                                        {!touch && <span className="text-[10px] opacity-50">{questions.length + 1}</span>} Bye 👋
                                     </button>
                                 </div>
-                            )}
-                            {!touch && (
-                                <p className="mt-2 text-right text-xs font-bold text-slate-400">
-                                    {typing ? <>{key('E')} skip</> : <>{key('1')}–{key(String(questions.length + 1))} choose · {key('E')} next question · {key('Esc')} leave</>}
-                                </p>
-                            )}
+                                {!touch && (
+                                    <p className="mt-2 text-right text-[11px] font-bold text-slate-400">
+                                        {key('1')}–{key(String(questions.length + 1))} ask · {key('E')} next question{tour !== null && <> · {key('N')} next stop</>} · {key('Esc')} close
+                                    </p>
+                                )}
                             </div>
                         </div>
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            {/* The tour, paused between stops */}
+            {tour !== null && talk === null && (
+                <div className={`absolute left-1/2 -translate-x-1/2 ${touch ? 'bottom-[250px]' : 'bottom-28'} flex items-center gap-2 px-3 py-2 ${hud}`}>
+                    <span className="text-xs font-black text-slate-500">Tour · {tour + 1} of {tourStops.length}</span>
+                    <button onClick={() => goTo(tourStops[tour])} className="rounded-full border-2 border-slate-900 px-3 py-1 text-xs font-black text-slate-900">Walk there</button>
+                    <button onClick={nextStop} className="rounded-full border-2 border-slate-900 bg-amber-300 px-3 py-1 text-xs font-black text-slate-900">Next stop</button>
+                    <button onClick={endTour} aria-label="End the tour" className="rounded-full p-1 text-slate-500 hover:text-slate-900"><X size={15} /></button>
+                </div>
+            )}
 
             {/* Touch d-pad */}
             {touch && talk === null && (
@@ -497,6 +636,25 @@ export default function BusGame({ scene, people, person, theme, onExit, onList }
                                         <Trophy size={12} /> {a.name}
                                     </span>
                                 ))}
+                            </div>
+
+                            {/* Skills map: fills in as you meet people */}
+                            <div className="mb-4 rounded-2xl border-2 border-slate-900 p-3">
+                                <div className="flex items-center justify-between mb-2">
+                                    <span className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500">Skills map</span>
+                                    <span className="text-[11px] font-black text-slate-500">🧗 Hard-part stories heard: {challengesHeard} of {challengeTotal}</span>
+                                </div>
+                                <div className="space-y-1.5">
+                                    {skillMap.map(a => (
+                                        <div key={a.area} className="flex items-center gap-2">
+                                            <span className="w-32 shrink-0 text-xs font-black text-slate-700">{a.area}</span>
+                                            <div className="h-3 flex-1 overflow-hidden rounded-full border-2 border-slate-900 bg-slate-100">
+                                                <motion.div className="h-full" style={{ background: theme.primary }} initial={{ width: 0 }} animate={{ width: `${(a.found / a.total) * 100}%` }} transition={{ type: 'spring', stiffness: 120, damping: 18 }} />
+                                            </div>
+                                            <span className="w-10 shrink-0 text-right text-[11px] font-black text-slate-500">{a.found}/{a.total}</span>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
 
                             {/* For hiring managers: what you have seen, at a glance */}
@@ -548,6 +706,7 @@ export default function BusGame({ scene, people, person, theme, onExit, onList }
                             <p className="text-[11px] font-black uppercase tracking-[0.2em] mb-1" style={{ color: theme.primary }}>How to play</p>
                             <h3 className="text-2xl font-black text-slate-900 mb-3">Meet everyone on {firstName}'s bus</h3>
                             <p className="text-slate-600 mb-4">Every passenger with a <span className="inline-flex h-5 w-5 items-center justify-center rounded-full border-2 border-slate-900 bg-[#ffc21a] text-xs font-black">!</span> is something {firstName} built or a place they worked. Walk up, say hi, and ask what problem it solved, what {firstName} did and how it works.</p>
+                            <p className="text-sm font-bold text-slate-800 mb-3">Only have a minute? Press <span className="rounded-full border-2 border-slate-900 bg-amber-300 px-2 text-xs font-black">▶ Quick tour</span> and we will walk you to the highlights.</p>
                             <ul className="space-y-2 text-sm font-bold text-slate-800 mb-5">
                                 {touch ? (
                                     <>

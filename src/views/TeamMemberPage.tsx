@@ -61,8 +61,8 @@ export default function TeamMemberPage() {
     /* Who is on the bus: one passenger for each thing built, each job and each other project */
     const zones: RideZone[] = [
         { label: 'Built on Transit Regina', icon: Wrench, items: person.built },
-        { label: "Where I've worked", icon: Briefcase, items: person.experience.map(job => ({ title: job.role, sub: `${job.org} · ${job.kind} · ${job.from} to ${job.to}`, detail: job.detail, tags: job.tags, stat: job.stat })) },
-        { label: 'More things I built', icon: Rocket, items: person.projects.map(project => ({ title: project.name, sub: project.status, problem: project.problem, detail: project.blurb, tags: project.tags, stat: project.stat, link: project.link, linkLabel: project.linkLabel })) },
+        { label: "Where I've worked", icon: Briefcase, items: person.experience.map(job => ({ title: job.role, sub: `${job.org} · ${job.kind} · ${job.from} to ${job.to}`, hook: job.hook, detail: job.detail, tags: job.tags, stat: job.stat, areas: job.areas })) },
+        { label: 'More things I built', icon: Rocket, items: person.projects.map(project => ({ title: project.name, sub: project.status, hook: project.hook, problem: project.problem, how: project.how, challenge: project.challenge, areas: project.areas, detail: project.blurb, tags: project.tags, stat: project.stat, link: project.link, linkLabel: project.linkLabel })) },
     ].filter(zone => zone.items.length > 0);
 
     const linkClass = 'inline-flex items-center gap-2 px-5 py-3 rounded-xl font-bold no-underline transition-all duration-200 hover:-translate-y-0.5';

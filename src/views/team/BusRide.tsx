@@ -12,7 +12,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion';
 import { ArrowUpRight, ChevronsDown, Gamepad2, LinkedinIcon, List, X } from 'lucide-react';
 import type { CharacterTheme } from '../../models/data/characterThemes';
-import type { TeamMember } from '../../models/data/team';
+import type { SkillArea, TeamMember } from '../../models/data/team';
 import type { createBusScene } from './busScene';
 import BusGame, { type Passenger } from './BusGame';
 
@@ -20,10 +20,15 @@ export interface RideItem {
     title: string;
     sub?: string;
     detail?: string;
+    /** One line that sells it */
+    hook?: string;
     /** For hiring managers: the problem, what the person did, how it works */
     problem?: string;
     did?: string;
     how?: string;
+    /** The hardest part, and how it was solved */
+    challenge?: string;
+    areas?: SkillArea[];
     tags?: string[];
     stat?: { value: string; label: string };
     link?: string;
@@ -54,6 +59,7 @@ function SeatCard({ item, kicker, seat, theme, tail }: { item: RideItem; kicker:
             </div>
             <h3 className="text-lg sm:text-xl font-black text-slate-900 leading-tight">{item.title}</h3>
             {item.sub && <p className="text-sm font-bold text-slate-500">{item.sub}</p>}
+            {item.hook && <p className="mt-1.5 text-base sm:text-lg font-black leading-snug" style={{ color: theme.primaryDark }}>{item.hook}</p>}
             <div className="mt-2.5 grid gap-3 sm:grid-cols-[1fr_auto]">
                 <div className="space-y-2.5">
                     {item.problem && (
@@ -72,6 +78,12 @@ function SeatCard({ item, kicker, seat, theme, tail }: { item: RideItem; kicker:
                         <div>
                             <span className={label}>How it works</span>
                             <p className="text-sm sm:text-[15px] text-slate-700 leading-relaxed">{item.how}</p>
+                        </div>
+                    )}
+                    {item.challenge && (
+                        <div className="rounded-xl border-2 border-dashed border-slate-300 px-3 py-2">
+                            <span className={label}>The hardest part</span>
+                            <p className="text-sm sm:text-[15px] text-slate-700 leading-relaxed">{item.challenge}</p>
                         </div>
                     )}
                 </div>
@@ -106,6 +118,35 @@ function SeatCard({ item, kicker, seat, theme, tail }: { item: RideItem; kicker:
     );
 }
 
+/* The scroll tour's card: short enough never to need its own scroll bar. The full story opens in a
+   panel of its own. */
+function CompactCard({ item, kicker, seat, theme, tail, onOpen }: { item: RideItem; kicker: string; seat: string; theme: CharacterTheme; tail: 'left' | 'right'; onOpen: () => void }) {
+    return (
+        <div className="relative rounded-[24px] bg-white border-[3px] border-slate-900 shadow-[5px_5px_0_#0f172a] px-4 py-3 sm:px-5 sm:py-4 text-left">
+            <span className={`absolute -top-[15px] ${tail === 'left' ? 'left-12' : 'right-12'} w-6 h-6 bg-white border-t-[3px] border-l-[3px] border-slate-900 rotate-45`} />
+            <div className="flex items-center gap-2 mb-1">
+                <span className="rounded-full px-2.5 py-0.5 text-[10px] font-black tracking-wider text-white" style={{ background: theme.primary }}>SEAT {seat}</span>
+                <span className="truncate text-[10.5px] font-black uppercase tracking-[0.14em]" style={{ color: theme.primary }}>{kicker}</span>
+            </div>
+            <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                    <h3 className="text-base sm:text-xl font-black text-slate-900 leading-tight">{item.title}</h3>
+                    {(item.hook || item.sub) && <p className="mt-0.5 text-sm sm:text-base font-bold leading-snug line-clamp-2" style={{ color: theme.primaryDark }}>{item.hook || item.sub}</p>}
+                </div>
+                {item.stat && (
+                    <div className="shrink-0 text-right max-w-[38%]">
+                        <div className="text-xl sm:text-2xl font-black leading-none" style={{ color: theme.primary }}>{item.stat.value}</div>
+                        <div className="text-[10px] sm:text-[11px] font-bold text-slate-500 mt-0.5 leading-tight line-clamp-2">{item.stat.label}</div>
+                    </div>
+                )}
+            </div>
+            <button onClick={onOpen} className="mt-2 inline-flex items-center gap-1 rounded-full border-2 border-slate-900 px-3 py-1 text-xs sm:text-sm font-black text-slate-900 hover:bg-amber-100">
+                Read the full story <ArrowUpRight size={14} />
+            </button>
+        </div>
+    );
+}
+
 export default function BusRide({ person, theme, zones }: { person: TeamMember; theme: CharacterTheme; zones: RideZone[] }) {
     const firstName = person.name.split(' ')[0];
 
@@ -128,6 +169,8 @@ export default function BusRide({ person, theme, zones }: { person: TeamMember; 
     /* Game mode (walk the bus yourself) and the plain list, for anyone short on time */
     const [playing, setPlaying] = useState(false);
     const [listOpen, setListOpen] = useState(false);
+    /* One item's full story, opened from the scroll tour */
+    const [story, setStory] = useState<{ item: RideItem; kicker: string; seat: string } | null>(null);
     /* Everyone on board, in seat order: the same order the scene seats them */
     const people: Passenger[] = rows.flatMap((r, ri) => r.pair.flatMap((item, k) => (item ? [{ item, zone: r.zone.label, seat: ri * 2 + k + 1 }] : [])));
 
@@ -295,7 +338,7 @@ export default function BusRide({ person, theme, zones }: { person: TeamMember; 
                             <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/60">Stop {row + 1} of {rows.length}</span>
                             </div>
 
-                            <div className="px-3 sm:px-6 pb-4 sm:pb-6 max-h-[46%] overflow-y-auto pointer-events-auto">
+                            <div className="px-3 sm:px-6 pb-4 sm:pb-6 pointer-events-auto">
                                 <AnimatePresence mode="wait">
                                     <motion.div
                                         key={row}
@@ -306,7 +349,7 @@ export default function BusRide({ person, theme, zones }: { person: TeamMember; 
                                         transition={{ duration: 0.22 }}
                                     >
                                         {here.pair.map((item, k) => item
-                                            ? <SeatCard key={item.title} item={item} kicker={here.zone.label} seat={String(row * 2 + k + 1).padStart(2, '0')} theme={theme} tail={k ? 'right' : 'left'} />
+                                            ? <CompactCard key={item.title} item={item} kicker={here.zone.label} seat={String(row * 2 + k + 1).padStart(2, '0')} theme={theme} tail={k ? 'right' : 'left'} onOpen={() => setStory({ item, kicker: here.zone.label, seat: String(row * 2 + k + 1).padStart(2, '0') })} />
                                             : <div key={k} className="hidden md:block" />)}
                                     </motion.div>
                                 </AnimatePresence>
@@ -315,6 +358,18 @@ export default function BusRide({ person, theme, zones }: { person: TeamMember; 
                     )}
                 </AnimatePresence>
             </div>
+
+            {/* One full story, from the scroll tour */}
+            <AnimatePresence>
+                {story && (
+                    <motion.div className="fixed inset-0 z-[95] flex items-end sm:items-center justify-center bg-slate-950/70 backdrop-blur-sm p-3 sm:p-8" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setStory(null)}>
+                        <motion.div className="relative w-full max-w-2xl max-h-[88dvh] overflow-y-auto rounded-[26px]" initial={{ y: 40, scale: 0.97 }} animate={{ y: 0, scale: 1 }} exit={{ y: 40 }} onClick={e => e.stopPropagation()}>
+                            <button onClick={() => setStory(null)} aria-label="Close" className="absolute right-3 top-3 z-10 rounded-full border-2 border-slate-900 bg-white p-1.5 text-slate-900"><X size={18} /></button>
+                            <SeatCard item={story.item} kicker={story.kicker} seat={story.seat} theme={theme} />
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             {/* Everything on the bus as a plain list */}
             <AnimatePresence>

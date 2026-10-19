@@ -6,7 +6,7 @@ export const SITE = {
     url: 'https://transitregina.ca',
     operators: 'Dev Patel and Nirjar Patel',
     /** Where questions about the site and people's information go */
-    CONTACT_EMAIL: 'p.p.dev2004@gmail.com',
+    CONTACT_EMAIL: 'transitregina.ca@gmail.com',
     /** Where Supabase stores the database: Supabase dashboard → Project Settings → General → Region */
     DATA_REGION: 'Canada (Central)',
     policyDate: 'October 17, 2026',
