@@ -20,7 +20,7 @@ export default function MapPage() {
         zoom, setZoom, stops, routes, selectedRoute, setSelectedRoute,
         routePaths, liveBuses, handlePlaceSelect, handleMapPlacePick, selectedPlaceMarker,
         setSelectedPlaceMarker, currentZoom, onZoomChanged,
-        activeDetours, weather, liveDown,
+        activeDetours, weather, liveDown, linkedStop,
     } = useMapController();
 
     return (
@@ -52,6 +52,7 @@ export default function MapPage() {
             onZoomChanged={onZoomChanged}
             activeDetours={activeDetours}
             weather={weather}
+            linkedStop={linkedStop}
         />
         </>
     );

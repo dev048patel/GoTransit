@@ -45,6 +45,23 @@ export const useMapController = (): MapControllerOutput => {
   /* When live positions last arrived, and whether they have stopped (three failed polls in a row) */
   const [liveDown, setLiveDown] = useState(false);
   const failedPolls = useRef(0);
+  /* Links from the route and stop pages: /map?route=4 shows route 4, /map?stop=0742 opens that stop */
+  const [linkedStop, setLinkedStop] = useState<Stop | null>(null);
+  const linkHandled = useRef(false);
+  useEffect(() => {
+    if (linkHandled.current || allStops.length === 0) return;
+    linkHandled.current = true;
+    const params = new URLSearchParams(window.location.search);
+    const route = params.get('route');
+    if (route && apiRoutes.some(r => r.ROUTE_NUM === route)) setSelectedRoute(route);
+    const stopId = params.get('stop');
+    const stop = stopId ? allStops.find(s => s.STOP_ID === stopId) : undefined;
+    if (stop) {
+      setCenter({ lat: Number(stop.LAT), lng: Number(stop.LON) });
+      setZoom(17);
+      setLinkedStop(stop);
+    }
+  }, [allStops, apiRoutes]);
 
   // Fetch weather from backend every 5 minutes — backend caches EC DataMart for us
   useEffect(() => {
@@ -257,6 +274,7 @@ export const useMapController = (): MapControllerOutput => {
     routes: routesWithColors,
     selectedRoute,
     setSelectedRoute,
+    linkedStop,
     routePaths,
     liveBuses: selectedRoute
       ? liveBuses.filter(b => String(b.route_num) === selectedRoute)

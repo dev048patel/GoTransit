@@ -15,6 +15,8 @@ export default function IndependenceNotice({ className = '' }: { className?: str
                 {' '}for official service notices. Maps by Google.
             </p>
             <p className="flex flex-wrap gap-x-4 gap-y-1 font-semibold">
+                <Link to="/routes" className="no-underline hover:underline text-slate-600">Bus routes</Link>
+                <Link to="/map" className="no-underline hover:underline text-slate-600">Live bus map</Link>
                 <Link to="/about" className="no-underline hover:underline text-slate-600">About</Link>
                 <Link to="/privacy" className="no-underline hover:underline text-slate-600">Privacy</Link>
                 <Link to="/terms" className="no-underline hover:underline text-slate-600">Terms</Link>

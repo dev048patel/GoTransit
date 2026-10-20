@@ -30,6 +30,8 @@ import { AuthProvider, useAuth } from './models/context/AuthContext';
 import { FeatureAccessProvider } from './models/context/FeatureAccessContext';
 import ProtectedRoute from './views/components/ProtectedRoute';
 import { useTermsSessionGuard } from './controllers/auth/useTermsSessionGuard';
+import { usePageMeta } from './controllers/usePageMeta';
+import { metaForPath } from './models/seo/pageMeta';
 import PublicOnlyRoute from './views/components/PublicOnlyRoute';
 import AdminRoute from './views/components/AdminRoute';
 import ProfilePage from './views/auth/ProfilePage';
@@ -55,6 +57,11 @@ const RouteManager = React.lazy(() => import('./views/admin/RouteManager'));
 const FeatureAccessControl = React.lazy(() => import('./views/admin/FeatureAccessControl'));
 const SecurityCenter = React.lazy(() => import('./views/admin/SecurityCenter'));
 const TwoStepPage = React.lazy(() => import('./views/auth/TwoStepPage'));
+/* The route and stop directory: one chunk, loaded only on those pages (it carries the stop data) */
+const RoutesIndexPage = React.lazy(() => import('./views/directory/DirectoryPages').then(m => ({ default: m.RoutesIndexPage })));
+const RoutePage = React.lazy(() => import('./views/directory/DirectoryPages').then(m => ({ default: m.RoutePage })));
+const StopPage = React.lazy(() => import('./views/directory/DirectoryPages').then(m => ({ default: m.StopPage })));
+const NotFoundPage = React.lazy(() => import('./views/directory/DirectoryPages').then(m => ({ default: m.NotFoundPage })));
 
 /**
  * AppRoutes — renders all routes ONLY after auth state has been resolved.
@@ -67,6 +74,8 @@ function AppRoutes() {
     /* Start every page at the top; without this a new page opens at the old page's scroll position */
     const { pathname } = useLocation();
     useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+    /* Title, description and canonical address for every page that does not set its own */
+    usePageMeta(metaForPath(pathname));
 
     const { isLoading } = useAuth();
     useAnalyticsBeacon();
@@ -197,11 +206,16 @@ function AppRoutes() {
                 <Route path="/privacy" element={<LegalPage page="privacy" />} />
                 <Route path="/terms" element={<LegalPage page="terms" />} />
 
-                {/* ── Legacy redirect: /landing still works ─────────────── */}
-                <Route path="/landing" element={<LandingPage />} />
+                {/* ── Public: every bus route and stop, as pages search engines can find ── */}
+                <Route path="/routes" element={<RoutesIndexPage />} />
+                <Route path="/routes/:slug" element={<RoutePage />} />
+                <Route path="/stops/:slug" element={<StopPage />} />
 
-                {/* ── 404 fallback ──────────────────────────────────────── */}
-                <Route path="*" element={<Navigate to="/" replace />} />
+                {/* ── Old address: /landing now points to the homepage ── */}
+                <Route path="/landing" element={<Navigate to="/" replace />} />
+
+                {/* ── Anything else: a real "not found" page, kept out of search results ── */}
+                <Route path="*" element={<NotFoundPage />} />
 
             </Routes>
         </Suspense>
