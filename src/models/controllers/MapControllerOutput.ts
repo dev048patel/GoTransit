@@ -21,6 +21,8 @@ export interface MapControllerOutput {
     stops: Stop[];
     routes: Route[];
     selectedRoute: string | null;
+    /** A stop opened by a link (/map?stop=0742) */
+    linkedStop: Stop | null;
     setSelectedRoute: (routeNum: string | null) => void;
     routePaths: { lat: number; lng: number }[][];
     liveBuses: BusPosition[];

@@ -50,6 +50,7 @@ export const MapView: React.FC<MapViewProps> = ({
   onZoomChanged,
   activeDetours,
   weather,
+  linkedStop,
 }) => {
   const [showTripPlanner, setShowTripPlanner] = useState(false);
   const [showInfoWindow, setShowInfoWindow] = useState(false);
@@ -77,6 +78,11 @@ export const MapView: React.FC<MapViewProps> = ({
     setShowBusSuggestions(false);
     setShowInfoWindow(false);
   };
+  // Arriving from a stop page (/map?stop=0742): open that stop's departure board
+  useEffect(() => {
+    if (linkedStop && isLoaded) handleStopClick(linkedStop);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [linkedStop, isLoaded]);
 
   // Get route color from transitColors data
   const getRouteColor = (routeNum: string): string => {

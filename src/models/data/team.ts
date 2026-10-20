@@ -72,8 +72,12 @@ export interface TeamMember {
     openToWork: boolean;
 }
 
-/* Photos are found by file name, so adding one needs no code change: src/assets/team/<slug>.jpg */
-const photos = import.meta.glob('../../assets/team/*.{jpg,jpeg,png,webp}', { eager: true, import: 'default' }) as Record<string, string>;
+/* Photos are found by file name, so adding one needs no code change: src/assets/team/<slug>.jpg.
+   import.meta.env exists only under Vite; at build time (scripts/prerender.tsx runs this file in plain
+   Node) there are no photos, which is fine because the pre-rendered pages only need the text. */
+const photos = (import.meta.env
+    ? import.meta.glob('../../assets/team/*.{jpg,jpeg,png,webp}', { eager: true, import: 'default' })
+    : {}) as Record<string, string>;
 const photoFor = (slug: string) =>
     Object.entries(photos).find(([path]) => path.split('/').pop()!.split('.')[0] === slug)?.[1] ?? '';
 

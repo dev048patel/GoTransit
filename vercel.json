@@ -1,8 +1,30 @@
 {
+    "cleanUrls": true,
+    "trailingSlash": false,
+    "redirects": [
+        {
+            "source": "/:path*",
+            "has": [{ "type": "host", "value": "www.transitregina.ca" }],
+            "destination": "https://transitregina.ca/:path*",
+            "permanent": true
+        },
+        {
+            "source": "/:path*",
+            "has": [{ "type": "host", "value": "gotransitregina.ca" }],
+            "destination": "https://transitregina.ca/:path*",
+            "permanent": true
+        },
+        {
+            "source": "/:path*",
+            "has": [{ "type": "host", "value": "www.gotransitregina.ca" }],
+            "destination": "https://transitregina.ca/:path*",
+            "permanent": true
+        }
+    ],
     "rewrites": [
         {
             "source": "/(.*)",
-            "destination": "/index.html"
+            "destination": "/index"
         }
     ],
     "headers": [

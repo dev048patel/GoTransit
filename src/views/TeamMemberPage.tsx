@@ -18,6 +18,8 @@ import TransitPass from './team/TransitPass';
 import BusRide, { type RideZone } from './team/BusRide';
 import { MARKER_CHARACTERS } from '../models/data/markerCharacters';
 import { CHARACTER_THEMES } from '../models/data/characterThemes';
+import { usePageMeta } from '../controllers/usePageMeta';
+import { teamMeta } from '../models/seo/pageMeta';
 import { TEAM, PROJECT } from '../models/data/team';
 
 /* A reminder shown only while developing, where content is still to be added */
@@ -50,6 +52,7 @@ function Section({ title, children, show = true }: { title: string; children: Re
 export default function TeamMemberPage() {
     const { slug } = useParams();
     const person = TEAM.find(p => p.slug === slug);
+    usePageMeta(person ? teamMeta(person) : null);
     if (!person) return <Navigate to="/connect" replace />;
 
     const dev = import.meta.env.DEV;

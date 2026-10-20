@@ -32,4 +32,6 @@ export interface MapViewProps {
     onZoomChanged: (newZoom: number) => void;
     activeDetours: ActiveDetour[];
     weather: WeatherSnapshot | null;
+    /** A stop to open straight away (from /map?stop=0742) */
+    linkedStop?: Stop | null;
 }
