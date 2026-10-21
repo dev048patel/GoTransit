@@ -28,7 +28,7 @@ export default function MapPage() {
         <WeatherBanner weather={weather} />
         <DepartureReminderBanner />
         <LiveStatus liveDown={liveDown} />
-        <LocationPrompt onCentre={at => { setCenter({ ...at }); setZoom(16); }} />
+        <LocationPrompt />
         <MapView
             isLoaded={isLoaded}
             loadError={loadError}

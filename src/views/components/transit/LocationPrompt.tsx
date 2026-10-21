@@ -8,13 +8,10 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Copy, LocateFixed, LocateOff, RotateCw, X } from 'lucide-react';
 import { useLocationConsent } from '../../../controllers/useLocationConsent';
-import { useGpsFixController } from '../../../controllers/useGpsFixController';
 import { detectPlatform, locationHelp } from '../../../models/services/LocationHelp';
 
-/** onCentre moves the map to the rider (the map doesn't follow them on its own) */
-export default function LocationPrompt({ onCentre }: { onCentre?: (at: { lat: number; lng: number }) => void }) {
+export default function LocationPrompt() {
     const { choice, problem, allow, decline, retry } = useLocationConsent();
-    const { fix } = useGpsFixController();
     const platform = useMemo(() => detectPlatform(), []);
     const [helpOpen, setHelpOpen] = useState(true);
     const [trying, setTrying] = useState(false);
@@ -26,20 +23,7 @@ export default function LocationPrompt({ onCentre }: { onCentre?: (at: { lat: nu
         setTrying(false);
     };
 
-    /* Location is working: a button that brings the map to where the rider is */
-    if (choice === 'allowed' && !problem) {
-        if (!fix || !onCentre) return null;
-        return (
-            <button
-                onClick={() => onCentre({ lat: fix.lat, lng: fix.lng })}
-                aria-label="Centre the map on my location"
-                title="Centre on me"
-                className="fixed z-[1000] right-3 bottom-[118px] w-11 h-11 rounded-full bg-white shadow-lg border border-slate-200 flex items-center justify-center text-[#1a73e8] active:scale-95 transition-transform"
-            >
-                <LocateFixed size={20} />
-            </button>
-        );
-    }
+    if (choice === 'allowed' && !problem) return null;
 
     if (choice === 'declined') {
         return (
