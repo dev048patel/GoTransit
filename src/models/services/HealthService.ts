@@ -41,6 +41,15 @@ export const HealthService = {
             const buses = JSON.parse(await res.text());
             return `${Array.isArray(buses) ? buses.length : 0} buses reported`;
         });
+        // The SMS service runs on its own (services/sms); checked once it is deployed
+        const smsService = process.env.SMS_SERVICE_URL;
+        if (smsService) await probe('Text alerts', async () => {
+            const res = await fetch(`${smsService.replace(/\/+$/, '')}/health`, { signal: AbortSignal.timeout(3_000) });
+            if (!res.ok) throw new Error(`the SMS service answered ${res.status}`);
+            const h = await res.json() as { enabled?: boolean; dryRun?: boolean; pilot?: boolean; timetable?: { coversToday?: boolean; end?: string } };
+            if (h.timetable && h.timetable.coversToday === false) throw new Error(`its timetable ended ${h.timetable.end}: rebuild it`);
+            return h.enabled === false ? 'running, sending turned off' : h.dryRun ? 'running in dry-run mode' : h.pilot ? 'running, pilot numbers only' : 'running and sending';
+        });
         lastRun = new Date().toISOString();
     },
 
@@ -49,6 +58,7 @@ export const HealthService = {
         if (!hasServiceKey()) config.push('SUPABASE_SERVICE_ROLE_KEY is not set: the backend is running with visitor-level database rights.');
         if (!process.env.RESEND_API_KEY || !process.env.ALERT_EMAILS) config.push('RESEND_API_KEY or ALERT_EMAILS is not set: alert emails are off.');
         if (process.env.TWILIO_AUTH_TOKEN && !process.env.BACKEND_URL) config.push('BACKEND_URL is not set: text-message replies (STOP/START) are refused.');
+        if (process.env.SMS_SERVICE_URL && !process.env.SMS_SERVICE_TOKEN) config.push('SMS_SERVICE_TOKEN is not set: admin text broadcasts can\'t reach the SMS service.');
         const checks: Check[] = [...state.entries()].map(([name, s]) => ({ name, ok: s.ok, detail: s.detail, since: s.since }));
         return { lastRun, checks, config };
     },

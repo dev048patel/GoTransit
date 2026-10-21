@@ -44,6 +44,8 @@ let profilesDown = false;
 let targetRole: string | null = null;
 /** Stand-in live bus feed: counts how often it is asked, and moves the bus each time. */
 let feedHits = 0;
+/** Switch for single tests: answers chosen requests (an array, an object, or [status, body]); undefined falls through. */
+let answer: ((method: string, url: string, body: any) => unknown) | null = null;
 const fake = http.createServer((req, res) => {
     let raw = '';
     req.on('data', c => { raw += c; });
@@ -63,6 +65,11 @@ const fake = http.createServer((req, res) => {
             return u ? send(200, { id: u.id, aud: 'authenticated', role: 'authenticated', email: `${u.role}@example.com` }) : send(401, { msg: 'invalid token' });
         }
         if (url.startsWith('/auth/v1/admin/users/')) return send(200, { id: url.split('/').pop() });
+        const custom = answer?.(req.method ?? '', url, body);
+        if (custom !== undefined) {
+            if (Array.isArray(custom) && custom.length === 2 && typeof custom[0] === 'number') return send(custom[0], custom[1]);
+            return send(200, single && Array.isArray(custom) ? custom[0] : custom);
+        }
         if (url.startsWith('/auth/v1/token')) {
             return body?.email === 'rider@example.com' && body?.password === 'correct-password'
                 ? send(200, { access_token: T.user, refresh_token: 'refresh-token', token_type: 'bearer', expires_in: 3600, user: { id: USER, aud: 'authenticated', email: body.email } })
@@ -135,7 +142,7 @@ before(async () => {
     base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
 });
 after(() => { server.close(); fake.close(); });
-beforeEach(() => { calls.length = 0; mails.length = 0; events._reset(); });
+beforeEach(() => { calls.length = 0; mails.length = 0; events._reset(); answer = null; });
 
 /* ── who may call what ── */
 
@@ -159,6 +166,8 @@ const ADMIN_ONLY: [string, string, unknown?][] = [
     ['GET', '/api/features/daily'],
     ['GET', '/api/features/total'],
     ['POST', '/api/sms/broadcast', { routeNum: '4', message: 'hello' }],
+    ['GET', '/api/admin/sms'],
+    ['POST', '/api/admin/sms/outage', { reason: 'testing' }],
 ];
 
 test('admin endpoints refuse a caller with no login', async () => {
@@ -625,4 +634,110 @@ test('deleting an account or changing a password needs the current password agai
     assert.ok(!calls.some(c => c.method === 'DELETE' && c.url.startsWith('/rest/v1/profiles')), 'nothing deleted');
     assert.equal((await api('POST', '/api/auth/confirm-password', { token: T.user, body: { password: 'wrong-password' } })).status, 401);
     assert.equal((await api('POST', '/api/auth/confirm-password', { body: { password: 'x' } })).status, 401, 'needs a login');
+});
+
+/* ── text alerts: the SMS service runs on its own (services/sms) ── */
+
+/** The SMS service's address for these tests: the stand-in answers /smsvc/* like the service would. */
+const smsService = () => `${process.env.VITE_SUPABASE_URL}/smsvc`;
+async function withSmsService<T>(run: () => Promise<T>, url = smsService()): Promise<T> {
+    Object.assign(process.env, { SMS_SERVICE_URL: url, SMS_SERVICE_TOKEN: 'sms-internal-token' });
+    try { return await run(); } finally { delete process.env.SMS_SERVICE_URL; delete process.env.SMS_SERVICE_TOKEN; }
+}
+
+test('a broadcast goes through the SMS service, with its internal token', async () => {
+    answer = (method, url) => url.startsWith('/smsvc/internal/broadcast') ? { ok: true, sent: 3 } : undefined;
+    const r = await withSmsService(() => api('POST', '/api/sms/broadcast', { token: T.admin, body: { routeNum: '4', message: 'Detour on Albert St' } }));
+    assert.equal(r.status, 200);
+    assert.deepEqual(r.json, { ok: true, sent: 3 });
+    const forwarded = calls.find(c => c.url.startsWith('/smsvc/internal/broadcast'));
+    assert.equal(forwarded?.auth, 'sms-internal-token');
+    assert.deepEqual(forwarded?.body, { routeNum: '4', message: 'Detour on Albert St' });
+    assert.ok(!calls.some(c => c.url.startsWith('/rest/v1/weekly_schedules')), 'this API no longer looks up the recipients itself');
+});
+
+test('a broadcast while the SMS service is down says so, and nothing else breaks', async () => {
+    const r = await withSmsService(() => api('POST', '/api/sms/broadcast', { token: T.admin, body: { routeNum: '4', message: 'hello' } }), 'http://127.0.0.1:9');
+    assert.equal(r.status, 503);
+    assert.match(r.json.error, /not answering/);
+    assert.equal((await api('GET', '/api/status')).status, 200);
+});
+
+test('declaring an SMS outage needs an authenticator code entered in the last few minutes', async () => {
+    const r = await withSmsService(() => api('POST', '/api/admin/sms/outage', { token: T.adminStaleCode, body: { reason: 'testing' } }));
+    assert.equal(r.status, 403);
+    assert.equal(r.json.code, 'fresh_two_step_required');
+    assert.ok(!calls.some(c => c.url.startsWith('/rest/v1/outage_days')));
+});
+
+/** The database as it looks on a day with one rider, alerts still to come */
+const outageDay = (opts: { alreadyDeclared?: boolean } = {}) => (method: string, url: string) => {
+    if (url.startsWith('/rest/v1/outage_days') && method === 'POST' && opts.alreadyDeclared) return [409, { code: '23505', message: 'duplicate key value violates unique constraint "outage_days_pkey"' }];
+    if (url.startsWith('/rest/v1/weekly_schedules')) return [{ user_id: USER, arrive_by: '23:59' }];
+    if (url.startsWith('/rest/v1/alerts') && method === 'GET') return [{ id: 'a1', user_id: USER }];
+    if (url.startsWith('/rest/v1/trip_plans') && method === 'GET') return [{ id: 'p1', user_id: USER }];
+    if (url.startsWith('/rest/v1/outage_notices') && method === 'POST') return [{ user_id: USER }];
+    return undefined;
+};
+
+test('an admin can turn text alerts off for the day: riders with alerts ahead get one email', async () => {
+    const { SmsOutageService } = await import('../src/models/services/SmsOutageService');
+    const sent: { to: string; subject: string; text: string; at: number }[] = [];
+    SmsOutageService._setMailer(async emails => { for (const e of emails) sent.push({ ...e, at: calls.length }); });
+    try {
+        answer = outageDay();
+        const r = await withSmsService(() => api('POST', '/api/admin/sms/outage', { token: T.admin, body: { reason: 'Twilio account suspended' } }));
+        assert.equal(r.status, 200);
+        assert.deepEqual(r.json, { declared: true, emailed: 1 });
+
+        const declared = calls.find(c => c.url.startsWith('/rest/v1/outage_days') && c.method === 'POST');
+        assert.match(declared?.body.cause, /Declared by an admin\. Reason: Twilio account suspended/);
+        assert.equal(declared?.body.declared_by, ADMIN);
+        assert.ok(calls.some(c => c.url.startsWith('/rest/v1/alerts') && c.method === 'PATCH' && c.body.status === 'suppressed'), 'nothing more goes out today');
+
+        assert.equal(sent.length, 1);
+        assert.equal(sent[0].to, `user-${USER.slice(0, 4)}@example.com`);
+        assert.match(sent[0].subject, /^No TransitR SMS alerts today \(\w+day, \w+ \d+\)$/);
+        assert.match(sent[0].text, /You can still see live bus times in the TransitR app: https:\/\/transitregina\.ca\/map/);
+        const notice = calls.findIndex(c => c.url.startsWith('/rest/v1/outage_notices') && c.method === 'POST');
+        assert.ok(notice >= 0 && notice < sent[0].at, 'the notice row is written before the email is sent');
+        await settle();
+        assert.ok(events.recent().some(e => e.type === 'sms_outage_declared' && e.userId === ADMIN));
+
+        // A second press the same day: nobody is emailed again
+        answer = outageDay({ alreadyDeclared: true });
+        const again = await withSmsService(() => api('POST', '/api/admin/sms/outage', { token: T.admin, body: { reason: 'again' } }));
+        assert.equal(again.status, 409);
+        assert.equal(sent.length, 1);
+    } finally { SmsOutageService._setMailer(null); }
+});
+
+test('the SMS service going quiet during alert hours is declared an outage automatically', async () => {
+    const { SmsOutageService } = await import('../src/models/services/SmsOutageService');
+    const sent: string[] = [];
+    SmsOutageService._setMailer(async emails => { sent.push(...emails.map(e => e.to)); });
+    const nineAm = Date.parse('2026-10-21T15:00:00Z');   // 9:00 in Regina
+    try {
+        const lastSeen = (minutesAgo: number) => (m: string, u: string) =>
+            u.startsWith('/rest/v1/heartbeats') ? [{ last_seen: new Date(nineAm - minutesAgo * 60_000).toISOString() }] : outageDay()(m, u);
+        // checked in 3 minutes ago: fine
+        answer = lastSeen(3);
+        assert.equal(await withSmsService(() => SmsOutageService.check(nineAm)), null);
+        assert.equal(sent.length, 0);
+        // not since 25 minutes ago: an outage
+        calls.length = 0;
+        answer = lastSeen(25);
+        const cause = await withSmsService(() => SmsOutageService.check(nineAm));
+        assert.match(cause ?? '', /has not checked in since/);
+        assert.equal(sent.length, 1);
+        // half the recent texts failing at Twilio is an outage too
+        calls.length = 0; sent.length = 0;
+        answer = (m, u) => u.startsWith('/rest/v1/messages') ? ['failed', 'undelivered', 'failed', 'delivered', 'delivered', 'failed'].map(status => ({ status }))
+            : lastSeen(1)(m, u);
+        assert.match(await withSmsService(() => SmsOutageService.check(nineAm)) ?? '', /4 of the last 6 texts failed at Twilio/);
+        // before the SMS service is deployed, nothing is watched
+        calls.length = 0;
+        assert.equal(await SmsOutageService.check(nineAm), null);
+        assert.equal(calls.length, 0);
+    } finally { SmsOutageService._setMailer(null); }
 });

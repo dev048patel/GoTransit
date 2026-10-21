@@ -84,6 +84,8 @@ router.patch('/phone', requireAuth, async (req: Request, res: Response) => {
 
 // ── POST /api/sms/webhook ───────────────────────────────────────────────────
 // Twilio calls this when a user texts back (STOP / START / HELP).
+// Legacy: the SMS service's /twilio/inbound replaces it. Delete this
+// route once the Twilio console points there.
 // Validated using Twilio's request signature so only Twilio can POST here.
 // Twilio posts form-encoded data, so this route parses that (the app only parses JSON by default).
 router.post('/webhook', rateLimit('sms-webhook', 120), express.urlencoded({ extended: false, limit: '10kb' }), async (req: Request, res: Response) => {
@@ -127,12 +129,8 @@ router.post('/webhook', rateLimit('sms-webhook', 120), express.urlencoded({ exte
 
 // ── POST /api/sms/broadcast ─────────────────────────────────────────────────
 // Admin-only. Sends a custom SMS to all opted-in users on a given route.
+// Once SMS_SERVICE_URL is set, the SMS service (services/sms) sends it; until then, this API does.
 router.post('/broadcast', requireAuth, requireAdmin, async (req: Request, res: Response) => {
-    if (!TwilioService.isConfigured()) {
-        res.status(503).json({ error: 'Twilio is not configured on this server' });
-        return;
-    }
-
     const { routeNum, message } = (req.body ?? {}) as { routeNum?: string; message?: string };
     if (typeof routeNum !== 'string' || typeof message !== 'string' || !/^[A-Za-z0-9]{1,6}$/.test(routeNum) || !message.trim()) {
         res.status(400).json({ error: 'routeNum and message are required' });
@@ -140,6 +138,30 @@ router.post('/broadcast', requireAuth, requireAdmin, async (req: Request, res: R
     }
     if (message.length > 160) {
         res.status(400).json({ error: 'Message must be 160 characters or fewer (single SMS segment)' });
+        return;
+    }
+
+    const smsService = process.env.SMS_SERVICE_URL, smsToken = process.env.SMS_SERVICE_TOKEN;
+    if (smsService && smsToken) {
+        let r: globalThis.Response;
+        try {
+            r = await fetch(`${smsService.replace(/\/+$/, '')}/internal/broadcast`, {
+                method: 'POST', headers: { Authorization: `Bearer ${smsToken}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ routeNum, message }), signal: AbortSignal.timeout(3_000),
+            });
+        } catch {
+            res.status(503).json({ error: 'The SMS service is not answering. Try again in a few minutes.' });
+            return;
+        }
+        const body = await r.json().catch(() => ({})) as { sent?: number; error?: string };
+        if (r.ok) void SecurityEventService.record({ type: 'sms_broadcast', severity: 'warning', ip: clientIp(req), userId: req.user!.id, path: req.originalUrl,
+            message: `Admin sent a text broadcast for route ${routeNum} to ${body.sent ?? 0} people` });
+        res.status(r.ok ? 200 : r.status >= 500 ? 503 : r.status).json(r.ok ? { ok: true, sent: body.sent ?? 0 } : { error: body.error ?? 'The SMS service refused the broadcast' });
+        return;
+    }
+
+    if (!TwilioService.isConfigured()) {
+        res.status(503).json({ error: 'Twilio is not configured on this server' });
         return;
     }
 
