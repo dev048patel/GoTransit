@@ -2,6 +2,8 @@
 import { useEffect, useState } from 'react';
 import { haversineDistance } from '../models/services/StopToRouteIndex';
 import { useLocationConsent } from './useLocationConsent';
+import { setLocationProblem } from '../models/services/LocationConsent';
+import { problemFromError } from '../models/services/LocationHelp';
 
 export interface GpsFix {
     lat: number;
@@ -20,13 +22,15 @@ export function useGpsFixController() {
     const [fix, setFix] = useState<GpsFix | null>(null);
     const [lost, setLost] = useState(false);
     /* Nothing is watched until the rider taps "Use my location" (see LocationPrompt) */
-    const { choice } = useLocationConsent();
+    const { choice, attempt } = useLocationConsent();
 
     useEffect(() => {
-        if (choice !== 'allowed' || !navigator.geolocation) return;
+        if (choice !== 'allowed') return;
+        if (!navigator.geolocation) { setLocationProblem('unsupported'); return; }
         const watchId = navigator.geolocation.watchPosition(
             (pos) => {
                 setLost(false);
+                setLocationProblem(null);
                 const { latitude: lat, longitude: lng, accuracy, heading, speed } = pos.coords;
                 const next: GpsFix = {
                     lat, lng, accuracy,
@@ -39,13 +43,14 @@ export function useGpsFixController() {
                 );
             },
             (err) => {
-                console.warn('Geolocation watch error:', err.message);
                 setLost(true);
+                /* Tell the rider what is wrong and how to fix it (see LocationPrompt) */
+                setLocationProblem(problemFromError(err.code));
             },
             { enableHighAccuracy: true, maximumAge: 10000 }
         );
         return () => navigator.geolocation.clearWatch(watchId);
-    }, [choice]);
+    }, [choice, attempt]);
 
     return { fix, lost };
 }
