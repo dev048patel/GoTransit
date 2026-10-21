@@ -11,9 +11,15 @@ npm run dev:server     # Backend with nodemon hot-reload
 npm run build          # Production build → /build
 npm run serve          # Preview production build locally
 npm run build:transit-data  # Regenerate src/models/data/ stops, routes and shapes from the GTFS feed in data/google_transit/
+npm test               # Backend tests (test/*.test.ts, node:test via tsx)
+
+# SMS service (run inside services/sms, which has its own package.json)
+npm start              # Start the service (port 3002 or Railway PORT)
+npm test               # Its tests
+npm run build:timetable  # Rebuild data/timetable.json from data/google_transit/ (commit the result)
 ```
 
-No test runner or lint scripts are configured.
+No lint scripts are configured.
 
 ## Architecture
 
@@ -53,6 +59,10 @@ Express server with three route groups mounted:
 - Middleware: `visitorTracker`, `featureTracker`
 
 `TransitController.ts` contains all handler implementations; route files just wire up paths to handlers.
+
+### SMS alert service (`services/sms/`)
+
+A separate Node service with its own deployment (Railway, root `services/sms`), dependencies and tests, so a failure there can't take down the main API and vice versa. It plans riders' saved commutes (`weekly_schedules`) on its own GTFS timetable (`data/timetable.json`), tracks the live buses, and texts through Twilio. Its tables live in the Supabase schema `sms` (script: `docs/security/sms_001_schema.sql`). It must never import from `src/`. The main API only talks to it through `/internal/*` (with `SMS_SERVICE_TOKEN`) and reads its heartbeat for `SmsOutageService` (outage emails to riders). See `services/sms/README.md`.
 
 ### Auth & roles
 

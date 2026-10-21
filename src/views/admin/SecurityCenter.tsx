@@ -5,6 +5,7 @@
 import { AlertTriangle, CheckCircle2, RefreshCw, XCircle } from 'lucide-react';
 import { useSecurityController } from '../../controllers/admin/useSecurityController';
 import { Badge, Card, EVENT_LABEL, PageHeader, Stat, btn, when } from '../components/admin/ui';
+import SmsStatusCard from './SmsStatusCard';
 
 /** What each kind of event usually means, so an admin can tell noise from a problem. */
 const ADVICE: Record<string, string> = {
@@ -17,6 +18,7 @@ const ADVICE: Record<string, string> = {
     webhook_rejected: 'Something pretended to be the text-message provider and was refused.',
     burst: 'The same thing was blocked ten times in ten minutes from one address. Someone is probing.',
     dependency_down: 'Riders are affected until this recovers.',
+    sms_outage: 'Riders with alerts still to come today were emailed. Alerts start again tomorrow on their own.',
     server_error: 'The backend hit an unexpected error. Check the Railway logs.',
     role_changed_db: 'A role was changed outside the admin panel. Confirm an admin did this.',
 };
@@ -43,6 +45,8 @@ export default function SecurityCenter() {
                 <Stat label="Critical, last 24 h" value={<span className={counts.critical ? 'text-red-700' : ''}>{counts.critical}</span>} sub="not yet handled" />
                 <Stat label="Warnings, last 24 h" value={<span className={counts.warning ? 'text-amber-700' : ''}>{counts.warning}</span>} sub="not yet handled" />
             </div>
+
+            <SmsStatusCard />
 
             {/* Things that are set up wrong */}
             {(data?.health.config ?? []).map(msg => (

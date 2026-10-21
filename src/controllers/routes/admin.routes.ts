@@ -11,6 +11,7 @@ import { clientIp, isUuid, isText, reject } from '../middleware/security';
 import { SecurityEventService } from '../../models/services/SecurityEventService';
 import { HealthService } from '../../models/services/HealthService';
 import { RealTimeService } from '../../models/services/RealTimeService';
+import { SmsOutageService } from '../../models/services/SmsOutageService';
 import { reginaDateKey, startOfReginaDay } from '../../models/services/ReginaTime';
 
 const router = Router();
@@ -21,7 +22,7 @@ const audit = (req: Request, type: string, message: string, severity: 'info' | '
     SecurityEventService.record({ type, severity, message, ip: clientIp(req), userId: req.user!.id, path: req.originalUrl });
 
 /** Things an admin did (as opposed to things that happened to the site). Shown in the activity log. */
-const ADMIN_ACTIONS = ['user_deleted', 'role_changed', 'status_changed', 'user_updated', 'feature_access_changed', 'route_changed', 'sms_broadcast', 'personal_data_viewed', 'events_handled'];
+const ADMIN_ACTIONS = ['user_deleted', 'role_changed', 'status_changed', 'user_updated', 'feature_access_changed', 'route_changed', 'sms_broadcast', 'sms_outage_declared', 'personal_data_viewed', 'events_handled'];
 /** An optional reason typed by the admin, tidied for the log. */
 const reasonOf = (req: Request) => (typeof req.body?.reason === 'string' && req.body.reason.trim() ? ` Reason: ${req.body.reason.trim().slice(0, 200)}` : '');
 const countOf = async (q: PromiseLike<{ count: number | null }>) => (await q).count ?? 0;
@@ -250,6 +251,28 @@ router.post('/security/handled', async (req: Request, res: Response) => {
     if (error) { console.error('[Admin] Mark handled error:', error.message); res.status(500).json({ error: 'Could not update the events. Has script 003 been run?' }); return; }
     await audit(req, 'events_handled', `Admin marked ${data?.length ?? 0} security event${data?.length === 1 ? '' : 's'} as handled`);
     res.json({ handled: data?.length ?? 0 });
+});
+
+// ── Text alerts: today's state of the SMS service, and the "declare an outage" button ──
+router.get('/sms', async (_req: Request, res: Response) => {
+    try { res.json(await SmsOutageService.status()); }
+    catch (err) { console.error('[Admin] SMS status error:', (err as Error).message); res.status(500).json({ error: 'Could not read the SMS tables. Has docs/security/sms_001_schema.sql been run, and "sms" added to the exposed schemas?' }); }
+});
+
+// Turns text alerts off for the rest of today and emails every affected rider once. It emails riders,
+// so like deleting an account it needs an authenticator code entered in the last few minutes.
+router.post('/sms/outage', requireFreshTwoStep, async (req: Request, res: Response) => {
+    if (!SmsOutageService.configured()) { res.status(400).json({ error: 'The SMS service is not set up (SMS_SERVICE_URL)' }); return; }
+    const reason = reasonOf(req);
+    try {
+        const r = await SmsOutageService.declare(`Declared by an admin.${reason}`, req.user!.id);
+        if (!r.declared) { res.status(409).json({ error: 'Today is already declared an SMS outage. Riders have been emailed.' }); return; }
+        await audit(req, 'sms_outage_declared', `Admin turned text alerts off for today and emailed ${r.emailed} rider${r.emailed === 1 ? '' : 's'}.${reason}`, 'warning');
+        res.json(r);
+    } catch (err) {
+        console.error('[Admin] SMS outage error:', (err as Error).message);
+        res.status(500).json({ error: 'Could not declare the outage' });
+    }
 });
 
 export default router;

@@ -13,6 +13,7 @@ import { serviceDb } from './models/lib/serverDb';
 import { TwilioService } from './models/services/TwilioService';
 import { HealthService } from './models/services/HealthService';
 import { SecurityEventService } from './models/services/SecurityEventService';
+import { SmsOutageService } from './models/services/SmsOutageService';
 import { isPushEndpoint } from './controllers/middleware/security';
 
 const app = createApp();
@@ -81,8 +82,10 @@ schedule('* * * * *', async () => {
             (profiles ?? []).map(p => [p.id, p])
         );
 
-        // ── SMS via Twilio ──────────────────────────────────────────────────
-        if (TwilioService.isConfigured()) {
+        // ── SMS via Twilio (legacy) ─────────────────────────────────────────
+        // Replaced by the SMS service (services/sms). Kept until the switch-over: set
+        // LEGACY_SMS_REMINDERS=false once that service is sending for real, then delete this block.
+        if (process.env.LEGACY_SMS_REMINDERS !== 'false' && TwilioService.isConfigured()) {
             const recipients = schedules.flatMap(s => {
                 const profile = profileMap.get(s.user_id);
                 if (!profile?.sms_opted_in || !profile?.mobile_number || !profile?.mobile_verified) return [];
@@ -140,6 +143,10 @@ schedule('* * * * *', async () => {
 // when one stops for two checks in a row, and the Security page shows the current state.
 schedule('*/5 * * * *', () => { HealthService.run().catch(err => console.error('[Health] Check failed:', err)); });
 if (RUN_JOBS) HealthService.run().catch(() => { });
+
+// Every minute: are SMS alerts down today? The SMS service can't announce its own outage, so this API
+// watches for one and emails the affected riders, once per day. Does nothing until SMS_SERVICE_URL is set.
+schedule('* * * * *', () => { SmsOutageService.check().catch(err => console.error('[SMS outage] Check failed:', err)); });
 
 // Once a day: delete visitor records (IP addresses) older than 90 days, and old security events.
 const RETENTION_DAYS = 90;

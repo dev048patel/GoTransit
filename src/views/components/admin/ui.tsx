@@ -135,7 +135,7 @@ export function ConfirmDialog({ request, onClose, verifyCode }: { request: Confi
 /** Plain names for the kinds of event the backend records. */
 export const EVENT_LABEL: Record<string, string> = {
     user_deleted: 'Account deleted', role_changed: 'Role changed', status_changed: 'Status changed', user_updated: 'Account edited',
-    feature_access_changed: 'Feature changed', route_changed: 'Route changed', sms_broadcast: 'Text broadcast',
+    feature_access_changed: 'Feature changed', route_changed: 'Route changed', sms_broadcast: 'Text broadcast', sms_outage_declared: 'Text alerts turned off for the day', sms_outage: 'Text alerts down',
     personal_data_viewed: 'Personal data viewed', events_handled: 'Events marked handled',
     role_changed_db: 'Role changed in the database', status_changed_db: 'Status changed in the database',
     auth_failed: 'Request without a valid login', admin_denied: 'Non-admin tried an admin action',
