@@ -11,7 +11,7 @@
     "build:timetable": "node scripts/build-timetable.mjs"
   },
   "engines": {
-    "node": ">=20"
+    "node": "26.12.1"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.97.0",
