@@ -1,2 +1,0 @@
-# Force Railway to use Node.js instead of auto-detecting Python
-providers = ["node"]
