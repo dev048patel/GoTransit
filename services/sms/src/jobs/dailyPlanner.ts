@@ -4,7 +4,8 @@
  * a commute saved later in the day is still planned. Each commute is planned once a day: the
  * database refuses a second plan for the same (schedule, date).
  */
-import { app, must, sms } from '../db';
+import { app, inChunks, must, sms } from '../db';
+import { smsRevoked } from '../access';
 import { config } from '../config';
 import { timetable } from '../transit/timetable';
 import { planArriveBy } from '../transit/planner';
@@ -14,13 +15,6 @@ import { parseHhmm, reginaDate, reginaMinutes, reginaWeekday } from '../time';
 
 /** Planning a commute that starts in under this many minutes is pointless: the rider is already on the way */
 const TOO_LATE_MIN = 20;
-const CHUNK = 150;   // ids per `in` filter, to keep request URLs short
-
-export async function inChunks<T>(ids: string[], fetch: (chunk: string[]) => Promise<T[]>): Promise<T[]> {
-    const out: T[] = [];
-    for (let i = 0; i < ids.length; i += CHUNK) out.push(...await fetch(ids.slice(i, i + CHUNK)));
-    return out;
-}
 
 interface Schedule { id: string; user_id: string; arrive_by: string; depart_by: string | null; from_dest_id: string | null; to_dest_id: string | null }
 interface Profile { id: string; mobile_number: string | null; sms_opted_in: boolean | null; mobile_verified: boolean | null; account_status: string | null }
@@ -60,7 +54,9 @@ export async function runPlanner(now = new Date()): Promise<PlannerResult> {
     });
     if (!todo.length) return result;
 
-    const profiles = new Map((await inChunks([...new Set(todo.map(s => s.user_id))], async ids =>
+    const riders = [...new Set(todo.map(s => s.user_id))];
+    const revoked = await smsRevoked(riders);
+    const profiles = new Map((await inChunks(riders, async ids =>
         must(await app().from('profiles').select('id, mobile_number, sms_opted_in, mobile_verified, account_status').in('id', ids), 'reading profiles') as Profile[]))
         .map(p => [p.id, p]));
     const placeIds = [...new Set(todo.flatMap(s => [s.from_dest_id, s.to_dest_id]).filter((x): x is string => !!x))];
@@ -73,7 +69,7 @@ export async function runPlanner(now = new Date()): Promise<PlannerResult> {
         const p = profiles.get(s.user_id);
         const from = s.from_dest_id ? places.get(s.from_dest_id) : undefined;
         const to = s.to_dest_id ? places.get(s.to_dest_id) : undefined;
-        if (!p?.sms_opted_in || !p.mobile_verified || !p.mobile_number || (p.account_status ?? 'active') !== 'active' || !from || !to) { result.ineligible++; continue; }
+        if (!p?.sms_opted_in || revoked.has(s.user_id) || !p.mobile_verified || !p.mobile_number || (p.account_status ?? 'active') !== 'active' || !from || !to) { result.ineligible++; continue; }
         try {
             const plan = planArriveBy(tt, date, from, to, parseHhmm(s.arrive_by)!);
             const rows = buildPlan(tt, date, {

@@ -3,7 +3,8 @@ export type FeatureKey =
     | 'trip_planner'
     | 'saved_locations'
     | 'bus_suggestions'
-    | 'push_notifications';
+    | 'push_notifications'
+    | 'sms_alerts';
 
 export interface FeatureDef {
     key: FeatureKey;
@@ -48,6 +49,14 @@ export const FEATURES: FeatureDef[] = [
         description: 'Departure reminder push alerts',
         color: 'bg-red-100',
         textColor: 'text-red-700',
+    },
+    {
+        // Checked on the server too (SmsAccessService, and the SMS service before every text)
+        key: 'sms_alerts',
+        label: 'Text Alerts',
+        description: 'SMS alerts for saved commutes',
+        color: 'bg-teal-100',
+        textColor: 'text-teal-700',
     },
 ];
 

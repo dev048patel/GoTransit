@@ -9,6 +9,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../../models/lib/supabase';
 import { useAuth } from '../../models/context/AuthContext';
+import { useFeatureAccess } from '../../models/context/FeatureAccessContext';
 import { formatMobile, deleteAccount, changePassword } from '../../models/services/AuthService';
 import { SmsService } from '../../models/services/SmsService';
 
@@ -90,6 +91,7 @@ export function useProfileController() {
     const [deletePassword, setDeletePassword] = useState('');
 
     // SMS notifications
+    const { hasFeature } = useFeatureAccess();
     const [smsLoading, setSmsLoading] = useState(false);
     const [smsError, setSmsError] = useState('');
 
@@ -357,6 +359,7 @@ export function useProfileController() {
         deletePassword, setDeletePassword,
         handleDeleteAccount,
         // SMS notifications
+        smsAllowed: hasFeature('sms_alerts'),
         smsLoading, smsError, handleSmsToggle,
         // Actions
         handleLogout,

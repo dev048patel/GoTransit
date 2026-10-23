@@ -129,10 +129,26 @@ test('broadcast needs the internal token, then texts each opted-in rider on the 
     assert.equal(texts[0].body, 'Route 4 detour on Albert St - expect delays', 'the dash is swapped so the text stays one segment');
 });
 
+test('broadcast leaves out riders an admin has switched text alerts off for', async () => {
+    setRespond(c => {
+        if (c.table === 'weekly_schedules') return [{ user_id: 'u1' }, { user_id: 'u2' }];
+        if (c.table === 'profiles') return [{ id: 'u1', mobile_number: PHONE }, { id: 'u2', mobile_number: '+13065550222' }];
+        if (c.table === 'feature_access') return [{ user_id: 'u2' }];
+        if (c.table === 'messages' && c.method === 'POST') return [{ id: 'm1' }];
+        return undefined;
+    });
+    const r = await fetch(`${base}/internal/broadcast`, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer internal-test-token' }, body: JSON.stringify({ routeNum: '4', message: 'Detour' }) });
+    assert.deepEqual(await r.json(), { ok: true, sent: 1 });
+    await settle(300);
+    assert.deepEqual(texts.map(t => t.to), [PHONE]);
+    assert.equal(filter(callsTo('feature_access')[0], 'feature'), 'sms_alerts');
+});
+
 /* ── Sender ── */
 
-function senderDb(opts: { alert: AlertDb; plan: PlanDb; legs: LegDb[]; claim?: string; profile?: object }) {
+function senderDb(opts: { alert: AlertDb; plan: PlanDb; legs: LegDb[]; claim?: string; profile?: object; revoked?: boolean }) {
     setRespond(c => {
+        if (c.table === 'feature_access') return opts.revoked ? [{ user_id: opts.alert.user_id }] : [];
         if (c.table === 'alerts' && c.method === 'GET') return [opts.alert];
         if (c.table === 'rpc/claim_alert') return opts.claim ?? 'queued';
         if (c.table === 'profiles' && c.method === 'GET') return [opts.profile ?? { mobile_number: PHONE, sms_opted_in: true, mobile_verified: true }];
@@ -204,6 +220,16 @@ test('sender: a rider who opted out since the morning gets nothing', async () =>
     assert.equal(texts.length, 0);
 });
 
+test('sender: a rider an admin switched text alerts off for since the morning gets nothing', async () => {
+    const { plan, legs, alerts } = realPlan();
+    senderDb({ alert: alerts[0], plan, legs, revoked: true });
+    const r = await runSender(Date.parse(alerts[0].due_at));
+    assert.equal(r.skipped, 1);
+    assert.equal(callsTo('rpc/release_alert').length, 1, 'the quota unit is given back');
+    assert.equal(callsTo('alerts', 'PATCH').at(-1)!.body.status, 'skipped');
+    assert.equal(texts.length, 0);
+});
+
 test('sender: Twilio saying the rider replied STOP opts them out here too', async () => {
     const { plan, legs, alerts } = realPlan();
     senderDb({ alert: alerts[0], plan, legs });
@@ -234,8 +260,9 @@ test('sender: SMS_ENABLED=false sends nothing at all', async () => {
 
 const AT_0430 = Date.parse('2026-10-21T10:30:00Z');   // Wednesday 4:30 AM in Regina
 
-function plannerDb(planned: string[] = []) {
+function plannerDb(planned: string[] = [], revoked: string[] = []) {
     setRespond(c => {
+        if (c.table === 'feature_access') return revoked.map(user_id => ({ user_id }));
         if (c.table === 'weekly_schedules') return [
             { id: 's1', user_id: 'u1', arrive_by: '09:00', depart_by: null, from_dest_id: 'd1', to_dest_id: 'd2' },
             { id: 's2', user_id: 'u2', arrive_by: '09:00', depart_by: null, from_dest_id: 'd1', to_dest_id: 'd2' },
@@ -263,6 +290,13 @@ test('planner: plans each eligible commute once, with N + 1 alerts', async () =>
     assert.equal(p_alerts.length, p_legs.length + 1);
     assert.equal(p_daily_max, 500);
     assert.ok(timetable().stopIndex(p_legs[0].board_stop_id) !== undefined);
+});
+
+test('planner: a rider an admin switched text alerts off for is not planned', async () => {
+    plannerDb([], ['u1']);
+    const r = await runPlanner(new Date(AT_0430));
+    assert.deepEqual({ planned: r.planned, ineligible: r.ineligible }, { planned: 0, ineligible: 2 });
+    assert.equal(callsTo('rpc/create_plan').length, 0);
 });
 
 test('planner: a commute already planned today is left alone', async () => {

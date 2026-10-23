@@ -3,7 +3,7 @@
  * only ever be set on this service and the main API.
  *
  *   sms()   the service's own tables (schema "sms", which must be listed under Exposed schemas)
- *   app()   the app's tables it reads: profiles, weekly_schedules, saved_destinations
+ *   app()   the app's tables it reads: profiles, feature_access, weekly_schedules, saved_destinations
  */
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { config } from './config';
@@ -23,6 +23,14 @@ function base(): SupabaseClient {
 
 export const sms = () => base().schema('sms');
 export const app = () => base();
+
+const CHUNK = 150;   // ids per `in` filter, to keep request URLs short
+
+export async function inChunks<T>(ids: string[], fetch: (chunk: string[]) => Promise<T[]>): Promise<T[]> {
+    const out: T[] = [];
+    for (let i = 0; i < ids.length; i += CHUNK) out.push(...await fetch(ids.slice(i, i + CHUNK)));
+    return out;
+}
 
 /** Throws the query's error, so a job fails loudly instead of acting on missing rows. */
 export function must<T>(r: { data: T | null; error: { message: string } | null }, what: string): T {

@@ -12,6 +12,7 @@ import { renderAlert } from '../alerts/render';
 import { deliver } from '../delivery/outbox';
 import { ERROR_OPTED_OUT } from '../delivery/twilio';
 import { emailAdmins } from '../delivery/email';
+import { smsRevoked } from '../access';
 import { AlertDb, AlertKind, LegDb, PlanDb } from '../types';
 
 /** How long after its due time an alert is still worth sending */
@@ -64,10 +65,10 @@ async function sendOne(alert: AlertDb, now: number, result: SenderResult): Promi
         return;
     }
 
-    // The rider may have opted out or changed number since the morning: check at send time
+    // The rider may have opted out, changed number or lost access since the morning: check at send time
     const profile = must(await app().from('profiles').select('mobile_number, sms_opted_in, mobile_verified').eq('id', alert.user_id).maybeSingle(), 'reading profile') as
         { mobile_number: string | null; sms_opted_in: boolean | null; mobile_verified: boolean | null } | null;
-    if (!profile?.sms_opted_in || !profile.mobile_verified || !profile.mobile_number) {
+    if (!profile?.sms_opted_in || !profile.mobile_verified || !profile.mobile_number || (await smsRevoked([alert.user_id])).has(alert.user_id)) {
         await sms().rpc('release_alert', { p_alert: alert.id, p_retry_at: alert.due_at });
         await sms().from('alerts').update({ status: 'skipped', updated_at: new Date().toISOString() }).eq('id', alert.id);
         result.skipped++;

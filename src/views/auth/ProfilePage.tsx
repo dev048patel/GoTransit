@@ -244,7 +244,7 @@ export default function ProfilePage() {
         showDeleteConfirm, setShowDeleteConfirm,
         deleteLoading, deleteError,
         handleDeleteAccount,
-        smsLoading, smsError, handleSmsToggle,
+        smsAllowed, smsLoading, smsError, handleSmsToggle,
         handleLogout,
         handleLogoutEverywhere,
         deletePassword, setDeletePassword,
@@ -420,7 +420,11 @@ export default function ProfilePage() {
 
                 {/* SMS NOTIFICATIONS */}
                 <SectionCard title="SMS Departure Reminders" icon={MessageSquare}>
-                    {!phone ? (
+                    {!smsAllowed ? (
+                        <p className="text-sm text-gray-500">
+                            Text alerts are not available on your account. Contact us if you think this is a mistake.
+                        </p>
+                    ) : !phone ? (
                         <p className="text-sm text-gray-500">
                             Add a phone number to your profile above to enable SMS reminders.
                         </p>

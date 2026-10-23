@@ -18,6 +18,7 @@ import { serviceDb, hasServiceKey } from '../lib/serverDb';
 import { SecurityEventService } from './SecurityEventService';
 import { reginaDateKey } from './ReginaTime';
 import { SITE } from '../data/legal';
+import { smsRevokedIds } from './SmsAccessService';
 
 const sms = () => serviceDb().schema('sms');
 
@@ -71,13 +72,14 @@ async function any(q: PromiseLike<{ data: unknown[] | null; error: { message: st
     return !!data?.length;
 }
 
-/** Riders with a commute today who are opted in to texts */
+/** Riders with a commute today who are opted in to texts, and not switched off by an admin */
 async function subscribersToday(now: number): Promise<{ user_id: string; arrive_by: string }[]> {
     const { data: schedules, error } = await serviceDb().from('weekly_schedules').select('user_id, arrive_by').eq('day_of_week', reginaWeekday(now)).eq('enabled', true);
     if (error) throw new Error(error.message);
     if (!schedules?.length) return [];
     const { data: people } = await serviceDb().from('profiles').select('id').in('id', [...new Set(schedules.map(s => s.user_id))]).eq('sms_opted_in', true).eq('mobile_verified', true);
-    const ok = new Set((people ?? []).map(p => p.id as string));
+    const revoked = await smsRevokedIds((people ?? []).map(p => p.id as string));
+    const ok = new Set((people ?? []).map(p => p.id as string).filter(id => !revoked.has(id)));
     return schedules.filter(s => ok.has(s.user_id));
 }
 

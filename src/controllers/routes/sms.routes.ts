@@ -7,6 +7,7 @@ import { clientIp, rateLimit } from '../middleware/security';
 import { requireAuth } from '../middleware/requireAuth';
 import { requireAdmin } from '../middleware/requireAdmin';
 import { TwilioService } from '../../models/services/TwilioService';
+import { smsRevokedIds } from '../../models/services/SmsAccessService';
 
 const router = Router();
 
@@ -39,6 +40,13 @@ router.post('/opt-in', requireAuth, async (req: Request, res: Response) => {
     if (fetchErr) { res.status(500).json({ error: 'Failed to fetch profile' }); return; }
     if (!profile?.mobile_number) {
         res.status(400).json({ error: 'Add a phone number to your profile before enabling SMS reminders' });
+        return;
+    }
+    // An admin can switch text alerts off for one person
+    const revoked = await smsRevokedIds([userId]).catch(() => null);
+    if (!revoked) { res.status(500).json({ error: 'Could not save the change' }); return; }
+    if (revoked.has(userId)) {
+        res.status(403).json({ error: 'Text alerts are not available on your account. Contact us if you think this is a mistake.' });
         return;
     }
 
@@ -178,17 +186,19 @@ router.post('/broadcast', requireAuth, requireAdmin, async (req: Request, res: R
     }
 
     const userIds = [...new Set(schedules.map(s => s.user_id))];
+    const revoked = await smsRevokedIds(userIds).catch(() => null);
+    if (!revoked) { res.status(500).json({ error: 'Could not read who may get texts' }); return; }
 
     const { data: profiles } = await serviceDb()
         .from('profiles')
-        .select('mobile_number')
+        .select('id, mobile_number')
         .in('id', userIds)
         .eq('sms_opted_in', true)
         .eq('mobile_verified', true)
         .not('mobile_number', 'is', null);
 
     const recipients = (profiles ?? [])
-        .filter(p => p.mobile_number)
+        .filter(p => p.mobile_number && !revoked.has(p.id))
         .map(p => ({ phone: p.mobile_number as string, body: message }));
     void SecurityEventService.record({ type: 'sms_broadcast', severity: 'warning', ip: clientIp(req), userId: req.user!.id, path: req.originalUrl,
         message: `Admin sent a text broadcast for route ${routeNum} to ${recipients.length} people` });

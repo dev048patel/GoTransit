@@ -680,6 +680,30 @@ test('a broadcast goes through the SMS service, with its internal token', async 
     assert.ok(!calls.some(c => c.url.startsWith('/rest/v1/weekly_schedules')), 'this API no longer looks up the recipients itself');
 });
 
+test('a rider an admin switched text alerts off for cannot opt back in', async () => {
+    answer = (method, url) => {
+        if (method === 'GET' && url.startsWith('/rest/v1/profiles') && url.includes('select=mobile_number')) return [{ mobile_number: '+13065550111' }];
+        if (method === 'GET' && url.startsWith('/rest/v1/feature_access') && url.includes('feature=eq.sms_alerts')) return [{ user_id: USER }];
+        return undefined;
+    };
+    const r = await api('POST', '/api/sms/opt-in', { token: T.user });
+    assert.equal(r.status, 403);
+    assert.match(r.json.error, /not available on your account/);
+    assert.ok(!calls.some(c => c.method === 'PATCH' && c.url.startsWith('/rest/v1/profiles')), 'sms_opted_in is not turned on');
+
+    answer = (method, url) => method === 'GET' && url.startsWith('/rest/v1/profiles') && url.includes('select=mobile_number') ? [{ mobile_number: '+13065550111' }] : undefined;
+    assert.equal((await api('POST', '/api/sms/opt-in', { token: T.user })).status, 200, 'with no row, text alerts are allowed');
+});
+
+test('only an admin can switch text alerts off for someone', async () => {
+    const body = { userId: OTHER, feature: 'sms_alerts', enabled: false };
+    assert.equal((await api('POST', '/api/admin/fac/set', { token: T.user, body })).status, 403);
+    assert.equal(backendWrites().length, 0);
+    assert.equal((await api('POST', '/api/admin/fac/set', { token: T.admin, body })).status, 200);
+    const write = calls.find(c => c.method === 'POST' && c.url.startsWith('/rest/v1/feature_access'));
+    assert.deepEqual({ feature: write?.body.feature, enabled: write?.body.enabled, updated_by: write?.body.updated_by }, { feature: 'sms_alerts', enabled: false, updated_by: ADMIN });
+});
+
 test('a broadcast while the SMS service is down says so, and nothing else breaks', async () => {
     const r = await withSmsService(() => api('POST', '/api/sms/broadcast', { token: T.admin, body: { routeNum: '4', message: 'hello' } }), 'http://127.0.0.1:9');
     assert.equal(r.status, 503);
