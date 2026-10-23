@@ -39,7 +39,7 @@ export const HOME_META: PageMeta = {
         name: SITE.brand, url: SITE_URL, applicationCategory: 'TravelApplication', operatingSystem: 'Any (web browser)',
         description: 'Unofficial real-time bus tracker and trip planner for Regina, Saskatchewan. Not affiliated with the City of Regina or Regina Transit.',
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'CAD' },
-        areaServed: { '@type': 'City', name: 'Regina', containedInPlace: { '@type': 'AdministrativeArea', name: 'Saskatchewan' } },
+        spatialCoverage: { '@type': 'City', name: 'Regina', containedInPlace: { '@type': 'AdministrativeArea', name: 'Saskatchewan' } },
         creator: [
             { '@type': 'Person', name: 'Dev Patel', url: `${SITE_URL}/connect/dev`, sameAs: ['https://www.linkedin.com/in/dev-patel-itsme/', 'https://github.com/dev048patel'] },
             { '@type': 'Person', name: 'Nirjar Patel', url: `${SITE_URL}/connect/nirjar`, sameAs: ['https://www.linkedin.com/in/nirjarpatel/', 'https://github.com/nirjar1012'] },
