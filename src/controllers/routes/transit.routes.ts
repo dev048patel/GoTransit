@@ -46,6 +46,13 @@ router.get('/colors', TransitController.getColors);
  */
 router.get('/live', TransitController.getLiveBuses);
 
+/**
+ * GET /api/plan/arrive-by?from=lat,lng&to=lat,lng&time=HH:MM
+ * The latest scheduled trip that arrives by `time` (Regina time; a time already passed means tomorrow).
+ * Limited per address: each answer runs the timetable planner.
+ */
+router.get('/plan/arrive-by', rateLimit('plan-arrive-by', 30), TransitController.planArriveBy);
+
 /*
  route = GET /api/stop-predictions/:stopId
  Fetch real-time predicted bus arrivals for a specific stop

@@ -511,6 +511,16 @@ test('a failed bus feed is an error, not an empty list, so the map keeps its bus
     assert.equal(back.json.length, 1, 'the next good answer is fetched straight away');
 });
 
+test('arrive-by planning checks its input and answers with a plan', async () => {
+    for (const q of ['', 'from=50.42,-104.6&to=50.42,-104.56', 'from=abc&to=50.42,-104.56&time=14:13', 'from=50.42,-104.6&to=50.42,-104.56&time=25:00']) {
+        assert.equal((await api('GET', `/api/plan/arrive-by?${q}`)).status, 400, q);
+    }
+    const r = await api('GET', '/api/plan/arrive-by?from=50.4205,-104.6&to=50.4195,-104.5655&time=14:13');
+    assert.equal(r.status, 200);
+    assert.ok(['planned', 'partial', 'no_service'].includes(r.json.status));
+    assert.equal(r.json.arriveBy, '2:13 PM');
+});
+
 test('usage tracking with no body is a bad request, not a server error', async () => {
     const r = await fetch(base + '/api/features/track', { method: 'POST', headers: { 'X-Forwarded-For': freshIp() } });
     assert.equal(r.status, 400);

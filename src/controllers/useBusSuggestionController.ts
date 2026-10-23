@@ -129,5 +129,5 @@ export function useBusSuggestionController({ destination, walkMultiplier = 1.0 }
         detectLocation();
     }, [detectLocation]);
 
-    return { gpsLoading, gpsError, results, searching, updating, lastUpdated, handleRefresh };
+    return { gpsLoading, gpsError, origin, results, searching, updating, lastUpdated, handleRefresh };
 }

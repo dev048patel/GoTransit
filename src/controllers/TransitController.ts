@@ -7,6 +7,7 @@ This file is Backend Part, where all the logic is implemented. ( Answer API call
 import { Request, Response } from 'express';
 import { TransitService } from '../models/services/TransitService';
 import { RealTimeService } from '../models/services/RealTimeService';
+import { ArriveByService } from '../models/services/ArriveByService';
 import { StopPredictionService } from '../models/services/StopPredictionService';
 import { setOverride } from '../models/services/routeOverrides';
 import { SecurityEventService } from '../models/services/SecurityEventService';
@@ -69,6 +70,28 @@ export const getLiveBuses = async (req: Request, res: Response) => {
     } catch (error) {
         // The feed (TransitLive) failed, not us: the map keeps showing its last positions
         res.status(502).json({ error: 'Failed to fetch live buses' });
+    }
+};
+
+// planArriveBy : the latest bus (or buses) that gets the rider to their destination by a time.
+// GET /api/plan/arrive-by?from=lat,lng&to=lat,lng&time=HH:MM  (Regina time)
+export const planArriveBy = (req: Request, res: Response) => {
+    const point = (v: unknown) => {
+        const [lat, lng] = typeof v === 'string' ? v.split(',').map(Number) : [];
+        return Number.isFinite(lat) && Number.isFinite(lng) && Math.abs(lat) <= 90 && Math.abs(lng) <= 180 ? { lat, lng } : null;
+    };
+    const from = point(req.query.from), to = point(req.query.to);
+    const m = typeof req.query.time === 'string' ? /^(\d{1,2}):(\d{2})$/.exec(req.query.time) : null;
+    const minutes = m && Number(m[1]) < 24 && Number(m[2]) < 60 ? Number(m[1]) * 60 + Number(m[2]) : null;
+    if (!from || !to || minutes === null) {
+        res.status(400).json({ error: 'from and to must be "lat,lng" and time "HH:MM"' });
+        return;
+    }
+    try {
+        res.json(ArriveByService.plan(from, to, minutes));
+    } catch (error) {
+        console.error('Controller Error planning arrive-by trip:', error);
+        res.status(500).json({ error: 'Failed to plan the trip' });
     }
 };
 

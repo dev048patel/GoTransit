@@ -4,7 +4,8 @@ import { TripOption } from '../../../models/transit/RoutePlanning';
 import transitColors from '../../../models/data/transitColors';
 import { BusSuggestionPanelProps } from '../../../models/components/BusSuggestionPanelProps';
 import { useBusSuggestionController } from '../../../controllers/useBusSuggestionController';
-import { computeDepartBy } from '../../../models/transit/TripSchedule';
+import { useArriveByController } from '../../../controllers/useArriveByController';
+import ArriveByPlanCard from './ArriveByPlanCard';
 import { STOP_DIRECTION_LABEL } from '../../../models/transit/StopDirection';
 import { DetourService } from '../../../models/services/DetourService';
 import type { WeatherSnapshot } from '../../../models/services/WeatherService';
@@ -21,14 +22,16 @@ function shortTime(t: string): string {
 // Pure view component — all GPS/route logic lives in useBusSuggestionController
 export default function BusSuggestionPanel({ destination, onClose, onSelectRoute, liveBuses, weather, character = 'default' }: BusSuggestionPanelProps) {
     const voice = CHARACTER_VOICE[character];
-    const { gpsLoading, gpsError, results, searching, updating, lastUpdated, handleRefresh } = useBusSuggestionController({
+    const { gpsLoading, gpsError, origin, results, searching, updating, lastUpdated, handleRefresh } = useBusSuggestionController({
         destination,
         walkMultiplier: weather?.walkMultiplier ?? 1.0,
     });
 
-    // Arrive-by time planning (purely display — no recalculation needed)
+    // Plan for later: with a time picked, show the scheduled trip that arrives by then instead of the live next buses
     const [arriveByMode, setArriveByMode] = React.useState(false);
     const [arriveByTime, setArriveByTime] = React.useState('');
+    const planning = arriveByMode && arriveByTime !== '';
+    const arriveBy = useArriveByController({ origin, destination, time: planning ? arriveByTime : '' });
 
     return (
         <div className="bus-suggestion-panel t-panel" style={panelStyle}>
@@ -95,13 +98,13 @@ export default function BusSuggestionPanel({ destination, onClose, onSelectRoute
                 )}
                 {arriveByMode && arriveByTime && (
                     <span style={{ fontSize: '11px', color: 'var(--t-accent)', fontWeight: '600' }}>
-                        Shows depart-by times
+                        Scheduled bus times
                     </span>
                 )}
             </div>
 
             {/* Live status — background refreshes update here instead of replacing the results */}
-            {results.length > 0 && (
+            {!planning && results.length > 0 && (
                 <div style={liveStatusStyle}>
                     {updating ? (
                         <>
@@ -145,14 +148,18 @@ export default function BusSuggestionPanel({ destination, onClose, onSelectRoute
                     </div>
                 )}
 
-                {searching && !gpsLoading && (
+                {planning && !gpsLoading && !gpsError && (
+                    <ArriveByPlanCard plan={arriveBy.plan} loading={arriveBy.loading} error={arriveBy.error} />
+                )}
+
+                {!planning && searching && !gpsLoading && (
                     <div style={statusStyle}>
                         <div style={spinnerStyle} />
                         <span>{voice.searching}</span>
                     </div>
                 )}
 
-                {!searching && !gpsLoading && !gpsError && results.length === 0 && (
+                {!planning && !searching && !gpsLoading && !gpsError && results.length === 0 && (
                     <div style={noResultsStyle}>
                         <div style={{ fontSize: '28px', marginBottom: '8px' }}>🤷</div>
                         <div style={{ fontWeight: '500', color: '#5f6368' }}>No routes found</div>
@@ -162,12 +169,11 @@ export default function BusSuggestionPanel({ destination, onClose, onSelectRoute
                     </div>
                 )}
 
-                {results.map((option, i) => (
+                {!planning && results.map((option, i) => (
                     <RouteCard
                         key={i}
                         option={option}
                         index={i}
-                        arriveBy={arriveByMode && arriveByTime ? arriveByTime : undefined}
                         weather={weather}
                         character={character}
                         onStart={() => onSelectRoute?.(option)}
@@ -198,8 +204,8 @@ export default function BusSuggestionPanel({ destination, onClose, onSelectRoute
 // RouteCard — displays a single route option with timeline steps
 /* The best route opens with its steps showing; the others show a one-glance summary until
    opened. "Start trip" begins tracking — a tap elsewhere on a card never does. */
-function RouteCard({ option, index, arriveBy, weather, character, onStart }: {
-    option: TripOption; index: number; arriveBy?: string; weather?: WeatherSnapshot | null;
+function RouteCard({ option, index, weather, character, onStart }: {
+    option: TripOption; index: number; weather?: WeatherSnapshot | null;
     character: MarkerCharacterId; onStart: () => void;
 }) {
     const [expanded, setExpanded] = React.useState(index === 0);
@@ -300,21 +306,6 @@ function RouteCard({ option, index, arriveBy, weather, character, onStart }: {
                     )}
                 </div>
             </div>
-
-            {/* Depart-by banner — shown when arrive-by mode is active */}
-            {arriveBy && (
-                <div style={{
-                    display: 'flex', alignItems: 'center', gap: '6px',
-                    padding: '6px 10px', backgroundColor: 'var(--t-accent-soft)', borderRadius: '8px',
-                    marginBottom: '10px', fontSize: '12px', fontWeight: '600',
-                }}>
-                    <span style={{ fontSize: '14px' }}>🕐</span>
-                    <span style={{ color: 'var(--t-accent-dark)' }}>
-                        Leave by <strong>{computeDepartBy(arriveBy, option.totalTime)}</strong>
-                        <span style={{ fontWeight: '400', color: 'var(--t-accent)' }}> to arrive by {arriveBy}</span>
-                    </span>
-                </div>
-            )}
 
             {/* Live ETA banner */}
             {option.isLivePrediction && option.waitTime !== undefined && (
