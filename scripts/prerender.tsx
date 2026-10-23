@@ -84,7 +84,7 @@ for (const person of TEAM) write(teamMeta(person));
 
 /* The sitemap: every page, with today's date as when it last changed */
 const today = new Date().toISOString().slice(0, 10);
-const priority = (p: string) => (p === '/' ? '1.0' : p === '/map' || p === '/routes' ? '0.9' : p.startsWith('/routes/') ? '0.8' : p.startsWith('/stops/') ? '0.6' : '0.5');
+const priority = (p: string) => (p === '/' ? '1.0' : p === '/routes' ? '0.9' : p.startsWith('/routes/') ? '0.8' : p.startsWith('/stops/') ? '0.6' : '0.5');
 fs.writeFileSync(path.join(out, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${written.map(m => `  <url><loc>${SITE_URL}${m.path === '/' ? '/' : m.path}</loc><lastmod>${today}</lastmod><priority>${priority(m.path)}</priority></url>`).join('\n')}

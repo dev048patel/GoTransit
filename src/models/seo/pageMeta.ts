@@ -58,6 +58,8 @@ export const MAP_META: PageMeta = {
     path: '/map',
     title: 'Live Regina Bus Map: Where Is My Bus? | Transit Regina',
     description: 'Every Regina bus on one live map, updated every few seconds. Tap a stop for its next departures, or plan a trip with transfers.',
+    // Sign-in only, so search engines only ever see the login page here
+    noindex: true,
 };
 
 export function routeMeta(r: RouteInfo): PageMeta {
