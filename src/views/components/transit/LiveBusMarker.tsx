@@ -3,24 +3,50 @@
  * gliding smoothly between position reports (see useBusMotionController), with its info window
  * when selected.
  */
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { InfoWindow, Marker } from '@react-google-maps/api';
 import { BusPosition } from '../../../models/transit/BusPosition';
 import { useBusMotionController } from '../../../controllers/useBusMotionController';
+
+/* Stacking: Google Maps puts markers with the same zIndex in front of each other by screen position,
+   so two overlapping buses at one shared zIndex kept swapping places as they moved, and blinked.
+   Each bus gets its own fixed layer from its id instead, so the order between buses never changes.
+   Exported so other markers can sit above every bus. */
+const BUS_Z_BASE = 1000;
+export const ABOVE_BUSES_Z = 100000;   // bus ids run in the low thousands
 
 // Icons are redrawn only when the heading moves to a new step of this many degrees
 const HEADING_STEP_DEG = 4;
 
 const iconCache = new Map<string, google.maps.Icon>();
 
+// Google Maps blanks a marker while its new image loads, so a bus turning to a new heading would vanish
+// for a moment. Each new image is decoded here first; until it's ready the bus keeps its current one.
+const decodedUrls = new Set<string>();
+const decoding = new Map<string, Promise<void>>();
+function decodeIcon(url: string): Promise<void> {
+    let pending = decoding.get(url);
+    if (!pending) {
+        const img = new Image();
+        img.src = url;
+        pending = img.decode().catch(() => undefined).then(() => { decodedUrls.add(url); decoding.delete(url); });
+        decoding.set(url, pending);
+    }
+    return pending;
+}
+
+/** On-screen size of the bus in px: the usual size, and bigger only once zoomed in to street level.
+ *  One step on purpose: every size change swaps every bus's icon, which makes them blink. */
+const busSizeForZoom = (zoom: number) => (zoom >= 16 ? 60 : 40);
+
 /** Top-down bus SVG, rotated to the heading (0 = north, 90 = east). Cached per colour/route/step. */
-function busIcon(color: string, routeNum: string | number, heading: number): google.maps.Icon {
+function busIcon(color: string, routeNum: string | number, heading: number, size: number): google.maps.Icon {
     const rotation = (Math.round(heading / HEADING_STEP_DEG) * HEADING_STEP_DEG) % 360;
-    const key = `${color}|${routeNum}|${rotation}`;
+    const key = `${color}|${routeNum}|${rotation}|${size}`;
     let icon = iconCache.get(key);
     if (!icon) {
         const svg = `
-            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+            <svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 40 40">
               <g transform="rotate(${rotation}, 20, 20)">
                 <!-- Shadow -->
                 <ellipse cx="20" cy="20" rx="10" ry="16" fill="rgba(0,0,0,0.15)"/>
@@ -41,8 +67,8 @@ function busIcon(color: string, routeNum: string | number, heading: number): goo
             </svg>`;
         icon = {
             url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`,
-            scaledSize: new google.maps.Size(40, 40),
-            anchor: new google.maps.Point(20, 20),
+            scaledSize: new google.maps.Size(size, size),
+            anchor: new google.maps.Point(size / 2, size / 2),
         };
         iconCache.set(key, icon);
     }
@@ -59,16 +85,19 @@ interface LiveBusMarkerProps {
     bus: BusPosition;
     color: string;
     selected: boolean;
+    /** Current map zoom; sets how big the bus is drawn */
+    zoom: number;
     onSelect: () => void;
     onClose: () => void;
 }
 
-export default function LiveBusMarker({ bus, color, selected, onSelect, onClose }: LiveBusMarkerProps) {
+export default function LiveBusMarker({ bus, color, selected, zoom, onSelect, onClose }: LiveBusMarkerProps) {
     const markerRef = useRef<google.maps.Marker | null>(null);
     const iconRef = useRef<google.maps.Icon | null>(null);
     // Where the marker is first placed. Kept stable so re-renders don't pull it back; after that the
     // motion controller moves it directly.
-    const [initial] = useState(() => ({ position: { lat: bus.lat, lng: bus.lng }, icon: busIcon(color, bus.route_num, bus.heading || 0) }));
+    const size = busSizeForZoom(zoom);
+    const [initial] = useState(() => ({ position: { lat: bus.lat, lng: bus.lng }, icon: busIcon(color, bus.route_num, bus.heading || 0, size) }));
     const latest = useRef<{ position: google.maps.LatLngLiteral; heading: number }>({ position: initial.position, heading: bus.heading || 0 });
 
     const draw = useCallback((position: google.maps.LatLngLiteral, heading: number) => {
@@ -76,27 +105,41 @@ export default function LiveBusMarker({ bus, color, selected, onSelect, onClose 
         const marker = markerRef.current;
         if (!marker) return;
         marker.setPosition(position);
-        const icon = busIcon(color, bus.route_num, heading);
-        if (icon !== iconRef.current) {
+        const icon = busIcon(color, bus.route_num, heading, size);
+        if (icon === iconRef.current) return;
+        const url = icon.url;
+        if (decodedUrls.has(url)) {
             iconRef.current = icon;
             marker.setIcon(icon);
+            return;
         }
-    }, [color, bus.route_num]);
+        // Not loaded yet: keep the current image, and swap once it is if the bus still wants it
+        decodeIcon(url).then(() => {
+            const wanted = busIcon(color, bus.route_num, latest.current.heading, size);
+            if (markerRef.current === marker && wanted.url === url && iconRef.current !== wanted) {
+                iconRef.current = wanted;
+                marker.setIcon(wanted);
+            }
+        });
+    }, [color, bus.route_num, size]);
 
     useBusMotionController(bus, draw);
 
+    // Resize a parked bus straight away when the zoom changes, rather than on its next move
+    useEffect(() => { draw(latest.current.position, latest.current.heading); }, [draw]);
+
     const handleLoad = useCallback((marker: google.maps.Marker) => {
         markerRef.current = marker;
-        iconRef.current = null;
+        iconRef.current = initial.icon; // what the marker was created with
         draw(latest.current.position, latest.current.heading); // catch up on motion before the marker existed
-    }, [draw]);
+    }, [draw, initial.icon]);
 
     return (
         <Marker
             position={initial.position}
             icon={initial.icon}
             title={`Bus #${bus.bus_id} — Route ${bus.route_num} (${bus.line_name})`}
-            zIndex={100}
+            zIndex={BUS_Z_BASE + bus.bus_id}
             onLoad={handleLoad}
             onClick={onSelect}
         >

@@ -18,7 +18,7 @@ import BusSuggestionPanel from './components/transit/BusSuggestionPanel';
 import RouteTrackingOverlay from './components/transit/RouteTrackingOverlay';
 import TrackingPanel from './components/transit/TrackingPanel';
 import UserLocationMarker from './components/transit/UserLocationMarker';
-import LiveBusMarker from './components/transit/LiveBusMarker';
+import LiveBusMarker, { ABOVE_BUSES_Z } from './components/transit/LiveBusMarker';
 import { useMarkerCharacter } from '../controllers/useMarkerCharacter';
 import { stopIconFor } from '../models/data/stopIcons';
 import { applyCharacterTheme } from '../models/data/characterThemes';
@@ -308,7 +308,7 @@ export const MapView: React.FC<MapViewProps> = ({
           <Marker
             position={selectedPlaceMarker.location}
             title={selectedPlaceMarker.name}
-            zIndex={200}
+            zIndex={ABOVE_BUSES_Z}
             icon={{
               url: placePin.url,
               scaledSize: isLoaded ? new google.maps.Size(placePin.width, placePin.height) : undefined,
@@ -345,6 +345,7 @@ export const MapView: React.FC<MapViewProps> = ({
               bus={bus}
               color={matchedRoute?.ROUTE_COLO ? `#${matchedRoute.ROUTE_COLO}` : '#1a73e8'}
               selected={selectedBus?.bus_id === bus.bus_id}
+              zoom={currentZoom}
               onSelect={() => {
                 setSelectedBus(bus);
                 setSelectedRoute(String(bus.route_num));

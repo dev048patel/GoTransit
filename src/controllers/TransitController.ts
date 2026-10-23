@@ -67,8 +67,8 @@ export const getLiveBuses = async (req: Request, res: Response) => {
         const liveData = await RealTimeService.getLiveBuses();
         res.json(liveData);
     } catch (error) {
-        console.error("Controller Error fetching live buses:", error);
-        res.status(500).json({ error: 'Failed to fetch live buses' });
+        // The feed (TransitLive) failed, not us: the map keeps showing its last positions
+        res.status(502).json({ error: 'Failed to fetch live buses' });
     }
 };
 

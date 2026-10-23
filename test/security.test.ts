@@ -44,6 +44,7 @@ let profilesDown = false;
 let targetRole: string | null = null;
 /** Stand-in live bus feed: counts how often it is asked, and moves the bus each time. */
 let feedHits = 0;
+let feedDown = false;   // the feed answers 503 while set
 /** Switch for single tests: answers chosen requests (an array, an object, or [status, body]); undefined falls through. */
 let answer: ((method: string, url: string, body: any) => unknown) | null = null;
 const fake = http.createServer((req, res) => {
@@ -57,6 +58,7 @@ const fake = http.createServer((req, res) => {
         const single = (req.headers.accept ?? '').includes('vnd.pgrst.object');
 
         if (url.startsWith('/feed')) {
+            if (feedDown) return send(503, { error: 'unavailable' });
             feedHits++;
             return send(200, [{ properties: { b: 'bus-1', dir: 0, speed: 10, r: '7', line: 'x' }, geometry: { coordinates: [-104.6, 50.4 + feedHits / 1000] } }]);
         }
@@ -495,6 +497,18 @@ test('the live bus feed is fetched once and shared, and is never more than half 
     const later = await api('GET', '/api/live');
     assert.equal(feedHits, 2, 'after half a second the feed is asked again');
     assert.notEqual(later.json[0].lat, first, 'and the bus has moved: riders never keep seeing an old position');
+});
+
+test('a failed bus feed is an error, not an empty list, so the map keeps its buses', async () => {
+    await new Promise(r => setTimeout(r, 600));   // let any earlier copy expire
+    feedDown = true;
+    try {
+        const r = await api('GET', '/api/live');
+        assert.equal(r.status, 502, 'an empty list would tell the map every bus has gone');
+    } finally { feedDown = false; }
+    const back = await api('GET', '/api/live');
+    assert.equal(back.status, 200);
+    assert.equal(back.json.length, 1, 'the next good answer is fetched straight away');
 });
 
 test('usage tracking with no body is a bad request, not a server error', async () => {

@@ -28,6 +28,8 @@ export class RealTimeService {
     private static latestAt = 0;
     private static inFlight: Promise<BusPosition[]> | null = null;
 
+    // A failed fetch throws rather than returning [], so the map keeps the buses where they are
+    // instead of being told every bus has gone.
     private static async fetchLiveBuses(): Promise<BusPosition[]> {
         try {
             // Append timestamp to prevent caching.
@@ -43,15 +45,13 @@ export class RealTimeService {
             // Guard against empty or malformed responses
             const text = await response.text();
             if (!text || text.trim().length === 0) {
-                console.warn('Live bus API returned empty response');
-                return [];
+                throw new Error('Live bus API returned an empty response');
             }
             let geoJsonData: any[];
             try {
                 geoJsonData = JSON.parse(text);
             } catch {
-                console.warn('Live bus API returned invalid JSON:', text.substring(0, 100));
-                return [];
+                throw new Error(`Live bus API returned invalid JSON: ${text.substring(0, 100)}`);
             }
             // Transform GeoJSON to internal BusPosition model.
             const parsedBuses: BusPosition[] = (geoJsonData as any[]).map((feature: any) => ({
@@ -67,7 +67,7 @@ export class RealTimeService {
             return parsedBuses;
         } catch (error) {
             console.error("Failed to fetch live bus data:", error);
-            return [];
+            throw error;
         }
     }
 }
