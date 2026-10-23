@@ -48,7 +48,7 @@ const routes = (
 const render = (url: string) => renderToString(<StaticRouter location={url}>{routes}</StaticRouter>);
 
 /* What the homepage shows before the app starts: the same headline and the ways in */
-const homeSnapshot = `<main style="max-width:44rem;margin:0 auto;padding:3rem 1.25rem;font-family:Inter,system-ui,sans-serif">
+const homeSnapshot = `<main data-prerender style="max-width:44rem;margin:0 auto;padding:3rem 1.25rem;font-family:Inter,system-ui,sans-serif">
 <h1>Regina bus tracker: every bus, live</h1>
 <p>See every Regina bus live on the map, check when your bus is coming at any stop, and plan trips with transfers. Free and unofficial, built by two University of Regina students.</p>
 <p><a href="/map">Open the live map</a> · <a href="/routes">All Regina bus routes</a> · <a href="/about">About</a></p>

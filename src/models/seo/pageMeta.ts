@@ -11,7 +11,7 @@ import { SITE } from '../data/legal';
 import type { RouteInfo, StopInfo } from '../services/TransitDirectory';
 
 export const SITE_URL = 'https://transitregina.ca';
-const OG_IMAGE = `${SITE_URL}/og-image.png`;
+const OG_IMAGE = `${SITE_URL}/og-logo.jpg`;
 
 export interface PageMeta {
     /** Path only, e.g. "/routes/4-hillsdale-walsh-acres" */

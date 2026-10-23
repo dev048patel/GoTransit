@@ -15,7 +15,7 @@
   <meta property="og:url" content="https://transitregina.ca/" />
   <meta property="og:title" content="Regina Bus Tracker: Live Bus Map &amp; Trip Planner | Transit Regina" />
   <meta property="og:description" content="Live bus positions, arrival times and trip planning for Regina riders. An independent project, not affiliated with the City of Regina or Regina Transit." />
-  <meta property="og:image" content="https://transitregina.ca/og-image.png" />
+  <meta property="og:image" content="https://transitregina.ca/og-logo.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="Transit Regina – unofficial live bus tracker for Regina" />
@@ -42,6 +42,9 @@
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
   <link rel="manifest" href="/manifest.json" />
+  <!-- The homepage's pre-rendered text is for search engines and link previews. Browsers that run the app
+       never show it, so it can't flash before the real page appears. -->
+  <style>@media (scripting: enabled) { [data-prerender] { display: none; } }</style>
   <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
