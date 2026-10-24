@@ -2,11 +2,12 @@
  * Every text goes through deliver(): the message row is written before Twilio is called and updated
  * after, so sms.messages always shows what was attempted, even if the service dies mid-send.
  *
- * A dry run (SMS_DRY_RUN, a number not on SMS_ALLOWLIST, or Twilio not configured) writes the row and
- * stops there.
+ * A dry run (dry run on in the admin panel, a number not on its pilot list, or Twilio not configured)
+ * writes the row and stops there.
  */
 import { config } from '../config';
 import { sms } from '../db';
+import { sendSettings, SendSettings } from '../settings';
 import { segments, toGsm } from '../alerts/gsm';
 import { SendError, twilioClient } from './twilio';
 
@@ -17,14 +18,16 @@ export type Delivery =
     | { ok: true; dryRun: boolean; messageId: string; sid: string | null }
     | { ok: false; retryable: boolean; code: number | null; messageId: string | null; error: string };
 
-export function isDryRun(to: string): boolean {
-    const c = config();
-    return c.dryRun || (c.allowlist.length > 0 && !c.allowlist.includes(to)) || !twilioClient();
+export function isDryRun(to: string, s: SendSettings): boolean {
+    return s.dryRun || (s.allowlist.length > 0 && !s.allowlist.includes(to)) || !twilioClient();
 }
 
 export async function deliver(msg: Outgoing): Promise<Delivery> {
     const body = toGsm(msg.body);
-    const dryRun = isDryRun(msg.to);
+    // Not knowing whether this is a dry run, nothing is recorded or sent: the caller retries
+    const settings = await sendSettings().catch((err: Error) => err);
+    if (settings instanceof Error) return { ok: false, retryable: true, code: null, messageId: null, error: settings.message };
+    const dryRun = isDryRun(msg.to, settings);
     const { data: row, error } = await sms().from('messages').insert({
         alert_id: msg.alertId, user_id: msg.userId, kind: msg.kind, to_phone: msg.to, body,
         segments: segments(body), status: dryRun ? 'dry_run' : 'sending', dry_run: dryRun,

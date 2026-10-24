@@ -46,9 +46,9 @@ export const HealthService = {
         if (smsService) await probe('Text alerts', async () => {
             const res = await fetch(`${smsService.replace(/\/+$/, '')}/health`, { signal: AbortSignal.timeout(3_000) });
             if (!res.ok) throw new Error(`the SMS service answered ${res.status}`);
-            const h = await res.json() as { enabled?: boolean; dryRun?: boolean; pilot?: boolean; timetable?: { coversToday?: boolean; end?: string } };
+            const h = await res.json() as { enabled?: boolean; dryRun?: boolean | null; pilot?: boolean; timetable?: { coversToday?: boolean; end?: string } };
             if (h.timetable && h.timetable.coversToday === false) throw new Error(`its timetable ended ${h.timetable.end}: rebuild it`);
-            return h.enabled === false ? 'running, sending turned off' : h.dryRun ? 'running in dry-run mode' : h.pilot ? 'running, pilot numbers only' : 'running and sending';
+            return h.enabled === false ? 'running, sending turned off' : h.dryRun !== false ? 'running in dry-run mode' : h.pilot ? 'running, pilot numbers only' : 'running and sending';
         });
         lastRun = new Date().toISOString();
     },

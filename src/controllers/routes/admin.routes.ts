@@ -22,7 +22,7 @@ const audit = (req: Request, type: string, message: string, severity: 'info' | '
     SecurityEventService.record({ type, severity, message, ip: clientIp(req), userId: req.user!.id, path: req.originalUrl });
 
 /** Things an admin did (as opposed to things that happened to the site). Shown in the activity log. */
-const ADMIN_ACTIONS = ['user_deleted', 'role_changed', 'status_changed', 'user_updated', 'feature_access_changed', 'route_changed', 'sms_broadcast', 'sms_outage_declared', 'personal_data_viewed', 'events_handled'];
+const ADMIN_ACTIONS = ['user_deleted', 'role_changed', 'status_changed', 'user_updated', 'feature_access_changed', 'route_changed', 'sms_broadcast', 'sms_outage_declared', 'sms_settings_changed', 'personal_data_viewed', 'events_handled'];
 /** An optional reason typed by the admin, tidied for the log. */
 const reasonOf = (req: Request) => (typeof req.body?.reason === 'string' && req.body.reason.trim() ? ` Reason: ${req.body.reason.trim().slice(0, 200)}` : '');
 const countOf = async (q: PromiseLike<{ count: number | null }>) => (await q).count ?? 0;
@@ -273,6 +273,44 @@ router.post('/sms/outage', requireFreshTwoStep, async (req: Request, res: Respon
         console.error('[Admin] SMS outage error:', (err as Error).message);
         res.status(500).json({ error: 'Could not declare the outage' });
     }
+});
+
+// Dry run and the pilot numbers, which the SMS service rereads every 15 seconds. Anything that lets real
+// texts go out, or changes who gets them, needs an authenticator code entered in the last few minutes.
+// Turning dry run back on never does: it is the brake.
+const PILOT_NUMBER = /^\+1\d{10}$/;
+router.patch('/sms/settings', async (req: Request, res: Response) => {
+    if (!SmsOutageService.configured()) { res.status(400).json({ error: 'The SMS service is not set up (SMS_SERVICE_URL)' }); return; }
+    const { dryRun, allowlist } = req.body ?? {};
+    if (dryRun !== undefined && typeof dryRun !== 'boolean') { reject(req, res, 'Invalid dry run setting'); return; }
+    let numbers: string[] | undefined;
+    if (allowlist !== undefined) {
+        if (!Array.isArray(allowlist) || allowlist.length > 50 || !allowlist.every(n => typeof n === 'string' && n.length <= 30)) { reject(req, res, 'Invalid pilot numbers'); return; }
+        numbers = [...new Set((allowlist as string[]).map(n => n.replace(/[\s\-().]/g, '')).filter(Boolean))];
+        if (!numbers.every(n => PILOT_NUMBER.test(n))) { reject(req, res, 'Pilot numbers must be Canadian numbers like +13065550111'); return; }
+    }
+    if (dryRun === undefined && numbers === undefined) { reject(req, res, 'Nothing to change'); return; }
+    const braking = dryRun === true && numbers === undefined;
+    if (!braking && Date.now() / 1000 - req.user!.twoStepAt > 10 * 60) {
+        res.status(403).json({ error: 'Enter your authenticator code again to do this', code: 'fresh_two_step_required' });
+        return;
+    }
+
+    const db = serviceDb().schema('sms');
+    const notSetUp = 'Could not save the SMS settings. Has docs/security/sms_003_send_settings.sql been run?';
+    const { data: before, error: readErr } = await db.from('settings').select('dry_run, allowlist').maybeSingle();
+    if (readErr) { console.error('[Admin] SMS settings read error:', readErr.message); res.status(500).json({ error: notSetUp }); return; }
+    const next = { dry_run: dryRun ?? before?.dry_run ?? true, allowlist: numbers ?? (before?.allowlist as string[] | undefined) ?? [] };
+    const { error } = await db.from('settings').upsert({ id: true, ...next, updated_at: new Date().toISOString(), updated_by: req.user!.id });
+    if (error) { console.error('[Admin] SMS settings save error:', error.message); res.status(500).json({ error: notSetUp }); return; }
+
+    const who = next.allowlist.length ? `only the ${next.allowlist.length} pilot number${next.allowlist.length === 1 ? '' : 's'}` : 'every rider with text alerts on';
+    const changes = [
+        dryRun !== undefined && dryRun !== (before?.dry_run ?? true) && (dryRun ? 'turned dry run on: texts are recorded, not sent' : `turned dry run off: real texts go to ${who}`),
+        numbers !== undefined && `set the pilot numbers to ${numbers.length ? numbers.map(n => `…${n.slice(-4)}`).join(', ') : 'none'}${next.dry_run ? '' : ` (real texts now go to ${who})`}`,
+    ].filter(Boolean);
+    if (changes.length) await audit(req, 'sms_settings_changed', `Admin ${changes.join('; ')}.${reasonOf(req)}`, next.dry_run ? 'info' : 'warning');
+    res.json({ ok: true, settings: { dryRun: next.dry_run, allowlist: next.allowlist } });
 });
 
 export default router;

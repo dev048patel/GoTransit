@@ -33,13 +33,12 @@ export function config() {
 
         /** false: send nothing at all (alerts go stale and are skipped). */
         enabled: flag(e.SMS_ENABLED, true),
-        /** true (the default until you turn it off): write every message to sms.messages but never call Twilio. */
-        dryRun: flag(e.SMS_DRY_RUN, true),
-        /** When set, only these numbers get real texts; everyone else is handled as a dry run. For the team pilot. */
-        allowlist: list(e.SMS_ALLOWLIST),
+        // Dry run and the pilot numbers are set on the admin panel: see settings.ts
         /** Ceiling on the daily quota, set from the monthly budget */
         dailyLimitMax: num(e.SMS_DAILY_LIMIT_MAX, 500),
         perUserDailyCap: num(e.SMS_PER_USER_DAILY_CAP, 6),
+        /** One-time trip texts a rider can have a day, counted apart from commute texts */
+        tripDailyCap: num(e.SMS_TRIP_DAILY_CAP, 10),
     };
 }
 

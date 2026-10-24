@@ -12,7 +12,9 @@ export const ALIGHT_LEAD_MIN = 2;     // timetable fallback for "next stop": 2 m
 const NOTICE_DEFAULT_LEAD_MIN = 45;   // no plan and no saved departure time: tell them 45 min before arrival
 
 export interface Commute {
-    scheduleId: string;
+    /** null for a one-time trip */
+    scheduleId: string | null;
+    kind?: 'commute' | 'trip';
     userId: string;
     arriveBy: string;           // "HH:MM"
     departBy: string | null;    // the rider's usual departure, "HH:MM", if saved
@@ -26,7 +28,7 @@ export interface LegRow {
 }
 export interface AlertRow { kind: 'leave_now' | 'alight' | 'notice'; due_at: string; leg_seq: number | null; key: string }
 export interface PlanRow {
-    schedule_id: string; user_id: string; service_date: string; arrive_by: string;
+    schedule_id: string | null; kind: 'commute' | 'trip'; user_id: string; service_date: string; arrive_by: string;
     status: 'planned' | 'partial' | 'no_service'; origin_name: string | null; destination_name: string | null;
     leave_at: string | null; arrive_at: string | null; notice: Record<string, unknown>;
 }
@@ -52,7 +54,7 @@ function alightAlerts(date: string, journey: Journey): AlertRow[] {
 const notBefore = (date: string, minutes: number, nowMin: number) => instantOf(date, Math.max(minutes, nowMin)).toISOString();
 
 export function buildPlan(tt: Timetable, date: string, c: Commute, result: PlanResult, nowMin: number) {
-    const base = { schedule_id: c.scheduleId, user_id: c.userId, service_date: date, arrive_by: c.arriveBy, origin_name: c.originName, destination_name: c.destinationName };
+    const base = { schedule_id: c.scheduleId, kind: c.kind ?? 'commute', user_id: c.userId, service_date: date, arrive_by: c.arriveBy, origin_name: c.originName, destination_name: c.destinationName };
 
     if (result.status === 'no_service') {
         const usual = parseHhmm(c.departBy) ?? (parseHhmm(c.arriveBy) ?? 0) - NOTICE_DEFAULT_LEAD_MIN;

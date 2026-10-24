@@ -57,7 +57,9 @@ async function sendOne(alert: AlertDb, now: number, result: SenderResult): Promi
         return;
     }
 
-    const { data: outcome, error } = await sms().rpc('claim_alert', { p_alert: alert.id, p_per_user_cap: cfg.perUserDailyCap });
+    const plan = must(await sms().from('trip_plans').select('*').eq('id', alert.plan_id).single(), 'reading plan') as PlanDb;
+    const cap = plan.kind === 'trip' ? cfg.tripDailyCap : cfg.perUserDailyCap;
+    const { data: outcome, error } = await sms().rpc('claim_alert', { p_alert: alert.id, p_per_user_cap: cap });
     if (error) throw new Error(`claim: ${error.message}`);
     if (outcome !== 'queued') {
         if (outcome === 'over_quota') await warnQuota(alert.service_date);
@@ -75,7 +77,6 @@ async function sendOne(alert: AlertDb, now: number, result: SenderResult): Promi
         return;
     }
 
-    const plan = must(await sms().from('trip_plans').select('*').eq('id', alert.plan_id).single(), 'reading plan') as PlanDb;
     const legs = must(await sms().from('trip_legs').select('*').eq('plan_id', alert.plan_id).order('seq'), 'reading legs') as LegDb[];
     const body = renderAlert(timetable(), plan, legs, alert);
 

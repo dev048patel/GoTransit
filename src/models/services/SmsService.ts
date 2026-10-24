@@ -20,6 +20,20 @@ export const SmsService = {
         return ((await r.json()) as { phone: string }).phone;
     },
 
+    // One-time trip texts for the trip just started (admins only for now)
+    async startTripTexts(trip: {
+        legs: { route: string; boardStopId: string; alightStopId: string }[];
+        origin: { lat: number; lng: number }; destination: { lat: number; lng: number }; destinationName: string | null;
+    }): Promise<{ texts: number; leaveAt: string; textsLeft: number }> {
+        const r = await apiPost('/api/sms/trip', trip);
+        return await r.json();
+    },
+
+    // Stops the texts still to come for that trip
+    async cancelTripTexts(): Promise<void> {
+        await apiPost('/api/sms/trip/cancel');
+    },
+
     // Validates + updates phone on the backend, and auto-opts-out (forces re-consent).
     async updatePhone(phone: string): Promise<void> {
         await apiPatch('/api/sms/phone', { phone });

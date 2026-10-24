@@ -7,7 +7,7 @@ import { apiGet } from '../../models/lib/apiClient';
 import { Badge, Card, EVENT_LABEL, PageHeader, when } from '../components/admin/ui';
 
 interface Entry { type: string; severity: 'info' | 'warning' | 'critical'; message: string; admin: string; ip: string | null; created_at: string; }
-const ACTIONS = ['user_deleted', 'role_changed', 'status_changed', 'user_updated', 'feature_access_changed', 'route_changed', 'sms_broadcast', 'sms_outage_declared', 'personal_data_viewed', 'events_handled'];
+const ACTIONS = ['user_deleted', 'role_changed', 'status_changed', 'user_updated', 'feature_access_changed', 'route_changed', 'sms_broadcast', 'sms_outage_declared', 'sms_settings_changed', 'personal_data_viewed', 'events_handled'];
 
 export default function ActivityLog() {
     const [rows, setRows] = useState<Entry[] | null>(null);

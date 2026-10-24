@@ -815,6 +815,95 @@ const outageDay = (opts: { alreadyDeclared?: boolean } = {}) => (method: string,
     return undefined;
 };
 
+/* ── One-time trip texts ── */
+
+const TRIP = { legs: [{ route: '4', boardStopId: '0742', alightStopId: '0123' }], origin: { lat: 50.44, lng: -104.61 }, destination: { lat: 50.41, lng: -104.58 }, destinationName: 'U of R' };
+const riderProfile = (row: object) => (method: string, url: string) => {
+    if (method === 'GET' && url.startsWith('/rest/v1/profiles') && url.includes('select=mobile_number')) return [row];
+    if (url.startsWith('/smsvc/internal/trips/cancel')) return { ok: true, cancelled: 1 };
+    if (url.startsWith('/smsvc/internal/trips')) return { ok: true, planId: 'p1', texts: 2, leaveAt: '2026-10-21T14:10:00Z', arriveAt: '2026-10-21T14:40:00Z', textsLeft: 8 };
+    return undefined;
+};
+
+test('trip texts: an admin with a verified number and texts on gets them, through the SMS service', async () => {
+    answer = riderProfile({ mobile_number: '+13065550111', mobile_verified: true, sms_opted_in: true });
+    const r = await withSmsService(() => api('POST', '/api/sms/trip', { token: T.admin, body: { ...TRIP, userId: OTHER } }));
+    assert.equal(r.status, 200);
+    assert.deepEqual(r.json, { ok: true, texts: 2, leaveAt: '2026-10-21T14:10:00Z', arriveAt: '2026-10-21T14:40:00Z', textsLeft: 8 });
+    const forwarded = calls.find(c => c.url.startsWith('/smsvc/internal/trips'));
+    assert.equal(forwarded?.auth, 'sms-internal-token');
+    assert.equal(forwarded?.body.userId, ADMIN, 'the rider is taken from the login, never the request');
+    assert.deepEqual(forwarded?.body.legs, TRIP.legs);
+
+    const cancel = await withSmsService(() => api('POST', '/api/sms/trip/cancel', { token: T.admin }));
+    assert.deepEqual(cancel.json, { ok: true, cancelled: 1 });
+    assert.equal(calls.find(c => c.url.startsWith('/smsvc/internal/trips/cancel'))?.body.userId, ADMIN);
+});
+
+test('trip texts: refused with the reason when the number is not verified or texts are off', async () => {
+    for (const [row, code] of [[{ mobile_number: '+13065550111', mobile_verified: false, sms_opted_in: true }, 'verify_phone'], [{ mobile_number: '+13065550111', mobile_verified: true, sms_opted_in: false }, 'opt_in']] as const) {
+        calls.length = 0;
+        answer = riderProfile(row);
+        const r = await withSmsService(() => api('POST', '/api/sms/trip', { token: T.admin, body: TRIP }));
+        assert.equal(r.status, 400);
+        assert.equal(r.json.code, code);
+        assert.ok(!calls.some(c => c.url.startsWith('/smsvc/')), 'the SMS service is not asked');
+    }
+});
+
+test('trip texts: riders who are not admins, bad trips, and a silent SMS service are refused', async () => {
+    answer = riderProfile({ mobile_number: '+13065550111', mobile_verified: true, sms_opted_in: true });
+    assert.equal((await withSmsService(() => api('POST', '/api/sms/trip', { token: T.user, body: TRIP }))).status, 403, 'admins only for now');
+    for (const body of [{ ...TRIP, legs: [] }, { ...TRIP, legs: [{ route: '4', boardStopId: '../x', alightStopId: '1' }] }, { ...TRIP, origin: null }, { ...TRIP, destinationName: 'x'.repeat(200) }]) {
+        assert.equal((await withSmsService(() => api('POST', '/api/sms/trip', { token: T.admin, body }))).status, 400, JSON.stringify(body).slice(0, 60));
+    }
+    const down = await withSmsService(() => api('POST', '/api/sms/trip', { token: T.admin, body: TRIP }), 'http://127.0.0.1:9');
+    assert.equal(down.status, 503);
+    assert.match(down.json.error, /not answering/);
+});
+
+/* ── Dry run and pilot numbers ── */
+
+const settingsWrite = () => calls.find(c => c.url.startsWith('/rest/v1/settings') && c.method === 'POST');
+const savedSettings = (row: object) => (method: string, url: string) => url.startsWith('/rest/v1/settings') && method === 'GET' ? [row] : undefined;
+
+test('sending real texts needs a fresh authenticator code; turning dry run back on never does', async () => {
+    answer = savedSettings({ dry_run: true, allowlist: [] });
+    const stale = await withSmsService(() => api('PATCH', '/api/admin/sms/settings', { token: T.adminStaleCode, body: { dryRun: false } }));
+    assert.equal(stale.status, 403);
+    assert.equal(stale.json.code, 'fresh_two_step_required');
+    assert.equal(settingsWrite(), undefined);
+
+    const live = await withSmsService(() => api('PATCH', '/api/admin/sms/settings', { token: T.admin, body: { dryRun: false, reason: 'pilot week' } }));
+    assert.equal(live.status, 200);
+    const w = settingsWrite();
+    assert.deepEqual({ dry_run: w?.body.dry_run, allowlist: w?.body.allowlist, updated_by: w?.body.updated_by, auth: w?.auth }, { dry_run: false, allowlist: [], updated_by: ADMIN, auth: 'service-key' });
+    await settle();
+    assert.ok(events.recent().some(e => e.type === 'sms_settings_changed' && /turned dry run off: real texts go to every rider/.test(e.message) && /Reason: pilot week/.test(e.message)));
+
+    calls.length = 0;
+    answer = savedSettings({ dry_run: false, allowlist: [] });
+    const brake = await withSmsService(() => api('PATCH', '/api/admin/sms/settings', { token: T.adminStaleCode, body: { dryRun: true } }));
+    assert.equal(brake.status, 200);
+    assert.equal(settingsWrite()?.body.dry_run, true);
+});
+
+test('pilot numbers are tidied to +1XXXXXXXXXX, and anything else is refused', async () => {
+    answer = savedSettings({ dry_run: true, allowlist: [] });
+    const r = await withSmsService(() => api('PATCH', '/api/admin/sms/settings', { token: T.admin, body: { allowlist: ['+1 306-555-0111', '+13065550111', '+1 (306) 555-0222'] } }));
+    assert.equal(r.status, 200);
+    assert.deepEqual(settingsWrite()?.body.allowlist, ['+13065550111', '+13065550222']);
+    assert.equal(settingsWrite()?.body.dry_run, true, 'dry run is left as it was');
+
+    for (const body of [{ allowlist: ['306'] }, { allowlist: ['+447700900123'] }, { allowlist: 'nope' }, { dryRun: 'false' }, {}]) {
+        calls.length = 0;
+        const bad = await withSmsService(() => api('PATCH', '/api/admin/sms/settings', { token: T.admin, body }));
+        assert.equal(bad.status, 400, JSON.stringify(body));
+        assert.equal(settingsWrite(), undefined);
+    }
+    assert.equal((await withSmsService(() => api('PATCH', '/api/admin/sms/settings', { token: T.user, body: { dryRun: false } }))).status, 403);
+});
+
 test('an admin can turn text alerts off for the day: riders with alerts ahead get one email', async () => {
     const { SmsOutageService } = await import('../src/models/services/SmsOutageService');
     const sent: { to: string; subject: string; text: string; at: number }[] = [];
