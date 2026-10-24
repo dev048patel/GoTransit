@@ -8,7 +8,7 @@ import type { AddressInfo } from 'node:net';
 import type { Server } from 'node:http';
 import twilio from 'twilio';
 import JSZip from 'jszip';
-import { startFakes, stopFakes, resetFakes, setRespond, calls, callsTo, filter, texts, emails, live, setTwilioFails } from './fakes';
+import { startFakes, stopFakes, resetFakes, setRespond, calls, callsTo, filter, texts, emails, live, setTwilioFails, sendRow, respond } from './fakes';
 import { createApp } from '../src/http/app';
 import { runSender } from '../src/jobs/sender';
 import { runPlanner } from '../src/jobs/dailyPlanner';
@@ -179,17 +179,39 @@ test('sender: records the message, then texts it, then marks the alert sent and 
     assert.equal(callsTo('rpc/claim_alert')[0].body.p_per_user_cap, 6);
 });
 
-test('sender: dry run and the pilot allowlist record the text without sending it', async () => {
+test('sender: dry run and the pilot numbers (set on the admin panel) record the text without sending it', async () => {
     const { plan, legs, alerts } = realPlan();
-    for (const env of [{ SMS_DRY_RUN: 'true' }, { SMS_DRY_RUN: 'false', SMS_ALLOWLIST: '+13065550111' }]) {
+    for (const row of [{ dry_run: true, allowlist: [] }, { dry_run: false, allowlist: ['+13065550111'] }]) {
         resetFakes();
-        Object.assign(process.env, env);
+        Object.assign(sendRow, row);
         senderDb({ alert: alerts[0], plan, legs });
         await runSender(Date.parse(alerts[0].due_at));
-        assert.equal(texts.length, 0, JSON.stringify(env));
+        assert.equal(texts.length, 0, JSON.stringify(row));
         assert.equal(callsTo('messages', 'POST')[0].body.status, 'dry_run');
         assert.equal(callsTo('alerts', 'PATCH').at(-1)!.body.status, 'sent');
     }
+});
+
+test('sender: before the settings table exists, everything is a dry run', async () => {
+    const { plan, legs, alerts } = realPlan();
+    senderDb({ alert: alerts[0], plan, legs });
+    const db = respond;
+    setRespond(c => c.table === 'settings' ? [404, { code: 'PGRST205', message: "Could not find the table 'sms.settings' in the schema cache" }] : db(c));
+    await runSender(Date.parse(alerts[0].due_at));
+    assert.equal(texts.length, 0);
+    assert.equal(callsTo('messages', 'POST')[0].body.status, 'dry_run');
+});
+
+test('sender: when the settings can\'t be read, nothing is recorded or sent and the alert is retried', async () => {
+    const { plan, legs, alerts } = realPlan();
+    senderDb({ alert: alerts[0], plan, legs });
+    const db = respond;
+    setRespond(c => c.table === 'settings' ? [500, { message: 'database unavailable' }] : db(c));
+    const r = await runSender(Date.parse(alerts[0].due_at));
+    assert.equal(texts.length, 0);
+    assert.equal(callsTo('messages', 'POST').length, 0);
+    assert.equal(callsTo('rpc/release_alert').length, 1, 'given back to try again');
+    assert.equal(r.held, 1);
 });
 
 test('sender: a stale "next stop" alert is skipped, not sent late', async () => {

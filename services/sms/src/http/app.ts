@@ -15,6 +15,7 @@ import twilio from 'twilio';
 import { config } from '../config';
 import { app as appDb, inChunks, sms } from '../db';
 import { smsRevoked } from '../access';
+import { sendSettings } from '../settings';
 import { timetable } from '../transit/timetable';
 import { handleInbound } from '../jobs/inbound';
 import { deliver, maskPhone } from '../delivery/outbox';
@@ -54,10 +55,11 @@ export function createApp() {
     app.disable('x-powered-by');
     app.set('trust proxy', Number(process.env.TRUST_PROXY_HOPS) || 2);
 
-    app.get('/health', (_req, res) => {
+    app.get('/health', async (_req, res) => {
         const c = config(), tt = timetable(), today = reginaDate();
+        const s = await sendSettings().catch(() => null);
         res.json({
-            ok: true, service: 'transitr-sms', enabled: c.enabled, dryRun: c.dryRun, pilot: c.allowlist.length > 0,
+            ok: true, service: 'transitr-sms', enabled: c.enabled, dryRun: s?.dryRun ?? null, pilot: s ? s.allowlist.length > 0 : null,
             timetable: { start: tt.feed.start, end: tt.feed.end, coversToday: tt.covers(today) },
             workers: publicStatus(),
         });

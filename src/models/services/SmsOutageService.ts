@@ -184,12 +184,13 @@ export const SmsOutageService = {
     async status(now = Date.now()) {
         const date = reginaDateKey(now);
         if (!SmsOutageService.configured()) return { configured: false as const, date };
-        const [beat, plans, alerts, quota, outage] = await Promise.all([
+        const [beat, plans, alerts, quota, outage, settings] = await Promise.all([
             sms().from('heartbeats').select('last_seen, started_at, details').eq('service', 'sms').maybeSingle(),
             sms().from('trip_plans').select('status').eq('service_date', date),
             sms().from('alerts').select('status').eq('service_date', date),
             sms().from('daily_quotas').select('quota, sent_count, active_subscribers, planned_alerts').eq('service_date', date).maybeSingle(),
             sms().from('outage_days').select('cause, declared_at, emails_sent').eq('service_date', date).maybeSingle(),
+            sms().from('settings').select('dry_run, allowlist, updated_at').maybeSingle(),
         ]);
         const tally = (rows: { status: string }[] | null) => (rows ?? []).reduce<Record<string, number>>((t, r) => { t[r.status] = (t[r.status] ?? 0) + 1; return t; }, {});
         const lastSeen = beat.data?.last_seen ?? null;
@@ -197,10 +198,16 @@ export const SmsOutageService = {
             configured: true as const, date,
             up: !!lastSeen && now - Date.parse(lastSeen) <= HEARTBEAT_STALE_MS,
             lastSeen,
-            mode: beat.data?.details ? (beat.data.details.enabled === false ? 'off' : beat.data.details.dryRun ? 'dry run' : beat.data.details.pilot ? 'pilot' : 'live') : null,
+            mode: beat.data?.details ? (beat.data.details.enabled === false ? 'off' : beat.data.details.dryRun !== false ? 'dry run' : beat.data.details.pilot ? 'pilot' : 'live') : null,
             plans: tally(plans.data), alerts: tally(alerts.data),
             quota: quota.data ?? null,
             outage: outage.data ?? null,
+            // Dry run and pilot numbers, set on this card. null: the table isn't there yet (script sms_003).
+            settings: settings.error ? null : {
+                dryRun: settings.data?.dry_run !== false,
+                allowlist: (settings.data?.allowlist ?? []) as string[],
+                updatedAt: settings.data?.updated_at ?? null,
+            },
             error: beat.error?.message ?? plans.error?.message ?? null,
         };
     },

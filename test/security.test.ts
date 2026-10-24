@@ -815,6 +815,48 @@ const outageDay = (opts: { alreadyDeclared?: boolean } = {}) => (method: string,
     return undefined;
 };
 
+/* ── Dry run and pilot numbers ── */
+
+const settingsWrite = () => calls.find(c => c.url.startsWith('/rest/v1/settings') && c.method === 'POST');
+const savedSettings = (row: object) => (method: string, url: string) => url.startsWith('/rest/v1/settings') && method === 'GET' ? [row] : undefined;
+
+test('sending real texts needs a fresh authenticator code; turning dry run back on never does', async () => {
+    answer = savedSettings({ dry_run: true, allowlist: [] });
+    const stale = await withSmsService(() => api('PATCH', '/api/admin/sms/settings', { token: T.adminStaleCode, body: { dryRun: false } }));
+    assert.equal(stale.status, 403);
+    assert.equal(stale.json.code, 'fresh_two_step_required');
+    assert.equal(settingsWrite(), undefined);
+
+    const live = await withSmsService(() => api('PATCH', '/api/admin/sms/settings', { token: T.admin, body: { dryRun: false, reason: 'pilot week' } }));
+    assert.equal(live.status, 200);
+    const w = settingsWrite();
+    assert.deepEqual({ dry_run: w?.body.dry_run, allowlist: w?.body.allowlist, updated_by: w?.body.updated_by, auth: w?.auth }, { dry_run: false, allowlist: [], updated_by: ADMIN, auth: 'service-key' });
+    await settle();
+    assert.ok(events.recent().some(e => e.type === 'sms_settings_changed' && /turned dry run off: real texts go to every rider/.test(e.message) && /Reason: pilot week/.test(e.message)));
+
+    calls.length = 0;
+    answer = savedSettings({ dry_run: false, allowlist: [] });
+    const brake = await withSmsService(() => api('PATCH', '/api/admin/sms/settings', { token: T.adminStaleCode, body: { dryRun: true } }));
+    assert.equal(brake.status, 200);
+    assert.equal(settingsWrite()?.body.dry_run, true);
+});
+
+test('pilot numbers are tidied to +1XXXXXXXXXX, and anything else is refused', async () => {
+    answer = savedSettings({ dry_run: true, allowlist: [] });
+    const r = await withSmsService(() => api('PATCH', '/api/admin/sms/settings', { token: T.admin, body: { allowlist: ['+1 306-555-0111', '+13065550111', '+1 (306) 555-0222'] } }));
+    assert.equal(r.status, 200);
+    assert.deepEqual(settingsWrite()?.body.allowlist, ['+13065550111', '+13065550222']);
+    assert.equal(settingsWrite()?.body.dry_run, true, 'dry run is left as it was');
+
+    for (const body of [{ allowlist: ['306'] }, { allowlist: ['+447700900123'] }, { allowlist: 'nope' }, { dryRun: 'false' }, {}]) {
+        calls.length = 0;
+        const bad = await withSmsService(() => api('PATCH', '/api/admin/sms/settings', { token: T.admin, body }));
+        assert.equal(bad.status, 400, JSON.stringify(body));
+        assert.equal(settingsWrite(), undefined);
+    }
+    assert.equal((await withSmsService(() => api('PATCH', '/api/admin/sms/settings', { token: T.user, body: { dryRun: false } }))).status, 403);
+});
+
 test('an admin can turn text alerts off for the day: riders with alerts ahead get one email', async () => {
     const { SmsOutageService } = await import('../src/models/services/SmsOutageService');
     const sent: { to: string; subject: string; text: string; at: number }[] = [];

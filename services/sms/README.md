@@ -37,11 +37,11 @@ src/
 | `SMS_SERVICE_TOKEN` | yes | shared secret with the main API (`openssl rand -hex 32`) |
 | `TRANSIT_LIVE_API_URL` | yes | live bus feed, same as the main API |
 | `RESEND_API_KEY`, `ALERT_EMAILS`, `ALERT_FROM` | for emails | admin report and warnings |
-| `SMS_DRY_RUN` | | **defaults to `true`**: texts are recorded in `sms.messages` but not sent. Set `false` to go live |
-| `SMS_ALLOWLIST` | | comma-separated numbers: only these get real texts (team pilot) |
 | `SMS_ENABLED` | | `false` stops all sending |
 | `SMS_DAILY_LIMIT_MAX` | | ceiling on the daily quota (default 500), from the monthly budget |
 | `SMS_PER_USER_DAILY_CAP` | | default 6 |
+
+**Dry run and pilot numbers** are not Railway settings: admins set them on the admin Security page ("Text alerts today"), which saves them to `sms.settings` (`docs/security/sms_003_send_settings.sql`). The service rereads them every 15 seconds. Until that table exists, or while it can't be read on start-up, nothing is sent for real. Turning dry run off or changing the pilot numbers needs a freshly entered authenticator code; turning dry run back on never does.
 
 ## Deploying
 
@@ -49,7 +49,7 @@ src/
 2. Create a Railway service from this repo with the root directory set to `services/sms`. `railway.json` sets the build, start command and health check. Add the settings above.
 3. In the Twilio console, set the number's (or Messaging Service's) incoming message webhook to `https://<SMS_PUBLIC_URL>/twilio/inbound` (HTTP POST).
 4. On the main API, set `SMS_SERVICE_URL` (this service's URL) and the same `SMS_SERVICE_TOKEN`. This turns on the Security page's "Text alerts" card and health check, the every-minute outage check, and broadcasting through this service.
-5. Roll out in stages: run a week with `SMS_DRY_RUN=true`, then a team pilot with `SMS_ALLOWLIST`, then everyone. At switch-over, set `LEGACY_SMS_REMINDERS=false` on the main API so its old "Leave by" text stops, then delete that code and `/api/sms/webhook`.
+5. Roll out in stages on the admin Security page ("Text alerts today"): a week in dry run, then a team pilot (dry run off, the team's numbers as pilot numbers), then everyone (no pilot numbers). At switch-over, set `LEGACY_SMS_REMINDERS=false` on the main API so its old "Leave by" text stops, then delete that code and `/api/sms/webhook`.
 
 ## The timetable
 

@@ -5,6 +5,7 @@
  */
 import { sms } from '../db';
 import { config } from '../config';
+import { sendSettings } from '../settings';
 import { addDays, reginaDate } from '../time';
 
 export const HEARTBEAT_ID = 'sms';
@@ -13,9 +14,10 @@ const startedAt = new Date().toISOString();
 
 export async function writeHeartbeat(details: Record<string, unknown>): Promise<void> {
     const c = config();
+    const s = await sendSettings().catch(() => null);
     const { error } = await sms().from('heartbeats').upsert({
         service: HEARTBEAT_ID, last_seen: new Date().toISOString(), started_at: startedAt,
-        details: { ...details, enabled: c.enabled, dryRun: c.dryRun, pilot: c.allowlist.length > 0 },
+        details: { ...details, enabled: c.enabled, dryRun: s?.dryRun ?? null, pilot: s ? s.allowlist.length > 0 : null },
     });
     if (error) throw new Error(`heartbeat: ${error.message}`);
 }

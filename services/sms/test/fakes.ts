@@ -10,6 +10,7 @@ import type { AddressInfo } from 'node:net';
 import { setTwilioClient, SendError, TwilioLike } from '../src/delivery/twilio';
 import { setMailer, Email } from '../src/delivery/email';
 import { _clearTransitLiveCache } from '../src/transit/transitLive';
+import { _clearSendSettings } from '../src/settings';
 
 export interface Call { method: string; table: string; query: URLSearchParams; schema: string; body: any; order: number }
 type Answer = unknown | [status: number, body: unknown];
@@ -21,6 +22,8 @@ export const emails: Email[] = [];
 /** set per test: what the database answers. Return undefined for the default (rows: [], writes: echo). */
 export let respond: (c: Call) => Answer | undefined = () => undefined;
 export const setRespond = (fn: typeof respond) => { respond = fn; };
+/** sms.settings as the admin panel left it: sending for real unless a test says otherwise */
+export const sendRow = { dry_run: false, allowlist: [] as string[] };
 /** TransitLive test data */
 export const live = { predictions: new Map<string, unknown[]>(), buses: [] as unknown[] };
 /** Twilio's behaviour for the next sends: undefined = accept */
@@ -53,6 +56,7 @@ const server = http.createServer((req, res) => {
         };
         calls.push(call);
         let answer = respond(call);
+        if (answer === undefined && table === 'settings' && call.method === 'GET') answer = [sendRow];
         let status = 200;
         if (Array.isArray(answer) && answer.length === 2 && typeof answer[0] === 'number') [status, answer] = answer as [number, unknown];
         if (answer === undefined) answer = call.method === 'GET' ? [] : table.startsWith('rpc/') ? null : (Array.isArray(call.body) ? call.body : [call.body ?? {}]);
@@ -74,7 +78,7 @@ export async function startFakes(): Promise<string> {
         TWILIO_ACCOUNT_SID: 'ACtest', TWILIO_AUTH_TOKEN: 'twilio-test-token', TWILIO_PHONE_NUMBER: '+13065550100',
         SMS_PUBLIC_URL: 'https://sms.example.test', SMS_SERVICE_TOKEN: 'internal-test-token',
         RESEND_API_KEY: 'resend-test', ALERT_EMAILS: 'admin@example.test',
-        SMS_DRY_RUN: 'false', SMS_ENABLED: 'true', SMS_ALLOWLIST: '',
+        SMS_ENABLED: 'true',
     });
     setTwilioClient(fakeTwilio);
     setMailer(async e => { emails.push(e); return true; });
@@ -88,7 +92,9 @@ export function resetFakes() {
     respond = () => undefined; twilioFails = null;
     live.predictions.clear(); live.buses = [];
     _clearTransitLiveCache();
-    process.env.SMS_DRY_RUN = 'false'; process.env.SMS_ALLOWLIST = ''; process.env.SMS_ENABLED = 'true';
+    process.env.SMS_ENABLED = 'true';
+    Object.assign(sendRow, { dry_run: false, allowlist: [] });
+    _clearSendSettings();
 }
 
 /** The calls to one table (and method), in order */
