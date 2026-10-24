@@ -10,7 +10,7 @@ import { FEATURES, FeatureKey } from '../../models/admin/FeatureAccessTypes';
 import type { ConfirmRequest } from '../../views/components/admin/ui';
 
 export interface Person {
-    profile: { id: string; full_name: string | null; email: string | null; role: string; account_status: string; mobile_number: string | null; sms_opted_in: boolean | null; created_at: string; last_active: string | null };
+    profile: { id: string; full_name: string | null; email: string | null; role: string; account_status: string; mobile_number: string | null; mobile_verified: boolean | null; sms_opted_in: boolean | null; created_at: string; last_active: string | null };
     features: { feature: string; enabled: boolean }[];
     sessions: { browser: string; os: string; device: string; first_seen: string; last_seen: string; page_views: number }[];
     history: { type: string; severity: string; message: string; admin: string; created_at: string }[];

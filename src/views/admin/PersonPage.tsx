@@ -30,7 +30,7 @@ export default function PersonPage() {
                             <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 p-5 text-sm">
                                 <div><dt className="text-slate-500">Joined</dt><dd className="text-slate-900">{when(p.created_at)}</dd></div>
                                 <div><dt className="text-slate-500">Last active</dt><dd className="text-slate-900">{when(p.last_active)}</dd></div>
-                                <div><dt className="text-slate-500">Phone</dt><dd className="text-slate-900">{p.mobile_number ?? '—'}</dd></div>
+                                <div><dt className="text-slate-500">Phone</dt><dd className="text-slate-900">{p.mobile_number ?? '—'}{p.mobile_number && <span className={'ml-2 text-xs ' + (p.mobile_verified ? 'text-emerald-700' : 'text-amber-700')}>{p.mobile_verified ? 'Verified' : 'Not verified'}</span>}</dd></div>
                                 <div><dt className="text-slate-500">Text reminders</dt><dd className="text-slate-900">{p.sms_opted_in ? 'On' : 'Off'}</dd></div>
                                 <div className="sm:col-span-2">
                                     <label htmlFor="person-name" className="text-slate-500">Name</label>

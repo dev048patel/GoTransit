@@ -4,6 +4,8 @@ SMS commute alerts for Transit Regina, deployed as its own Railway service. If t
 
 For each saved commute (`public.weekly_schedules`), a trip with N buses gets N + 1 texts: "leave now", then "get off at the next stop" for each bus. If buses only cover part of the way, the rider gets a partial-trip notice. If no bus gets them there on time, they get a no-service notice with the earliest possible arrival.
 
+A rider gets texts only if they have opted in, have a verified number, have an active account and have not had text alerts switched off by an admin. Admins switch them off on the admin panel (Person → Features → "Text Alerts"), which writes `public.feature_access` (feature `sms_alerts`, enabled false). The planner, the sender (before every text) and broadcasts all check it, so switching someone off stops their texts within seconds (`src/access.ts`).
+
 ```
 src/
   transit/    timetable (from data/timetable.json), RAPTOR planner, TransitLive client

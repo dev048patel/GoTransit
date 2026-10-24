@@ -14,6 +14,7 @@ import { TwilioService } from './models/services/TwilioService';
 import { HealthService } from './models/services/HealthService';
 import { SecurityEventService } from './models/services/SecurityEventService';
 import { SmsOutageService } from './models/services/SmsOutageService';
+import { smsRevokedIds } from './models/services/SmsAccessService';
 import { isPushEndpoint } from './controllers/middleware/security';
 
 const app = createApp();
@@ -86,9 +87,11 @@ schedule('* * * * *', async () => {
         // Replaced by the SMS service (services/sms). Kept until the switch-over: set
         // LEGACY_SMS_REMINDERS=false once that service is sending for real, then delete this block.
         if (process.env.LEGACY_SMS_REMINDERS !== 'false' && TwilioService.isConfigured()) {
-            const recipients = schedules.flatMap(s => {
+            // If it can't tell who an admin switched off, it sends no texts this minute (push still goes)
+            const revoked = await smsRevokedIds(userIds).catch(err => { console.error('[SMS]', (err as Error).message); return null; });
+            const recipients = !revoked ? [] : schedules.flatMap(s => {
                 const profile = profileMap.get(s.user_id);
-                if (!profile?.sms_opted_in || !profile?.mobile_number || !profile?.mobile_verified) return [];
+                if (!profile?.sms_opted_in || !profile?.mobile_number || !profile?.mobile_verified || revoked.has(s.user_id)) return [];
                 const departLabel = (s.depart_by ?? target).slice(0, 5);
                 const arriveLabel = (s.arrive_by ?? '').slice(0, 5);
                 return [{

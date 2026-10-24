@@ -13,13 +13,13 @@ import crypto from 'node:crypto';
 import express, { NextFunction, Request, Response } from 'express';
 import twilio from 'twilio';
 import { config } from '../config';
-import { app as appDb, sms } from '../db';
+import { app as appDb, inChunks, sms } from '../db';
+import { smsRevoked } from '../access';
 import { timetable } from '../transit/timetable';
 import { handleInbound } from '../jobs/inbound';
 import { deliver, maskPhone } from '../delivery/outbox';
 import { reginaDate } from '../time';
 import { segments, toGsm } from '../alerts/gsm';
-import { inChunks } from '../jobs/dailyPlanner';
 import { publicStatus } from '../workers';
 
 const escapeXml = (s: string) => s.replace(/[<>&'"]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;' }[c]!));
@@ -106,8 +106,10 @@ export function createApp() {
         const userIds = [...new Set((schedules ?? []).map(s => s.user_id as string))];
         const profiles = await inChunks(userIds, async ids => (await appDb().from('profiles').select('id, mobile_number')
             .in('id', ids).eq('sms_opted_in', true).eq('mobile_verified', true).not('mobile_number', 'is', null)).data ?? []);
+        const revoked = await smsRevoked(userIds).catch(() => null);
+        if (!revoked) { res.status(500).json({ error: 'Could not read who may get texts' }); return; }
         const seen = new Set<string>();
-        const recipients = profiles.filter(p => p.mobile_number && !seen.has(p.mobile_number) && seen.add(p.mobile_number));
+        const recipients = profiles.filter(p => p.mobile_number && !revoked.has(p.id) && !seen.has(p.mobile_number) && seen.add(p.mobile_number));
 
         res.json({ ok: true, sent: recipients.length });
         // After answering: 100 ms between texts stays inside Twilio's per-number rate limit

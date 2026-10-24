@@ -3,14 +3,13 @@
  * Runs hourly from 01:00 to 06:00 Regina time; sms.daily_reports makes sure each day is emailed once
  * (the row is written first, and removed again if the email can't be sent, so the next hour retries).
  */
-import { app, must, sms } from '../db';
+import { app, inChunks, must, sms } from '../db';
 import { config } from '../config';
 import { timetable } from '../transit/timetable';
 import { emailAdmins } from '../delivery/email';
 import { twilioClient } from '../delivery/twilio';
 import { addDays, instantOf, parseHhmm, reginaDate, reginaMinutes } from '../time';
 import { buildWorkbook, Cell, HourRow, Sheet } from '../report/xlsx';
-import { inChunks } from './dailyPlanner';
 
 interface MessageRow { id: string; alert_id: string | null; user_id: string | null; kind: string; status: string; segments: number; price: number | null; price_unit: string | null; twilio_sid: string | null; dry_run: boolean; error_code: number | null; created_at: string }
 

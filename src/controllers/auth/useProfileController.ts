@@ -9,6 +9,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../../models/lib/supabase';
 import { useAuth } from '../../models/context/AuthContext';
+import { useFeatureAccess } from '../../models/context/FeatureAccessContext';
 import { formatMobile, deleteAccount, changePassword } from '../../models/services/AuthService';
 import { SmsService } from '../../models/services/SmsService';
 
@@ -90,8 +91,21 @@ export function useProfileController() {
     const [deletePassword, setDeletePassword] = useState('');
 
     // SMS notifications
+    const { hasFeature } = useFeatureAccess();
     const [smsLoading, setSmsLoading] = useState(false);
     const [smsError, setSmsError] = useState('');
+
+    // Phone verification: 'idle' until a code has been sent
+    const [verifyStage, setVerifyStage] = useState<'idle' | 'sent'>('idle');
+    const [verifyCode, setVerifyCode] = useState('');
+    const [verifyLoading, setVerifyLoading] = useState(false);
+    const [verifyError, setVerifyError] = useState('');
+    const [resendIn, setResendIn] = useState(0);
+    useEffect(() => {
+        if (resendIn <= 0) return;
+        const t = setTimeout(() => setResendIn(s => s - 1), 1000);
+        return () => clearTimeout(t);
+    }, [resendIn]);
 
     /* ── Load all profile data when user is available ───────────── */
     useEffect(() => {
@@ -240,12 +254,17 @@ export function useProfileController() {
             // Format mobile to canonical +1 XXX-XXX-XXXX before saving
             const formattedMobile = editMobile.trim() ? formatMobile(editMobile) : null;
 
+            // A different number has to be verified again, and texts agreed to again
+            const digits = (v: string | null | undefined) => (v ?? '').replace(/\D/g, '');
+            const numberChanged = digits(formattedMobile) !== digits(profile?.mobile_number);
+
             // Update name and mobile in profiles table
             const { error: profileError } = await supabase
                 .from('profiles')
                 .update({
                     full_name: editName.trim(),
                     mobile_number: formattedMobile,
+                    ...(numberChanged ? { mobile_verified: false, sms_opted_in: false } : {}),
                     updated_at: new Date().toISOString(),
                 })
                 .eq('id', user.id);
@@ -253,9 +272,10 @@ export function useProfileController() {
 
             // Reflect changes in local state immediately
             setProfile(prev => prev
-                ? { ...prev, full_name: editName.trim(), mobile_number: formattedMobile }
+                ? { ...prev, full_name: editName.trim(), mobile_number: formattedMobile, ...(numberChanged ? { mobile_verified: false, sms_opted_in: false } : {}) }
                 : prev
             );
+            if (numberChanged) { setVerifyStage('idle'); setVerifyCode(''); setVerifyError(''); }
 
             // If email changed, trigger Supabase email update (sends confirmation)
             if (editEmail.trim() && editEmail.trim() !== user.email) {
@@ -272,7 +292,7 @@ export function useProfileController() {
         } finally {
             setEditLoading(false);
         }
-    }, [user, editName, editEmail, editMobile]);
+    }, [user, editName, editEmail, editMobile, profile?.mobile_number]);
 
     /* ── SMS Notifications ──────────────────────────────────────── */
     const handleSmsToggle = useCallback(async (enable: boolean) => {
@@ -295,6 +315,37 @@ export function useProfileController() {
             setSmsLoading(false);
         }
     }, []);
+
+    /* ── Phone verification ─────────────────────────────────────── */
+    const sendVerifyCode = useCallback(async () => {
+        setVerifyLoading(true);
+        setVerifyError('');
+        try {
+            await SmsService.sendVerifyCode();
+            setVerifyStage('sent');
+            setVerifyCode('');
+            setResendIn(30);
+        } catch (err: any) {
+            setVerifyError(err?.message ?? 'The code could not be sent. Try again.');
+        } finally {
+            setVerifyLoading(false);
+        }
+    }, []);
+
+    const confirmVerifyCode = useCallback(async () => {
+        setVerifyLoading(true);
+        setVerifyError('');
+        try {
+            const phone = await SmsService.checkVerifyCode(verifyCode);
+            setProfile(prev => prev ? { ...prev, mobile_number: phone ?? prev.mobile_number, mobile_verified: true } : prev);
+            setVerifyStage('idle');
+            setVerifyCode('');
+        } catch (err: any) {
+            setVerifyError(err?.message ?? 'The code could not be checked. Try again.');
+        } finally {
+            setVerifyLoading(false);
+        }
+    }, [verifyCode]);
 
     /* ── Delete Account ─────────────────────────────────────────── */
     const handleDeleteAccount = useCallback(async () => {
@@ -357,7 +408,11 @@ export function useProfileController() {
         deletePassword, setDeletePassword,
         handleDeleteAccount,
         // SMS notifications
+        smsAllowed: hasFeature('sms_alerts'),
         smsLoading, smsError, handleSmsToggle,
+        // Phone verification
+        verifyStage, verifyCode, setVerifyCode: (v: string) => setVerifyCode(v.replace(/\D/g, '').slice(0, 10)),
+        verifyLoading, verifyError, resendIn, sendVerifyCode, confirmVerifyCode,
         // Actions
         handleLogout,
         handleLogoutEverywhere,

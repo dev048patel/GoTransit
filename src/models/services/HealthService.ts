@@ -59,6 +59,7 @@ export const HealthService = {
         if (!process.env.RESEND_API_KEY || !process.env.ALERT_EMAILS) config.push('RESEND_API_KEY or ALERT_EMAILS is not set: alert emails are off.');
         if (process.env.TWILIO_AUTH_TOKEN && !process.env.BACKEND_URL) config.push('BACKEND_URL is not set: text-message replies (STOP/START) are refused.');
         if (process.env.SMS_SERVICE_URL && !process.env.SMS_SERVICE_TOKEN) config.push('SMS_SERVICE_TOKEN is not set: admin text broadcasts can\'t reach the SMS service.');
+        if (process.env.SMS_SERVICE_URL && !process.env.TWILIO_VERIFY_SERVICE_SID) config.push('TWILIO_VERIFY_SERVICE_SID is not set: riders can\'t verify their phone numbers, so nobody can turn on text alerts.');
         const checks: Check[] = [...state.entries()].map(([name, s]) => ({ name, ok: s.ok, detail: s.detail, since: s.since }));
         return { lastRun, checks, config };
     },
