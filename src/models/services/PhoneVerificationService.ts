@@ -32,13 +32,23 @@ function explain(err: unknown): VerifyError {
     if (code === 60200 || code === 21211 || code === 21614) return new VerifyError('A code could not be texted to this number. Check that it is a Canadian mobile number.', 400);
     if (code === 60410 || code === 60605) return new VerifyError('Texts to this number are blocked. Contact us if you think this is a mistake.', 400);
     console.error('[Verify] Twilio error:', code ?? '', (err as Error).message);
-    return new VerifyError('The code could not be sent. Try again in a few minutes.', 503);
+    // Set-up mistakes: the rider can't fix these, but the message tells an admin where to look
+    if (code === 20003) return new VerifyError('Phone verification is not set up correctly: Twilio refused the account SID or auth token (error 20003).', 503);
+    if (code === 20404) return new VerifyError('Phone verification is not set up correctly: Twilio has no Verify service with that SID (error 20404).', 503);
+    if (code === 60223) return new VerifyError('Phone verification is not set up correctly: SMS is turned off for the Verify service (error 60223).', 503);
+    if (code === 21608) return new VerifyError('Codes can only be sent to numbers verified in Twilio while the account is a trial (error 21608).', 503);
+    return new VerifyError(`The code could not be sent${code ? ` (error ${code})` : ''}. Try again in a few minutes.`, 503);
 }
 
 function twilioVerify(): VerifyClient | null {
-    const sid = process.env.TWILIO_ACCOUNT_SID, token = process.env.TWILIO_AUTH_TOKEN, service = process.env.TWILIO_VERIFY_SERVICE_SID;
-    if (!sid || !token || !service) return null;
-    const verify = twilio(sid, token).verify.v2.services(service);
+    const sid = process.env.TWILIO_ACCOUNT_SID?.trim(), token = process.env.TWILIO_AUTH_TOKEN?.trim(), service = process.env.TWILIO_VERIFY_SERVICE_SID?.trim();
+    const missing = [!sid && 'TWILIO_ACCOUNT_SID', !token && 'TWILIO_AUTH_TOKEN', !service && 'TWILIO_VERIFY_SERVICE_SID'].filter(Boolean);
+    if (missing.length) { console.warn(`[Verify] Phone verification is off: ${missing.join(', ')} not set`); return null; }
+    if (!sid!.startsWith('AC') || !service!.startsWith('VA')) {
+        console.warn('[Verify] Phone verification is off: TWILIO_ACCOUNT_SID must start with AC and TWILIO_VERIFY_SERVICE_SID with VA');
+        return null;
+    }
+    const verify = twilio(sid, token).verify.v2.services(service!);
     return {
         async send(to) {
             try { await verify.verifications.create({ to, channel: 'sms', locale: 'en' }); }
