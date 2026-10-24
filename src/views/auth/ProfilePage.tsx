@@ -88,10 +88,55 @@ function InfoRow({ label, value, verified, loading }: { label: string; value: st
                 {loading ? <Shimmer width="w-28" /> : (
                     <>
                         <span className="text-sm font-medium text-gray-900">{value}</span>
-                        {verified && <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />}
+                        {verified && <CheckCircle2 className="w-3.5 h-3.5 text-green-500" aria-label="Verified" />}
+                        {verified === false && <span className="text-xs font-medium text-amber-600">Not verified</span>}
                     </>
                 )}
             </div>
+        </div>
+    );
+}
+
+/* ── Verify phone number ────────────────────────────────────────── */
+function VerifyPhone({ phone, stage, code, setCode, loading, error, resendIn, onSend, onConfirm }: {
+    phone: string; stage: 'idle' | 'sent'; code: string; setCode: (v: string) => void;
+    loading: boolean; error: string; resendIn: number;
+    onSend: () => void; onConfirm: () => void;
+}) {
+    return (
+        <div className="space-y-3">
+            <div>
+                <p className="text-sm font-medium text-gray-900">Verify your phone number</p>
+                <p className="text-xs text-gray-400 mt-0.5">
+                    {stage === 'idle'
+                        ? <>Before you can turn on text alerts, confirm that <span className="font-medium text-gray-600">{phone}</span> is yours. We'll text it a code.</>
+                        : <>Enter the code we texted to <span className="font-medium text-gray-600">{phone}</span>. It expires in 10 minutes.</>}
+                </p>
+            </div>
+            {stage === 'idle' ? (
+                <button onClick={onSend} disabled={loading}
+                    className="w-full py-2 rounded-xl bg-[#003DA5] text-white text-sm font-medium hover:bg-[#002d7a] transition disabled:opacity-60">
+                    {loading ? 'Sending…' : 'Send code'}
+                </button>
+            ) : (
+                <>
+                    <form onSubmit={e => { e.preventDefault(); onConfirm(); }} className="flex gap-2">
+                        <input value={code} onChange={e => setCode(e.target.value)} inputMode="numeric" autoComplete="one-time-code"
+                            placeholder="123456" aria-label="Verification code" autoFocus
+                            className="flex-1 min-w-0 px-3 py-2 rounded-xl border border-gray-200 text-sm tracking-widest focus:outline-none focus:ring-2 focus:ring-[#003DA5]/30" />
+                        <button type="submit" disabled={loading || code.length < 4}
+                            className="px-4 py-2 rounded-xl bg-[#003DA5] text-white text-sm font-medium hover:bg-[#002d7a] transition disabled:opacity-60">
+                            {loading ? 'Checking…' : 'Verify'}
+                        </button>
+                    </form>
+                    <button onClick={onSend} disabled={loading || resendIn > 0} className="text-xs font-medium text-[#003DA5] hover:underline disabled:text-gray-400 disabled:no-underline">
+                        {resendIn > 0 ? `Send a new code in ${resendIn}s` : 'Send a new code'}
+                    </button>
+                </>
+            )}
+            {error && (
+                <p role="alert" className="text-xs text-red-500 bg-red-50 border border-red-100 rounded-lg px-3 py-2">{error}</p>
+            )}
         </div>
     );
 }
@@ -245,6 +290,7 @@ export default function ProfilePage() {
         deleteLoading, deleteError,
         handleDeleteAccount,
         smsAllowed, smsLoading, smsError, handleSmsToggle,
+        verifyStage, verifyCode, setVerifyCode, verifyLoading, verifyError, resendIn, sendVerifyCode, confirmVerifyCode,
         handleLogout,
         handleLogoutEverywhere,
         deletePassword, setDeletePassword,
@@ -402,7 +448,7 @@ export default function ProfilePage() {
                             <InfoRow
                                 label="Phone"
                                 value={phone ?? 'Not set'}
-                                verified={profile?.mobile_verified}
+                                verified={phone && profile ? !!profile.mobile_verified : undefined}
                                 loading={profileLoading && !profile}
                             />
                         </>
@@ -428,6 +474,12 @@ export default function ProfilePage() {
                         <p className="text-sm text-gray-500">
                             Add a phone number to your profile above to enable SMS reminders.
                         </p>
+                    ) : profile && !profile.mobile_verified ? (
+                        <VerifyPhone
+                            phone={phone} stage={verifyStage} code={verifyCode} setCode={setVerifyCode}
+                            loading={verifyLoading} error={verifyError} resendIn={resendIn}
+                            onSend={sendVerifyCode} onConfirm={confirmVerifyCode}
+                        />
                     ) : (
                         <div className="space-y-3">
                             {/* Toggle row */}

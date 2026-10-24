@@ -8,6 +8,7 @@ import { requireAuth } from '../middleware/requireAuth';
 import { requireAdmin } from '../middleware/requireAdmin';
 import { TwilioService } from '../../models/services/TwilioService';
 import { smsRevokedIds } from '../../models/services/SmsAccessService';
+import { PhoneVerificationService, VerifyError, CheckResult } from '../../models/services/PhoneVerificationService';
 
 const router = Router();
 
@@ -33,13 +34,17 @@ router.post('/opt-in', requireAuth, async (req: Request, res: Response) => {
     // Fetch current phone on file — opt-in is meaningless without one
     const { data: profile, error: fetchErr } = await userDb(req.user!.token)
         .from('profiles')
-        .select('mobile_number')
+        .select('mobile_number, mobile_verified')
         .eq('id', userId)
         .single();
 
     if (fetchErr) { res.status(500).json({ error: 'Failed to fetch profile' }); return; }
     if (!profile?.mobile_number) {
         res.status(400).json({ error: 'Add a phone number to your profile before enabling SMS reminders' });
+        return;
+    }
+    if (!profile.mobile_verified) {
+        res.status(400).json({ error: 'Verify your phone number before turning on text alerts' });
         return;
     }
     // An admin can switch text alerts off for one person
@@ -72,7 +77,7 @@ router.post('/opt-out', requireAuth, async (req: Request, res: Response) => {
 
 // ── PATCH /api/sms/phone ────────────────────────────────────────────────────
 // Updates the authenticated user's mobile number.
-// Opts them out automatically — they must re-consent after a number change.
+// Opts them out automatically — they must verify the new number and re-consent after a number change.
 router.patch('/phone', requireAuth, async (req: Request, res: Response) => {
     const { phone } = req.body as { phone?: string };
     if (!phone) { res.status(400).json({ error: 'phone is required' }); return; }
@@ -83,11 +88,56 @@ router.patch('/phone', requireAuth, async (req: Request, res: Response) => {
 
     const { error } = await userDb(req.user!.token)
         .from('profiles')
-        .update({ mobile_number: normalisePhone(phone), sms_opted_in: false })
+        .update({ mobile_number: normalisePhone(phone), mobile_verified: false, sms_opted_in: false })
         .eq('id', req.user!.id);
 
     if (error) { res.status(500).json({ error: 'Could not save the change' }); return; }
     res.json({ ok: true });
+});
+
+/** The number on the rider's profile, in the +1XXXXXXXXXX form Twilio uses */
+async function savedPhone(req: Request, res: Response): Promise<{ saved: string; phone: string; verified: boolean } | null> {
+    if (!PhoneVerificationService.configured()) { res.status(503).json({ error: 'Phone verification is not set up yet. Try again later.' }); return null; }
+    const { data: profile, error } = await userDb(req.user!.token).from('profiles').select('mobile_number, mobile_verified').eq('id', req.user!.id).single();
+    if (error) { res.status(500).json({ error: 'Failed to fetch profile' }); return null; }
+    if (!profile?.mobile_number) { res.status(400).json({ error: 'Add a phone number to your profile first' }); return null; }
+    if (!isValidPhone(profile.mobile_number)) { res.status(400).json({ error: 'Enter a valid Canadian number (+1 XXX-XXX-XXXX) in your profile first' }); return null; }
+    return { saved: profile.mobile_number, phone: normalisePhone(profile.mobile_number), verified: !!profile.mobile_verified };
+}
+
+// ── POST /api/sms/verify/send ───────────────────────────────────────────────
+// Texts a one-time code to the number on the rider's profile. Twilio Verify also limits codes per number.
+router.post('/verify/send', requireAuth, rateLimit('sms-verify-send', 5), async (req: Request, res: Response) => {
+    const p = await savedPhone(req, res);
+    if (!p) return;
+    if (p.verified) { res.status(400).json({ error: 'This number is already verified' }); return; }
+    try { await PhoneVerificationService.send(p.phone); }
+    catch (err) { const e = err instanceof VerifyError ? err : new VerifyError('The code could not be sent. Try again in a few minutes.', 503); res.status(e.status).json({ error: e.message }); return; }
+    res.json({ ok: true });
+});
+
+// ── POST /api/sms/verify/check { code } ─────────────────────────────────────
+// Marks the number verified only when Twilio approves the code. Anything else leaves mobile_verified false.
+router.post('/verify/check', requireAuth, rateLimit('sms-verify-check', 10), async (req: Request, res: Response) => {
+    const code = typeof req.body?.code === 'string' ? req.body.code.trim() : '';
+    if (!/^\d{4,10}$/.test(code)) { res.status(400).json({ error: 'Enter the code from the text message' }); return; }
+    const p = await savedPhone(req, res);
+    if (!p) return;
+    if (p.verified) { res.json({ ok: true, phone: p.phone }); return; }
+
+    let result: CheckResult;
+    try { result = await PhoneVerificationService.check(p.phone, code); }
+    catch (err) { const e = err instanceof VerifyError ? err : new VerifyError('The code could not be checked. Try again in a few minutes.', 503); res.status(e.status).json({ error: e.message }); return; }
+    if (result === 'wrong') { res.status(400).json({ error: 'That code is not right. Check the text and try again.' }); return; }
+    if (result === 'expired') { res.status(400).json({ error: 'That code has expired. Send a new code.' }); return; }
+
+    // Only the backend can set mobile_verified. The number must still be the one the code was sent to.
+    const { data, error } = await serviceDb().from('profiles')
+        .update({ mobile_number: p.phone, mobile_verified: true, updated_at: new Date().toISOString() })
+        .eq('id', req.user!.id).eq('mobile_number', p.saved).select('id');
+    if (error) { console.error('[SMS] Could not mark number verified:', error.message); res.status(500).json({ error: 'Could not save the change' }); return; }
+    if (!data?.length) { res.status(409).json({ error: 'Your number changed while you were verifying it. Send a new code.' }); return; }
+    res.json({ ok: true, phone: p.phone });
 });
 
 // ── POST /api/sms/webhook ───────────────────────────────────────────────────

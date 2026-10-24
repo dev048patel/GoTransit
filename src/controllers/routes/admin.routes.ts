@@ -119,7 +119,7 @@ router.get('/users/:id', async (req: Request, res: Response) => {
     if (!isUuid(id)) { reject(req, res, 'Invalid user id'); return; }
     const db = serviceDb();
     const [profile, features, sessions, history] = await Promise.all([
-        db.from('profiles').select('id, full_name, email, role, account_status, mobile_number, sms_opted_in, created_at, last_active').eq('id', id).maybeSingle(),
+        db.from('profiles').select('id, full_name, email, role, account_status, mobile_number, mobile_verified, sms_opted_in, created_at, last_active').eq('id', id).maybeSingle(),
         db.from('feature_access').select('feature, enabled').eq('user_id', id),
         db.from('visitor_sessions').select('browser, os, device, first_seen, last_seen, page_views').eq('user_id', id).order('last_seen', { ascending: false }).limit(10),
         // ponytail: finds actions on this person by their id in the message text; add a target_id column if the log grows large

@@ -102,6 +102,8 @@ const fake = http.createServer((req, res) => {
 let base = '';
 let server: http.Server;
 let events: typeof import('../src/models/services/SecurityEventService').SecurityEventService;
+let phoneVerify: typeof import('../src/models/services/PhoneVerificationService').PhoneVerificationService;
+let VerifyErr: typeof import('../src/models/services/PhoneVerificationService').VerifyError;
 const mails: { subject: string; text: string }[] = [];
 let nextIp = 10;
 /** Each test talks from its own address so rate limits and burst counters don't leak between tests. */
@@ -138,6 +140,7 @@ before(async () => {
     // imported only now, so the modules read the settings above
     const { createApp } = await import('../src/apiApp');
     events = (await import('../src/models/services/SecurityEventService')).SecurityEventService;
+    ({ PhoneVerificationService: phoneVerify, VerifyError: VerifyErr } = await import('../src/models/services/PhoneVerificationService'));
     events._setMailer(async (subject, text) => { mails.push({ subject, text }); });
     server = createApp().listen(0, '127.0.0.1');
     await new Promise<void>(r => server.once('listening', () => r()));
@@ -682,7 +685,7 @@ test('a broadcast goes through the SMS service, with its internal token', async 
 
 test('a rider an admin switched text alerts off for cannot opt back in', async () => {
     answer = (method, url) => {
-        if (method === 'GET' && url.startsWith('/rest/v1/profiles') && url.includes('select=mobile_number')) return [{ mobile_number: '+13065550111' }];
+        if (method === 'GET' && url.startsWith('/rest/v1/profiles') && url.includes('select=mobile_number')) return [{ mobile_number: '+13065550111', mobile_verified: true }];
         if (method === 'GET' && url.startsWith('/rest/v1/feature_access') && url.includes('feature=eq.sms_alerts')) return [{ user_id: USER }];
         return undefined;
     };
@@ -691,8 +694,92 @@ test('a rider an admin switched text alerts off for cannot opt back in', async (
     assert.match(r.json.error, /not available on your account/);
     assert.ok(!calls.some(c => c.method === 'PATCH' && c.url.startsWith('/rest/v1/profiles')), 'sms_opted_in is not turned on');
 
-    answer = (method, url) => method === 'GET' && url.startsWith('/rest/v1/profiles') && url.includes('select=mobile_number') ? [{ mobile_number: '+13065550111' }] : undefined;
+    answer = (method, url) => method === 'GET' && url.startsWith('/rest/v1/profiles') && url.includes('select=mobile_number') ? [{ mobile_number: '+13065550111', mobile_verified: true }] : undefined;
     assert.equal((await api('POST', '/api/sms/opt-in', { token: T.user })).status, 200, 'with no row, text alerts are allowed');
+});
+
+/* ── Phone verification ── */
+
+/** A stand-in for Twilio Verify: the right code is 123456, and "expired" numbers have no code waiting */
+function fakeVerify(opts: { expired?: boolean; sendFails?: Error } = {}) {
+    const sent: string[] = [], checked: { to: string; code: string }[] = [];
+    phoneVerify._setClient({
+        async send(to) { if (opts.sendFails) throw opts.sendFails; sent.push(to); },
+        async check(to, code) { checked.push({ to, code }); return opts.expired ? 'expired' : code === '123456' ? 'approved' : 'wrong'; },
+    });
+    return { sent, checked };
+}
+const profileWith = (row: object) => (method: string, url: string) =>
+    method === 'GET' && url.startsWith('/rest/v1/profiles') && url.includes('select=mobile_number') ? [row] : undefined;
+const profileWrites = () => calls.filter(c => c.method === 'PATCH' && c.url.startsWith('/rest/v1/profiles'));
+
+test('a code is texted to the number on the profile, in the +1XXXXXXXXXX form', async () => {
+    const v = fakeVerify();
+    answer = profileWith({ mobile_number: '+1 306-555-0111', mobile_verified: false });
+    const r = await api('POST', '/api/sms/verify/send', { token: T.user });
+    assert.equal(r.status, 200);
+    assert.deepEqual(v.sent, ['+13065550111']);
+    assert.equal(profileWrites().length, 0, 'sending a code changes nothing in the database');
+    phoneVerify._setClient(null);
+});
+
+test('a wrong or expired code leaves the number unverified', async () => {
+    for (const [opts, code, message] of [[{}, '654321', /not right/], [{ expired: true }, '123456', /expired/]] as const) {
+        calls.length = 0;
+        fakeVerify(opts);
+        answer = profileWith({ mobile_number: '+13065550111', mobile_verified: false });
+        const r = await api('POST', '/api/sms/verify/check', { token: T.user, body: { code } });
+        assert.equal(r.status, 400);
+        assert.match(r.json.error, message);
+        assert.equal(profileWrites().length, 0, 'mobile_verified stays false');
+    }
+    phoneVerify._setClient(null);
+});
+
+test('the right code marks the number verified, written by the backend', async () => {
+    const v = fakeVerify();
+    answer = (method, url) => {
+        if (method === 'PATCH' && url.startsWith('/rest/v1/profiles')) return [{ id: USER }];
+        return profileWith({ mobile_number: '+1 306-555-0111', mobile_verified: false })(method, url);
+    };
+    const r = await api('POST', '/api/sms/verify/check', { token: T.user, body: { code: '123456' } });
+    assert.equal(r.status, 200);
+    assert.deepEqual(r.json, { ok: true, phone: '+13065550111' });
+    assert.deepEqual(v.checked, [{ to: '+13065550111', code: '123456' }]);
+    const write = profileWrites()[0];
+    assert.equal(write.auth, 'service-key');
+    assert.equal(write.body.mobile_verified, true);
+    assert.equal(write.body.mobile_number, '+13065550111');
+    assert.ok(write.url.includes(`id=eq.${USER}`) && write.url.includes('mobile_number=eq.'), 'only if the number is still the one the code went to');
+    phoneVerify._setClient(null);
+});
+
+test('a code that is not digits is refused before Twilio is asked', async () => {
+    const v = fakeVerify();
+    answer = profileWith({ mobile_number: '+13065550111', mobile_verified: false });
+    for (const code of ['', '12', 'abcdef', '1234567890123']) {
+        assert.equal((await api('POST', '/api/sms/verify/check', { token: T.user, body: { code } })).status, 400, code);
+    }
+    assert.equal(v.checked.length, 0);
+    phoneVerify._setClient(null);
+});
+
+test('text alerts cannot be turned on until the number is verified', async () => {
+    answer = profileWith({ mobile_number: '+13065550111', mobile_verified: false });
+    const r = await api('POST', '/api/sms/opt-in', { token: T.user });
+    assert.equal(r.status, 400);
+    assert.match(r.json.error, /Verify your phone number/);
+    assert.equal(profileWrites().length, 0);
+});
+
+test('Twilio refusing to send says why, and needs a signed-in rider', async () => {
+    fakeVerify({ sendFails: new VerifyErr('Too many codes sent to this number. Wait 10 minutes and try again.', 429) });
+    answer = profileWith({ mobile_number: '+13065550111', mobile_verified: false });
+    const r = await api('POST', '/api/sms/verify/send', { token: T.user });
+    assert.equal(r.status, 429);
+    assert.match(r.json.error, /Too many codes/);
+    assert.equal((await api('POST', '/api/sms/verify/send')).status, 401);
+    phoneVerify._setClient(null);
 });
 
 test('only an admin can switch text alerts off for someone', async () => {
