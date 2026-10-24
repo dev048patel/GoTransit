@@ -37,6 +37,8 @@ export function config() {
         /** Ceiling on the daily quota, set from the monthly budget */
         dailyLimitMax: num(e.SMS_DAILY_LIMIT_MAX, 500),
         perUserDailyCap: num(e.SMS_PER_USER_DAILY_CAP, 6),
+        /** One-time trip texts a rider can have a day, counted apart from commute texts */
+        tripDailyCap: num(e.SMS_TRIP_DAILY_CAP, 10),
     };
 }
 

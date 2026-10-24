@@ -3,7 +3,7 @@ import twilio from 'twilio';
 import express from 'express';
 import { serviceDb, userDb } from '../../models/lib/serverDb';
 import { SecurityEventService } from '../../models/services/SecurityEventService';
-import { clientIp, rateLimit } from '../middleware/security';
+import { clientIp, rateLimit, reject } from '../middleware/security';
 import { requireAuth } from '../middleware/requireAuth';
 import { requireAdmin } from '../middleware/requireAdmin';
 import { TwilioService } from '../../models/services/TwilioService';
@@ -183,6 +183,63 @@ router.post('/webhook', rateLimit('sms-webhook', 120), express.urlencoded({ exte
     // Return empty TwiML — Twilio expects XML, not JSON
     res.set('Content-Type', 'text/xml');
     res.send('<Response></Response>');
+});
+
+/** POSTs to the SMS service's /internal/* routes. null when the service isn't set up or doesn't answer. */
+async function toSmsService(path: string, body: unknown): Promise<{ status: number; json: Record<string, unknown> } | null> {
+    const url = process.env.SMS_SERVICE_URL, token = process.env.SMS_SERVICE_TOKEN;
+    if (!url || !token) return null;
+    try {
+        const r = await fetch(`${url.replace(/\/+$/, '')}${path}`, {
+            method: 'POST', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify(body), signal: AbortSignal.timeout(5_000),
+        });
+        return { status: r.status, json: await r.json().catch(() => ({})) as Record<string, unknown> };
+    } catch { return null; }
+}
+
+const TRIP_ID = /^[A-Za-z0-9]{1,10}$/;
+const isPoint = (v: unknown) => { const p = v as { lat?: unknown; lng?: unknown } | null; return !!p && typeof p.lat === 'number' && typeof p.lng === 'number' && Math.abs(p.lat) <= 90 && Math.abs(p.lng) <= 180; };
+
+// ── POST /api/sms/trip ──────────────────────────────────────────────────────
+// One-time trip texts: a rider who has started a trip on the map asks to be texted for it ("leave now",
+// then "get off at the next stop" for each bus). Admins only while it is being tried out. The SMS
+// service finds the chosen buses in its timetable and sends the texts; starting another trip, or
+// POST /api/sms/trip/cancel, stops them.
+router.post('/trip', requireAuth, requireAdmin, rateLimit('sms-trip', 10), async (req: Request, res: Response) => {
+    const { legs, origin, destination, destinationName } = (req.body ?? {}) as Record<string, unknown>;
+    const list = Array.isArray(legs) ? legs as Record<string, unknown>[] : [];
+    if (!list.length || list.length > 3 || !list.every(l => typeof l.route === 'string' && TRIP_ID.test(l.route) && typeof l.boardStopId === 'string' && TRIP_ID.test(l.boardStopId) && typeof l.alightStopId === 'string' && TRIP_ID.test(l.alightStopId))
+        || !isPoint(origin) || !isPoint(destination) || (destinationName != null && (typeof destinationName !== 'string' || destinationName.length > 120))) {
+        reject(req, res, 'Invalid trip');
+        return;
+    }
+    if (!process.env.SMS_SERVICE_URL || !process.env.SMS_SERVICE_TOKEN) { res.status(503).json({ error: 'Trip texts are not set up yet.' }); return; }
+
+    // The same checks the sender makes before every text, said up front
+    const userId = req.user!.id;
+    const { data: profile, error } = await serviceDb().from('profiles').select('mobile_number, mobile_verified, sms_opted_in').eq('id', userId).maybeSingle();
+    if (error) { res.status(500).json({ error: 'Failed to fetch profile' }); return; }
+    if (!profile?.mobile_number || !profile.mobile_verified) { res.status(400).json({ error: 'Verify your phone number on your profile page first.', code: 'verify_phone' }); return; }
+    if (!profile.sms_opted_in) { res.status(400).json({ error: 'Turn on text alerts on your profile page first.', code: 'opt_in' }); return; }
+    const revoked = await smsRevokedIds([userId]).catch(() => null);
+    if (!revoked) { res.status(500).json({ error: 'Could not check text alert access' }); return; }
+    if (revoked.has(userId)) { res.status(403).json({ error: 'Text alerts are not available on your account.' }); return; }
+
+    const r = await toSmsService('/internal/trips', { userId, legs: list.map(l => ({ route: l.route, boardStopId: l.boardStopId, alightStopId: l.alightStopId })), origin, destination, destinationName: destinationName ?? null });
+    if (!r) { res.status(503).json({ error: 'The text alert service is not answering. Try again in a few minutes.' }); return; }
+    if (r.status !== 200) { res.status(r.status >= 500 ? 503 : r.status).json({ error: r.json.error ?? 'The trip could not be texted' }); return; }
+    const { texts, leaveAt, arriveAt, textsLeft } = r.json;
+    res.json({ ok: true, texts, leaveAt, arriveAt, textsLeft });
+});
+
+// ── POST /api/sms/trip/cancel ───────────────────────────────────────────────
+// Stops the texts still to come for the rider's trip (they pressed Stop, or went back to the routes)
+router.post('/trip/cancel', requireAuth, rateLimit('sms-trip-cancel', 20), async (req: Request, res: Response) => {
+    if (!process.env.SMS_SERVICE_URL) { res.json({ ok: true, cancelled: 0 }); return; }
+    const r = await toSmsService('/internal/trips/cancel', { userId: req.user!.id });
+    if (!r || r.status !== 200) { res.status(503).json({ error: 'The trip texts could not be stopped. Try again in a minute.' }); return; }
+    res.json({ ok: true, cancelled: r.json.cancelled ?? 0 });
 });
 
 // ── POST /api/sms/broadcast ─────────────────────────────────────────────────

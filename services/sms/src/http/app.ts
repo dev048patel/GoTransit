@@ -16,6 +16,7 @@ import { config } from '../config';
 import { app as appDb, inChunks, sms } from '../db';
 import { smsRevoked } from '../access';
 import { sendSettings } from '../settings';
+import { cancelTrips, startTrip } from '../jobs/oneTimeTrip';
 import { timetable } from '../transit/timetable';
 import { handleInbound } from '../jobs/inbound';
 import { deliver, maskPhone } from '../delivery/outbox';
@@ -123,6 +124,32 @@ export function createApp() {
             }
             console.log(`[Broadcast] Route ${routeNum}: ${recipients.length} texts handed out`);
         })();
+    });
+
+    // One-time trip texts, started from the map. The main API has checked the rider may have them.
+    app.post('/internal/trips', express.json({ limit: '10kb' }), internalOnly, async (req, res) => {
+        const b = (req.body ?? {}) as Record<string, unknown>;
+        const point = (v: unknown) => { const p = v as { lat?: unknown; lng?: unknown } | null; return !!p && typeof p.lat === 'number' && typeof p.lng === 'number' && Math.abs(p.lat) <= 90 && Math.abs(p.lng) <= 180; };
+        const id = /^[A-Za-z0-9]{1,10}$/;
+        const legs = Array.isArray(b.legs) ? b.legs as Record<string, unknown>[] : [];
+        if (typeof b.userId !== 'string' || !/^[0-9a-f-]{36}$/i.test(b.userId) || !legs.length || legs.length > 3
+            || !legs.every(l => typeof l.route === 'string' && id.test(l.route) && typeof l.boardStopId === 'string' && id.test(l.boardStopId) && typeof l.alightStopId === 'string' && id.test(l.alightStopId))
+            || !point(b.origin) || !point(b.destination) || (b.destinationName != null && (typeof b.destinationName !== 'string' || b.destinationName.length > 120))) {
+            res.status(400).json({ error: 'Invalid trip' }); return;
+        }
+        const r = await startTrip({
+            userId: b.userId, legs: legs.map(l => ({ route: l.route as string, boardStopId: l.boardStopId as string, alightStopId: l.alightStopId as string })),
+            origin: b.origin as { lat: number; lng: number }, destination: b.destination as { lat: number; lng: number },
+            destinationName: (b.destinationName as string | null | undefined)?.trim() || null,
+        });
+        if (!r.ok) { res.status(r.status).json({ error: r.error }); return; }
+        res.json(r);
+    });
+
+    app.post('/internal/trips/cancel', express.json({ limit: '1kb' }), internalOnly, async (req, res) => {
+        const userId = (req.body ?? {}).userId;
+        if (typeof userId !== 'string' || !/^[0-9a-f-]{36}$/i.test(userId)) { res.status(400).json({ error: 'Invalid user' }); return; }
+        res.json({ ok: true, cancelled: await cancelTrips(userId, reginaDate()) });
     });
 
     app.use((_req, res) => { res.status(404).json({ error: 'Not found' }); });

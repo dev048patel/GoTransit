@@ -14,6 +14,8 @@ import { runSender } from '../src/jobs/sender';
 import { runPlanner } from '../src/jobs/dailyPlanner';
 import { runTracker } from '../src/jobs/tripTracker';
 import { runDailyReport } from '../src/jobs/dailyReport';
+import { startTrip } from '../src/jobs/oneTimeTrip';
+import { journeyFor } from '../src/transit/chosenTrip';
 import { SendError } from '../src/delivery/twilio';
 import { timetable } from '../src/transit/timetable';
 import { planArriveBy } from '../src/transit/planner';
@@ -441,4 +443,85 @@ test('report: a day already reported is not emailed again', async () => {
     setRespond(c => c.table === 'daily_reports' && c.method === 'POST' ? [409, { message: 'duplicate key value violates unique constraint "daily_reports_pkey"', code: '23505' }] : undefined);
     assert.equal(await runDailyReport(Date.parse('2026-10-22T08:00:00Z')), 'already');
     assert.equal(emails.length, 0);
+});
+
+/* ── One-time trip texts ── */
+
+const ORIGIN = { lat: 50.4479, lng: -104.6107 }, UOFR = { lat: 50.4154, lng: -104.5880 };
+const chosenFrom = (legs: LegDb[]) => legs.map(l => ({ route: l.route_num, boardStopId: l.board_stop_id, alightStopId: l.alight_stop_id }));
+const AT_0800 = instantOf(DATE, 8 * 60);
+
+test('trip: the buses the rider chose are found in the timetable, on the next trips they can catch', () => {
+    const tt = timetable();
+    const { legs } = realPlan();
+    const j = journeyFor(tt, DATE, chosenFrom(legs), 8 * 60, ORIGIN, UOFR)!;
+    assert.ok(j, 'found');
+    assert.deepEqual(j.legs.map(l => [l.route, tt.stopIds[l.boardStop], tt.stopIds[l.alightStop]]), legs.map(l => [l.route_num, l.board_stop_id, l.alight_stop_id]));
+    assert.ok(j.legs[0].boardMin >= 8 * 60 + j.legs[0].walkBeforeMin, 'not a bus that has already left');
+    for (let i = 1; i < j.legs.length; i++) assert.ok(j.legs[i].boardMin > j.legs[i - 1].alightMin, 'each transfer is after the last bus');
+
+    assert.equal(journeyFor(tt, DATE, [{ ...chosenFrom(legs)[0], boardStopId: 'nope' }], 480, ORIGIN, UOFR), null, 'unknown stop');
+    assert.equal(journeyFor(tt, DATE, [{ ...chosenFrom(legs)[0], route: '999' }], 480, ORIGIN, UOFR), null, 'route that does not stop there');
+    assert.equal(journeyFor(tt, DATE, chosenFrom(legs), 26 * 60, ORIGIN, UOFR), null, 'no buses left today');
+});
+
+function tripDb(opts: { earlierTrip?: boolean; textsUsed?: number; createPlan?: unknown } = {}) {
+    setRespond(c => {
+        if (c.table === 'outage_days') return [];
+        if (c.table === 'trip_plans' && c.method === 'GET') return opts.earlierTrip || opts.textsUsed ? [{ id: 't0' }] : [];
+        if (c.table === 'alerts' && c.method === 'GET') return Array.from({ length: opts.textsUsed ?? 0 }, (_, i) => ({ id: `x${i}` }));
+        if (c.table === 'rpc/create_plan') return opts.createPlan ?? 'trip-plan-id';
+        return undefined;
+    });
+}
+const tripRequest = () => ({ userId: '22222222-2222-4222-8222-222222222222', legs: chosenFrom(realPlan().legs), origin: ORIGIN, destination: UOFR, destinationName: 'U of R' });
+
+test('trip: starting one stores a plan of kind "trip" with N + 1 texts, and stops the last trip\'s texts', async () => {
+    tripDb({ earlierTrip: true });
+    const r = await startTrip(tripRequest(), AT_0800);
+    assert.ok(r.ok, JSON.stringify(r));
+    const { p_plan, p_legs, p_alerts } = callsTo('rpc/create_plan')[0].body;
+    assert.equal(p_plan.kind, 'trip');
+    assert.equal(p_plan.schedule_id, null);
+    assert.equal(p_plan.destination_name, 'U of R');
+    assert.equal(p_alerts.length, p_legs.length + 1);
+    assert.equal(p_alerts[0].kind, 'leave_now');
+    assert.equal(r.ok && r.texts, p_alerts.length);
+    const stopped = callsTo('alerts', 'PATCH')[0];
+    assert.equal(stopped.body.status, 'skipped');
+    assert.equal(filter(stopped, 'plan_id'), '(t0)');
+    assert.ok(callsTo('alerts', 'PATCH')[0].order < callsTo('rpc/create_plan')[0].order, 'the old trip is stopped first');
+});
+
+test('trip: no more than 10 trip texts a day', async () => {
+    tripDb({ textsUsed: 9 });
+    const r = await startTrip(tripRequest(), AT_0800);
+    assert.equal(r.ok, false);
+    assert.equal(!r.ok && r.status, 429);
+    assert.match(!r.ok ? r.error : '', /limited to 10 a day/);
+    assert.equal(callsTo('rpc/create_plan').length, 0);
+});
+
+test('trip: before script sms_004 it says trip texts are not set up', async () => {
+    tripDb({ createPlan: [400, { code: '23502', message: 'null value in column "schedule_id" of relation "trip_plans" violates not-null constraint' }] });
+    const r = await startTrip(tripRequest(), AT_0800);
+    assert.equal(!r.ok && r.status, 503);
+    assert.match(!r.ok ? r.error : '', /sms_004/);
+});
+
+test('trip: the internal routes need the token and a well-formed trip', async () => {
+    const post = (path: string, body: unknown, token?: string) => fetch(base + path, { method: 'POST', headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) }, body: JSON.stringify(body) });
+    assert.equal((await post('/internal/trips', tripRequest())).status, 401);
+    assert.equal((await post('/internal/trips/cancel', { userId: tripRequest().userId })).status, 401);
+    for (const bad of [{ ...tripRequest(), legs: [] }, { ...tripRequest(), legs: [{ route: '4; drop', boardStopId: '1', alightStopId: '2' }] }, { ...tripRequest(), origin: { lat: 'x' } }, { ...tripRequest(), userId: 'me' }]) {
+        assert.equal((await post('/internal/trips', bad, 'internal-test-token')).status, 400, JSON.stringify(bad).slice(0, 80));
+    }
+    assert.equal(calls.length, 0, 'nothing reached the database');
+});
+
+test('sender: a trip text is capped by the trip limit, not the commute one', async () => {
+    const { plan, legs, alerts } = realPlan();
+    senderDb({ alert: alerts[0], plan: { ...plan, kind: 'trip', schedule_id: null }, legs });
+    await runSender(Date.parse(alerts[0].due_at));
+    assert.equal(callsTo('rpc/claim_alert')[0].body.p_per_user_cap, 10);
 });

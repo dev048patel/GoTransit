@@ -237,7 +237,7 @@ export const MapView: React.FC<MapViewProps> = ({
 
       {/* Tracking Panel (bottom sheet) */}
       {activeTracking && (
-        <TrackingPanel tripOption={activeTracking} onStopTracking={handleStopTracking} onBack={handleBackToSuggestions} />
+        <TrackingPanel tripOption={activeTracking} onStopTracking={handleStopTracking} onBack={handleBackToSuggestions} destinationName={selectedPlaceMarker?.name} />
       )}
 
 

@@ -40,6 +40,9 @@ src/
 | `SMS_ENABLED` | | `false` stops all sending |
 | `SMS_DAILY_LIMIT_MAX` | | ceiling on the daily quota (default 500), from the monthly budget |
 | `SMS_PER_USER_DAILY_CAP` | | default 6 |
+| `SMS_TRIP_DAILY_CAP` | | one-time trip texts per rider per day, counted apart from commute texts (default 10) |
+
+**One-time trip texts.** After starting a trip on the map, a rider can ask to be texted for it (admins only for now; the main API's `POST /api/sms/trip` checks). The main API sends the buses they chose to `/internal/trips`; `src/transit/chosenTrip.ts` finds the next trips of those routes in the timetable and the plan is stored with `kind = 'trip'` and no schedule, so the tracker and sender treat it like a commute. Starting another trip, or Stop on the map (`/internal/trips/cancel`), stops the texts still to come. Needs `docs/security/sms_004_one_time_trips.sql`.
 
 **Dry run and pilot numbers** are not Railway settings: admins set them on the admin Security page ("Text alerts today"), which saves them to `sms.settings` (`docs/security/sms_003_send_settings.sql`). The service rereads them every 15 seconds. Until that table exists, or while it can't be read on start-up, nothing is sent for real. Turning dry run off or changing the pilot numbers needs a freshly entered authenticator code; turning dry run back on never does.
 

@@ -1,17 +1,23 @@
 /* TrackingPanel — live trip tracking: summary, what to do right now, and the step-by-step timeline.
    Docked on the right on desktop (the map stays visible); a collapsible bottom sheet on phones. */
 import React, { useState } from 'react';
-import { ArrowLeft, ChevronDown, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ArrowLeft, ChevronDown, MessageSquare, X } from 'lucide-react';
 import transitColors from '../../../models/data/transitColors';
 import { TrackingPanelProps } from '../../../models/components/TrackingPanelProps';
 import { formatTime, calculateArrivalTime, calculateBoardTime } from '../../../models/services/TimeService';
+import { useTripTextsController } from '../../../controllers/useTripTextsController';
 
 // Step dot colours carry meaning and are the same in every theme
 const BLUE = '#4285F4', GREY = '#5f6368', RED = '#ea4335', ORANGE = '#e37400', GREEN = '#34a853';
 
 // Pure view component — time calculations delegated to TimeService
-export default function TrackingPanel({ tripOption, onStopTracking, onBack }: TrackingPanelProps) {
+export default function TrackingPanel({ tripOption, onStopTracking, onBack, destinationName }: TrackingPanelProps) {
     const [collapsed, setCollapsed] = useState(false);
+    const texts = useTripTextsController(tripOption, destinationName);
+    // Ending the trip stops its texts too
+    const stopTrip = () => { void texts.stop(); onStopTracking(); };
+    const backToRoutes = onBack && (() => { void texts.stop(); onBack(); });
 
     const now = new Date();
     const effectiveTime = tripOption.totalTimeWithWait ?? tripOption.totalTime;
@@ -62,12 +68,12 @@ export default function TrackingPanel({ tripOption, onStopTracking, onBack }: Tr
                     </div>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
-                    {onBack && (
-                        <button type="button" onClick={onBack} style={backBtnStyle}>
+                    {backToRoutes && (
+                        <button type="button" onClick={backToRoutes} style={backBtnStyle}>
                             <ArrowLeft size={14} aria-hidden /> Routes
                         </button>
                     )}
-                    <button type="button" className="t-keep" onClick={onStopTracking} style={stopBtnStyle}>
+                    <button type="button" className="t-keep" onClick={stopTrip} style={stopBtnStyle}>
                         <X size={14} aria-hidden /> Stop
                     </button>
                 </div>
@@ -84,6 +90,38 @@ export default function TrackingPanel({ tripOption, onStopTracking, onBack }: Tr
                     ) : null}
                 </span>
             </div>
+
+            {/* Text me this trip (admins only while it is being tried out) */}
+            {texts.offered && texts.state !== 'declined' && (
+                <div style={textsStyle} role="region" aria-label="Trip texts">
+                    <MessageSquare size={16} aria-hidden style={{ flexShrink: 0, marginTop: '2px' }} />
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                        {texts.state === 'on' && texts.info ? (
+                            <>
+                                <strong>Texts on for this trip.</strong>{' '}
+                                {texts.info.texts} texts, the first around {formatTime(new Date(texts.info.leaveAt))}. {texts.info.textsLeft} trip texts left today.
+                            </>
+                        ) : (
+                            <>
+                                <strong>Text me this trip?</strong>{' '}
+                                We'll text you when to leave and when to get off each bus, even with the app closed.
+                                <div style={{ display: 'flex', gap: '6px', marginTop: '6px', flexWrap: 'wrap' }}>
+                                    <button type="button" onClick={texts.start} disabled={texts.state === 'starting'} style={textsYesStyle}>
+                                        {texts.state === 'starting' ? 'Setting up…' : 'Text me'}
+                                    </button>
+                                    <button type="button" onClick={texts.decline} disabled={texts.state === 'starting'} style={textsNoStyle}>No thanks</button>
+                                </div>
+                                {texts.error && (
+                                    <div role="alert" style={{ color: '#c5221f', marginTop: '6px' }}>
+                                        {texts.error}{' '}
+                                        {texts.fixOnProfile && <Link to="/profile" style={{ color: 'inherit', fontWeight: 600 }}>Open your profile</Link>}
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </div>
+                </div>
+            )}
 
             {/* Step-by-step timeline */}
             {!collapsed && (
@@ -267,6 +305,21 @@ const backBtnStyle: React.CSSProperties = {
 
 const stopBtnStyle: React.CSSProperties = {
     ...btnBase, backgroundColor: '#d93025', color: 'white', border: '1.5px solid #d93025',
+};
+
+const textsStyle: React.CSSProperties = {
+    display: 'flex', alignItems: 'flex-start', gap: '8px',
+    margin: '0 12px 10px', padding: '8px 10px', borderRadius: '10px',
+    border: '1px solid var(--t-border)', backgroundColor: 'var(--t-surface-2)', color: '#202124',
+    fontSize: '13px', lineHeight: 1.35,
+};
+
+const textsYesStyle: React.CSSProperties = {
+    ...btnBase, height: '28px', backgroundColor: 'var(--t-primary)', color: 'white', border: 'none',
+};
+
+const textsNoStyle: React.CSSProperties = {
+    ...btnBase, height: '28px', backgroundColor: 'transparent', color: 'inherit', border: '1.5px solid var(--t-border)',
 };
 
 const routeBadgeStyle: React.CSSProperties = {

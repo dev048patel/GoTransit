@@ -5,4 +5,6 @@ export interface TrackingPanelProps {
     tripOption: TripOption;
     onStopTracking: () => void;
     onBack?: () => void;
+    /** The place the rider searched for, named in trip texts */
+    destinationName?: string;
 }

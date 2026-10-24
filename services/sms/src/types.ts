@@ -13,7 +13,9 @@ export interface PlanNotice {
 
 export interface PlanDb {
     id: string;
-    schedule_id: string;
+    schedule_id: string | null;
+    /** 'trip': one-time trip texts started from the map (missing before script sms_004) */
+    kind?: 'commute' | 'trip';
     user_id: string;
     service_date: string;
     arrive_by: string;
